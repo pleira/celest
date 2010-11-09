@@ -1,0 +1,14 @@
+package be.angelcorp.libs.celest.math;
+
+import be.angelcorp.libs.math.functions.MultivariateVectorFunction;
+
+/**
+ * A MultivariateVectorFunction that returns a set of keplerian coordinates
+ * 
+ * @author simon
+ * @see MultivariateVectorFunction
+ * 
+ */
+public interface KeplerianMultivariateVectorFunction extends MultivariateVectorFunction, Keplerian {
+
+}
