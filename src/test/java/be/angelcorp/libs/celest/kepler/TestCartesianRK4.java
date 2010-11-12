@@ -21,8 +21,13 @@ public class TestCartesianRK4 extends TestCase {
 		CartRK4Propagator integrator = new CartRK4Propagator(TwoBodyCartesian.ZERO);
 		RealVector x0 = new ArrayRealVector(new double[] { 42164000, 0, 0, 0, 3074.6663, 0 }); // Geostationairy
 
-		integrator.setStepSize(7 * 60);
+		integrator.setStepSize(1 * 60);
 		RealVector ans2 = integrator.integrate(0, 30 * 24 * 360, x0);
+
+		// System.out.println(x0.getSubVector(0, 3).getNorm());
+		// System.out.println(ans2.getSubVector(0, 3).getNorm());
+		// System.out.println(x0.getSubVector(0, 3).getNorm() - ans2.getSubVector(0, 3).getNorm());
+
 		assertEquals(x0.getSubVector(0, 3).getNorm(),
 				ans2.getSubVector(0, 3).getNorm(), 2);
 	}
