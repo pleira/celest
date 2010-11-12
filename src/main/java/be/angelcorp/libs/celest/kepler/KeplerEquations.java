@@ -87,7 +87,7 @@ public abstract class KeplerEquations {
 		// return new ExtendedKeplerStateVector(
 		// lambda_true, ecc, inc, w, Omega, nu, w_true, u_true, lambda_true);
 
-		return new KeplerElements(a, ecc, inc, w, Omega, nu, mhu);
+		return new KeplerElements(a, ecc, inc, w, Omega, nu);
 	}
 
 	/**

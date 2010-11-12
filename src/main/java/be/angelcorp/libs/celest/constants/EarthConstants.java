@@ -57,7 +57,7 @@ public abstract class EarthConstants {
 	public static final KeplerElements	solarOrbit;
 	static {
 		solarOrbit = new KeplerElements(semiMajorAxis, eccentricity, inclination,
-				argPerigee, raan, 0, SolarConstants.mu);
+				argPerigee, raan, 0);
 	}
 
 	/**
