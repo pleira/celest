@@ -4,7 +4,9 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.math.CartesianMultivariateVectorFunction;
+import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -24,17 +26,9 @@ public abstract class TwoBodyCartesian implements CartesianMultivariateVectorFun
 		ZERO = new TwoBodyCartesian() {
 			@Override
 			public CelestialBody getCenterBody() {
-				return CelestialBody.ZERO;
+				return new CelestialBody(new CartesianElements(), EarthConstants.mass);
 			}
 		};
-	}
-	private double											mu	= 3.98600441E14;	// mu earth
-
-	public TwoBodyCartesian() {
-	}
-
-	public TwoBodyCartesian(double mu) {
-		this.mu = mu;
 	}
 
 	protected abstract CelestialBody getCenterBody();
@@ -44,7 +38,7 @@ public abstract class TwoBodyCartesian implements CartesianMultivariateVectorFun
 			IllegalArgumentException {
 		Vector3D R0 = new Vector3D(point.getSubVector(0, 3).toArray());
 		R0 = R0.subtract(getCenterBody().getState().toCartesianElements().getR());
-		Vector3D a = R0.multiply(mu / (Math.pow(R0.getNorm(), 3))).negate();
+		Vector3D a = R0.multiply(getCenterBody().getMu() / (Math.pow(R0.getNorm(), 3))).negate();
 		return a;
 	}
 

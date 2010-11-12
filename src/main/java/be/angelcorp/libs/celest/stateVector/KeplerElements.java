@@ -4,6 +4,7 @@ import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.MatrixIndexException;
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerCircular;
 import be.angelcorp.libs.celest.kepler.KeplerEllipse;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
@@ -14,11 +15,11 @@ import be.angelcorp.libs.celest.math.Keplerian;
 
 public class KeplerElements extends StateVector implements Keplerian {
 
-	public static KeplerElements fromVector(RealVector vector, double mu) {
+	public static KeplerElements fromVector(RealVector vector) {
 		if (vector.getDimension() != 6)
 			throw new MatrixIndexException("Vector must have 6 indices: [a, e, i, omega, raan, trueA]");
 		double[] d = vector.getData();
-		return new KeplerElements(d[0], d[1], d[2], d[3], d[4], d[5], mu);
+		return new KeplerElements(d[0], d[1], d[2], d[3], d[4], d[5]);
 	}
 
 	/**
@@ -31,7 +32,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * <b>[m]</b>
 	 * </p>
 	 */
-	protected double	a;
+	protected double		a;
 
 	/**
 	 * Eccentricity
@@ -39,7 +40,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * Eccentricity may be interpreted as a measure of how much this shape deviates from a circle.
 	 * </p>
 	 */
-	protected double	e;
+	protected double		e;
 
 	/**
 	 * Inclination
@@ -51,7 +52,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * <b>[rad]</b>
 	 * </p>
 	 */
-	protected double	i;
+	protected double		i;
 	/**
 	 * argument of periapsis (&omega;)
 	 * <p>
@@ -63,7 +64,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * <b>[rad]</b>
 	 * </p>
 	 */
-	protected double	omega;
+	protected double		omega;
 	/**
 	 * Right ascension of the ascending node (RAAN, &Omega;)
 	 * <p>
@@ -74,24 +75,19 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * <b>[rad]</b>
 	 * </p>
 	 */
-	protected double	raan;
+	protected double		raan;
 	/**
 	 * True anomaly
 	 * <p>
 	 * <b>[rad]</b>
 	 * </p>
 	 */
-	protected double	trueA;
-	/**
-	 * Gravitational parameter
-	 * <p>
-	 * <b>[]</b>
-	 * </p>
-	 */
-	protected double	mu;
+	protected double		trueA;
+
+	private CelestialBody	centerbody;
 
 	public KeplerElements(double a, double e, double i, double omega,
-			double raan, double trueA, double mu) {
+			double raan, double trueA) {
 		super();
 		this.a = a;
 		this.e = e;
@@ -99,12 +95,11 @@ public class KeplerElements extends StateVector implements Keplerian {
 		this.omega = omega;
 		this.raan = raan;
 		this.trueA = trueA;
-		this.mu = mu;
 	}
 
 	@Override
 	public StateVector clone() {
-		return new KeplerElements(a, e, i, omega, raan, trueA, mu);
+		return new KeplerElements(a, e, i, omega, raan, trueA);
 	}
 
 	/**
@@ -127,6 +122,10 @@ public class KeplerElements extends StateVector implements Keplerian {
 
 	public double getArgumentPeriapsis() {
 		return omega;
+	}
+
+	public CelestialBody getCenterbody() {
+		return centerbody;
 	}
 
 	public double getEccentricity() {
@@ -192,6 +191,10 @@ public class KeplerElements extends StateVector implements Keplerian {
 		this.omega = omega;
 	}
 
+	public void setCenterbody(CelestialBody centerbody) {
+		this.centerbody = centerbody;
+	}
+
 	public void setEccentricity(double e) {
 		this.e = e;
 	}
@@ -214,7 +217,11 @@ public class KeplerElements extends StateVector implements Keplerian {
 
 	@Override
 	public CartesianElements toCartesianElements() {
-		return getOrbitEqn().kepler2cartesian(mu);
+		return getOrbitEqn().kepler2cartesian(centerbody.getMu());
+	}
+
+	public CartesianElements toCartesianElements(CelestialBody center) {
+		return getOrbitEqn().kepler2cartesian(center.getMu());
 	}
 
 	@Override
