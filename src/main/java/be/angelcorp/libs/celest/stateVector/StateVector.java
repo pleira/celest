@@ -66,11 +66,15 @@ public abstract class StateVector {
 	 */
 	public abstract CartesianElements toCartesianElements();
 
+	@Override
+	public String toString() {
+		return toVector().toString();
+	}
+
 	/**
 	 * Convert the current state vector to an equivalent vector form
 	 * 
 	 * @return Vector equivalent of the state vector
 	 */
 	public abstract RealVector toVector();
-
 }

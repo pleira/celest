@@ -15,13 +15,24 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
+import java.util.List;
+
 import be.angelcorp.libs.math.linear.Vector3D;
 
-public class TestCartesianElements extends TestStateVector {
+import com.google.common.collect.Lists;
+
+public class TestCartesianElements extends TestStateVector<CartesianElements> {
 
 	@Override
-	public StateVector getTestStateVector() {
-		return new CartesianElements(Vector3D.random(), Vector3D.random());
+	public List<CartesianElements> getTestStateVectors() {
+		List<CartesianElements> l = Lists.newLinkedList();
+		l.add(new CartesianElements(Vector3D.random(), Vector3D.random()));
+		return l;
+	}
+
+	@Override
+	public void testToCartesianElement(CartesianElements state) {
+		assertEquals(state, state.toCartesianElements());
 	}
 
 }

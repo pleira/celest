@@ -53,8 +53,7 @@ public abstract class TwoBodyCartesian implements CartesianMultivariateVectorFun
 			IllegalArgumentException {
 		Vector3D R0 = new Vector3D(point.getSubVector(0, 3).toArray());
 		R0 = R0.subtract(getCenterBody().getState().toCartesianElements().getR());
-		Vector3D a = R0.multiply(getCenterBody().getMu() / (Math.pow(R0.getNorm(), 3))).negate();
-		return a;
+		return getCenterBody().getGravitationalPotential().evaluate(R0);
 	}
 
 }

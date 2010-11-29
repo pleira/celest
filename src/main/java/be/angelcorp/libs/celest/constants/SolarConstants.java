@@ -15,6 +15,9 @@
  */
 package be.angelcorp.libs.celest.constants;
 
+import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.stateVector.CartesianElements;
+
 /**
  * Different constants specific to the sun. Has constants in the following categories:
  * <ul>
@@ -95,4 +98,8 @@ public abstract class SolarConstants {
 	 */
 	public static final double	volume				= 1.412E27;
 
+	/**
+	 * Celestial body representation of the sun
+	 */
+	public static CelestialBody	body				= new CelestialBody(new CartesianElements(), mass);
 }

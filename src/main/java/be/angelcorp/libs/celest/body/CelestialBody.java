@@ -17,6 +17,8 @@ package be.angelcorp.libs.celest.body;
 
 import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.celest.constants.SolarConstants;
+import be.angelcorp.libs.celest.potential.GravitationalPotential;
+import be.angelcorp.libs.celest.potential.PointMassPotential;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.StateVector;
 
@@ -57,6 +59,15 @@ public class CelestialBody {
 	public CelestialBody(StateVector state, double mass) {
 		setState(state);
 		setMass(mass);
+	}
+
+	/**
+	 * Get the local gravitational field produced by the body
+	 * 
+	 * @return
+	 */
+	public GravitationalPotential getGravitationalPotential() {
+		return new PointMassPotential(this);
 	}
 
 	/**

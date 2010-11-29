@@ -15,28 +15,38 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
+import java.util.Collection;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.RealVector;
 
-public abstract class TestStateVector extends TestCase {
+public abstract class TestStateVector<T extends StateVector> extends TestCase {
 
-	public abstract StateVector getTestStateVector();
+	public abstract Collection<T> getTestStateVectors();
+
+	public abstract void testToCartesianElement(T state);
+
+	public void testToCartesianElements() {
+		for (T state : getTestStateVectors())
+			testToCartesianElement(state);
+	}
 
 	public void testVectorConversion() {
-		StateVector state = getTestStateVector();
+		Collection<T> states = getTestStateVectors();
 
-		RealVector vector = state.toVector();
-		StateVector state2;
-		try {
-			state2 = (StateVector) state.getClass().getDeclaredMethod("fromVector", RealVector.class)
+		for (T state : states) {
+			RealVector vector = state.toVector();
+			T state2;
+			try {
+				state2 = (T) state.getClass().getDeclaredMethod("fromVector", RealVector.class)
 							.invoke(state, vector);
-		} catch (Exception e) {
-			throw new AssertionFailedError("Could not invoke comparison");
+			} catch (Exception e) {
+				throw new AssertionFailedError("Could not invoke comparison");
+			}
+			assertTrue(state.equals(state2));
 		}
-
-		assertTrue(state.equals(state2));
 	}
 
 }

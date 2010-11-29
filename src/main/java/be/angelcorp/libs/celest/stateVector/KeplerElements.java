@@ -239,6 +239,10 @@ public class KeplerElements extends StateVector implements Keplerian {
 		return getOrbitEqn().kepler2cartesian(center.getMu());
 	}
 
+	public CartesianElements toCartesianElements(double mu) {
+		return getOrbitEqn().kepler2cartesian(mu);
+	}
+
 	@Override
 	public RealVector toVector() {
 		return new ArrayRealVector(new double[] { a, e, i, omega, raan, trueA });

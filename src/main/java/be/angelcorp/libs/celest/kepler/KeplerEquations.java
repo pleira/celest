@@ -23,6 +23,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
 
 public abstract class KeplerEquations {
 
+	public static double	angleTolarance					= 1E-6;
 	public static double	eccentricityTolarance			= 1E-3;
 	public static double	eccentricAnomalyIterationTol	= 1E-6;
 
@@ -73,8 +74,8 @@ public abstract class KeplerEquations {
 		if (N.getY() < 0) // Checking for quadrant
 			Omega = 2 * Math.PI - Omega;
 
-		double w = Math.acos(N.dot(e_vec) / (nNorm * ecc)); // Argument of perigee
-		//
+		double w = N.dot(e_vec) / (nNorm * ecc);
+		w = Math.acos(w); // Argument of perigee
 		if (e_vec.getZ() < 0) // Checking for quadrant
 			w = 2 * Math.PI - w;
 

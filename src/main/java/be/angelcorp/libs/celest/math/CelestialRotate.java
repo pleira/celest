@@ -40,7 +40,8 @@ public abstract class CelestialRotate {
 		double ci = Math.cos(i);
 		double si = Math.sin(i);
 
-		double[][] out = new double[3][3];
+		Matrix3D m = new Matrix3D();
+		double[][] out = m.getDataRef();
 		out[0][0] = craan * cw - sraan * sw * ci;
 		out[0][1] = -craan * sw - sraan * cw * ci;
 		out[0][2] = sraan * si;
@@ -51,7 +52,7 @@ public abstract class CelestialRotate {
 		out[2][1] = cw * si;
 		out[2][2] = ci;
 
-		return new Matrix3D(out);
+		return m;
 	}
 
 	/**
