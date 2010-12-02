@@ -8,7 +8,7 @@
 	
 	<parent>
 		<groupId>be.angelcorp.libs</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>libs</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
