@@ -34,11 +34,15 @@ public class CelestialBody {
 	/**
 	 * Body state vector
 	 */
-	private StateVector	state;
+	private StateVector				state;
 	/**
 	 * Body mass
 	 */
-	private double		mass;
+	private double					mass;
+	/**
+	 * Gravitational potential of this object
+	 */
+	private GravitationalPotential	gravitationalPotential	= new PointMassPotential(this);
 
 	/**
 	 * Generic body with coordinates with R: <0, 0, 0> and V: <0, 0, 0> and with mass of our sun (one
@@ -67,7 +71,7 @@ public class CelestialBody {
 	 * @return
 	 */
 	public GravitationalPotential getGravitationalPotential() {
-		return new PointMassPotential(this);
+		return gravitationalPotential;
 	}
 
 	/**
