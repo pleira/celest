@@ -49,9 +49,9 @@ public abstract class TwoBodyCartesian implements CartesianMultivariateVectorFun
 	protected abstract CelestialBody getCenterBody();
 
 	@Override
-	public RealVector value(RealVector point) throws FunctionEvaluationException,
-			IllegalArgumentException {
-		Vector3D R0 = new Vector3D(point.getSubVector(0, 3).toArray());
+	public RealVector value(RealVector point) throws FunctionEvaluationException {
+		double[] p = point.toArray();
+		Vector3D R0 = new Vector3D(p[0], p[1], p[2]);
 		R0 = R0.subtract(getCenterBody().getState().toCartesianElements().getR());
 		return getCenterBody().getGravitationalPotential().evaluate(R0);
 	}

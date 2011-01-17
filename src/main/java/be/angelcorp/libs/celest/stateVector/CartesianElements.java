@@ -16,7 +16,6 @@
 package be.angelcorp.libs.celest.stateVector;
 
 import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.MatrixIndexException;
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.math.Cartesian;
@@ -25,12 +24,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
 public class CartesianElements extends StateVector implements Cartesian {
 
 	public static CartesianElements fromVector(RealVector v) {
-		if (v.getDimension() != 6)
-			throw new MatrixIndexException("Vector must have 6 indices: [Rx, Ry, Rz, Vx, Vy, Vz]");
-		double[] data = v.getData();
-		Vector3D R = new Vector3D(data[0], data[1], data[2]);
-		Vector3D V = new Vector3D(data[3], data[4], data[5]);
-		return new CartesianElements(R, V);
+		return new CartesianElements(v.getData());
 	}
 
 	public Vector3D	R;
@@ -38,6 +32,14 @@ public class CartesianElements extends StateVector implements Cartesian {
 
 	public CartesianElements() {
 		this(Vector3D.ZERO, Vector3D.ZERO);
+	}
+
+	public CartesianElements(double[] d) {
+		if (d.length != 6)
+			throw new ArrayIndexOutOfBoundsException(String.format(
+					"Array must be length 6 [rx, ry, rz, vx, vy, vz], only %d elements given", d.length));
+		this.R = new Vector3D(d[0], d[1], d[2]);
+		this.V = new Vector3D(d[3], d[4], d[5]);
 	}
 
 	public CartesianElements(Vector3D R, Vector3D V) {
