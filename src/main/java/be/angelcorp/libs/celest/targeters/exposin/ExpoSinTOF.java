@@ -46,33 +46,76 @@ public class ExpoSinTOF extends ComposableFunction {
 	 * </p>
 	 */
 	protected final double				phi;
+	/**
+	 * End angle for theta (total rotation that is executed)
+	 * <p>
+	 * <b>Unit: [rad]</b>
+	 * </p>
+	 */
 	protected final double				theta_f;
 	/**
-	 * Standard gravitational parameter of the certer body.
+	 * Standard gravitational parameter of the center body.
 	 * <p>
 	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
 	 * </p>
 	 */
 	protected final double				mu;
 
+	/**
+	 * Basic exponential sinusoid, for which the time of flight can be computed (in function of gamma).
+	 * Note this only hold valif information for the same gamma where the exposin parameters where
+	 * constructed with.
+	 * <p>
+	 * <b>Unit: tof(&gamma;) = [s]</b>
+	 * </p>
+	 */
 	protected ExponentialSinusoid		expo;
+	/**
+	 * Function integrator (used to integrate from theta is 0 to theta_f.
+	 */
 	private UnivariateRealIntegrator	integrator;
 
+	/**
+	 * Create the time of flight function for a given set of exposin parameters
+	 * 
+	 * @param k0
+	 *            Exposin param
+	 * @param k1
+	 *            Exposin param
+	 * @param k2
+	 *            Exposin param
+	 * @param phi
+	 *            Exposin param
+	 * @param theta_final
+	 *            Total rotation angle of the exposin
+	 * @param mu
+	 *            Standard gravitation parameter of the center body
+	 */
 	public ExpoSinTOF(double k0, double k1, double k2, double phi, double theta_final, double mu) {
 		this.k1 = k1;
 		this.k2 = k2;
 		this.phi = phi;
 		this.theta_f = theta_final;
 		this.mu = mu;
+		/* Make an exposin of the given parameters */
 		expo = new ExponentialSinusoid(k0, k1, k2, 0, phi);
+		/* Make a new function intgrator */
 		integrator = new LegendreGaussIntegrator(5, 100);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Note you should use the same gamma as was used to make the exposin parameters
+	 * </p>
+	 */
 	@Override
 	public double value(final double gamma) throws FunctionEvaluationException {
+		/* The d(theta)/dt equation */
 		UnivariateRealFunction theta_dot = new UnivariateRealFunction() {
 			@Override
 			public double value(double theta) throws FunctionEvaluationException {
+				/* d(theta)/dt = sqrt(r^3 (tan^2(g) + k1 k2^2 s +s)/ mu) */
 				double r = expo.value(theta);
 				double s = Math.sin(k2 * theta + phi);
 				double theta_dot = Math.sqrt(
@@ -84,7 +127,7 @@ public class ExpoSinTOF extends ComposableFunction {
 		try {
 			return integrator.integrate(theta_dot, 0, theta_f);
 		} catch (Exception e) {
-			return Double.NaN;
+			return Double.NaN; /* wrap the error and deal with it later */
 		}
 	}
 }

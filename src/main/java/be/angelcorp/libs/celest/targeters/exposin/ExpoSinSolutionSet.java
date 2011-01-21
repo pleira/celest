@@ -29,19 +29,26 @@ import be.angelcorp.libs.math.functions.UnivariateRealSolvers;
 import be.angelcorp.libs.math.functions.domain.Domain;
 
 /**
- * Computes the tof for a given exposin problem
+ * Creates a solution set for a given exposin problem. It contains all of the possible trajectories from
+ * r1 to r2, without the time constraint. For the optimal solution, it solves the time of flight to match
+ * the set dT.
  * 
- * 
- * @author simon
+ * @author Simon Billemont
  * 
  */
 public class ExpoSinSolutionSet extends ComposableFunction {
 
+	/**
+	 * Computes the exposin K0 parameter
+	 */
 	private static double getK0(double r1, double k1, double phi) {
 		double k0 = r1 * (Math.exp(-k1 * Math.sin(phi)));
 		return k0;
 	}
 
+	/**
+	 * Computes the exposin K1 parameter
+	 */
 	private static double getK1(double log, double tan_gamma, double k2, double theta, double gamma) {
 		double signK1 = (log + (tan_gamma / k2) * Math.sin(k2 * theta))
 				/ (1 - Math.cos(k2 * theta));
@@ -50,29 +57,75 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 		return k1;
 	}
 
+	/**
+	 * Computes the exposin phi parameter
+	 */
 	private static double getPhi(double tan_gamma, double k1, double k2) {
 		double phi = Math.acos(tan_gamma / (k1 * k2));
 		return phi;
 
 	}
 
+	/**
+	 * Domain (of gamma) over which this function has valid solutions.
+	 * <p>
+	 * <b>Unit: [-]</b>
+	 * </p>
+	 */
 	private Domain	domain;
 
+	/**
+	 * Start radius of the spacecraft
+	 * <p>
+	 * <b>Unit: [m]</b>
+	 * </p>
+	 */
 	private double	r1;
+	/**
+	 * Wanted travel time between r1 and r2
+	 * <p>
+	 * <b>Unit: [s]</b>
+	 * </p>
+	 */
 	private double	dT;
+	/**
+	 * Cached value of log(r1 / r2)
+	 * <p>
+	 * <b>Unit: [-]</b>
+	 * </p>
+	 */
 	private double	log;
+	/**
+	 * Cached value of the exposin parameter k2
+	 * <p>
+	 * <b>Unit: [-]</b>
+	 * </p>
+	 */
 	private double	k2;
+	/**
+	 * Total traveled angle between r1 and r2
+	 * <p>
+	 * <b>Unit: [rad]</b>
+	 * </p>
+	 */
 	private double	theta;
+	/**
+	 * Standard gravitational parameter of the center body.
+	 * <p>
+	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
+	 * </p>
+	 */
 	private double	mu_center;
 
 	public ExpoSinSolutionSet(double r1, double r2, double dT, double k2, double theta, double mu_center) {
-		this.r1 = r1;
+		this.r1 = r1; // Store stuff
 		this.dT = dT;
 		this.k2 = k2;
 		this.theta = theta;
 		this.mu_center = mu_center;
-		log = Math.log(r1 / r2);
+		log = Math.log(r1 / r2); // cache value as its commenly needed
 
+		/* Compute the domain of gamma [gamma_min, gamma_max] */
 		double delta = (2 * (1 - Math.cos(k2 * theta))) / Math.pow(k2, 4) - (log * log);
 		double gamma_min = Math.atan((k2 / 2)
 				* (-log * (1 / Math.tan(k2 * theta / 2)) - Math.sqrt(delta)));
@@ -82,20 +135,34 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 		domain = new Domain(gamma_min, gamma_max);
 	}
 
+	/**
+	 * Domain of gamma over which this function yields valid results
+	 */
 	public Domain getDomain() {
 		return domain;
 	}
 
+	/**
+	 * Get the exponential sinusiod trajectory that is linked to a given gamma value.
+	 */
 	public ExponentialSinusoid getExpoSin(double gamma) {
 		double tan_gamma = Math.tan(gamma);
+		/* Compute the exposin parameters */
 		double k1 = getK1(log, tan_gamma, k2, theta, gamma);
 		double phi = getPhi(tan_gamma, k1, k2);
 		double k0 = getK0(r1, k1, phi);
 		return new ExponentialSinusoid(k0, k1, k2, 0, phi);
 	}
 
+	/**
+	 * Compute the function of gamma for which the travel time is the set dT.
+	 * 
+	 * @return The optimal gamma value
+	 * @throws OptimizationException
+	 */
 	public double getOptimalSolution() throws OptimizationException {
 		double gamma = Double.NaN;
+		/* Try different solvers to find a root of the f(gamma) = tof - dT */
 		List<UnivariateRealSolver> solvers = UnivariateRealSolvers.newInstance().newSolverList();
 		for (UnivariateRealSolver solver : solvers) {
 			try {
@@ -105,18 +172,34 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 			}
 		}
 		if (gamma == Double.NaN)
+			/* We could not solve the problem to tell the user */
 			throw new OptimizationException(new MathException("Could not find root solution"));
-		return gamma;
+		return gamma; // return the optimam gamma value
 	}
 
+	/**
+	 * Set the wanted travel time between r1 and r2
+	 * 
+	 * @param dT
+	 *            Wanted travel time [s]
+	 */
+	public void setdT(double dT) {
+		this.dT = dT;
+	}
+
+	/**
+	 * {@inheritDoc} Find the time of flight for a given value of gamma.
+	 */
 	@Override
 	public double value(double gamma) throws FunctionEvaluationException {
 		double tan_gamma = Math.tan(gamma);
+		/* Compute the exposin parameters */
 		double k1 = getK1(log, tan_gamma, k2, theta, gamma);
 		double phi = getPhi(tan_gamma, k1, k2);
 		double k0 = getK0(r1, k1, phi);
+		/* Formulate the tof equation */
 		ExpoSinTOF tof = new ExpoSinTOF(k0, k1, k2, phi, theta, mu_center);
-		double y = tof.value(gamma);
+		double y = tof.value(gamma); // Return the actual tof value
 		return y;
 
 	}
