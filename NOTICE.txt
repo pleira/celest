@@ -1,9 +1,18 @@
 NOTICE.txt - credits and copyright notices
 
 
-   be.angelcorp.libs.celest Copyright (c) 2010 by the project members: 
+	be.angelcorp.libs.celest Copyright (c) 2010 by the project members: 
            Simon Billemont
 
+	Generic concepts and equations based on the work of:
+		TUDelft AE4-879 lecture slides (AEE879)
+			by Ir. Ron Noomen
+		TUDelft AE4-874 I/IIAstrodynamics lecture notes (AE4874) 
+			by Prof.Ir. K.F. Wakker
+		Orbit & Constellation Design & Management (OCDM)
+			by James R. Wertz
+			Second printing 2009
+			
 
 See LICENSE.txt for licensing information.
 See http://angelcorp.be for further information.
