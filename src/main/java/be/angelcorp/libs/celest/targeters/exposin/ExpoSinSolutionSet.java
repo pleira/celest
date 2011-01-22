@@ -24,7 +24,6 @@ import org.apache.commons.math.analysis.solvers.UnivariateRealSolver;
 import org.apache.commons.math.optimization.OptimizationException;
 
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
-import be.angelcorp.libs.math.functions.Sign;
 import be.angelcorp.libs.math.functions.UnivariateRealSolvers;
 import be.angelcorp.libs.math.functions.domain.Domain;
 
@@ -52,7 +51,7 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 	private static double getK1(double log, double tan_gamma, double k2, double theta, double gamma) {
 		double signK1 = (log + (tan_gamma / k2) * Math.sin(k2 * theta))
 				/ (1 - Math.cos(k2 * theta));
-		double k1 = Sign.eval(signK1)
+		double k1 = Math.signum(signK1)
 				* Math.sqrt(Math.pow(signK1, 2) + (Math.pow(Math.tan(gamma), 2)) / (k2 * k2));
 		return k1;
 	}
