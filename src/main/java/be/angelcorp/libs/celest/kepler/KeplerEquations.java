@@ -35,10 +35,10 @@ public abstract class KeplerEquations {
 	 * Astrodynamics and Applications (2nd Edition)
 	 * </p>
 	 * 
-	 * @param R
+	 * @param V
 	 *            Radius vector from the center of the center object to the rotating satellite (inertial
 	 *            coordinates)
-	 * @param V
+	 * @param A
 	 *            Velocity vector of the satellite wrt the center object
 	 * @param mhu
 	 *            Gravitational constant of body being orbited

@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.body;
+package be.angelcorp.libs.celest.body.bodyCollection;
 
 import java.util.Collection;
+
+import be.angelcorp.libs.celest.body.CelestialBody;
 
 /**
  * Holds a collection of Celestial bodies.eg a universe or solar system

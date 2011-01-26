@@ -24,9 +24,10 @@ import org.apache.commons.math.ode.nonstiff.ClassicalRungeKuttaIntegrator;
 import org.apache.commons.math.ode.sampling.StepHandler;
 import org.apache.commons.math.ode.sampling.StepInterpolator;
 
+import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
-import be.angelcorp.libs.celest.eom.TwoBodyCartesian;
-import be.angelcorp.libs.celest.orbitIntegrator.CartesianOrbitPropagator;
+import be.angelcorp.libs.celest.eom.TwoBody;
+import be.angelcorp.libs.celest.orbitIntegrator.OrbitPropagatorImpl;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException;
@@ -42,12 +43,14 @@ public class TestCartesianOrbitPropagator extends TestCase {
 	 * @throws FunctionEvaluationException
 	 */
 	public void testRK4integrationTestGeo() throws Exception {
-		CartesianOrbitPropagator integrator = new CartesianOrbitPropagator(60);
+		OrbitPropagatorImpl integrator = new OrbitPropagatorImpl(60);
 		/* Geostationairy start position */
 		CartesianElements x0 = new CartesianElements(new double[] { 42164000, 0, 0, 0, 3074.6663, 0 });
 
-		CartesianElements ans2 = integrator.integrate(TwoBodyCartesian.ZERO, 0, x0, 30 * 24 * 360);
+		/* Create the two body problem */
+		TwoBody tb = new TwoBody(new CelestialBody(x0, 1));
 
+		CartesianElements ans2 = integrator.integrate(tb, 0, 30 * 24 * 360);
 		// System.out.println(x0.getSubVector(0, 3).getNorm());
 		// System.out.println(ans2.getSubVector(0, 3).getNorm());
 		// System.out.println(x0.getSubVector(0, 3).getNorm() - ans2.getSubVector(0, 3).getNorm());
@@ -91,11 +94,13 @@ public class TestCartesianOrbitPropagator extends TestCase {
 			}
 
 		};
-		CartesianOrbitPropagator integrator = new CartesianOrbitPropagator(rk4);
+		OrbitPropagatorImpl integrator = new OrbitPropagatorImpl(rk4);
 
 		/* Leo orbit */
 		KeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0);
-		integrator.integrate(TwoBodyCartesian.ZERO, 0d,
-				k.getOrbitEqn().kepler2cartesian(EarthConstants.mu), 4);
+		CartesianElements c = k.getOrbitEqn().kepler2cartesian(EarthConstants.mu);
+		/* Create the two body problem */
+		TwoBody tb = new TwoBody(new CelestialBody(c, 1));
+		CartesianElements ans2 = integrator.integrate(tb, 0, 4);
 	}
 }

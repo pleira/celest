@@ -15,8 +15,8 @@
  */
 package be.angelcorp.libs.celest.potential;
 
-import be.angelcorp.libs.celest.body.BodyCollection;
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.bodyCollection.BodyCollection;
 import be.angelcorp.libs.celest.physics.quanteties.Force;
 import be.angelcorp.libs.math.linear.Vector3D;
 

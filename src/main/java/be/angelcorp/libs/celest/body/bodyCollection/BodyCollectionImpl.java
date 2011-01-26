@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.body;
+package be.angelcorp.libs.celest.body.bodyCollection;
 
 import java.util.Collection;
 import java.util.HashSet;
+
+import be.angelcorp.libs.celest.body.CelestialBody;
 
 /**
  * Basic implementation of a {@link BodyCollection} using a {@link HashSet}

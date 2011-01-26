@@ -15,33 +15,31 @@
  */
 package be.angelcorp.libs.celest.orbitIntegrator;
 
-import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.MathException;
-import org.apache.commons.math.linear.RealVector;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.nonstiff.ClassicalRungeKuttaIntegrator;
 
+import be.angelcorp.libs.celest.eom.StateDerivatives;
 import be.angelcorp.libs.celest.math.Cartesian;
-import be.angelcorp.libs.celest.math.CartesianMultivariateVectorFunction;
+import be.angelcorp.libs.celest.stateVector.CartesianDerivative;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.math.linear.Vector3D;
 
-public class CartesianOrbitPropagator implements OrbitPropagator, Cartesian {
+public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 
 	private FirstOrderIntegrator	integrator;
 
-	public CartesianOrbitPropagator(double stepSize) {
+	public OrbitPropagatorImpl(double stepSize) {
 		this.integrator = new ClassicalRungeKuttaIntegrator(stepSize);
 	}
 
-	public CartesianOrbitPropagator(FirstOrderIntegrator integrator) {
+	public OrbitPropagatorImpl(FirstOrderIntegrator integrator) {
 		this.integrator = integrator;
 	}
 
-	public CartesianElements integrate(final CartesianMultivariateVectorFunction accelleration,
-			double t0, CartesianElements y0, double t) throws MathException {
+	public CartesianElements integrate(final StateDerivatives dState,
+			double t0, double t) throws MathException {
 		/* Wrap the accelleration in ode for for the integrator */
 		FirstOrderDifferentialEquations eqn = new FirstOrderDifferentialEquations() {
 			@Override
@@ -49,18 +47,17 @@ public class CartesianOrbitPropagator implements OrbitPropagator, Cartesian {
 					throws DerivativeException {
 				/* point: ____ [rx, ry, rz, vx, vy, vz] */
 				/* derivative: [vx, vy, vz, ax, ay, az], note no t derivative */
-				try {
-					RealVector aVector = accelleration.value(new Vector3D(y[0], y[1], y[2]));
-					double[] a = aVector.getData();
-					yDot[0] = y[3];
-					yDot[1] = y[4];
-					yDot[2] = y[5];
-					yDot[3] = a[0];
-					yDot[4] = a[1];
-					yDot[5] = a[2];
-				} catch (FunctionEvaluationException e) {
-					throw new DerivativeException(e);
-				}
+				CartesianElements state = new CartesianElements(y);
+				CartesianDerivative derivs = dState.getDerivatives(t).toCartesianDerivative();
+				System.arraycopy(derivs.toVector().toArray(), 0, yDot, 0, 6);
+				// RealVector aVector = accelleration.value(new Vector3D(y[0], y[1], y[2]));
+				// double[] a = aVector.getData();
+				// yDot[0] = y[3];
+				// yDot[1] = y[4];
+				// yDot[2] = y[5];
+				// yDot[3] = a[0];
+				// yDot[4] = a[1];
+				// yDot[5] = a[2];
 			}
 
 			@Override
@@ -71,7 +68,8 @@ public class CartesianOrbitPropagator implements OrbitPropagator, Cartesian {
 
 		double[] y = new double[6]; // End state container
 		/* Integrate the orbit with the given equations and conditions */
-		double tEnd = integrator.integrate(eqn, t0, y0.toVector().getData(), t, y);
+		CartesianElements startState = dState.getBody().getState().toCartesianElements();
+		double tEnd = integrator.integrate(eqn, t0, startState.toVector().getData(), t, y);
 
 		/* Add a check to see if tEnd +-= t ? */
 
