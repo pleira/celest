@@ -17,7 +17,49 @@ package be.angelcorp.libs.celest.unit;
 
 import junit.framework.Assert;
 
+import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
+
 public abstract class Tests extends Assert {
+
+	/**
+	 * Tests if the elements between two vectors are all within the given tolerance
+	 */
+	public static void assertEquals(double[] expected, double[] actual, double tol) {
+		assertEquals("Elements of the vectors are not equal", expected, actual, tol);
+	}
+
+	/**
+	 * Tests if the elements between two vectors are all within the given tolerance
+	 */
+	public static void assertEquals(RealVector expected, RealVector actual, double tol) {
+		assertEquals(expected.getData(), actual.getData(), tol);
+	}
+
+	/**
+	 * Tests if the elements between two vectors are all within the given tolerance
+	 */
+	public static void assertEquals(String message, double[] expected, double[] actual, double tol) {
+		assertEquals("Vectors must be the same length", expected.length, actual.length);
+		for (int i = 0; i < expected.length; i++)
+			assertEquals(message, expected[i], actual[i], tol);
+	}
+
+	/**
+	 * Tests if the elements between two vectors are all within the given tolerance
+	 */
+	public static void assertEquals(String message, double[] expected, double[] actual, double[] tol) {
+		assertEquals("Vectors must be the same length", expected.length, actual.length);
+		for (int i = 0; i < expected.length; i++)
+			assertEquals(message, expected[i], actual[i], tol[i]);
+	}
+
+	/**
+	 * Tests if the elements between two vectors are all within the given tolerance
+	 */
+	public static void assertEquals(String message, RealVector expected, RealVector actual, double tol) {
+		assertEquals(message, expected.getData(), actual.getData(), tol);
+	}
 
 	/**
 	 * Check if two angles are equal within the given range. Note this will test 2*pi and 0 as equal (or
@@ -57,5 +99,30 @@ public abstract class Tests extends Assert {
 		boolean sinTrue = Math.abs(Math.asin(Math.sin(a)) - Math.asin(Math.sin(b))) < tol;
 		boolean cosTrue = Math.abs(Math.acos(Math.cos(a)) - Math.acos(Math.cos(b))) < tol;
 		assertTrue(message, sinTrue && cosTrue);
+	}
+
+	/**
+	 * Get statistics on the element wise error vector between two vectors
+	 * <p>
+	 * error = v2 - v1
+	 * </p>
+	 * 
+	 * @param v1
+	 * @param v2
+	 * @return
+	 */
+	public static SummaryStatistics getStatistics(double[] v1, double[] v2) {
+		SummaryStatistics stats = new SummaryStatistics();
+		for (int i = 0; i < v1.length; i++) {
+			stats.addValue(v2[i] - v1[i]);
+		}
+		return stats;
+	}
+
+	/**
+	 * @see Tests#getStatistics(double[], double[])
+	 */
+	public static SummaryStatistics getStatistics(RealVector v1, RealVector v2) {
+		return getStatistics(v1.getData(), v2.getData());
 	}
 }
