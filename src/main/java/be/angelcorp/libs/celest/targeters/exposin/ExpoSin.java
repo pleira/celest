@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.targeters.exposin;
 
 import org.apache.commons.math.MathException;
 
+import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.stateVector.StateVector;
 import be.angelcorp.libs.celest.targeters.TPBVP;
@@ -44,7 +45,7 @@ public class ExpoSin extends TPBVP {
 	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
 	 * </p>
 	 */
-	private double				mu_center	= SolarConstants.mu;
+	private CelestialBody		center		= SolarConstants.body;
 	/**
 	 * Amount of rotations to perform around the center body in order to arrive at r2.
 	 * <p>
@@ -105,7 +106,7 @@ public class ExpoSin extends TPBVP {
 	 *            Revolutions to assume [N]
 	 */
 	public void assumeK2FromN(int N) {
-		this.assumeK2 = 1 / (2 * N);
+		this.assumeK2 = 1. / (2 * N);
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class ExpoSin extends TPBVP {
 		double psi = Math.acos(r1vec.dot(r2vec) / (r1 * r2));
 		double theta = psi + 2 * Math.PI * N;
 
-		return new ExpoSinSolutionSet(r1, r2, dT, assumeK2, theta, mu_center);
+		return new ExpoSinSolutionSet(r1, r2, dT, assumeK2, theta, center.getMu());
 	}
 
 	@Override
@@ -132,18 +133,15 @@ public class ExpoSin extends TPBVP {
 		double gammaOptimal = solutions.getOptimalSolution();
 		logger.dbg("Gamma optimal: %f", gammaOptimal);
 
-		return new ExpoSinTrajectory(solutions.getExpoSin(gammaOptimal), gammaOptimal);
+		return new ExpoSinTrajectory(solutions.getExpoSin(gammaOptimal), solutions.getThetaMax(),
+				gammaOptimal, center);
 	}
 
 	/**
-	 * Set the standard gravitational parameter of the center body (body with the stronges gravitational
-	 * force)
-	 * 
-	 * @param mu
-	 *            Standard gravitational parameter [m^3/s^2]
+	 * Set the center celesital body
 	 */
-	public void setMu(double mu) {
-		this.mu_center = mu;
+	public void setCenter(CelestialBody center) {
+		this.center = center;
 	}
 
 	/**

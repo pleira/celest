@@ -52,6 +52,10 @@ public class TwoBody implements StateDerivatives {
 		this.body = body;
 	}
 
+	public TwoBodyCollection getBodies() {
+		return bodies;
+	}
+
 	@Override
 	public CelestialBody getBody() {
 		return body;

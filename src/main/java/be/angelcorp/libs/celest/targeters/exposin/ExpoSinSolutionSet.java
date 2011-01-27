@@ -15,16 +15,13 @@
  */
 package be.angelcorp.libs.celest.targeters.exposin;
 
-import java.util.List;
-
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.analysis.ComposableFunction;
-import org.apache.commons.math.analysis.solvers.UnivariateRealSolver;
+import org.apache.commons.math.analysis.solvers.UnivariateRealSolverFactoryImpl;
 import org.apache.commons.math.optimization.OptimizationException;
 
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
-import be.angelcorp.libs.math.functions.UnivariateRealSolvers;
 import be.angelcorp.libs.math.functions.domain.Domain;
 
 /**
@@ -162,18 +159,19 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 	public double getOptimalSolution() throws OptimizationException {
 		double gamma = Double.NaN;
 		/* Try different solvers to find a root of the f(gamma) = tof - dT */
-		List<UnivariateRealSolver> solvers = UnivariateRealSolvers.newInstance().newSolverList();
-		for (UnivariateRealSolver solver : solvers) {
-			try {
-				gamma = solver.solve(this.add(-dT), domain.lowerBound, domain.upperBound);
-				break;
-			} catch (Exception e) {
-			}
+		try {
+			gamma = new UnivariateRealSolverFactoryImpl().newBrentSolver().
+					solve(this.add(-dT), domain.lowerBound, domain.upperBound, 0);
+		} catch (Exception e) {
 		}
 		if (gamma == Double.NaN)
 			/* We could not solve the problem to tell the user */
 			throw new OptimizationException(new MathException("Could not find root solution"));
 		return gamma; // return the optimam gamma value
+	}
+
+	public double getThetaMax() {
+		return theta;
 	}
 
 	/**
@@ -200,6 +198,6 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 		ExpoSinTOF tof = new ExpoSinTOF(k0, k1, k2, phi, theta, mu_center);
 		double y = tof.value(gamma); // Return the actual tof value
 		return y;
-
 	}
+
 }

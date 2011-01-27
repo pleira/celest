@@ -127,7 +127,7 @@ public class ExpoSinTOF extends ComposableFunction {
 		try {
 			return integrator.integrate(theta_dot, 0, theta_f);
 		} catch (Exception e) {
-			return Double.NaN; /* wrap the error and deal with it later */
+			return Double.POSITIVE_INFINITY; /* wrap the error and deal with it later */
 		}
 	}
 }

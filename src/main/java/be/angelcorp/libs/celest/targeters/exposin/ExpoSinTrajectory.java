@@ -15,31 +15,57 @@
  */
 package be.angelcorp.libs.celest.targeters.exposin;
 
+import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.ComposableFunction;
+import org.apache.commons.math.analysis.UnivariateRealFunction;
+import org.apache.commons.math.analysis.integration.LegendreGaussIntegrator;
 
+import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.StateVector;
 import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
+import be.angelcorp.libs.math.linear.Vector3D;
 
 public class ExpoSinTrajectory extends Trajectory {
 
 	private ExponentialSinusoid	exposin;
+	private double				thetaMax;
 	private double				gamma;
+	private CelestialBody		center;
 
-	public ExpoSinTrajectory(double k0, double k1, double k2, double phi, double gamma) {
-		this(new ExponentialSinusoid(k0, k1, k2, 0, phi), gamma);
-	}
-
-	public ExpoSinTrajectory(ExponentialSinusoid exposin, double gamma) {
+	public ExpoSinTrajectory(ExponentialSinusoid exposin, double thetaMax, double gamma,
+			CelestialBody center) {
 		this.exposin = exposin;
+		this.thetaMax = thetaMax;
 		this.gamma = gamma;
+		this.center = center;
 	}
 
 	@Override
 	public StateVector evaluate(double t) throws FunctionEvaluationException {
-		// TODO Auto-generated method stub
-		// return null;
-		throw new UnsupportedOperationException("Not implemented yet");
+		UnivariateRealFunction thetaDot = new ComposableFunction() {
+			@Override
+			public double value(double theta) throws FunctionEvaluationException {
+				double r = exposin.value(theta);
+				double s = Math.sin(exposin.getK2() * theta + exposin.getPhi());
+				double thetaDot = (center.getMu() / Math.pow(r, 3))
+						* (1 / (Math.pow(Math.tan(gamma), 2) + exposin.getK1() * exposin.getK2()
+								* exposin.getK2() * s + 1));
+				thetaDot = Math.sqrt(thetaDot);
+				return thetaDot;
+			}
+		};
+		double theta;
+		try {
+			theta = new LegendreGaussIntegrator(5, 200).integrate(thetaDot, 0, t);
+		} catch (ConvergenceException e) {
+			throw new FunctionEvaluationException(e, t);
+		}
+		double r = exposin.value(theta);
+		return new CartesianElements(
+				new Vector3D(r * Math.cos(theta), r * Math.sin(theta), 0), Vector3D.ZERO);
 	}
 
 	public ExponentialSinusoid getExposin() {
@@ -48,6 +74,10 @@ public class ExpoSinTrajectory extends Trajectory {
 
 	public double getGamma() {
 		return gamma;
+	}
+
+	public double getThetaMax() {
+		return thetaMax;
 	}
 
 }

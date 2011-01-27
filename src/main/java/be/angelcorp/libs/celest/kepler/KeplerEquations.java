@@ -192,7 +192,7 @@ public abstract class KeplerEquations {
 	 *            True anomaly [rad]
 	 * @return Flight path angle &gamma; [rad]
 	 */
-	public static double flightPAthAngle(double e, double nu) {
+	public static double flightPathAngle(double e, double nu) {
 		return Math.atan(e * Math.sin(nu) / (1 + e * Math.cos(nu)));
 	}
 
@@ -389,6 +389,10 @@ public abstract class KeplerEquations {
 		return eccentricAnomaly(k.getMeanAnomaly(), k.getEccentricity());
 	}
 
+	public double flightPathAngle() {
+		return flightPathAngle(k.getEccentricity(), k.getTrueAnomaly());
+	}
+
 	/**
 	 * This function converts Kepler orbital elements (p,e,i,O,w,nu) to ECI cartesian coordinates. This
 	 * function is derived from algorithm 10 on pg. 125 of David A. Vallado's Fundamentals of
@@ -403,6 +407,10 @@ public abstract class KeplerEquations {
 				.getRaan(), k.getArgumentPeriapsis(), k.getTrueAnomaly(), k.getCenterbody().getMu());
 	}
 
+	public double meanMotion() {
+		return meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
+	}
+
 	public double perifocalDistance() {
 		return perifocalDistance(k.getSemiMajorAxis(), k.getEccentricity());
 	}
@@ -410,7 +418,7 @@ public abstract class KeplerEquations {
 	public abstract double perifocalDistance(double a, double e);
 
 	public double period() {
-		return period(meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis()));
+		return period(meanMotion());
 	}
 
 	public abstract double period(double n);
@@ -433,6 +441,17 @@ public abstract class KeplerEquations {
 	}
 
 	public abstract double totEnergyPerMass(double mu, double a);
+
+	/**
+	 * Compute the true anomaly from the mean anomaly
+	 * 
+	 * @param M
+	 *            Mean anomaly [rad]
+	 * @return True anomaly [rad]
+	 */
+	public double trueAnomalyFromMean(double M) {
+		return trueAnomalyFromMean(M, k.getEccentricity());
+	}
 
 	public double velocitySq(double r) {
 		return velocitySq(k.getCenterbody().getMu(), r, k.getSemiMajorAxis());
