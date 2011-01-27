@@ -38,6 +38,10 @@ public class KeplerEllipse extends KeplerEquations {
 		return 2 * Math.PI / n;
 	}
 
+	public double periodMu(double mu) {
+		return period(meanMotion(mu, k.getSemiMajorAxis()));
+	}
+
 	@Override
 	public double totEnergyPerMass(double mu, double a) {
 		return -mu / (2 * a);
@@ -45,7 +49,7 @@ public class KeplerEllipse extends KeplerEquations {
 
 	@Override
 	public double velocitySq(double mu, double r, double a) {
-		return mu * (2 / r - 1 / a);
+		return visViva(mu, r, a);
 	}
 
 }

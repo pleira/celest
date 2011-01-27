@@ -98,8 +98,8 @@ public class TestOrbitPropagatorImpl extends TestCase {
 		OrbitPropagatorImpl integrator = new OrbitPropagatorImpl(rk4);
 
 		/* Leo orbit */
-		KeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0);
-		CartesianElements c = k.getOrbitEqn().kepler2cartesian(EarthConstants.mu);
+		KeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, EarthConstants.bodyCenter);
+		CartesianElements c = k.getOrbitEqn().kepler2cartesian();
 		/* Create the two body problem */
 		TwoBody tb = new TwoBody(new CelestialBody(c, 1));
 		CartesianElements ans2 = integrator.integrate(tb, 0, 4);

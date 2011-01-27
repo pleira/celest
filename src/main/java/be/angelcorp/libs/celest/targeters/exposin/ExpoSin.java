@@ -132,7 +132,7 @@ public class ExpoSin extends TPBVP {
 		double gammaOptimal = solutions.getOptimalSolution();
 		logger.dbg("Gamma optimal: %f", gammaOptimal);
 
-		return new ExpoSinTrajectory(solutions.getExpoSin(gammaOptimal));
+		return new ExpoSinTrajectory(solutions.getExpoSin(gammaOptimal), gammaOptimal);
 	}
 
 	/**

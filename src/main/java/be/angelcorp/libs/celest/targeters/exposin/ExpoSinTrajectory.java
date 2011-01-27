@@ -24,13 +24,15 @@ import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 public class ExpoSinTrajectory extends Trajectory {
 
 	private ExponentialSinusoid	exposin;
+	private double				gamma;
 
-	public ExpoSinTrajectory(double k0, double k1, double k2, double phi) {
-		this(new ExponentialSinusoid(k0, k1, k2, 0, phi));
+	public ExpoSinTrajectory(double k0, double k1, double k2, double phi, double gamma) {
+		this(new ExponentialSinusoid(k0, k1, k2, 0, phi), gamma);
 	}
 
-	public ExpoSinTrajectory(ExponentialSinusoid exposin) {
+	public ExpoSinTrajectory(ExponentialSinusoid exposin, double gamma) {
 		this.exposin = exposin;
+		this.gamma = gamma;
 	}
 
 	@Override
@@ -42,6 +44,10 @@ public class ExpoSinTrajectory extends Trajectory {
 
 	public ExponentialSinusoid getExposin() {
 		return exposin;
+	}
+
+	public double getGamma() {
+		return gamma;
 	}
 
 }

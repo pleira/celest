@@ -103,6 +103,11 @@ public class KeplerElements extends StateVector implements Keplerian {
 
 	public KeplerElements(double a, double e, double i, double omega,
 			double raan, double trueA) {
+		this(a, e, i, omega, raan, trueA, null);
+	}
+
+	public KeplerElements(double a, double e, double i, double omega,
+			double raan, double trueA, CelestialBody centerbody) {
 		super();
 		this.a = a;
 		this.e = e;
@@ -110,11 +115,12 @@ public class KeplerElements extends StateVector implements Keplerian {
 		this.omega = omega;
 		this.raan = raan;
 		this.trueA = trueA;
+		this.centerbody = centerbody;
 	}
 
 	@Override
-	public StateVector clone() {
-		return new KeplerElements(a, e, i, omega, raan, trueA);
+	public KeplerElements clone() {
+		return new KeplerElements(a, e, i, omega, raan, trueA, centerbody);
 	}
 
 	/**
@@ -232,15 +238,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 
 	@Override
 	public CartesianElements toCartesianElements() {
-		return getOrbitEqn().kepler2cartesian(centerbody.getMu());
-	}
-
-	public CartesianElements toCartesianElements(CelestialBody center) {
-		return getOrbitEqn().kepler2cartesian(center.getMu());
-	}
-
-	public CartesianElements toCartesianElements(double mu) {
-		return getOrbitEqn().kepler2cartesian(mu);
+		return getOrbitEqn().kepler2cartesian();
 	}
 
 	@Override

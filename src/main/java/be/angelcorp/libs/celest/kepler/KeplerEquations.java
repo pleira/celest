@@ -15,6 +15,7 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
+import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.CelestialRotate;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
@@ -35,11 +36,32 @@ public abstract class KeplerEquations {
 	 * Astrodynamics and Applications (2nd Edition)
 	 * </p>
 	 * 
-	 * @param V
-	 *            Radius vector from the center of the center object to the rotating satellite (inertial
+	 * @param state
+	 *            Current Cartesian state of the object relative to the center of the orbited object
+	 *            (Radius vector from the center of the center object to the rotating satellite (inertial
 	 *            coordinates)
-	 * @param A
-	 *            Velocity vector of the satellite wrt the center object
+	 * @param body
+	 *            Center body begin orbited
+	 * @return
+	 */
+	public static KeplerElements cartesian2kepler(CartesianElements state, CelestialBody body) {
+		KeplerElements k = cartesian2kepler(state, body.getMu());
+		k.setCenterbody(body);
+		return k;
+	}
+
+	/**
+	 * Kepler orbital elements ECI Position orbit conversion
+	 * <p>
+	 * This function converts ECI Cartesian coordinates (R & V) to Kepler orbital elements (a, e, i, O,
+	 * w, nu). This function is derived from algorithm 9 on pg. 120 of David A. Vallado's Fundamentals of
+	 * Astrodynamics and Applications (2nd Edition)
+	 * </p>
+	 * 
+	 * @param state
+	 *            Current Cartesian state of the object relative to the center of the orbited object
+	 *            (Radius vector from the center of the center object to the rotating satellite (inertial
+	 *            coordinates)
 	 * @param mhu
 	 *            Gravitational constant of body being orbited
 	 * @return
@@ -103,7 +125,9 @@ public abstract class KeplerEquations {
 		// return new ExtendedKeplerStateVector(
 		// lambda_true, ecc, inc, w, Omega, nu, w_true, u_true, lambda_true);
 
-		return new KeplerElements(a, ecc, inc, w, Omega, nu);
+		KeplerElements k = new KeplerElements(a, ecc, inc, w, Omega, nu);
+		fix2dOrbit(k);
+		return k;
 	}
 
 	/**
@@ -130,6 +154,46 @@ public abstract class KeplerEquations {
 			E = Etemp + (M - Etemp + ecc * Math.sin(Etemp)) / (1 - ecc * Math.cos(Etemp));
 		}
 		return E;
+	}
+
+	/**
+	 * Compute the eccentricity from an elliptical orbit using the pericenter and apocenter distances
+	 * 
+	 * @param rp
+	 *            Apocenter radius [m]
+	 * @param ra
+	 *            Pericenter radius [m]
+	 * @return eccentricty
+	 */
+	public static double eccentricity(double rp, double ra) {
+		return (ra - rp) / (ra + rp);
+	}
+
+	/**
+	 * Fixes Argument of pericenter and Right ascension of ascending node (NaN to 0)
+	 * 
+	 * @param k
+	 *            Kepler elements to fix
+	 */
+	public static void fix2dOrbit(KeplerElements k) {
+		if (Double.isNaN(k.getArgumentPeriapsis()))
+			k.setArgumentPeriapsis(0);
+		if (Double.isNaN(k.getRaan()))
+			k.setRaan(0);
+	}
+
+	/**
+	 * Compute the flight path angle &gamma; of the instantanius velocity vector. (Angel between the
+	 * tangent on the radius vector and the velocity vector
+	 * 
+	 * @param e
+	 *            Eccentricity [-]
+	 * @param nu
+	 *            True anomaly [rad]
+	 * @return Flight path angle &gamma; [rad]
+	 */
+	public static double flightPAthAngle(double e, double nu) {
+		return Math.atan(e * Math.sin(nu) / (1 + e * Math.cos(nu)));
 	}
 
 	/**
@@ -205,7 +269,7 @@ public abstract class KeplerEquations {
 	 *            True anomaly
 	 * @param mhu
 	 *            Gravitational constant of body being orbited
-	 * @return RV in cartesian coordiantes
+	 * @return Cartesian state vector
 	 */
 	public static CartesianElements kepler2cartesian(double a, double ecc, double inc, double Omega,
 			double w, double nu, double mhu) {
@@ -250,14 +314,58 @@ public abstract class KeplerEquations {
 		return Math.sqrt(mu / Math.abs(a * a * a));
 	}
 
-	private KeplerElements	k;
+	/**
+	 * Compute the true anomaly from the mean anomaly
+	 * 
+	 * @param M
+	 *            Mean anomaly [rad]
+	 * @param ecc
+	 *            Eccentricity [-]
+	 * @return True anomaly [rad]
+	 */
+	public static double trueAnomalyFromMean(double M, double ecc) {
+		// %Determining eccentric anomaly from mean anomaly
+		double E = eccentricAnomaly(M, ecc);
+
+		// Since tan(x) = sin(x)/cos(x), we can use atan2 to ensure that the angle for nu
+		// is in the correct quadrant since we know both sin(nu) and cos(nu). [see help atan2]
+		return Math.atan2((Math.sin(E) * Math.sqrt(1 - ecc * ecc)), (Math.cos(E) - ecc));
+	}
+
+	/**
+	 * Evaluate the Vis Viva equation
+	 * <p>
+	 * V<sup>2</sup> = &mu; (2/r - 1/a)
+	 * </p>
+	 * 
+	 * @param mu
+	 *            Standard gravitational parmeter [m^3/s^2]
+	 * @param r
+	 *            Radius [m]
+	 * @param a
+	 *            Semi-major axis [m]
+	 * @return Current velocity squared [m/s]
+	 */
+	public static double visViva(double mu, double r, double a) {
+		return mu * (2 / r - 1 / a);
+	}
+
+	/**
+	 * Kepler elements to compute the equations with
+	 */
+	protected KeplerElements	k;
 
 	public KeplerEquations(KeplerElements k) {
 		this.k = k;
 	}
 
-	public double arealVel(double mu) {
-		return arealVel(mu, k.getSemiMajorAxis(), k.getEccentricity());
+	/**
+	 * Areal velocity in function of Semi-major axis and the gravitational constant
+	 * 
+	 * @return Areal velocity \dot{A}
+	 */
+	public double arealVel() {
+		return arealVel(k.getCenterbody().getMu(), k.getSemiMajorAxis(), k.getEccentricity());
 	}
 
 	/**
@@ -275,10 +383,6 @@ public abstract class KeplerEquations {
 	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
 	 * simple Newton-Raphson iteration
 	 * 
-	 * @param M
-	 *            Mean anomaly
-	 * @param ecc
-	 *            Eccentricity
 	 * @return The eccentric anomaly
 	 */
 	public double eccentricAnomaly() {
@@ -294,9 +398,9 @@ public abstract class KeplerEquations {
 	 *            Gravitational constant of body being orbited
 	 * @return RV in cartesian coordiantes
 	 */
-	public CartesianElements kepler2cartesian(double mhu) {
+	public CartesianElements kepler2cartesian() {
 		return kepler2cartesian(k.getSemiMajorAxis(), k.getEccentricity(), k.getInclination(), k
-				.getRaan(), k.getArgumentPeriapsis(), k.getTrueAnomaly(), mhu);
+				.getRaan(), k.getArgumentPeriapsis(), k.getTrueAnomaly(), k.getCenterbody().getMu());
 	}
 
 	public double perifocalDistance() {
@@ -305,16 +409,33 @@ public abstract class KeplerEquations {
 
 	public abstract double perifocalDistance(double a, double e);
 
+	public double period() {
+		return period(meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis()));
+	}
+
 	public abstract double period(double n);
 
-	public double totEnergyPerMass(double mu) {
-		return totEnergyPerMass(mu, k.getSemiMajorAxis());
+	/**
+	 * @param p
+	 *            Focal parameter
+	 * @param e
+	 *            Eccentricity
+	 * @param nu
+	 *            True anomaly
+	 * @return current radius
+	 */
+	public double radius(double p, double e, double nu) {
+		return p / (1 + e * Math.cos(nu));
+	}
+
+	public double totEnergyPerMass() {
+		return totEnergyPerMass(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 	}
 
 	public abstract double totEnergyPerMass(double mu, double a);
 
-	public double velocitySq(double mu, double r) {
-		return velocitySq(mu, r, k.getSemiMajorAxis());
+	public double velocitySq(double r) {
+		return velocitySq(k.getCenterbody().getMu(), r, k.getSemiMajorAxis());
 	}
 
 	public abstract double velocitySq(double mu, double r, double a);

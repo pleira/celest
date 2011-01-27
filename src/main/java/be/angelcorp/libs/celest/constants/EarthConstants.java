@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.constants;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
 
 /**
@@ -156,10 +157,15 @@ public abstract class EarthConstants {
 	public static final KeplerElements	solarOrbit;
 	static {
 		solarOrbit = new KeplerElements(semiMajorAxis, eccentricity, inclination,
-				argPerigee, raan, 0);
+				argPerigee, raan, 0, SolarConstants.body);
 	}
 	/**
-	 * Celestial body representation of the earth
+	 * Celestial body representation of the earth around the sun
 	 */
 	public static CelestialBody			body				= new CelestialBody(solarOrbit, mass);
+	/**
+	 * Celestial body representation of the earth in the center
+	 */
+	public static CelestialBody			bodyCenter			= new CelestialBody(
+																	new CartesianElements(), mass);
 }

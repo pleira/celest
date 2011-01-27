@@ -32,6 +32,13 @@ public abstract class Tests extends Assert {
 	/**
 	 * Tests if the elements between two vectors are all within the given tolerance
 	 */
+	public static void assertEquals(double[] expected, double[] actual, double[] tol) {
+		assertEquals("Elements of the vectors are not equal", expected, actual, tol);
+	}
+
+	/**
+	 * Tests if the elements between two vectors are all within the given tolerance
+	 */
 	public static void assertEquals(RealVector expected, RealVector actual, double tol) {
 		assertEquals(expected.getData(), actual.getData(), tol);
 	}
