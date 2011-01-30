@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.targeters;
+package be.angelcorp.libs.celest.maneuvers.targeters;
 
 import org.apache.commons.math.MathException;
 

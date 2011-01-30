@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.targeters.exposin;
+package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import org.apache.commons.math.MathException;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
+import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.stateVector.StateVector;
-import be.angelcorp.libs.celest.targeters.TPBVP;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.lyndir.lhunath.lib.system.logging.Logger;

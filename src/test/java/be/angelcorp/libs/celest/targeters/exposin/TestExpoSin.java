@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.ArrayRealVector;
 
+import be.angelcorp.libs.celest.maneuvers.targeters.exposin.ExpoSin;
+import be.angelcorp.libs.celest.maneuvers.targeters.exposin.ExpoSinTrajectory;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
