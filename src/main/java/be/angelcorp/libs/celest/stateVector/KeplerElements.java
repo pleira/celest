@@ -99,15 +99,52 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 */
 	protected double		trueA;
 
+	/**
+	 * Center body of the kepler elements
+	 */
 	private CelestialBody	centerbody;
 
-	public KeplerElements(double a, double e, double i, double omega,
-			double raan, double trueA) {
+	/**
+	 * Create the Kepler elements from direct numerical values
+	 * 
+	 * @param a
+	 *            Semi-major axis [m]
+	 * @param e
+	 *            Eccentricity [-]
+	 * @param i
+	 *            Inclination [rad]
+	 * @param omega
+	 *            Argument of pericenter [rad]
+	 * @param raan
+	 *            Right ascension of ascending node [rad]
+	 * @param trueA
+	 *            True anomaly [rad]
+	 */
+	public KeplerElements(double a, double e, double i, double omega, double raan, double trueA) {
 		this(a, e, i, omega, raan, trueA, null);
 	}
 
-	public KeplerElements(double a, double e, double i, double omega,
-			double raan, double trueA, CelestialBody centerbody) {
+	/**
+	 * Create the Kepler elements from direct numerical values, with a center body to where the values
+	 * hold
+	 * 
+	 * @param a
+	 *            Semi-major axis [m]
+	 * @param e
+	 *            Eccentricity [-]
+	 * @param i
+	 *            Inclination [rad]
+	 * @param omega
+	 *            Argument of pericenter [rad]
+	 * @param raan
+	 *            Right ascension of ascending node [rad]
+	 * @param trueA
+	 *            True anomaly [rad]
+	 * @param centerbody
+	 *            The body that is being orbited by these elements
+	 */
+	public KeplerElements(double a, double e, double i, double omega, double raan, double trueA,
+			CelestialBody centerbody) {
 		super();
 		this.a = a;
 		this.e = e;
@@ -118,43 +155,65 @@ public class KeplerElements extends StateVector implements Keplerian {
 		this.centerbody = centerbody;
 	}
 
+	/**
+	 * Create an identical copy of this object, holds the same values, but in a different object.
+	 */
 	@Override
 	public KeplerElements clone() {
 		return new KeplerElements(a, e, i, omega, raan, trueA, centerbody);
 	}
 
+	/**
+	 * Tests if two sets of kepler elements hold the same variables (tests for equal
+	 * a,e,i,&omega;,&Omega;,&nu;)
+	 * 
+	 * @param state2
+	 *            Kepler elements to compare with
+	 * @return True if the two sets contain the same orbital elements
+	 */
 	public boolean equals(KeplerElements state2) {
 		return state2.getSemiMajorAxis() == a && state2.getEccentricity() == e &&
 				state2.getInclination() == i && state2.getArgumentPeriapsis() == omega &&
 				state2.getRaan() == raan && state2.getTrueAnomaly() == trueA;
 	}
 
+	/**
+	 * @see KeplerElements#omega
+	 */
 	public double getArgumentPeriapsis() {
 		return omega;
 	}
 
+	/**
+	 * @see KeplerElements#centerbody
+	 */
 	public CelestialBody getCenterbody() {
 		return centerbody;
 	}
 
+	/**
+	 * @see KeplerElements#e
+	 */
 	public double getEccentricity() {
 		return e;
 	}
 
+	/**
+	 * @see KeplerElements#i
+	 */
 	public double getInclination() {
 		return i;
 	}
 
 	/**
-	 * Calculate the mean anomaly.
+	 * Get the specific set of Keplerian equations that can be used with this set of Kepler elements
+	 * <p>
+	 * This means it returns KeplerCircular equations if the orbit is circular, KeplerEllipse if
+	 * elliptical and so forth...
+	 * </p>
 	 * 
-	 * @return Mean anomaly [rad]
+	 * @return A set of KeplerEquations to compute additional parameters with
 	 */
-
-	public double getMeanAnomaly() {
-		return getOrbitEqn().meanAnomalyFromTrue(trueA);
-	}
-
 	public KeplerEquations getOrbitEqn() {
 		switch (getOrbitType()) {
 			case Circular:
@@ -169,6 +228,9 @@ public class KeplerElements extends StateVector implements Keplerian {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Get the type of orbit we are in (circular, elliptical, parabolic or hyperbolic)
+	 */
 	public KeplerOrbitTypes getOrbitType() {
 		double tol = KeplerEquations.eccentricityTolarance;
 		if (e < tol) {
@@ -182,42 +244,72 @@ public class KeplerElements extends StateVector implements Keplerian {
 		}
 	}
 
+	/**
+	 * @see KeplerElements#raan
+	 */
 	public double getRaan() {
 		return raan;
 	}
 
+	/**
+	 * @see KeplerElements#a
+	 */
 	public double getSemiMajorAxis() {
 		return a;
 	}
 
+	/**
+	 * @see KeplerElements#trueA
+	 */
 	public double getTrueAnomaly() {
 		return trueA;
 	}
 
+	/**
+	 * @see KeplerElements#omega
+	 */
 	public void setArgumentPeriapsis(double omega) {
 		this.omega = omega;
 	}
 
+	/**
+	 * @see KeplerElements#centerbody
+	 */
 	public void setCenterbody(CelestialBody centerbody) {
 		this.centerbody = centerbody;
 	}
 
+	/**
+	 * @see KeplerElements#e
+	 */
 	public void setEccentricity(double e) {
 		this.e = e;
 	}
 
+	/**
+	 * @see KeplerElements#i
+	 */
 	public void setInclination(double i) {
 		this.i = i;
 	}
 
+	/**
+	 * @see KeplerElements#raan
+	 */
 	public void setRaan(double raan) {
 		this.raan = raan;
 	}
 
+	/**
+	 * @see KeplerElements#a
+	 */
 	public void setSemiMajorAxis(double a) {
 		this.a = a;
 	}
 
+	/**
+	 * @see KeplerElements#trueA
+	 */
 	public void setTrueAnomaly(double trueA) {
 		this.trueA = trueA;
 	}
@@ -227,6 +319,12 @@ public class KeplerElements extends StateVector implements Keplerian {
 		return getOrbitEqn().kepler2cartesian();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * [ a, e, i, omega, raan, trueA ]
+	 * </p>
+	 */
 	@Override
 	public RealVector toVector() {
 		return new ArrayRealVector(new double[] { a, e, i, omega, raan, trueA });

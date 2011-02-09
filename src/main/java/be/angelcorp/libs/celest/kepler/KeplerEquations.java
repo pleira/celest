@@ -445,7 +445,7 @@ public abstract class KeplerEquations {
 	 * @return The eccentric anomaly
 	 */
 	public double eccentricAnomaly() {
-		return eccentricAnomaly(k.getMeanAnomaly(), k.getEccentricity());
+		return eccentricAnomaly(meanAnomalyFromTrue(k.getTrueAnomaly()), k.getEccentricity());
 	}
 
 	public double flightPathAngle() {
