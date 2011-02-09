@@ -28,7 +28,8 @@ import be.angelcorp.libs.celest.stateVector.CartesianElements;
 
 public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 
-	private FirstOrderIntegrator	integrator;
+	protected FirstOrderIntegrator	integrator;
+	private double					tEnd;
 
 	public OrbitPropagatorImpl(double stepSize) {
 		this.integrator = new ClassicalRungeKuttaIntegrator(stepSize);
@@ -38,8 +39,13 @@ public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 		this.integrator = integrator;
 	}
 
+	public double getEndTime() {
+		return tEnd;
+	}
+
 	public CartesianElements integrate(final StateDerivatives dState,
 			double t0, double t) throws MathException {
+		tEnd = Double.NaN;
 		/* Wrap the accelleration in ode for for the integrator */
 		FirstOrderDifferentialEquations eqn = new FirstOrderDifferentialEquations() {
 			@Override
@@ -69,11 +75,12 @@ public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 		double[] y = new double[6]; // End state container
 		/* Integrate the orbit with the given equations and conditions */
 		CartesianElements startState = dState.getBody().getState().toCartesianElements();
-		double tEnd = integrator.integrate(eqn, t0, startState.toVector().getData(), t, y);
+		tEnd = integrator.integrate(eqn, t0, startState.toVector().getData(), t, y);
 
 		/* Add a check to see if tEnd +-= t ? */
 
 		/* Wrap the result in a fancy format and return */
 		return new CartesianElements(y);
 	}
+
 }

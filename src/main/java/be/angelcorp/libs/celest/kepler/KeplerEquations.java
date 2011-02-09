@@ -19,6 +19,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.CelestialRotate;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Matrix3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -131,6 +132,41 @@ public abstract class KeplerEquations {
 	}
 
 	/**
+	 * Get the 2d kepler elements from a set of Cartesian elements (true anomaly and eccentricity). This
+	 * is more optimal if only the true anomaly and eccentricity are needed.
+	 * 
+	 * @param state
+	 *            State of the satellite
+	 * @param center
+	 *            Center body
+	 * @return Subset of kepler elements
+	 */
+	public static KeplerElements cartesian2kepler2D(CartesianElements state, CelestialBody center) {
+		Vector3D R = state.getR();
+		Vector3D V = state.getV();
+		double mhu = center.getMu();
+
+		double rNorm = R.getNorm();
+		double vNorm2 = V.getNormSq();
+
+		Vector3D e_vec = (R.multiply(vNorm2 - mhu / rNorm).subtract(
+				V.multiply(R.dot(V)))).multiply(1 / mhu);
+		double ecc = e_vec.getNorm();
+
+		double a;
+		if ((1 - Math.abs(ecc)) > eccentricityTolarance) // Checking to see if orbit is parabolic
+			a = (mhu * rNorm) / (2 * mhu - rNorm * vNorm2);
+		else
+			a = Double.POSITIVE_INFINITY;
+
+		double nu = Math.acos(e_vec.dot(R) / (ecc * rNorm)); // True anomaly
+		if (R.dot(V) < 0) // Checking for quadrant
+			nu = 2 * Math.PI - nu;
+
+		return new KeplerElements(a, ecc, Double.NaN, Double.NaN, Double.NaN, nu);
+	}
+
+	/**
 	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
 	 * simple Newton-Raphson iteration
 	 * 
@@ -154,6 +190,10 @@ public abstract class KeplerEquations {
 			E = Etemp + (M - Etemp + ecc * Math.sin(Etemp)) / (1 - ecc * Math.cos(Etemp));
 		}
 		return E;
+	}
+
+	public static double eccentricAnomalyFromTrue(double nu, double e) {
+		return Math.atan2(Math.sqrt(1 - e * e) * Math.sin(nu), e + Math.cos(nu));
 	}
 
 	/**
@@ -305,6 +345,12 @@ public abstract class KeplerEquations {
 		return g;
 	}
 
+	public static double meanAnomalyFromTrue(double nu, double e) {
+		double ea = MathUtils2.mod(
+				Math.atan2(Math.sqrt(1 - e * e) * Math.sin(nu), e + Math.cos(nu)), 2 * Math.PI);
+		return ea - e * Math.sin(ea);
+	}
+
 	/**
 	 * Calculate the mean angular motion
 	 * 
@@ -312,6 +358,23 @@ public abstract class KeplerEquations {
 	 */
 	public static double meanMotion(double mu, double a) {
 		return Math.sqrt(mu / Math.abs(a * a * a));
+	}
+
+	/**
+	 * Compute the true anomaly from the eccentric anomaly
+	 * 
+	 * @param E
+	 *            Eccentric anomaly [rad]
+	 * @param ecc
+	 *            Eccentricity [-]
+	 * @return True anomaly [rad]
+	 */
+	public static double trueAnomalyFromEccentric(double E, double ecc) {
+		// Since tan(x) = sin(x)/cos(x), we can use atan2 to ensure that the angle for nu
+		// is in the correct quadrant since we know both sin(nu) and cos(nu). [see help atan2]
+		return Math.atan2((Math.sin(E) * Math.sqrt(1 - ecc * ecc)), (Math.cos(E) - ecc));
+		// return 2 * Math.atan2((Math.sin(E) * Math.sqrt(1 - ecc * ecc)), (1 - ecc) * (Math.cos(E) +
+		// 1));
 	}
 
 	/**
@@ -324,12 +387,8 @@ public abstract class KeplerEquations {
 	 * @return True anomaly [rad]
 	 */
 	public static double trueAnomalyFromMean(double M, double ecc) {
-		// %Determining eccentric anomaly from mean anomaly
 		double E = eccentricAnomaly(M, ecc);
-
-		// Since tan(x) = sin(x)/cos(x), we can use atan2 to ensure that the angle for nu
-		// is in the correct quadrant since we know both sin(nu) and cos(nu). [see help atan2]
-		return Math.atan2((Math.sin(E) * Math.sqrt(1 - ecc * ecc)), (Math.cos(E) - ecc));
+		return trueAnomalyFromEccentric(E, ecc);
 	}
 
 	/**
@@ -393,6 +452,12 @@ public abstract class KeplerEquations {
 		return flightPathAngle(k.getEccentricity(), k.getTrueAnomaly());
 	}
 
+	public abstract double focalParameter();
+
+	public abstract double getApocenter();
+
+	public abstract double getPericenter();
+
 	/**
 	 * This function converts Kepler orbital elements (p,e,i,O,w,nu) to ECI cartesian coordinates. This
 	 * function is derived from algorithm 10 on pg. 125 of David A. Vallado's Fundamentals of
@@ -407,15 +472,13 @@ public abstract class KeplerEquations {
 				.getRaan(), k.getArgumentPeriapsis(), k.getTrueAnomaly(), k.getCenterbody().getMu());
 	}
 
+	public double meanAnomalyFromTrue(double nu) {
+		return meanAnomalyFromTrue(nu, k.getEccentricity());
+	}
+
 	public double meanMotion() {
 		return meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 	}
-
-	public double perifocalDistance() {
-		return perifocalDistance(k.getSemiMajorAxis(), k.getEccentricity());
-	}
-
-	public abstract double perifocalDistance(double a, double e);
 
 	public double period() {
 		return period(meanMotion());

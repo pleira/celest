@@ -123,18 +123,6 @@ public class KeplerElements extends StateVector implements Keplerian {
 		return new KeplerElements(a, e, i, omega, raan, trueA, centerbody);
 	}
 
-	/**
-	 * Calculates the eccentric anomaly.
-	 * 
-	 * @return Eccentric anomaly [rad]
-	 */
-
-	public double eccentricAnomaly() {
-		double cta = Math.cos(trueA);
-		double e0 = Math.acos((e + cta) / (1.0 + e * cta));
-		return e0;
-	}
-
 	public boolean equals(KeplerElements state2) {
 		return state2.getSemiMajorAxis() == a && state2.getEccentricity() == e &&
 				state2.getInclination() == i && state2.getArgumentPeriapsis() == omega &&
@@ -164,9 +152,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 */
 
 	public double getMeanAnomaly() {
-		double ea = eccentricAnomaly();
-		double m = ea - e * Math.sin(ea);
-		return m;
+		return getOrbitEqn().meanAnomalyFromTrue(trueA);
 	}
 
 	public KeplerEquations getOrbitEqn() {

@@ -29,8 +29,18 @@ public class KeplerEllipse extends KeplerEquations {
 	}
 
 	@Override
-	public double perifocalDistance(double a, double e) {
-		return a * (1 - e);
+	public double focalParameter() {
+		return k.getSemiMajorAxis() * (1 - k.getEccentricity() * k.getEccentricity());
+	}
+
+	@Override
+	public double getApocenter() {
+		return k.getSemiMajorAxis() * (1 + k.getEccentricity());
+	}
+
+	@Override
+	public double getPericenter() {
+		return k.getSemiMajorAxis() * (1 - k.getEccentricity());
 	}
 
 	@Override

@@ -29,8 +29,18 @@ public class KeplerParabola extends KeplerEquations {
 	}
 
 	@Override
-	public double perifocalDistance(double a, double e) {
-		return a / 2;
+	public double focalParameter() {
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
+	public double getApocenter() {
+		return Double.POSITIVE_INFINITY;
+	}
+
+	@Override
+	public double getPericenter() {
+		return focalParameter() / 2;
 	}
 
 	@Override

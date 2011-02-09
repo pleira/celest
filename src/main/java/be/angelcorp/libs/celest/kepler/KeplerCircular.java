@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.kepler;
 
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
 
-public class KeplerCircular extends KeplerEquations {
+public class KeplerCircular extends KeplerEllipse {
 
 	public static double Vc(double r, double mhu) {
 		return Math.sqrt(mhu / r);
@@ -49,12 +49,22 @@ public class KeplerCircular extends KeplerEquations {
 		return a * a * n / 2;
 	}
 
-	public double perifocalDistance(double a) {
-		return a;
+	@Override
+	public double focalParameter() {
+		return k.getSemiMajorAxis();
 	}
 
 	@Override
-	public double perifocalDistance(double a, double e) {
+	public double getApocenter() {
+		return k.getSemiMajorAxis();
+	}
+
+	@Override
+	public double getPericenter() {
+		return k.getSemiMajorAxis();
+	}
+
+	public double perifocalDistance(double a) {
 		return a;
 	}
 
