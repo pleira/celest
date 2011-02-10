@@ -54,8 +54,8 @@ public class KeplerParabola extends KeplerEquations {
 	}
 
 	@Override
-	public double velocitySq(double mu, double r, double a) {
-		return 2 * mu / r;
+	public double visViva(double r) {
+		return 2 * k.getCenterbody().getMu() / r;
 	}
 
 }

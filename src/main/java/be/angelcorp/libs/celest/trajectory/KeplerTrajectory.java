@@ -19,7 +19,7 @@ public class KeplerTrajectory extends Trajectory {
 		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 		double dM = n * t;
 		KeplerElements k2 = k.clone();
-		k2.setTrueAnomaly(k2.getOrbitEqn().trueAnomalyFromMean(k.getMeanAnomaly() + dM));
+		k2.setTrueAnomaly(k2.getOrbitEqn().trueAnomalyFromMean(k.getOrbitEqn().meanAnomaly() + dM));
 		return k2;
 	}
 

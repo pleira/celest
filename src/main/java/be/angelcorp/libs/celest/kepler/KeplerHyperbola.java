@@ -53,9 +53,4 @@ public class KeplerHyperbola extends KeplerEquations {
 		return mu / (2 * a);
 	}
 
-	@Override
-	public double velocitySq(double mu, double r, double a) {
-		return visViva(mu, r, a);
-	}
-
 }

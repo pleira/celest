@@ -192,6 +192,15 @@ public abstract class KeplerEquations {
 		return E;
 	}
 
+	/**
+	 * Compute the eccentric anomaly E from the true anomaly &nu;.
+	 * 
+	 * @param nu
+	 *            True anomaly [rad]
+	 * @param e
+	 *            Eccentricity [-]
+	 * @return Eccentric anomaly [rad]
+	 */
 	public static double eccentricAnomalyFromTrue(double nu, double e) {
 		return Math.atan2(Math.sqrt(1 - e * e) * Math.sin(nu), e + Math.cos(nu));
 	}
@@ -223,7 +232,7 @@ public abstract class KeplerEquations {
 	}
 
 	/**
-	 * Compute the flight path angle &gamma; of the instantanius velocity vector. (Angel between the
+	 * Compute the flight path angle &gamma; of the instantanius velocity vector. (Angle between the
 	 * tangent on the radius vector and the velocity vector
 	 * 
 	 * @param e
@@ -241,7 +250,6 @@ public abstract class KeplerEquations {
 	 * 
 	 * @return angular momentum vector
 	 */
-
 	public static Vector3D getH(Vector3D R, Vector3D V) {
 		return R.cross(V);
 	}
@@ -251,7 +259,6 @@ public abstract class KeplerEquations {
 	 * 
 	 * @return Gravity gradient matrix.
 	 */
-
 	public static Matrix3D gravityGradient(Vector3D R, double mu) {
 		double rmag = R.getNorm();
 		double r2 = rmag * rmag;
@@ -336,7 +343,6 @@ public abstract class KeplerEquations {
 	 * 
 	 * @return g vector
 	 */
-
 	public static Vector3D localGravity(Vector3D r, double mu) {
 		double rmag = r.getNorm();
 		double muor3 = mu / (rmag * rmag * rmag);
@@ -345,6 +351,15 @@ public abstract class KeplerEquations {
 		return g;
 	}
 
+	/**
+	 * Compute the mean anomaly M from the true anomaly &nu;
+	 * 
+	 * @param nu
+	 *            True anomaly [rad]
+	 * @param e
+	 *            Eccentricity [-]
+	 * @return Mean anomaly [rad]
+	 */
 	public static double meanAnomalyFromTrue(double nu, double e) {
 		double ea = MathUtils2.mod(
 				Math.atan2(Math.sqrt(1 - e * e) * Math.sin(nu), e + Math.cos(nu)), 2 * Math.PI);
@@ -414,6 +429,13 @@ public abstract class KeplerEquations {
 	 */
 	protected KeplerElements	k;
 
+	/**
+	 * Create a set of equations for a specific set of Kepler elements. This allows for automatic
+	 * substitution of variables in the equations.
+	 * 
+	 * @param k
+	 *            Kepler elements to use in the substitutions.
+	 */
 	public KeplerEquations(KeplerElements k) {
 		this.k = k;
 	}
@@ -448,14 +470,36 @@ public abstract class KeplerEquations {
 		return eccentricAnomaly(meanAnomalyFromTrue(k.getTrueAnomaly()), k.getEccentricity());
 	}
 
+	/**
+	 * Compute the flight path angle &gamma; for the current positions. (Angle between the tangent on the
+	 * radius vector and the velocity vector
+	 * 
+	 * @return Flight path angle &gamma; [rad]
+	 */
 	public double flightPathAngle() {
 		return flightPathAngle(k.getEccentricity(), k.getTrueAnomaly());
 	}
 
+	/**
+	 * Compute the focal parameter of the orbit
+	 * 
+	 * @return Focal parameter [m]
+	 */
 	public abstract double focalParameter();
 
+	/**
+	 * Compute the apcocenter distance (distance from the center body to the furthest point in the
+	 * orbit).
+	 * 
+	 * @return Apocenter distance [m]
+	 */
 	public abstract double getApocenter();
 
+	/**
+	 * Compute the pericenter distance (distance from the center body to the closest point in the orbit).
+	 * 
+	 * @return Pericenter distance [m]
+	 */
 	public abstract double getPericenter();
 
 	/**
@@ -472,37 +516,86 @@ public abstract class KeplerEquations {
 				.getRaan(), k.getArgumentPeriapsis(), k.getTrueAnomaly(), k.getCenterbody().getMu());
 	}
 
+	/**
+	 * Compute the mean anomaly for the current position of the celestial body
+	 * 
+	 * @return Mean anomaly [rad]
+	 */
+	public double meanAnomaly() {
+		return meanAnomalyFromTrue(k.getTrueAnomaly());
+	}
+
+	/**
+	 * Find the true anomaly for this set of Kepler elements with the given true anomaly.
+	 * 
+	 * @param nu
+	 *            True anomaly to find the mean anomaly from [rad]
+	 * @return Mean anomaly at the given true anomaly [rad]
+	 */
 	public double meanAnomalyFromTrue(double nu) {
 		return meanAnomalyFromTrue(nu, k.getEccentricity());
 	}
 
+	/**
+	 * Compute the mean motion of the body in the orbit
+	 * 
+	 * @return Mean motion [rad/s]
+	 */
 	public double meanMotion() {
 		return meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 	}
 
+	/**
+	 * Compute the period of the orbit (sidereal)
+	 * 
+	 * @param n
+	 *            Mean motion [rad/s]
+	 * @return Period time [s]
+	 */
 	public double period() {
 		return period(meanMotion());
 	}
 
+	/**
+	 * Compute the period (sidereal) for a given mean motion
+	 * 
+	 * @param n
+	 *            Mean motion [rad/s]
+	 * @return Period time [s]
+	 */
 	public abstract double period(double n);
 
 	/**
 	 * @param p
 	 *            Focal parameter
 	 * @param e
-	 *            Eccentricity
+	 *            Eccentricity [-]
 	 * @param nu
-	 *            True anomaly
-	 * @return current radius
+	 *            True anomaly [rad]
+	 * @return current radius [r]
 	 */
 	public double radius(double p, double e, double nu) {
 		return p / (1 + e * Math.cos(nu));
 	}
 
+	/**
+	 * Compute the total energy per unit mass for the orbit
+	 * 
+	 * @return Total energy per unit mass [m^2/s^2]
+	 */
 	public double totEnergyPerMass() {
 		return totEnergyPerMass(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 	}
 
+	/**
+	 * Compute the total energy per unit mass for a given orbit
+	 * 
+	 * @param mu
+	 *            Standard gravitational parameter [m^3/s^2]
+	 * @param a
+	 *            Semi-major axis [m]
+	 * @return Total energy per unit mass [m^2/s^2]
+	 */
 	public abstract double totEnergyPerMass(double mu, double a);
 
 	/**
@@ -516,10 +609,15 @@ public abstract class KeplerEquations {
 		return trueAnomalyFromMean(M, k.getEccentricity());
 	}
 
-	public double velocitySq(double r) {
-		return velocitySq(k.getCenterbody().getMu(), r, k.getSemiMajorAxis());
+	/**
+	 * Compute the velocity squared in a given point in the orbit (by given r)
+	 * 
+	 * @param r
+	 *            Radius of the position [m]
+	 * @return velocity squared [m<sup>2</sup>/s<sup>2</sup>]
+	 */
+	public double visViva(double r) {
+		return visViva(k.getCenterbody().getMu(), r, k.getSemiMajorAxis());
 	}
-
-	public abstract double velocitySq(double mu, double r, double a);
 
 }

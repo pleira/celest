@@ -79,8 +79,8 @@ public class KeplerCircular extends KeplerEllipse {
 	}
 
 	@Override
-	public double velocitySq(double mu, double r, double a) {
-		return mu / r;
+	public double visViva(double r) {
+		return k.getCenterbody().getMu() / r;
 	}
 
 }
