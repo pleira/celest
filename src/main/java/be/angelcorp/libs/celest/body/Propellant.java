@@ -16,17 +16,41 @@ public class Propellant {
 		this.propellantLeft = propellantLeft;
 	}
 
+	/**
+	 * Compute the amount of propelant used in ideal conditions (no gravity losses, Tsiolkovsky)
+	 * <p>
+	 * For non ideal maneuvers,correct the dV term with a &Delta;dV, eg see:<br />
+	 * J.Weiss, B. Metzger, M. Gallmeister, Orbit maneuvers with finite thrust, MBB/ERNO, ESA CR(P)-1910,
+	 * 3 volumes, 1983
+	 * </p>
+	 * 
+	 * @param body
+	 * @param dV
+	 */
 	public void consumeDV(CelestialBody body, double dV) {
 		// Tsiolkovsky:
 		// m0/m1 = e ^ (Dv / Veff)
-		// (body.getMass() + dM) / body.getMass() = e ^ (Dv / Veff)
 		double m = body.getMass();
-		double dM = m * Math.exp(dV / getVeff()) - m;
+		double dM = m - Math.exp(-dV / getVeff()) * m;
 		consumeMass(dM);
 	}
 
 	public void consumeMass(double dM) {
 		propellantLeft -= dM;
+	}
+
+	/**
+	 * Compute the maximum dV that can be given with this engine (for an impulse maneuver, Tsiolkovsky)
+	 * 
+	 * @param body
+	 *            Body that contains the rocket engine
+	 * @return Maximum dV that can be given with the given amount of propellant
+	 */
+	public double getDvMax(CelestialBody body) {
+		double m0 = body.getMass();
+		double mProp = getPropellantMass();
+		double dV = getVeff() * Math.log(m0 / (m0 - mProp));
+		return dV;
 	}
 
 	public double getIsp() {
