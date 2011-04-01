@@ -13,50 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.physics.quanteties;
+package be.angelcorp.libs.celest.physics.quantities;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
 
-public class ObjectForce extends Force {
+public class FreeForce extends Force {
 
-	private CelestialBody	object;
-	private Vector3D		offset;
+	private Vector3D	origin;
 
-	public ObjectForce(CelestialBody object) {
-		this(object, Vector3D.ZERO);
+	public FreeForce() {
+		this(Vector3D.ZERO, Vector3D.ZERO);
 	}
 
-	public ObjectForce(CelestialBody object, Vector3D force) {
-		setObject(object);
+	public FreeForce(Vector3D force) {
+		this(force, Vector3D.ZERO);
+	}
+
+	public FreeForce(Vector3D force, Vector3D origin) {
 		setForce(force);
+		setOrigin(origin);
 	}
 
 	@Override
 	public Force clone() {
-		return new ObjectForce(getObject(), getForce().clone());
-	}
-
-	public CelestialBody getObject() {
-		return object;
+		return new FreeForce(getForce().clone(), getOrigin().clone());
 	}
 
 	@Override
 	public Vector3D getOffset() {
-		return offset;
+		return origin;
 	}
 
-	public void setObject(CelestialBody object) {
-		this.object = object;
+	public Vector3D getOrigin() {
+		return origin;
 	}
 
-	public void setOffset(Vector3D offset) {
-		this.offset = offset;
+	public void setOrigin(Vector3D origin) {
+		this.origin = origin;
 	}
 
-	public Vector3D toAcceleration() {
-		// F = m a
-		// a = F/m
-		return getForce().divide(getObject().getMass());
-	}
 }

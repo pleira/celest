@@ -17,8 +17,8 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import java.util.List;
 
-import be.angelcorp.libs.celest.physics.quanteties.Force;
-import be.angelcorp.libs.celest.physics.quanteties.Torque;
+import be.angelcorp.libs.celest.physics.quantities.Force;
+import be.angelcorp.libs.celest.physics.quantities.Torque;
 
 import com.google.common.collect.ImmutableList;
 
