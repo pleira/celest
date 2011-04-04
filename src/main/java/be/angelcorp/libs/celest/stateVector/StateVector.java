@@ -29,7 +29,7 @@ import org.apache.commons.math.linear.RealVector.Entry;
 public abstract class StateVector {
 
 	/**
-	 * Restore the statevector from a vector
+	 * Restore the {@link StateVector} from a vector
 	 * 
 	 * @param vector
 	 *            Vector to restore the the state from
@@ -40,11 +40,19 @@ public abstract class StateVector {
 	}
 
 	/**
-	 * Create a new Statevector with identical properties
+	 * Create a new {@link StateVector} with identical properties
 	 */
 	@Override
 	public abstract StateVector clone();
 
+	/**
+	 * Tests if two StateVectors are equal. By default, this id done by comparing all elements of the
+	 * {@link StateVector#toVector()} output.
+	 * 
+	 * @param obj
+	 *            Compare the current {@link StateVector} with this ones
+	 * @return true if they are equal
+	 */
 	public boolean equals(StateVector obj) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
@@ -60,12 +68,15 @@ public abstract class StateVector {
 	}
 
 	/**
-	 * Convert the statevector to an equivalent Cartesian one (R, V in Cartesian coordinates)
+	 * Convert the {@link StateVector} to an equivalent Cartesian one (R, V in Cartesian coordinates)
 	 * 
 	 * @return Cartesian equivalent state vector
 	 */
 	public abstract CartesianElements toCartesianElements();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return toVector().toString();

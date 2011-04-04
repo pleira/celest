@@ -30,6 +30,9 @@ import be.angelcorp.libs.celest.math.Keplerian;
 
 public class KeplerElements extends StateVector implements Keplerian {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public static KeplerElements fromVector(RealVector vector) {
 		if (vector.getDimension() != 6)
 			throw new MatrixIndexException("Vector must have 6 indices: [a, e, i, omega, raan, trueA]");
@@ -100,7 +103,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	protected double		trueA;
 
 	/**
-	 * Center body of the kepler elements
+	 * Center body of the Kepler elements
 	 */
 	private CelestialBody	centerbody;
 
@@ -153,6 +156,28 @@ public class KeplerElements extends StateVector implements Keplerian {
 		this.raan = raan;
 		this.trueA = trueA;
 		this.centerbody = centerbody;
+	}
+
+	/**
+	 * Create a set of Kepler elements from another {@link StateVector}. Chooses itself what the best way
+	 * of converting is.
+	 * 
+	 * @param state
+	 *            {@link StateVector} to convert
+	 * @param center
+	 *            Body where the {@link KeplerElements} are formulated against
+	 */
+	public KeplerElements(StateVector state, CelestialBody center) {
+		Class<? extends StateVector> clazz = state.getClass();
+		if (CartesianElements.class.isAssignableFrom(clazz)) {
+			KeplerElements k2 = KeplerEquations.cartesian2kepler((CartesianElements) state, center);
+			setElements(k2.a, k2.e, k2.i, k2.omega, k2.raan, k2.trueA);
+			setCenterbody(center);
+		} else {
+			KeplerElements k2 = KeplerEquations.cartesian2kepler(state.toCartesianElements(), center);
+			setElements(k2.a, k2.e, k2.i, k2.omega, k2.raan, k2.trueA);
+			setCenterbody(center);
+		}
 	}
 
 	/**
@@ -287,6 +312,31 @@ public class KeplerElements extends StateVector implements Keplerian {
 	}
 
 	/**
+	 * Sets all the Kepler elements at once
+	 * 
+	 * @param a
+	 *            Semi-major axis {@link KeplerElements#a} [m]
+	 * @param e
+	 *            Eccentricity {@link KeplerElements#e}[-]
+	 * @param i
+	 *            Inclination {@link KeplerElements#i} [rad]
+	 * @param omega
+	 *            Argument of pericenter {@link KeplerElements#omega} [rad]
+	 * @param raan
+	 *            Right acsention of the ascending node {@link KeplerElements#raan} [rad]
+	 * @param trueA
+	 *            True anomaly {@link KeplerElements#trueA} [rad]
+	 */
+	public void setElements(double a, double e, double i, double omega, double raan, double trueA) {
+		setSemiMajorAxis(a);
+		setEccentricity(e);
+		setInclination(i);
+		setArgumentPeriapsis(omega);
+		setRaan(raan);
+		setTrueAnomaly(trueA);
+	}
+
+	/**
 	 * @see KeplerElements#i
 	 */
 	public void setInclination(double i) {
@@ -314,6 +364,9 @@ public class KeplerElements extends StateVector implements Keplerian {
 		this.trueA = trueA;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public CartesianElements toCartesianElements() {
 		return getOrbitEqn().kepler2cartesian();
