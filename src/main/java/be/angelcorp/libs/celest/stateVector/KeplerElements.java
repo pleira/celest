@@ -27,6 +27,7 @@ import be.angelcorp.libs.celest.kepler.KeplerHyperbola;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.kepler.KeplerParabola;
 import be.angelcorp.libs.celest.math.Keplerian;
+import be.angelcorp.libs.math.MathUtils2;
 
 public class KeplerElements extends StateVector implements Keplerian {
 
@@ -169,15 +170,25 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 */
 	public KeplerElements(StateVector state, CelestialBody center) {
 		Class<? extends StateVector> clazz = state.getClass();
-		if (CartesianElements.class.isAssignableFrom(clazz)) {
-			KeplerElements k2 = KeplerEquations.cartesian2kepler((CartesianElements) state, center);
-			setElements(k2.a, k2.e, k2.i, k2.omega, k2.raan, k2.trueA);
-			setCenterbody(center);
+		if (SphericalElements.class.isAssignableFrom(clazz)) {
+			// See Fundamentals of astrodynamics - II , K.F. Wakker, p 16-4, eqn 16.1-16.7
+			SphericalElements s = (SphericalElements) state;
+			double mu = center.getMu();
+			double rv2m = (s.r * s.v * s.v / mu);
+			a = s.r / (2 - rv2m);
+			e = Math.sqrt(1 - rv2m * (2 - rv2m) * Math.pow(Math.cos(s.gamma), 2));
+			double E = Math.atan2(Math.sqrt(a / mu) * s.r * s.v * Math.sin(s.gamma), a - s.r);
+			trueA = 2 * Math.atan(Math.sqrt((1 + e) / (1 - e)) * Math.tan(E / 2));
+			trueA = MathUtils2.quadrantFix(trueA, E);
+			i = Math.acos(Math.cos(s.delta) * Math.sin(s.psi));
+			omega = Math.atan2(Math.sin(s.delta) / Math.sin(i),
+					Math.cos(s.delta) * Math.cos(s.psi) / Math.sin(i)) - trueA;
+			raan = s.alpha - Math.atan2(Math.tan(s.delta) / Math.tan(i), Math.cos(s.psi) / Math.sin(i));
 		} else {
 			KeplerElements k2 = KeplerEquations.cartesian2kepler(state.toCartesianElements(), center);
 			setElements(k2.a, k2.e, k2.i, k2.omega, k2.raan, k2.trueA);
-			setCenterbody(center);
 		}
+		setCenterbody(center);
 	}
 
 	/**
