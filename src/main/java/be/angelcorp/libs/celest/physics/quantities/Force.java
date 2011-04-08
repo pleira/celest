@@ -23,12 +23,12 @@ public abstract class Force implements Comparable<Force> {
 	private Vector3D	force;
 
 	public Vector3D add(Force force2) {
-		force = force.add(force2.getForce());
-		return force;
+		setForce(getForce().add(force2.getForce()));
+		return getForce();
 	}
 
 	public void add(Vector3D term) {
-		force = force.add(term);
+		setForce(getForce().add(term));
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public abstract class Force implements Comparable<Force> {
 	public abstract Vector3D getOffset();
 
 	public Vector3D mult(float scalar) {
-		setForce(force.multiply(scalar));
+		setForce(getForce().multiply(scalar));
 		return getForce();
 	}
 
