@@ -18,42 +18,89 @@ package be.angelcorp.libs.celest.physics.quantities;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
 
+/**
+ * A generic force that is linked to a specific body. It contains a force on the object and an offset to
+ * the center of gravity of that object.
+ * 
+ * @author simon
+ * 
+ */
 public class ObjectForce extends Force {
 
+	/**
+	 * Object where the force acts on
+	 */
 	private CelestialBody	object;
+	/**
+	 * Offset with respect to its center of gravity
+	 */
 	private Vector3D		offset;
 
+	/**
+	 * Create a new force on a specific object F: <0,0,0> and R: <0,0,0>
+	 * 
+	 * @param object
+	 *            Object where the force acts on
+	 */
 	public ObjectForce(CelestialBody object) {
 		this(object, Vector3D.ZERO);
 	}
 
+	/**
+	 * Create a new force on a specific object F: given and R: <0,0,0>
+	 * 
+	 * @param object
+	 *            Object where the force acts on
+	 * @param force
+	 *            Force vector
+	 */
 	public ObjectForce(CelestialBody object, Vector3D force) {
 		setObject(object);
 		setForce(force);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Force clone() {
 		return new ObjectForce(getObject(), getForce().clone());
 	}
 
+	/**
+	 * @see ObjectForce#object
+	 */
 	public CelestialBody getObject() {
 		return object;
 	}
 
+	/**
+	 * @see ObjectForce#offset
+	 */
 	@Override
 	public Vector3D getOffset() {
 		return offset;
 	}
 
+	/**
+	 * @see ObjectForce#object
+	 */
 	public void setObject(CelestialBody object) {
 		this.object = object;
 	}
 
+	/**
+	 * @see ObjectForce#offset
+	 */
 	public void setOffset(Vector3D offset) {
 		this.offset = offset;
 	}
 
+	/**
+	 * Compute the (linear) acceleration of the given force on the object
+	 * 
+	 * @return Acceleration vector a = F/m
+	 */
 	public Vector3D toAcceleration() {
 		// F = m a
 		// a = F/m

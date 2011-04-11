@@ -19,32 +19,68 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.math.linear.Vector3D;
 
-public abstract class GravitationalForce extends ObjectForce {
+/**
+ * 
+ * A Gravitational force of a body on a satellite. This is the main driver of most satellites there
+ * orbit.
+ * 
+ * @author simon
+ * 
+ */
+public class GravitationalForce extends ObjectForce {
 
 	/**
 	 * Body generating the gravitationalForce
 	 */
 	private CelestialBody	gravitationBody;
 
-	public GravitationalForce(CelestialBody gravitationBody, CelestialBody satellite) {
+	/**
+	 * Create a gravitational force acting on the satellite from the gravitationBody. This uses the
+	 * gravitational representation in the gravitationBody
+	 * {@link CelestialBody#getGravitationalPotential()}
+	 * 
+	 * @param satellite
+	 *            Satellite where the force is acting on
+	 * @param gravitationBody
+	 *            Body that is generating the gravitational force
+	 */
+	public GravitationalForce(CelestialBody satellite, CelestialBody gravitationBody) {
 		super(satellite);
 		this.gravitationBody = gravitationBody;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Vector3D getForce() {
-		Vector3D rCenter = getGravitationBody().getState().toCartesianElements().getR();
-		Vector3D rSatellite = getObject().getState().toCartesianElements().getR();
-		Vector3D g = gravitationBody.getGravitationalPotential().evaluate(rSatellite.subtract(rCenter));
-		return g.multiply(getObject().getMass());
+		Vector3D f = toAcceleration().multiply(getObject().getMass());
+		return f;
 	}
 
+	/**
+	 * @see GravitationalForce#gravitationBody
+	 */
 	public CelestialBody getGravitationBody() {
 		return gravitationBody;
 	}
 
+	/**
+	 * @see GravitationalForce#gravitationBody
+	 */
 	public void setGravitationBody(CelestialBody gravitationBody) {
 		this.gravitationBody = gravitationBody;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Vector3D toAcceleration() {
+		Vector3D rCenter = getGravitationBody().getState().toCartesianElements().getR();
+		Vector3D rSatellite = getObject().getState().toCartesianElements().getR();
+		Vector3D g = gravitationBody.getGravitationalPotential().evaluate(rSatellite.subtract(rCenter));
+		return g;
 	}
 
 }

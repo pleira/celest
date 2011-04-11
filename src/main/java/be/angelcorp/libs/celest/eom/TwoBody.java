@@ -18,6 +18,7 @@ package be.angelcorp.libs.celest.eom;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.body.bodyCollection.TwoBodyCollection;
 import be.angelcorp.libs.celest.constants.EarthConstants;
+import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce;
 import be.angelcorp.libs.celest.stateVector.CartesianDerivative;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.StateDerivativeVector;
@@ -63,14 +64,10 @@ public class TwoBody implements StateDerivatives {
 
 	@Override
 	public StateDerivativeVector getDerivatives(double t) {
-		CelestialBody otherBody = bodies.other(body);
+		GravitationalForce fg = new GravitationalForce(body, bodies.other(body));
+		Vector3D A = fg.toAcceleration();
 
 		CartesianElements thisState = body.getState().toCartesianElements();
-		CartesianElements otherState = otherBody.getState().toCartesianElements();
-
-		Vector3D R0 = thisState.R.subtract(otherState.R);
-		Vector3D A = otherBody.getGravitationalPotential().evaluate(R0);
-
-		return new CartesianDerivative(thisState.V, A);
+		return new CartesianDerivative(thisState.getV(), A);
 	}
 }

@@ -102,6 +102,6 @@ public class TestOrbitPropagatorImpl extends TestCase {
 		CartesianElements c = k.getOrbitEqn().kepler2cartesian();
 		/* Create the two body problem */
 		TwoBody tb = new TwoBody(new CelestialBody(c, 1));
-		CartesianElements ans2 = integrator.integrate(tb, 0, 4);
+		integrator.integrate(tb, 0, 4);
 	}
 }
