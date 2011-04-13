@@ -21,7 +21,7 @@ import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.nonstiff.ClassicalRungeKuttaIntegrator;
 
-import be.angelcorp.libs.celest.eom.StateDerivatives;
+import be.angelcorp.libs.celest.eom.IStateDerivatives;
 import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.stateVector.CartesianDerivative;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
@@ -43,7 +43,7 @@ public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 		return tEnd;
 	}
 
-	public CartesianElements integrate(final StateDerivatives dState,
+	public CartesianElements integrate(final IStateDerivatives dState,
 			double t0, double t) throws MathException {
 		tEnd = Double.NaN;
 		/* Wrap the accelleration in ode for for the integrator */

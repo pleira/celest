@@ -16,42 +16,30 @@
 package be.angelcorp.libs.celest.eom;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.body.bodyCollection.TwoBodyCollection;
-import be.angelcorp.libs.celest.constants.EarthConstants;
+import be.angelcorp.libs.celest.body.bodyCollection.BodyCollection;
 import be.angelcorp.libs.celest.eom.forcesmodel.ForceModelCore;
 import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce;
 
 /**
- * Function that holds the calculates the acceleration in Cartesian coordinates when in the presence of
- * another spherical body
+ * Create the EOM for a single body in an N-Body environment
  * 
  * @author Simon Billemont
  * 
  */
-public class TwoBody extends ForceModelCore {
+public class NBody extends ForceModelCore {
 
 	/**
-	 * {@link TwoBody} problem for a simple Earth system (where the given body is a satellite around the
-	 * earth)
-	 * 
 	 * @param body
-	 *            Satellite around the Earth
-	 */
-	public TwoBody(CelestialBody body) {
-		this(new TwoBodyCollection(EarthConstants.bodyCenter, body), body);
-	}
-
-	/**
-	 * {@link TwoBody} problem for a body in a given two body system
-	 * 
+	 *            Body for which the {@link IStateDerivatives} are computed
 	 * @param bodies
-	 *            The two body system considered
-	 * @param body
-	 *            The body for which to compute the {@link IStateDerivatives}
+	 *            All the bodies in the system
 	 */
-	public TwoBody(TwoBodyCollection bodies, CelestialBody body) {
+	public NBody(CelestialBody body, BodyCollection bodies) {
 		super(body);
-		addForce(new GravitationalForce(body, bodies.other(body)));
+		for (CelestialBody body2 : bodies.getBodies()) {
+			if (!body2.equals(body))
+				addForce(new GravitationalForce(body, body2));
+		}
 	}
 
 }

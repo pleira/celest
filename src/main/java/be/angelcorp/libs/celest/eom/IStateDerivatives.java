@@ -18,10 +18,26 @@ package be.angelcorp.libs.celest.eom;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.stateVector.StateDerivativeVector;
 
-public interface StateDerivatives {
+/**
+ * Computes the derivatives of the state vector of a specific body
+ * 
+ * @author simon
+ * 
+ */
+public interface IStateDerivatives {
 
+	/**
+	 * Body for which the state vector derivatives are computed
+	 */
 	public CelestialBody getBody();
 
+	/**
+	 * Compute the state derivatives of the body after x seconds
+	 * 
+	 * @param t
+	 *            Time [s]
+	 * @return Derivatives of the current state vector
+	 */
 	public StateDerivativeVector getDerivatives(double t);
 
 }
