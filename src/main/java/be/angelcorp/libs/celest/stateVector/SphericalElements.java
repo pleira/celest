@@ -324,8 +324,9 @@ public class SphericalElements extends StateVector {
 	 */
 	@Override
 	public CartesianElements toCartesianElements() {
-		// TODO: implement toCartesianElements()
-		throw new UnsupportedOperationException("Not implemented yet");
+		// TODO: direct conversion
+		KeplerElements k = new KeplerElements(this, centerbody);
+		return k.toCartesianElements();
 	}
 
 	/**
