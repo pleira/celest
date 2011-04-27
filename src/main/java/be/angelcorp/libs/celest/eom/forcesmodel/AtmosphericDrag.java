@@ -23,6 +23,15 @@ import be.angelcorp.libs.math.linear.Vector3D;
 /**
  * The AtmosphericDrag class computes the acceleration due to drag on a satellite using atmospheric model
  * 
+ * <p>
+ * <b>Note: If you use tabluated values for &rho; of the atmosphere, then you also need to use the
+ * associate Cd and S of those values, not those computed for the satellite itself !!!</b> <br />
+ * If no value of Cd was given, 2.2 probably the value they used. This is because most of these tables
+ * where created from satellite measurements of actual satellites where they fixed Cd,S,M so &rho; was
+ * the only unknow. This means that &rho; also contains other information but the density, that are
+ * related to Cd and S.
+ * </p>
+ * 
  * @author simon
  * 
  */
@@ -31,6 +40,10 @@ abstract public class AtmosphericDrag extends ObjectForce {
 
 	/**
 	 * Drag coefficient
+	 * <p>
+	 * Usually ranges from 2.2 to 2.8, NOT THE SAME CD AS FOR AIRCRAFT. Cd contains corrections for the
+	 * physical models, &rho; and S.
+	 * </p>
 	 * <p>
 	 * <b>Unit: [-]</b>
 	 * </p>
