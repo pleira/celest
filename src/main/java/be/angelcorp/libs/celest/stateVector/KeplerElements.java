@@ -32,6 +32,49 @@ import be.angelcorp.libs.math.MathUtils2;
 public class KeplerElements extends StateVector implements Keplerian {
 
 	/**
+	 * Create a set of Kepler elements from another {@link StateVector}. Chooses itself what the best way
+	 * of converting is.
+	 * <p>
+	 * Guarantees that the return of a {@link KeplerElements} {@link StateVector}, but not necessarily a
+	 * clone (can be the same {@link StateVector})
+	 * </p>
+	 * 
+	 * @param state
+	 *            {@link StateVector} to convert
+	 * @param center
+	 *            Body where the {@link KeplerElements} are formulated against
+	 */
+	public static KeplerElements as(StateVector state, CelestialBody center) {
+		Class<? extends StateVector> clazz = state.getClass();
+		if (KeplerElements.class.isAssignableFrom(clazz)) {
+			KeplerElements k2 = (KeplerElements) state;
+			if (k2.getCenterbody().equals(center))
+				return k2;
+			else {
+				// TODO: more native implementation
+			}
+		} else if (SphericalElements.class.isAssignableFrom(clazz)) {
+			// See Fundamentals of astrodynamics - II , K.F. Wakker, p 16-4, eqn 16.1-16.7
+			SphericalElements s = (SphericalElements) state;
+			double mu = center.getMu();
+			double rv2m = (s.r * s.v * s.v / mu);
+			double a = s.r / (2 - rv2m);
+			double e = Math.sqrt(1 - rv2m * (2 - rv2m) * Math.pow(Math.cos(s.gamma), 2));
+			double E = Math.atan2(Math.sqrt(a / mu) * s.r * s.v * Math.sin(s.gamma), a - s.r);
+			double trueA = 2 * Math.atan(Math.sqrt((1 + e) / (1 - e)) * Math.tan(E / 2));
+			trueA = MathUtils2.quadrantFix(trueA, E);
+			double i = Math.acos(Math.cos(s.delta) * Math.sin(s.psi));
+			double omega = Math.atan2(Math.sin(s.delta) / Math.sin(i),
+						Math.cos(s.delta) * Math.cos(s.psi) / Math.sin(i)) - trueA;
+			double raan = s.alpha
+						- Math.atan2(Math.tan(s.delta) / Math.tan(i), Math.cos(s.psi) / Math.sin(i));
+			return new KeplerElements(a, E, i, omega, raan, trueA, center);
+		}
+		CartesianElements c = state.toCartesianElements();
+		return KeplerEquations.cartesian2kepler(c, center);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static KeplerElements fromVector(RealVector vector) {
@@ -60,7 +103,6 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * </p>
 	 */
 	protected double		e;
-
 	/**
 	 * Inclination
 	 * <p>
@@ -95,6 +137,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * </p>
 	 */
 	protected double		raan;
+
 	/**
 	 * True anomaly
 	 * <p>
@@ -157,38 +200,6 @@ public class KeplerElements extends StateVector implements Keplerian {
 		this.raan = raan;
 		this.trueA = trueA;
 		this.centerbody = centerbody;
-	}
-
-	/**
-	 * Create a set of Kepler elements from another {@link StateVector}. Chooses itself what the best way
-	 * of converting is.
-	 * 
-	 * @param state
-	 *            {@link StateVector} to convert
-	 * @param center
-	 *            Body where the {@link KeplerElements} are formulated against
-	 */
-	public KeplerElements(StateVector state, CelestialBody center) {
-		Class<? extends StateVector> clazz = state.getClass();
-		if (SphericalElements.class.isAssignableFrom(clazz)) {
-			// See Fundamentals of astrodynamics - II , K.F. Wakker, p 16-4, eqn 16.1-16.7
-			SphericalElements s = (SphericalElements) state;
-			double mu = center.getMu();
-			double rv2m = (s.r * s.v * s.v / mu);
-			a = s.r / (2 - rv2m);
-			e = Math.sqrt(1 - rv2m * (2 - rv2m) * Math.pow(Math.cos(s.gamma), 2));
-			double E = Math.atan2(Math.sqrt(a / mu) * s.r * s.v * Math.sin(s.gamma), a - s.r);
-			trueA = 2 * Math.atan(Math.sqrt((1 + e) / (1 - e)) * Math.tan(E / 2));
-			trueA = MathUtils2.quadrantFix(trueA, E);
-			i = Math.acos(Math.cos(s.delta) * Math.sin(s.psi));
-			omega = Math.atan2(Math.sin(s.delta) / Math.sin(i),
-					Math.cos(s.delta) * Math.cos(s.psi) / Math.sin(i)) - trueA;
-			raan = s.alpha - Math.atan2(Math.tan(s.delta) / Math.tan(i), Math.cos(s.psi) / Math.sin(i));
-		} else {
-			KeplerElements k2 = KeplerEquations.cartesian2kepler(state.toCartesianElements(), center);
-			setElements(k2.a, k2.e, k2.i, k2.omega, k2.raan, k2.trueA);
-		}
-		setCenterbody(center);
 	}
 
 	/**

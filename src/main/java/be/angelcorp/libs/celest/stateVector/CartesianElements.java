@@ -31,6 +31,20 @@ import be.angelcorp.libs.math.linear.Vector3D;
 public class CartesianElements extends StateVector implements Cartesian {
 
 	/**
+	 * Create the {@link CartesianElements} from another {@link StateVector}.
+	 * <p>
+	 * Guarantees that the return of a {@link CartesianElements} {@link StateVector}, but not necessarily
+	 * a clone (can be the same {@link StateVector})
+	 * </p>
+	 * 
+	 * @param state
+	 *            {@link StateVector} to convert
+	 */
+	public static CartesianElements as(StateVector state) {
+		return state.toCartesianElements();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static CartesianElements fromVector(RealVector v) {
@@ -44,6 +58,7 @@ public class CartesianElements extends StateVector implements Cartesian {
 	 * </p>
 	 */
 	public Vector3D	R;
+
 	/**
 	 * Instantaneous velocity
 	 * <p>
@@ -81,18 +96,6 @@ public class CartesianElements extends StateVector implements Cartesian {
 					"Array must be length 6 [rx, ry, rz, vx, vy, vz], only %d elements given", d.length));
 		this.R = new Vector3D(d[0], d[1], d[2]);
 		this.V = new Vector3D(d[3], d[4], d[5]);
-	}
-
-	/**
-	 * Create the {@link CartesianElements} from another {@link StateVector}.
-	 * 
-	 * @param state
-	 *            {@link StateVector} to convert
-	 */
-	public CartesianElements(StateVector state) {
-		CartesianElements c2 = state.toCartesianElements();
-		this.R = c2.R;
-		this.V = c2.V;
 	}
 
 	/**

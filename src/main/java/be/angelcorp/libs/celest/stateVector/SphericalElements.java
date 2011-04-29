@@ -24,6 +24,39 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 public class SphericalElements extends StateVector {
 
 	/**
+	 * Create a set of {@link SphericalElements} from another {@link StateVector}. Chooses itself what
+	 * the best way of converting is.
+	 * 
+	 * <p>
+	 * Guarantees that the return of a {@link SphericalElements} {@link StateVector}, but not necessarily
+	 * a clone (can be the same {@link StateVector})
+	 * </p>
+	 * 
+	 * @param state
+	 *            {@link StateVector} to convert
+	 * @param center
+	 *            Body where the {@link KeplerElements} are formulated against
+	 */
+	public static SphericalElements as(StateVector state, CelestialBody center) {
+		Class<? extends StateVector> clazz = state.getClass();
+		if (SphericalElements.class.isAssignableFrom(clazz)) {
+			SphericalElements s2 = (SphericalElements) state;
+			if (s2.getCenterbody() == center)
+				return s2;
+			else {
+				// TODO: more native implementation
+			}
+		} else if (KeplerElements.class.isAssignableFrom(clazz)) {
+			KeplerElements k = KeplerElements.as(state, center);
+			// TODO: implement Kepler conversion
+			throw new UnsupportedOperationException("Not implemented yet");
+		}
+		CartesianElements c = state.toCartesianElements();
+		// TODO: implement Cartesian conversion
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static SphericalElements fromVector(RealVector vector) {
@@ -54,7 +87,6 @@ public class SphericalElements extends StateVector {
 	 * </p>
 	 */
 	protected double		alpha;
-
 	/**
 	 * Declination, &delta;
 	 * <p>
@@ -83,6 +115,7 @@ public class SphericalElements extends StateVector {
 	 * </p>
 	 */
 	protected double		gamma;
+
 	/**
 	 * Flight path azimuth, &psi;
 	 * <p>
@@ -149,30 +182,6 @@ public class SphericalElements extends StateVector {
 		this.gamma = gamma;
 		this.psi = psi;
 		this.centerbody = centerbody;
-	}
-
-	/**
-	 * Create a set of {@link SphericalElements} from another {@link StateVector}. Chooses itself what
-	 * the best way of converting is.
-	 * 
-	 * @param state
-	 *            {@link StateVector} to convert
-	 * @param center
-	 *            Body where the {@link KeplerElements} are formulated against
-	 */
-	public SphericalElements(StateVector state, CelestialBody center) {
-		Class<? extends StateVector> clazz = state.getClass();
-		if (KeplerElements.class.isAssignableFrom(clazz)) {
-			KeplerElements k = (KeplerElements) state;
-			setCenterbody(center);
-			// TODO: implement Kepler conversion
-			throw new UnsupportedOperationException("Not implemented yet");
-		} else {
-			CartesianElements c = state.toCartesianElements();
-			setCenterbody(center);
-			// TODO: implement Cartesian conversion
-			throw new UnsupportedOperationException("Not implemented yet");
-		}
 	}
 
 	/**
@@ -325,7 +334,7 @@ public class SphericalElements extends StateVector {
 	@Override
 	public CartesianElements toCartesianElements() {
 		// TODO: direct conversion
-		KeplerElements k = new KeplerElements(this, centerbody);
+		KeplerElements k = KeplerElements.as(this, centerbody);
 		return k.toCartesianElements();
 	}
 
