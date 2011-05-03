@@ -17,17 +17,18 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.Constants;
+import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.physics.EM.IEMspectrum;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
- * Force created by a stars radiation pressure on a satellite
+ * Force created by a stars radiation pressure on a satellite. Internally uses cartesian form.
  * 
  * @author simon
  * 
  */
-public class SolarRadiationPressure extends ObjectForce {
+public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 
 	/**
 	 * Cross sectional (reflective) area
@@ -58,15 +59,15 @@ public class SolarRadiationPressure extends ObjectForce {
 	 * @param satellite
 	 *            Satellite the force acts upon
 	 * @param area
-	 *            Effective area of the satellite {@link SolarRadiationPressure#area}
+	 *            Effective area of the satellite {@link SolarRadiationPressure_C#area}
 	 * @param CR
-	 *            Reflectivity coefficient {@link SolarRadiationPressure#CR}
+	 *            Reflectivity coefficient {@link SolarRadiationPressure_C#CR}
 	 * @param star
-	 *            The star that creates emits the flux {@link SolarRadiationPressure#star}
+	 *            The star that creates emits the flux {@link SolarRadiationPressure_C#star}
 	 * @param emmition
-	 *            The emmision sprectum of the star {@link SolarRadiationPressure#spectrum}
+	 *            The emmision sprectum of the star {@link SolarRadiationPressure_C#spectrum}
 	 */
-	public SolarRadiationPressure(CelestialBody satellite, double area, double CR,
+	public SolarRadiationPressure_C(CelestialBody satellite, double area, double CR,
 			CelestialBody star, IEMspectrum emmition) {
 		super(satellite);
 		this.area = area;
@@ -76,14 +77,14 @@ public class SolarRadiationPressure extends ObjectForce {
 	}
 
 	/**
-	 * @see SolarRadiationPressure#area
+	 * @see SolarRadiationPressure_C#area
 	 */
 	public double getArea() {
 		return area;
 	}
 
 	/**
-	 * @see SolarRadiationPressure#CR
+	 * @see SolarRadiationPressure_C#CR
 	 */
 	public double getCR() {
 		return CR;
@@ -98,42 +99,42 @@ public class SolarRadiationPressure extends ObjectForce {
 	}
 
 	/**
-	 * @see SolarRadiationPressure#spectrum
+	 * @see SolarRadiationPressure_C#spectrum
 	 */
 	public IEMspectrum getSpectrum() {
 		return spectrum;
 	}
 
 	/**
-	 * @see SolarRadiationPressure#star
+	 * @see SolarRadiationPressure_C#star
 	 */
 	public CelestialBody getStar() {
 		return star;
 	}
 
 	/**
-	 * @see SolarRadiationPressure#area
+	 * @see SolarRadiationPressure_C#area
 	 */
 	public void setArea(double area) {
 		this.area = area;
 	}
 
 	/**
-	 * @see SolarRadiationPressure#CR
+	 * @see SolarRadiationPressure_C#CR
 	 */
 	public void setCR(double cR) {
 		CR = cR;
 	}
 
 	/**
-	 * @see SolarRadiationPressure#spectrum
+	 * @see SolarRadiationPressure_C#spectrum
 	 */
 	public void setSpectrum(IEMspectrum spectrum) {
 		this.spectrum = spectrum;
 	}
 
 	/**
-	 * @see SolarRadiationPressure#star
+	 * @see SolarRadiationPressure_C#star
 	 */
 	public void setStar(CelestialBody star) {
 		this.star = star;

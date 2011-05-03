@@ -36,8 +36,11 @@ public class ForceModel extends ForceModelCore {
 	 * @param body
 	 *            Bod where the forces act on
 	 */
-	public ForceModel(CelestialBody body) {
+	public ForceModel(CelestialBody body, ObjectForce... forces) {
 		super(body);
+
+		for (ObjectForce f : forces)
+			addForce(f);
 	}
 
 	/**

@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.eom;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.body.bodyCollection.BodyCollection;
 import be.angelcorp.libs.celest.eom.forcesmodel.ForceModelCore;
-import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce;
+import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce_C;
 
 /**
  * Create the EOM for a single body in an N-Body environment
@@ -38,7 +38,7 @@ public class NBody extends ForceModelCore {
 		super(body);
 		for (CelestialBody body2 : bodies.getBodies()) {
 			if (!body2.equals(body))
-				addForce(new GravitationalForce(body, body2));
+				addForce(new GravitationalForce_C(body, body2));
 		}
 	}
 

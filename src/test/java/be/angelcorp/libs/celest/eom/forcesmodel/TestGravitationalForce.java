@@ -33,14 +33,14 @@ public class TestGravitationalForce extends TestCase {
 		CelestialBody earth = EarthConstants.bodyCenter;
 		CelestialBody sat = new CelestialBody(
 				new KeplerElements(10E6, 0, 0, 0, 0, 0, earth), 5);
-		GravitationalForce g = new GravitationalForce(sat, earth);
+		GravitationalForce_C g = new GravitationalForce_C(sat, earth);
 		assertEquals(19.93d, g.getForce().getNorm(), 1E-1);
 		assertEquals(3.986d, g.toAcceleration().getNorm(), 1E-2);
 
 		/* Test the f/a in a simple earth system all components */
 		CelestialBody sat1 = new CelestialBody(new SphericalElements(10E6, Math.PI / 3, 0,
 				KeplerCircular.Vc(10E6, earth.getMu()), 0, 0, earth), 5);
-		GravitationalForce g1 = new GravitationalForce(sat1, earth);
+		GravitationalForce_C g1 = new GravitationalForce_C(sat1, earth);
 		Tests.assertEquals(
 				new Vector3D(Math.cos(Math.PI / 3) * -19.93d, Math.sin(Math.PI / 3) * -19.93d, 0),
 				g1.getForce(), 1E-1);
@@ -52,7 +52,7 @@ public class TestGravitationalForce extends TestCase {
 		CelestialBody sun = SolarConstants.body;
 		CelestialBody sat2 = new CelestialBody(
 				new KeplerElements(Length.convert(1, Length.AU), 0, 0, 0, 0, 0, sun), 5);
-		GravitationalForce g2 = new GravitationalForce(sat2, sun);
+		GravitationalForce_C g2 = new GravitationalForce_C(sat2, sun);
 		assertEquals(0.02965d, g2.getForce().getNorm(), 1E-4);
 		assertEquals(0.005930d, g2.toAcceleration().getNorm(), 1E-5);
 	}

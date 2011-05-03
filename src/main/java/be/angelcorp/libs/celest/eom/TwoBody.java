@@ -19,7 +19,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.body.bodyCollection.TwoBodyCollection;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.eom.forcesmodel.ForceModelCore;
-import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce;
+import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce_C;
 
 /**
  * Function that holds the calculates the acceleration in Cartesian coordinates when in the presence of
@@ -51,7 +51,7 @@ public class TwoBody extends ForceModelCore {
 	 */
 	public TwoBody(TwoBodyCollection bodies, CelestialBody body) {
 		super(body);
-		addForce(new GravitationalForce(body, bodies.other(body)));
+		addForce(new GravitationalForce_C(body, bodies.other(body)));
 	}
 
 }
