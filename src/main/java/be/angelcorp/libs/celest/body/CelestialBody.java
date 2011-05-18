@@ -38,7 +38,7 @@ public class CelestialBody {
 	/**
 	 * Body mass
 	 */
-	private double					mass;
+	private double					dryMass;
 	/**
 	 * Gravitational potential of this object
 	 */
@@ -66,6 +66,18 @@ public class CelestialBody {
 	}
 
 	/**
+	 * Get the dry mass of the celestial body (mass without the propellant mass)
+	 * <p>
+	 * <b>Unit: [kg]</b>
+	 * </p>
+	 * 
+	 * @return Mass of the body
+	 */
+	public double getDryMass() {
+		return dryMass;
+	}
+
+	/**
 	 * Get the local gravitational field produced by the body
 	 * 
 	 * @return
@@ -75,7 +87,7 @@ public class CelestialBody {
 	}
 
 	/**
-	 * Get the mass of the celestial body
+	 * Get the total mass of the celestial body
 	 * <p>
 	 * <b>Unit: [kg]</b>
 	 * </p>
@@ -83,7 +95,7 @@ public class CelestialBody {
 	 * @return Mass of the body
 	 */
 	public double getMass() {
-		return mass;
+		return getDryMass() + getWetMass();
 	}
 
 	/**
@@ -95,7 +107,7 @@ public class CelestialBody {
 	 * @return Mu of the body
 	 */
 	public double getMu() {
-		return Constants.mass2mu(mass);
+		return Constants.mass2mu(getMass());
 	}
 
 	/**
@@ -108,23 +120,25 @@ public class CelestialBody {
 	}
 
 	/**
+	 * Get the wet mass of the body (Propellant mass)
+	 * <p>
+	 * <b>Unit: [kg]</b>
+	 * </p>
+	 * 
+	 * @return Mass of the body
+	 */
+	public double getWetMass() {
+		return 0;
+	}
+
+	/**
 	 * Set the mass of the celestial body
 	 * 
 	 * @param mass
 	 *            new mass of the body [kg]
 	 */
 	public void setMass(double mass) {
-		this.mass = mass;
-	}
-
-	/**
-	 * Set the gravitational parameter of the celestial body (&mu; = G * m)
-	 * 
-	 * @param mu
-	 *            Mu of the body [m<sup>3</sup> / s<sup>2</sup>]
-	 */
-	public void setMu(double mu) {
-		this.mass = Constants.mu2mass(mu);
+		this.dryMass = mass;
 	}
 
 	/**
