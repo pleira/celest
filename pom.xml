@@ -46,20 +46,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<inherited>true</inherited>
-
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-
-					<encoding>UTF-8</encoding>
-					<optimize>true</optimize>
-					<showWarnings>true</showWarnings>
-					<showDeprecation>true</showDeprecation>
-
-					<meminitial>16m</meminitial>
-					<maxmem>512m</maxmem>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.google.code.maven-license-plugin</groupId>
