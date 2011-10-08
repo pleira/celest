@@ -22,8 +22,8 @@ import be.angelcorp.libs.celest.eom.IStateDerivatives;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.celest.physics.quantities.Torque;
 import be.angelcorp.libs.celest.stateVector.CartesianDerivative;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.StateDerivativeVector;
+import be.angelcorp.libs.celest.stateVector.ICartesianElements;
+import be.angelcorp.libs.celest.stateVector.IStateDerivativeVector;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.google.common.collect.Lists;
@@ -91,14 +91,14 @@ public class ForceModelCore implements IStateDerivatives {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public StateDerivativeVector getDerivatives(double t) {
+	public IStateDerivativeVector getDerivatives(double t) {
 		Vector3D a = Vector3D.ZERO;
 		for (ObjectForce f : getForcesList()) {
 			Vector3D dA = f.toAcceleration();
 			a = a.add(dA);
 		}
 
-		CartesianElements thisState = body.getState().toCartesianElements();
+		ICartesianElements thisState = body.getState().toCartesianElements();
 		return new CartesianDerivative(thisState.getV(), a);
 	}
 

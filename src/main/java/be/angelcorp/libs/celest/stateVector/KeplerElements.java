@@ -26,10 +26,15 @@ import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerHyperbola;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.kepler.KeplerParabola;
-import be.angelcorp.libs.celest.math.Keplerian;
 import be.angelcorp.libs.math.MathUtils2;
 
-public class KeplerElements extends StateVector implements Keplerian {
+/**
+ * Documentation: {@link IKeplerElements}
+ * 
+ * @author Simon Billemont
+ * @see IKeplerElements
+ */
+public class KeplerElements extends StateVector implements IKeplerElements {
 
 	/**
 	 * Create a set of Kepler elements from another {@link StateVector}. Chooses itself what the best way
@@ -44,10 +49,10 @@ public class KeplerElements extends StateVector implements Keplerian {
 	 * @param center
 	 *            Body where the {@link KeplerElements} are formulated against
 	 */
-	public static KeplerElements as(StateVector state, CelestialBody center) {
-		Class<? extends StateVector> clazz = state.getClass();
+	public static IKeplerElements as(IStateVector state, CelestialBody center) {
+		Class<? extends IStateVector> clazz = state.getClass();
 		if (KeplerElements.class.isAssignableFrom(clazz)) {
-			KeplerElements k2 = (KeplerElements) state;
+			IKeplerElements k2 = (IKeplerElements) state;
 			if (k2.getCenterbody().equals(center))
 				return k2;
 			else {
@@ -70,7 +75,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 						- Math.atan2(Math.tan(s.delta) / Math.tan(i), Math.cos(s.psi) / Math.sin(i));
 			return new KeplerElements(a, E, i, omega, raan, trueA, center);
 		}
-		CartesianElements c = state.toCartesianElements();
+		ICartesianElements c = state.toCartesianElements();
 		return KeplerEquations.cartesian2kepler(c, center);
 	}
 
@@ -203,7 +208,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	}
 
 	/**
-	 * Create an identical copy of this object, holds the same values, but in a different object.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public KeplerElements clone() {
@@ -211,56 +216,59 @@ public class KeplerElements extends StateVector implements Keplerian {
 	}
 
 	/**
-	 * Tests if two sets of kepler elements hold the same variables (tests for equal
-	 * a,e,i,&omega;,&Omega;,&nu;)
-	 * 
-	 * @param state2
-	 *            Kepler elements to compare with
-	 * @return True if the two sets contain the same orbital elements
+	 * {@inheritDoc}
 	 */
-	public boolean equals(KeplerElements state2) {
+	@Override
+	public boolean equals(IKeplerElements state2) {
 		return state2.getSemiMajorAxis() == a && state2.getEccentricity() == e &&
 				state2.getInclination() == i && state2.getArgumentPeriapsis() == omega &&
 				state2.getRaan() == raan && state2.getTrueAnomaly() == trueA;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#omega}
+	 * 
 	 * @see KeplerElements#omega
 	 */
+	@Override
 	public double getArgumentPeriapsis() {
 		return omega;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#centerbody}
+	 * 
 	 * @see KeplerElements#centerbody
 	 */
+	@Override
 	public CelestialBody getCenterbody() {
 		return centerbody;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#e}
+	 * 
 	 * @see KeplerElements#e
 	 */
+	@Override
 	public double getEccentricity() {
 		return e;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#i}
+	 * 
 	 * @see KeplerElements#i
 	 */
+	@Override
 	public double getInclination() {
 		return i;
 	}
 
 	/**
-	 * Get the specific set of Keplerian equations that can be used with this set of Kepler elements
-	 * <p>
-	 * This means it returns KeplerCircular equations if the orbit is circular, KeplerEllipse if
-	 * elliptical and so forth...
-	 * </p>
-	 * 
-	 * @return A set of KeplerEquations to compute additional parameters with
+	 * {@inheritDoc}
 	 */
+	@Override
 	public KeplerEquations getOrbitEqn() {
 		switch (getOrbitType()) {
 			case Circular:
@@ -276,8 +284,9 @@ public class KeplerElements extends StateVector implements Keplerian {
 	}
 
 	/**
-	 * Get the type of orbit we are in (circular, elliptical, parabolic or hyperbolic)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public KeplerOrbitTypes getOrbitType() {
 		double tol = KeplerEquations.eccentricityTolarance;
 		if (e < tol) {
@@ -292,63 +301,69 @@ public class KeplerElements extends StateVector implements Keplerian {
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#raan}
+	 * 
 	 * @see KeplerElements#raan
 	 */
+	@Override
 	public double getRaan() {
 		return raan;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#a}
+	 * 
 	 * @see KeplerElements#a
 	 */
+	@Override
 	public double getSemiMajorAxis() {
 		return a;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#trueA}
+	 * 
 	 * @see KeplerElements#trueA
 	 */
+	@Override
 	public double getTrueAnomaly() {
 		return trueA;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#omega}
+	 * 
 	 * @see KeplerElements#omega
 	 */
+	@Override
 	public void setArgumentPeriapsis(double omega) {
 		this.omega = omega;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#centerbody}
+	 * 
 	 * @see KeplerElements#centerbody
 	 */
+	@Override
 	public void setCenterbody(CelestialBody centerbody) {
 		this.centerbody = centerbody;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#e}
+	 * 
 	 * @see KeplerElements#e
 	 */
+	@Override
 	public void setEccentricity(double e) {
 		this.e = e;
 	}
 
 	/**
-	 * Sets all the Kepler elements at once
-	 * 
-	 * @param a
-	 *            Semi-major axis {@link KeplerElements#a} [m]
-	 * @param e
-	 *            Eccentricity {@link KeplerElements#e}[-]
-	 * @param i
-	 *            Inclination {@link KeplerElements#i} [rad]
-	 * @param omega
-	 *            Argument of pericenter {@link KeplerElements#omega} [rad]
-	 * @param raan
-	 *            Right acsention of the ascending node {@link KeplerElements#raan} [rad]
-	 * @param trueA
-	 *            True anomaly {@link KeplerElements#trueA} [rad]
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setElements(double a, double e, double i, double omega, double raan, double trueA) {
 		setSemiMajorAxis(a);
 		setEccentricity(e);
@@ -359,35 +374,47 @@ public class KeplerElements extends StateVector implements Keplerian {
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#i}
+	 * 
 	 * @see KeplerElements#i
 	 */
+	@Override
 	public void setInclination(double i) {
 		this.i = i;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#raan}
+	 * 
 	 * @see KeplerElements#raan
 	 */
+	@Override
 	public void setRaan(double raan) {
 		this.raan = raan;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#a}
+	 * 
 	 * @see KeplerElements#a
 	 */
+	@Override
 	public void setSemiMajorAxis(double a) {
 		this.a = a;
 	}
 
 	/**
+	 * Documentation: {@link KeplerElements#trueA}
+	 * 
 	 * @see KeplerElements#trueA
 	 */
+	@Override
 	public void setTrueAnomaly(double trueA) {
 		this.trueA = trueA;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @see IKeplerElements#toCartesianElements()
 	 */
 	@Override
 	public CartesianElements toCartesianElements() {
@@ -395,10 +422,7 @@ public class KeplerElements extends StateVector implements Keplerian {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * [ a, e, i, omega, raan, trueA ]
-	 * </p>
+	 * @see IKeplerElements#toVector()
 	 */
 	@Override
 	public RealVector toVector() {

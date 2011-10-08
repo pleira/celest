@@ -18,22 +18,22 @@ package be.angelcorp.libs.celest.trajectory;
 import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.stateVector.IKeplerElements;
+import be.angelcorp.libs.celest.stateVector.IStateVector;
 
 public class KeplerTrajectory extends Trajectory {
 
-	private final KeplerElements	k;
+	private final IKeplerElements	k;
 
-	public KeplerTrajectory(KeplerElements k) {
+	public KeplerTrajectory(IKeplerElements k) {
 		this.k = k;
 	}
 
 	@Override
-	public StateVector evaluate(double t) throws FunctionEvaluationException {
+	public IStateVector evaluate(double t) throws FunctionEvaluationException {
 		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 		double dM = n * t;
-		KeplerElements k2 = k.clone();
+		IKeplerElements k2 = k.clone();
 		k2.setTrueAnomaly(k2.getOrbitEqn().trueAnomalyFromMean(k.getOrbitEqn().meanAnomaly() + dM));
 		return k2;
 	}

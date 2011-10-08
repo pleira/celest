@@ -18,6 +18,8 @@ package be.angelcorp.libs.celest.kepler;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.CelestialRotate;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
+import be.angelcorp.libs.celest.stateVector.ICartesianElements;
+import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
 import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Matrix3D;
@@ -45,7 +47,7 @@ public abstract class KeplerEquations {
 	 *            Center body begin orbited
 	 * @return
 	 */
-	public static KeplerElements cartesian2kepler(CartesianElements state, CelestialBody body) {
+	public static KeplerElements cartesian2kepler(ICartesianElements state, CelestialBody body) {
 		KeplerElements k = cartesian2kepler(state, body.getMu());
 		k.setCenterbody(body);
 		return k;
@@ -67,7 +69,7 @@ public abstract class KeplerEquations {
 	 *            Gravitational constant of body being orbited
 	 * @return
 	 */
-	public static KeplerElements cartesian2kepler(CartesianElements state, double mhu) {
+	public static KeplerElements cartesian2kepler(ICartesianElements state, double mhu) {
 		Vector3D R = state.getR();
 		Vector3D V = state.getV();
 
@@ -141,7 +143,7 @@ public abstract class KeplerEquations {
 	 *            Center body
 	 * @return Subset of kepler elements
 	 */
-	public static KeplerElements cartesian2kepler2D(CartesianElements state, CelestialBody center) {
+	public static IKeplerElements cartesian2kepler2D(ICartesianElements state, CelestialBody center) {
 		Vector3D R = state.getR();
 		Vector3D V = state.getV();
 		double mhu = center.getMu();
@@ -224,7 +226,7 @@ public abstract class KeplerEquations {
 	 * @param k
 	 *            Kepler elements to fix
 	 */
-	public static void fix2dOrbit(KeplerElements k) {
+	public static void fix2dOrbit(IKeplerElements k) {
 		if (Double.isNaN(k.getArgumentPeriapsis()))
 			k.setArgumentPeriapsis(0);
 		if (Double.isNaN(k.getRaan()))
@@ -427,7 +429,7 @@ public abstract class KeplerEquations {
 	/**
 	 * Kepler elements to compute the equations with
 	 */
-	protected KeplerElements	k;
+	protected IKeplerElements	k;
 
 	/**
 	 * Create a set of equations for a specific set of Kepler elements. This allows for automatic
@@ -436,7 +438,7 @@ public abstract class KeplerEquations {
 	 * @param k
 	 *            Kepler elements to use in the substitutions.
 	 */
-	public KeplerEquations(KeplerElements k) {
+	public KeplerEquations(IKeplerElements k) {
 		this.k = k;
 	}
 

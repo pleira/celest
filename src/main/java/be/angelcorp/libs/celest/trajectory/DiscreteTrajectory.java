@@ -20,6 +20,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
+import be.angelcorp.libs.celest.stateVector.IStateVector;
 import be.angelcorp.libs.celest.stateVector.StateVector;
 
 import com.google.common.collect.Maps;
@@ -41,7 +42,7 @@ public class DiscreteTrajectory extends Trajectory {
 	}
 
 	@Override
-	public StateVector evaluate(double t) throws FunctionEvaluationException {
+	public IStateVector evaluate(double t) throws FunctionEvaluationException {
 		Entry<Double, StateVector> entry = states.floorEntry(t);
 		if (entry == null)
 			throw new FunctionEvaluationException(t, "No state found before the given time index");

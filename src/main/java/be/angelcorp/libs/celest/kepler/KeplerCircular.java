@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 
 public class KeplerCircular extends KeplerEllipse {
 
@@ -23,7 +23,7 @@ public class KeplerCircular extends KeplerEllipse {
 		return Math.sqrt(mhu / r);
 	}
 
-	public KeplerCircular(KeplerElements k) {
+	public KeplerCircular(IKeplerElements k) {
 		super(k);
 	}
 

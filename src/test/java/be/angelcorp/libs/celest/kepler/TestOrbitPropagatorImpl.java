@@ -30,6 +30,8 @@ import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.eom.TwoBody;
 import be.angelcorp.libs.celest.orbitIntegrator.OrbitPropagatorImpl;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
+import be.angelcorp.libs.celest.stateVector.ICartesianElements;
+import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException;
@@ -52,7 +54,7 @@ public class TestOrbitPropagatorImpl extends TestCase {
 		/* Create the two body problem */
 		TwoBody tb = new TwoBody(new CelestialBody(x0, 1));
 
-		CartesianElements ans2 = integrator.integrate(tb, 0, 30 * 24 * 360);
+		ICartesianElements ans2 = integrator.integrate(tb, 0, 30 * 24 * 360);
 		// System.out.println(x0.getSubVector(0, 3).getNorm());
 		// System.out.println(ans2.getSubVector(0, 3).getNorm());
 		// System.out.println(x0.getSubVector(0, 3).getNorm() - ans2.getSubVector(0, 3).getNorm());
@@ -98,7 +100,7 @@ public class TestOrbitPropagatorImpl extends TestCase {
 		OrbitPropagatorImpl integrator = new OrbitPropagatorImpl(rk4);
 
 		/* Leo orbit */
-		KeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, EarthConstants.bodyCenter);
+		IKeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, EarthConstants.bodyCenter);
 		CartesianElements c = k.getOrbitEqn().kepler2cartesian();
 		/* Create the two body problem */
 		TwoBody tb = new TwoBody(new CelestialBody(c, 1));

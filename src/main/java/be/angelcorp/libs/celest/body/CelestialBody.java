@@ -20,7 +20,7 @@ import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.potential.GravitationalPotential;
 import be.angelcorp.libs.celest.potential.PointMassPotential;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.stateVector.IStateVector;
 
 /**
  * Representation of a celestial body (eg planet/sun/satellite). It is a wrapper for a state vector and
@@ -34,7 +34,7 @@ public class CelestialBody {
 	/**
 	 * Body state vector
 	 */
-	private StateVector				state;
+	private IStateVector				state;
 	/**
 	 * Body mass
 	 */
@@ -60,7 +60,7 @@ public class CelestialBody {
 	 * @param mass
 	 *            Mass of the body [kg]
 	 */
-	public CelestialBody(StateVector state, double mass) {
+	public CelestialBody(IStateVector state, double mass) {
 		setState(state);
 		setMass(mass);
 	}
@@ -115,7 +115,7 @@ public class CelestialBody {
 	 * 
 	 * @return Body state vector
 	 */
-	public StateVector getState() {
+	public IStateVector getState() {
 		return state;
 	}
 
@@ -147,7 +147,7 @@ public class CelestialBody {
 	 * @param state
 	 *            new body state
 	 */
-	public void setState(StateVector state) {
+	public void setState(IStateVector state) {
 		this.state = state;
 	}
 

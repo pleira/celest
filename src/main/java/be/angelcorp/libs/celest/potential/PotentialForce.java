@@ -49,8 +49,8 @@ public class PotentialForce extends Force {
 
 	@Override
 	public Vector3D getForce() {
-		Vector3D r = Vector3DMath.relative(centerbody.getState().toCartesianElements().R,
-				satellite.getState().toCartesianElements().R);
+		Vector3D r = Vector3DMath.relative(centerbody.getState().toCartesianElements().getR(),
+				satellite.getState().toCartesianElements().getR());
 		Vector3D a = centerbody.getGravitationalPotential().evaluate(r);
 		return a.multiply(satellite.getMass());
 	}

@@ -23,7 +23,7 @@ import org.apache.commons.math.analysis.integration.LegendreGaussIntegrator;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.stateVector.IStateVector;
 import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -44,7 +44,7 @@ public class ExpoSinTrajectory extends Trajectory {
 	}
 
 	@Override
-	public StateVector evaluate(double t) throws FunctionEvaluationException {
+	public IStateVector evaluate(double t) throws FunctionEvaluationException {
 		UnivariateRealFunction thetaDot = new ComposableFunction() {
 			@Override
 			public double value(double theta) throws FunctionEvaluationException {

@@ -25,6 +25,7 @@ import be.angelcorp.libs.celest.eom.IStateDerivatives;
 import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.stateVector.CartesianDerivative;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
+import be.angelcorp.libs.celest.stateVector.ICartesianElements;
 
 public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 
@@ -43,7 +44,7 @@ public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 		return tEnd;
 	}
 
-	public CartesianElements integrate(final IStateDerivatives dState,
+	public ICartesianElements integrate(final IStateDerivatives dState,
 			double t0, double t) throws MathException {
 		tEnd = Double.NaN;
 		/* Wrap the accelleration in ode for for the integrator */
@@ -53,7 +54,7 @@ public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 					throws DerivativeException {
 				/* point: ____ [rx, ry, rz, vx, vy, vz] */
 				/* derivative: [vx, vy, vz, ax, ay, az], note no t derivative */
-				CartesianElements state = new CartesianElements(y);
+				ICartesianElements state = new CartesianElements(y);
 				CartesianDerivative derivs = dState.getDerivatives(t).toCartesianDerivative();
 				System.arraycopy(derivs.toVector().toArray(), 0, yDot, 0, 6);
 				// RealVector aVector = accelleration.value(new Vector3D(y[0], y[1], y[2]));
@@ -74,7 +75,7 @@ public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 
 		double[] y = new double[6]; // End state container
 		/* Integrate the orbit with the given equations and conditions */
-		CartesianElements startState = dState.getBody().getState().toCartesianElements();
+		ICartesianElements startState = dState.getBody().getState().toCartesianElements();
 		tEnd = integrator.integrate(eqn, t0, startState.toVector().getData(), t, y);
 
 		/* Add a check to see if tEnd +-= t ? */

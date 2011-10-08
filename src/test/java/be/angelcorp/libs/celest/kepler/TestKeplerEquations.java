@@ -21,6 +21,8 @@ import org.apache.commons.math.linear.ArrayRealVector;
 
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
+import be.angelcorp.libs.celest.stateVector.ICartesianElements;
+import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.math.MathUtils2;
@@ -35,10 +37,10 @@ public class TestKeplerEquations extends TestCase {
 	public void testStaticCartesian2kepler() {
 		// cartesian2kepler(CartesianElements, CelestialBody)
 		// cartesian2kepler(CartesianElements, double)
-		CartesianElements c = new CartesianElements(
+		ICartesianElements c = new CartesianElements(
 				new Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
 				new Vector3D(1099.2953996, 3455.105924, 4355.0978095));
-		KeplerElements k = KeplerEquations.cartesian2kepler(c, EarthConstants.mu);
+		IKeplerElements k = KeplerEquations.cartesian2kepler(c, EarthConstants.mu);
 		double[] expected = new double[] {
 				1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560 };
 		double[] tol = new ArrayRealVector(expected).mapMultiply(1E-3).toArray();
@@ -49,10 +51,10 @@ public class TestKeplerEquations extends TestCase {
 
 	public void testStaticCartesian2kepler2D() {
 		// cartesian2kepler2D(CartesianElements, CelestialBody)
-		CartesianElements c = new CartesianElements(
+		ICartesianElements c = new CartesianElements(
 				new Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
 				new Vector3D(1099.2953996, 3455.105924, 4355.0978095));
-		KeplerElements k = KeplerEquations.cartesian2kepler2D(c, EarthConstants.bodyCenter);
+		IKeplerElements k = KeplerEquations.cartesian2kepler2D(c, EarthConstants.bodyCenter);
 		assertEquals(1.216495E7, k.getSemiMajorAxis(), 1E4);
 		assertEquals(0.01404, k.getEccentricity(), 1E-5);
 		assertEquals(3.88056, k.getTrueAnomaly(), 1E-2);
@@ -85,7 +87,7 @@ public class TestKeplerEquations extends TestCase {
 
 	public void testStaticFix2dOrbit() {
 		// fix2dOrbit(KeplerElements)
-		KeplerElements k = new KeplerElements(0, 0, 0, Double.NaN, Double.NaN, 0);
+		IKeplerElements k = new KeplerElements(0, 0, 0, Double.NaN, Double.NaN, 0);
 		KeplerEquations.fix2dOrbit(k);
 		assertTrue(!Double.isNaN(k.getRaan()));
 		assertTrue(!Double.isNaN(k.getArgumentPeriapsis()));

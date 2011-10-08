@@ -18,12 +18,13 @@ package be.angelcorp.libs.celest.stateVector;
 import org.apache.commons.math.linear.RealVector;
 
 /**
- * State vector that hold the state of a celestial body.
+ * Basis for a state derivative vector that hold the state of a celestial body. This implements a default
+ * human readable toString using the vector notation if the state derivative.
  * 
- * @author simon
- * 
+ * @author Simon Billemont
+ * @see IStateDerivativeVector
  */
-public abstract class StateDerivativeVector {
+public abstract class StateDerivativeVector implements IStateDerivativeVector {
 
 	/**
 	 * Restore the StateDerivativeVector from a vector
@@ -32,32 +33,33 @@ public abstract class StateDerivativeVector {
 	 *            Vector to restore the the state from
 	 * @return State vector as contained in the given vector
 	 */
-	public static StateDerivativeVector fromVector(RealVector vector) {
+	public static IStateDerivativeVector fromVector(RealVector vector) {
 		throw new UnsupportedOperationException("This method must be overwritten");
 	}
 
 	/**
-	 * Create a new StateDerivativeVector with identical properties
+	 * {@inheritDoc}
 	 */
 	@Override
-	public abstract StateDerivativeVector clone();
+	public abstract IStateDerivativeVector clone();
 
 	/**
-	 * Convert the StateDerivativeVector to an equivalent Cartesian one (V,A in Cartesian coordinates)
-	 * 
-	 * @return Cartesian equivalent state derivative vector
+	 * {@inheritDoc}
 	 */
+	@Override
 	public abstract CartesianDerivative toCartesianDerivative();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return toVector().toString();
 	}
 
 	/**
-	 * Convert the current state vector to an equivalent vector form
-	 * 
-	 * @return Vector equivalent of the state vector
+	 * {@inheritDoc}
 	 */
+	@Override
 	public abstract RealVector toVector();
 }

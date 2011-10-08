@@ -18,10 +18,15 @@ package be.angelcorp.libs.celest.stateVector;
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.RealVector;
 
-import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.math.linear.Vector3D;
 
-public class CartesianDerivative extends StateDerivativeVector implements Cartesian {
+/**
+ * Documentation: {@link ICartesianDerivative}
+ * 
+ * @author Simon Billemont
+ * @see ICartesianDerivative
+ */
+public class CartesianDerivative extends StateDerivativeVector implements ICartesianDerivative {
 
 	public static CartesianDerivative fromVector(RealVector v) {
 		return new CartesianDerivative(v.getData());
@@ -47,32 +52,57 @@ public class CartesianDerivative extends StateDerivativeVector implements Cartes
 		this.A = A;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public StateDerivativeVector clone() {
+	public ICartesianDerivative clone() {
 		return new CartesianDerivative(V.clone(), A.clone());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Vector3D getA() {
 		return A;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Vector3D getV() {
 		return V;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setA(Vector3D a) {
 		A = a;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setV(Vector3D v) {
 		V = v;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public CartesianDerivative toCartesianDerivative() {
 		return this;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public RealVector toVector() {
 		return new ArrayRealVector(new double[] {

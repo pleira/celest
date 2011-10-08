@@ -15,11 +15,11 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 
 public class KeplerHyperbola extends KeplerEquations {
 
-	public KeplerHyperbola(KeplerElements k) {
+	public KeplerHyperbola(IKeplerElements k) {
 		super(k);
 	}
 

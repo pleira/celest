@@ -21,7 +21,13 @@ import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 
-public class SphericalElements extends StateVector {
+/**
+ * Documentation: {@link ISphericalElements}
+ * 
+ * @author Simon Billemont
+ * @see ISphericalElements
+ */
+public class SphericalElements extends StateVector implements ISphericalElements {
 
 	/**
 	 * Create a set of {@link SphericalElements} from another {@link StateVector}. Chooses itself what
@@ -37,21 +43,21 @@ public class SphericalElements extends StateVector {
 	 * @param center
 	 *            Body where the {@link KeplerElements} are formulated against
 	 */
-	public static SphericalElements as(StateVector state, CelestialBody center) {
-		Class<? extends StateVector> clazz = state.getClass();
+	public static ISphericalElements as(IStateVector state, CelestialBody center) {
+		Class<? extends IStateVector> clazz = state.getClass();
 		if (SphericalElements.class.isAssignableFrom(clazz)) {
-			SphericalElements s2 = (SphericalElements) state;
+			ISphericalElements s2 = (ISphericalElements) state;
 			if (s2.getCenterbody() == center)
 				return s2;
 			else {
 				// TODO: more native implementation
 			}
 		} else if (KeplerElements.class.isAssignableFrom(clazz)) {
-			KeplerElements k = KeplerElements.as(state, center);
+			IKeplerElements k = KeplerElements.as(state, center);
 			// TODO: implement Kepler conversion
 			throw new UnsupportedOperationException("Not implemented yet");
 		}
-		CartesianElements c = state.toCartesianElements();
+		ICartesianElements c = state.toCartesianElements();
 		// TODO: implement Cartesian conversion
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
@@ -185,105 +191,98 @@ public class SphericalElements extends StateVector {
 	}
 
 	/**
-	 * Create an identical copy of this object, holds the same values, but in a different object.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public SphericalElements clone() {
+	public ISphericalElements clone() {
 		return new SphericalElements(r, alpha, delta, v, gamma, psi, centerbody);
 	}
 
 	/**
-	 * Tests if two sets of {@link SphericalElements} hold the same variables (tests for equal
-	 * r,&alpha;,&delta;,V,&gamma;,&psi;)
-	 * 
-	 * @param state2
-	 *            {@link SphericalElements} to compare with
-	 * @return True if the two sets contain the same orbital elements
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(SphericalElements state2) {
 		return state2.r == r && state2.alpha == alpha && state2.delta == delta &&
 				state2.v == v && state2.gamma == gamma && state2.psi == psi;
 	}
 
 	/**
-	 * @see KeplerElements#centerbody
+	 * {@inheritDoc}
 	 */
+	@Override
 	public CelestialBody getCenterbody() {
 		return centerbody;
 	}
 
 	/**
-	 * @see SphericalElements#delta
+	 * {@inheritDoc}
 	 */
+	@Override
 	public double getDeclination() {
 		return delta;
 	}
 
 	/**
-	 * @see SphericalElements#gamma
+	 * {@inheritDoc}
 	 */
+	@Override
 	public double getFlightPathAngle() {
 		return gamma;
 	}
 
 	/**
-	 * @see SphericalElements#psi
+	 * {@inheritDoc}
 	 */
+	@Override
 	public double getFlightPathAzimuth() {
 		return psi;
 	}
 
 	/**
-	 * @see SphericalElements#r
+	 * {@inheritDoc}
 	 */
+	@Override
 	public double getRadius() {
 		return r;
 	}
 
 	/**
-	 * @see SphericalElements#alpha
+	 * {@inheritDoc}
 	 */
+	@Override
 	public double getRightAscension() {
 		return alpha;
 	}
 
 	/**
-	 * @see SphericalElements#c
+	 * {@inheritDoc}
 	 */
+	@Override
 	public double getVelocity() {
 		return v;
 	}
 
 	/**
-	 * @see SphericalElements#centerbody
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setCenterbody(CelestialBody centerbody) {
 		this.centerbody = centerbody;
 	}
 
 	/**
-	 * @see SphericalElements#delta
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDeclination(double delta) {
 		this.delta = delta;
 	}
 
 	/**
-	 * Sets all the {@link SphericalElements} at once
-	 * 
-	 * @param r
-	 *            Radius length [m]
-	 * @param alpha
-	 *            Right ascension [rad]
-	 * @param delta
-	 *            Declination [rad]
-	 * @param v
-	 *            Velocity [m/S]
-	 * @param gamma
-	 *            Flight path angle [rad]
-	 * @param trueA
-	 *            Flight path azimuth [rad]
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setElements(double r, double alpha, double delta, double v, double gamma, double psi) {
 		setRadius(r);
 		setRightAscension(alpha);
@@ -294,36 +293,41 @@ public class SphericalElements extends StateVector {
 	}
 
 	/**
-	 * @see SphericalElements#gamma
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setFlightPathAngle(double gamma) {
 		this.gamma = gamma;
 	}
 
 	/**
-	 * @see SphericalElements#psi
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setFlightPathAzimuth(double psi) {
 		this.psi = psi;
 	}
 
 	/**
-	 * @see SphericalElements#r
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setRadius(double r) {
 		this.r = r;
 	}
 
 	/**
-	 * @see SphericalElements#alpha
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setRightAscension(double alpha) {
 		this.alpha = alpha;
 	}
 
 	/**
-	 * @see SphericalElements#v
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setVelocity(double v) {
 		this.v = v;
 	}
@@ -332,17 +336,14 @@ public class SphericalElements extends StateVector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CartesianElements toCartesianElements() {
+	public ICartesianElements toCartesianElements() {
 		// TODO: direct conversion
-		KeplerElements k = KeplerElements.as(this, centerbody);
+		IKeplerElements k = KeplerElements.as(this, centerbody);
 		return k.toCartesianElements();
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * <p>
-	 * [ a, e, i, omega, raan, trueA ]
-	 * </p>
 	 */
 	@Override
 	public RealVector toVector() {

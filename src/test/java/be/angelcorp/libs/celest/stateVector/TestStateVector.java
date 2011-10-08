@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.RealVector;
 
-public abstract class TestStateVector<T extends StateVector> extends TestCase {
+public abstract class TestStateVector<T extends IStateVector> extends TestCase {
 
 	public abstract Collection<T> getTestStateVectors();
 

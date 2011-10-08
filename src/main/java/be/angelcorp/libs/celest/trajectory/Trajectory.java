@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.trajectory;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.linear.RealVector;
 
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.stateVector.IStateVector;
 import be.angelcorp.libs.math.functions.UnivariateVectorFunction;
 
 /**
@@ -28,7 +28,7 @@ import be.angelcorp.libs.math.functions.UnivariateVectorFunction;
  */
 public abstract class Trajectory implements UnivariateVectorFunction {
 
-	public abstract StateVector evaluate(double t) throws FunctionEvaluationException;
+	public abstract IStateVector evaluate(double t) throws FunctionEvaluationException;
 
 	@Override
 	public RealVector value(double t) throws FunctionEvaluationException {

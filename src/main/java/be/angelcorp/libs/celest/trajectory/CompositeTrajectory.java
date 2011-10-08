@@ -20,7 +20,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.stateVector.IStateVector;
 
 import com.google.common.collect.Maps;
 
@@ -48,7 +48,7 @@ public class CompositeTrajectory extends Trajectory {
 	}
 
 	@Override
-	public StateVector evaluate(double t) throws FunctionEvaluationException {
+	public IStateVector evaluate(double t) throws FunctionEvaluationException {
 		Entry<Double, Trajectory> entry = trajectories.floorEntry(t);
 		Trajectory trajectory = entry.getValue();
 

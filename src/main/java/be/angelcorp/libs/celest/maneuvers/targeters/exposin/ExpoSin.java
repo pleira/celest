@@ -20,7 +20,7 @@ import org.apache.commons.math.MathException;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.stateVector.IStateVector;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.lyndir.lhunath.lib.system.logging.Logger;
@@ -76,7 +76,7 @@ public class ExpoSin extends TPBVP {
 	 * @param dT
 	 *            Time between the start position and end position [s]
 	 */
-	public ExpoSin(StateVector r1, StateVector r2, double dT) {
+	public ExpoSin(IStateVector r1, IStateVector r2, double dT) {
 		super(r1, r2, dT);
 	}
 
@@ -116,8 +116,8 @@ public class ExpoSin extends TPBVP {
 	 * @return All possible exposin solutions
 	 */
 	public ExpoSinSolutionSet getSolutionSet() {
-		Vector3D r1vec = this.r1.toCartesianElements().R;
-		Vector3D r2vec = this.r2.toCartesianElements().R;
+		Vector3D r1vec = this.r1.toCartesianElements().getR();
+		Vector3D r2vec = this.r2.toCartesianElements().getR();
 		double r1 = r1vec.getNorm();
 		double r2 = r2vec.getNorm();
 

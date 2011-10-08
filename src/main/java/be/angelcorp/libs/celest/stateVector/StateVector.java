@@ -21,12 +21,12 @@ import org.apache.commons.math.linear.RealVector;
 import org.apache.commons.math.linear.RealVector.Entry;
 
 /**
- * State vector that hold the state of a celestial body.
+ * Abstract base for a state vector that hold the state of a celestial body.
  * 
- * @author simon
- * 
+ * @author Simon Billemont
+ * @see IStateVector
  */
-public abstract class StateVector {
+public abstract class StateVector implements IStateVector {
 
 	/**
 	 * Restore the {@link StateVector} from a vector
@@ -35,25 +35,21 @@ public abstract class StateVector {
 	 *            Vector to restore the the state from
 	 * @return State vector as contained in the given vector
 	 */
-	public static StateVector fromVector(RealVector vector) {
+	public static IStateVector fromVector(RealVector vector) {
 		throw new UnsupportedOperationException("This method must be overwritten");
 	}
 
 	/**
-	 * Create a new {@link StateVector} with identical properties
+	 * {@inheritDoc}
 	 */
 	@Override
-	public abstract StateVector clone();
+	public abstract IStateVector clone();
 
 	/**
-	 * Tests if two StateVectors are equal. By default, this id done by comparing all elements of the
-	 * {@link StateVector#toVector()} output.
-	 * 
-	 * @param obj
-	 *            Compare the current {@link StateVector} with this ones
-	 * @return true if they are equal
+	 * {@inheritDoc}
 	 */
-	public boolean equals(StateVector obj) {
+	@Override
+	public boolean equals(IStateVector obj) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
 		RealVector error = v1.subtract(v2);
@@ -67,12 +63,6 @@ public abstract class StateVector {
 		return max < 1E-9;
 	}
 
-	/**
-	 * Convert the {@link StateVector} to an equivalent Cartesian one (R, V in Cartesian coordinates)
-	 * 
-	 * @return Cartesian equivalent state vector
-	 */
-	public abstract CartesianElements toCartesianElements();
 
 	/**
 	 * {@inheritDoc}
@@ -82,10 +72,4 @@ public abstract class StateVector {
 		return toVector().toString();
 	}
 
-	/**
-	 * Convert the current state vector to an equivalent vector form
-	 * 
-	 * @return Vector equivalent of the state vector
-	 */
-	public abstract RealVector toVector();
 }
