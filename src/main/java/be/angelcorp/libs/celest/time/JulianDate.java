@@ -15,7 +15,17 @@
  */
 package be.angelcorp.libs.celest.time;
 
-public class JulianDate {
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+/**
+ * Basic julian date stuff
+ * 
+ * @author Simon Billemont
+ * 
+ */
+public class JulianDate implements IJulianDate {
 
 	public static double decimal_day(long day, long hour, long minute, long second) {
 		return day + decimal_hour(hour, minute, second) / 24;
@@ -45,15 +55,44 @@ public class JulianDate {
 
 	double	date;
 
-	public JulianDate(long date) {
-		this.date = date;
+	public JulianDate(Date date) {
+		setDate(date);
 	}
 
-	public double getDate() {
+	public JulianDate(double date) {
+		setJD(date);
+	}
+
+	@Override
+	public Date getDate() {
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double getJD() {
 		return date;
 	}
 
-	public void setDate(double date) {
+	@Override
+	public void setDate(Date date) {
+		Calendar cal = new GregorianCalendar();
+		cal.clear();
+		cal.setTime(date);
+
+		this.date = toJuliandate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+				cal.get(Calendar.DAY_OF_WEEK), cal.get(Calendar.HOUR_OF_DAY),
+				cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setJD(double date) {
 		this.date = date;
 	}
+
 }
