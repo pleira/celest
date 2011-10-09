@@ -27,32 +27,6 @@ import java.util.GregorianCalendar;
  */
 public class JulianDate implements IJulianDate {
 
-	public static double decimal_day(long day, long hour, long minute, long second) {
-		return day + decimal_hour(hour, minute, second) / 24;
-	}
-
-	public static double decimal_hour(long hour, long minute, long second) {
-		return hour + (double) minute / 60 + (double) second / 3600;
-	}
-
-	public static double toJuliandate(long year, long month, long day, long hour, long minute,
-			long second) {
-		/* after Oct 15th, 1582 */
-		long j_year = year;
-		long j_month = month;
-		long A, B, C, D;
-
-		if (month == 1 || month == 2) {
-			j_month = month + 12;
-			j_year = year - 1;
-		}
-		A = (j_year / 100);
-		B = 2 - A + (A / 4);
-		C = (long) (365.25 * j_year);
-		D = (long) (30.6001 * (j_month + 1));
-		return B + C + D + decimal_day(day, hour, minute, second) + 1720994.5;
-	}
-
 	double	date;
 
 	public JulianDate(Date date) {
@@ -65,7 +39,10 @@ public class JulianDate implements IJulianDate {
 
 	@Override
 	public Date getDate() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		int[] dateArr = TimeUtils.invjday(date);
+		GregorianCalendar calender = new GregorianCalendar(
+				dateArr[0], dateArr[1], dateArr[2], dateArr[3], dateArr[4], dateArr[5]);
+		return calender.getTime();
 	}
 
 	/**
@@ -82,7 +59,7 @@ public class JulianDate implements IJulianDate {
 		cal.clear();
 		cal.setTime(date);
 
-		this.date = toJuliandate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+		this.date = TimeUtils.jday(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
 				cal.get(Calendar.DAY_OF_WEEK), cal.get(Calendar.HOUR_OF_DAY),
 				cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 	}
