@@ -15,25 +15,44 @@
  */
 package be.angelcorp.libs.celest.potential;
 
+import java.util.Arrays;
 import java.util.List;
 
 import be.angelcorp.libs.math.linear.Vector3D;
 
+import com.google.common.collect.Lists;
+
 /**
- * Create a GravitationalPotential that is the result of the summation of a set of independant
- * GravitationalPotentials
+ * Implementation of {@link ICumulativePotential}
  * 
  * @author simon
- * 
+ * @see ICumulativePotential
  */
-public class CumulativePotential implements GravitationalPotential {
+public class CumulativePotential implements ICumulativePotential {
 
 	/**
 	 * List containing potentials that are to be summed
 	 */
-	private List<GravitationalPotential>	potentials;
+	private List<IGravitationalPotential>	potentials;
 
-	public CumulativePotential(List<GravitationalPotential> potentials) {
+	/**
+	 * Create a potential resulting from a set of other gravity potentials
+	 * 
+	 * @param potentials
+	 *            List of other potentials
+	 */
+	public CumulativePotential(IGravitationalPotential... potentials) {
+		this.potentials = Lists.newLinkedList(Arrays.asList(potentials));
+
+	}
+
+	/**
+	 * Create a potential resulting from a set of other gravity potentials
+	 * 
+	 * @param potentials
+	 *            List of other potentials
+	 */
+	public CumulativePotential(List<IGravitationalPotential> potentials) {
 		this.potentials = potentials;
 	}
 
@@ -43,7 +62,7 @@ public class CumulativePotential implements GravitationalPotential {
 	@Override
 	public Vector3D evaluate(Vector3D point) {
 		Vector3D sum = new Vector3D(0, 0, 0);
-		for (GravitationalPotential pot : potentials) {
+		for (IGravitationalPotential pot : potentials) {
 			sum = sum.add(pot.evaluate(point));
 		}
 		return sum;

@@ -19,42 +19,25 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
- * Implementation of {@link IPointMassPotential}. Create an ideal gravitational potential of a point
- * mass, homogeneous sphere or body with a spherically symmetric mass distribution.
+ * Create an ideal gravitational potential of a point mass, homogeneous sphere or body with a spherically
+ * symmetric mass distribution.
  * 
  * @author Simon Billemont
- * @see IPointMassPotential
+ * 
  */
-public class PointMassPotential implements IPointMassPotential {
+public interface IPointMassPotential extends IGravitationalPotential {
 
 	/**
-	 * Body that creates the current potential, (uses its mass or mu)
+	 * {@inheritDoc}
 	 */
-	private CelestialBody	body;
+	@Override
+	public abstract Vector3D evaluate(Vector3D point);
 
 	/**
-	 * Construct a potential based on a single celestial body
+	 * Get the body around which the gravity potential is centered
 	 * 
-	 * @param body
-	 *            Body generating the potential
+	 * @return
 	 */
-	public PointMassPotential(CelestialBody body) {
-		this.body = body;
-	}
+	public abstract CelestialBody getBody();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Vector3D evaluate(Vector3D point) {
-		return point.multiply(body.getMu() / Math.pow(point.getNorm(), 3)).negate();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CelestialBody getBody() {
-		return body;
-	}
 }

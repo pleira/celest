@@ -19,33 +19,50 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
- * Create an ideal gravitational potential of thin spherical shell. This is equivalent to a point mass,
- * when the point considered is outside the shell and when inside the shell 0(see Gauss' law for
- * gravity).
  * 
- * @author simon
+ * Implementation of a {@link IThinShellPotential}, a potential similar to a spherically symmetric mass
+ * distribution outside the shell, and inside it is zero.
+ * 
+ * @author Simon Billemont
+ * @see IThinShellPotential
  * 
  */
-public class ThinShellPotential extends PointMassPotential {
+public class ThinShellPotential extends PointMassPotential implements IThinShellPotential {
 
 	/**
-	 * Radius square of the thin shell
+	 * Radius of the thin shell
 	 * <p>
 	 * <b>Unit: [m<sup>2</sup>]</b>
 	 * </p>
 	 */
 	private double	r2;
 
+	/**
+	 * Create the potential of a thin shell. This is equal to a spherically symmetric distribution
+	 * outside the spherical shell, but inside is zero.
+	 * 
+	 * @param body
+	 *            Body creating the potential
+	 * @param r
+	 *            Radius of the thin shell
+	 */
 	public ThinShellPotential(CelestialBody body, double r) {
 		super(body);
 		this.r2 = r * r;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Vector3D evaluate(Vector3D point) {
 		if (point.getNormSq() < r2)
+			/* Valid where R is outside the shell, R >= R2 */
+			/* U = Constants.GRAVITATIONAL_CONSTANT / r and is constant, so dU/dr = 0 */
 			return Vector3D.ZERO;
 		else
+			/* Valid where R is inside the shell, R <= R1 */
+			/* U = GM/r = spherically symmetric */
 			return super.evaluate(point);
 	}
 

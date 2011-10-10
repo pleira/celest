@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.body;
 
 import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.celest.constants.SolarConstants;
-import be.angelcorp.libs.celest.potential.GravitationalPotential;
+import be.angelcorp.libs.celest.potential.IGravitationalPotential;
 import be.angelcorp.libs.celest.potential.PointMassPotential;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
@@ -42,7 +42,7 @@ public class CelestialBody {
 	/**
 	 * Gravitational potential of this object
 	 */
-	private GravitationalPotential	gravitationalPotential	= new PointMassPotential(this);
+	private IGravitationalPotential	gravitationalPotential	= new PointMassPotential(this);
 
 	/**
 	 * Generic body with coordinates with R: <0, 0, 0> and V: <0, 0, 0> and with mass of our sun (one
@@ -82,7 +82,7 @@ public class CelestialBody {
 	 * 
 	 * @return
 	 */
-	public GravitationalPotential getGravitationalPotential() {
+	public IGravitationalPotential getGravitationalPotential() {
 		return gravitationalPotential;
 	}
 

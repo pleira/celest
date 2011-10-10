@@ -32,7 +32,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author simon
  * 
  */
-public interface GravitationalPotential extends Vector3dField<Vector3D> {
+public interface IGravitationalPotential extends Vector3dField<Vector3D> {
 
 	/**
 	 * Evaluate the gravitational potential at a given point to the the acceleration caused by this

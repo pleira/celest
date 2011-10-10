@@ -22,9 +22,14 @@ import java.util.GregorianCalendar;
 /**
  * Basic julian date stuff
  * 
+ * <p>
+ * WARNING: Any arithmetic in this class is only accurate to the second ! (double => int for seconds)
+ * </p>
+ * 
  * @author Simon Billemont
  * 
  */
+// TODO: remove (int) sec casts
 public class JulianDate implements IJulianDate {
 
 	double	date;
