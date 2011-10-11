@@ -51,14 +51,14 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	 */
 	public static IKeplerElements as(IStateVector state, CelestialBody center) {
 		Class<? extends IStateVector> clazz = state.getClass();
-		if (KeplerElements.class.isAssignableFrom(clazz)) {
+		if (IKeplerElements.class.isAssignableFrom(clazz)) {
 			IKeplerElements k2 = (IKeplerElements) state;
 			if (k2.getCenterbody().equals(center))
 				return k2;
 			else {
 				// TODO: more native implementation
 			}
-		} else if (SphericalElements.class.isAssignableFrom(clazz)) {
+		} else if (ISphericalElements.class.isAssignableFrom(clazz)) {
 			// See Fundamentals of astrodynamics - II , K.F. Wakker, p 16-4, eqn 16.1-16.7
 			SphericalElements s = (SphericalElements) state;
 			double mu = center.getMu();

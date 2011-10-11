@@ -40,6 +40,16 @@ public interface ICartesianElements extends Cartesian, IStateVector {
 	public abstract ICartesianElements clone();
 
 	/**
+	 * Tests if two sets of cartesian elements hold the same variables (tests for equal
+	 * x,y,z,&#7819;,&#7823;,&#380;)
+	 * 
+	 * @param state2
+	 *            Cartesian elements to compare with
+	 * @return True if the two sets contain the same orbital elements
+	 */
+	public abstract boolean equals(ICartesianElements state2);
+
+	/**
 	 * Get the instantaneous position
 	 * <p>
 	 * <b>Unit: [m]</b>

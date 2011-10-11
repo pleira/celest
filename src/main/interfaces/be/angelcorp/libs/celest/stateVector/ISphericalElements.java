@@ -52,7 +52,7 @@ public interface ISphericalElements extends IStateVector {
 	 *            {@link SphericalElements} to compare with
 	 * @return True if the two sets contain the same orbital elements
 	 */
-	public abstract boolean equals(SphericalElements state2);
+	public abstract boolean equals(ISphericalElements state2);
 
 	/**
 	 * @see SphericalElements#centerbody

@@ -38,7 +38,7 @@ public class CartesianElements extends StateVector implements ICartesianElements
 	 * @param state
 	 *            {@link StateVector} to convert
 	 */
-	public static ICartesianElements as(ICartesianElements state) {
+	public static ICartesianElements as(IStateVector state) {
 		return state.toCartesianElements();
 	}
 
@@ -118,6 +118,11 @@ public class CartesianElements extends StateVector implements ICartesianElements
 	@Override
 	public ICartesianElements clone() {
 		return new CartesianElements(R.clone(), V.clone());
+	}
+
+	@Override
+	public boolean equals(ICartesianElements state2) {
+		return R.equals(state2.getR()) && V.equals(state2.getV());
 	}
 
 	/**

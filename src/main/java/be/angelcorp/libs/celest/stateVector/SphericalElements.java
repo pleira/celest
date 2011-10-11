@@ -45,14 +45,14 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 */
 	public static ISphericalElements as(IStateVector state, CelestialBody center) {
 		Class<? extends IStateVector> clazz = state.getClass();
-		if (SphericalElements.class.isAssignableFrom(clazz)) {
+		if (ISphericalElements.class.isAssignableFrom(clazz)) {
 			ISphericalElements s2 = (ISphericalElements) state;
 			if (s2.getCenterbody() == center)
 				return s2;
 			else {
 				// TODO: more native implementation
 			}
-		} else if (KeplerElements.class.isAssignableFrom(clazz)) {
+		} else if (IKeplerElements.class.isAssignableFrom(clazz)) {
 			IKeplerElements k = KeplerElements.as(state, center);
 			// TODO: implement Kepler conversion
 			throw new UnsupportedOperationException("Not implemented yet");
@@ -202,9 +202,10 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(SphericalElements state2) {
-		return state2.r == r && state2.alpha == alpha && state2.delta == delta &&
-				state2.v == v && state2.gamma == gamma && state2.psi == psi;
+	public boolean equals(ISphericalElements state2) {
+		return state2.getRadius() == r && state2.getRightAscension() == alpha &&
+				state2.getDeclination() == delta && state2.getVelocity() == v &&
+				state2.getFlightPathAngle() == gamma && state2.getFlightPathAzimuth() == psi;
 	}
 
 	/**
