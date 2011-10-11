@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.time;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.floor;
+import static java.lang.Math.round;
 
 /**
  * Large suite of time utils, based partially on the code of fundamentals of astrodynamics and
@@ -185,7 +186,7 @@ public abstract class TimeUtils {
 		temp = (temp - hr) * 60.0;
 		minute = (int) floor(temp);
 		sec = (temp - minute) * 60.0;
-		return new int[] { mon, day, hr, minute, (int) sec };
+		return new int[] { mon, day, hr, minute, (int) round(sec) };
 	}
 
 	/**
@@ -208,7 +209,7 @@ public abstract class TimeUtils {
 		int deg = (int) floor(temp);
 		int min = (int) floor((temp - deg) * 60.0);
 		double sec = (temp - deg - min / 60.0) * 3600.0;
-		return new int[] { deg, min, (int) sec };
+		return new int[] { deg, min, (int) round(sec) };
 	}
 
 	/**
@@ -317,7 +318,7 @@ public abstract class TimeUtils {
 		hr = (int) (temp);
 		min = (int) ((temp - hr) * 60.0);
 		sec = (temp - hr - min / 60.0) * 3600.0;
-		return new int[] { hr, min, (int) sec };
+		return new int[] { hr, min, (int) round(sec) };
 	}
 
 	/**
@@ -360,7 +361,7 @@ public abstract class TimeUtils {
 		hr = (int) floor(temp);
 		min = (int) floor((temp - hr) * 60.0);
 		sec = (temp - hr - min / 60.0) * 3600.0;
-		return new int[] { hr, min, (int) sec };
+		return new int[] { hr, min, (int) round(sec) };
 	}
 
 	/**
@@ -396,7 +397,7 @@ public abstract class TimeUtils {
 		int hr = (int) floor(ut * 0.01);
 		int min = (int) floor(ut - hr * 100.0);
 		double sec = (ut - hr * 100.0 - min) * 100.0;
-		return new int[] { hr, min, (int) sec };
+		return new int[] { hr, min, (int) round(sec) };
 	}
 
 	/**
@@ -458,7 +459,7 @@ public abstract class TimeUtils {
 		/* ----------------- find remaing data ------------------------- */
 		int[] mdhms = days2mdhms(year, days);
 		double sec = mdhms[4]; // - 0.00000086400;
-		return new int[] { year, mdhms[0], mdhms[1], mdhms[2], mdhms[3], (int) sec };
+		return new int[] { year, mdhms[0], mdhms[1], mdhms[2], mdhms[3], (int) round(sec) };
 	}
 
 	/**
