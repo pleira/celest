@@ -40,6 +40,15 @@ public interface IJulianDate {
 	public abstract double getJD();
 
 	/**
+	 * Get the internal julian date, but in the given external form
+	 * 
+	 * @param form
+	 *            Form to return the date in
+	 * @return Date represented by this julian date in the given form
+	 */
+	double getJD(JulianDateForm form);
+
+	/**
 	 * Set the julian date
 	 * 
 	 * @param date
@@ -54,5 +63,15 @@ public interface IJulianDate {
 	 *            JD
 	 */
 	public abstract void setJD(double date);
+
+	/**
+	 * Set the julian date
+	 * 
+	 * @param date
+	 *            date number in a form given by form
+	 * @param form
+	 *            Form that the given date is in
+	 */
+	void setJD(double date2, JulianDateForm form);
 
 }

@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * Basic julian date stuff
+ * Basic Julian Date container
  * 
  * <p>
  * WARNING: Any arithmetic in this class is only accurate to the second ! (double => int for seconds)
@@ -32,16 +32,46 @@ import java.util.GregorianCalendar;
 // TODO: remove (int) sec casts
 public class JulianDate implements IJulianDate {
 
+	/**
+	 * Julian Date represented by this class
+	 */
 	double	date;
 
+	/**
+	 * Create a Julian Date from a given {@link Date}
+	 * 
+	 * @param date
+	 *            Date to convert to a Julian Date
+	 */
 	public JulianDate(Date date) {
 		setDate(date);
 	}
 
+	/**
+	 * Create a Julian Date from the given Julian Date number
+	 * 
+	 * @param date
+	 *            Set the internal date to the given JD
+	 */
 	public JulianDate(double date) {
 		setJD(date);
 	}
 
+	/**
+	 * Create a Julian Date from a given date in the given form
+	 * 
+	 * @param date
+	 *            Date to create the Julian Date
+	 * @param form
+	 *            Form that the given date is in
+	 */
+	public JulianDate(double date, JulianDateForm form) {
+		setJD(date, form);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Date getDate() {
 		int[] dateArr = TimeUtils.invjday(date);
@@ -58,6 +88,17 @@ public class JulianDate implements IJulianDate {
 		return date;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double getJD(JulianDateForm form) {
+		return form.fromJD(date);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setDate(Date date) {
 		Calendar cal = new GregorianCalendar();
@@ -75,6 +116,14 @@ public class JulianDate implements IJulianDate {
 	@Override
 	public void setJD(double date) {
 		this.date = date;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setJD(double date2, JulianDateForm form) {
+		this.date = form.toJD(date2);
 	}
 
 }
