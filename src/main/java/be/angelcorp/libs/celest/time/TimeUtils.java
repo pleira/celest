@@ -90,7 +90,7 @@ public abstract class TimeUtils {
 
 		utc = hms_sec(localhr, min, sec);
 		ut1 = utc + dut1;
-		int[] tmpArr = hms_sec(ut1);
+		int[] tmpArr = sec_hms(ut1);
 		hrtemp = tmpArr[0];
 		mintemp = tmpArr[1];
 		sectemp = tmpArr[2];
@@ -100,7 +100,7 @@ public abstract class TimeUtils {
 		tai = utc + dat;
 
 		tt = tai + 32.184; // sec
-		tmpArr = hms_sec(tt);
+		tmpArr = sec_hms(tt);
 		hrtemp = tmpArr[0];
 		mintemp = tmpArr[1];
 		sectemp = tmpArr[2];
@@ -113,7 +113,7 @@ public abstract class TimeUtils {
 		me = me % 360.0;
 		me = me * deg2rad;
 		tdb = tt + 0.001657 * Math.sin(me) + 0.00001385 * Math.sin(2.0 * me);
-		tmpArr = hms_sec(tdb);
+		tmpArr = sec_hms(tdb);
 		hrtemp = tmpArr[0];
 		mintemp = tmpArr[1];
 		sectemp = tmpArr[2];
@@ -192,29 +192,6 @@ public abstract class TimeUtils {
 	/**
 	 * Convert degrees, minutes and seconds into radians.
 	 * 
-	 * @param dms
-	 *            dms ; rad
-	 * 
-	 * @return double[] containing;
-	 *         <ul>
-	 *         <li>degrees ; 0 .. 360</li>
-	 *         <li>minutes ; 0 .. 59</li>
-	 *         <li>seconds ; 0.0 .. 59.99</li>
-	 *         </ul>
-	 */
-	public static int[] dms_rad(double dms) {
-		double rad2deg = 180 / PI;
-		double temp = dms * rad2deg;
-
-		int deg = (int) floor(temp);
-		int min = (int) floor((temp - deg) * 60.0);
-		double sec = (temp - deg - min / 60.0) * 3600.0;
-		return new int[] { deg, min, (int) round(sec) };
-	}
-
-	/**
-	 * Convert degrees, minutes and seconds into radians.
-	 * 
 	 * @param deg
 	 *            degrees ; 0 .. 360
 	 * @param min
@@ -225,8 +202,7 @@ public abstract class TimeUtils {
 	 * @return result ; rad
 	 */
 	public static double dms_rad(int deg, int min, double sec) {
-		double rad2deg = 180 / PI;
-		return (deg + min / 60.0 + sec / 3600.0) / rad2deg;
+		return PI * (deg + min / 60.0 + sec / 3600.0) / 180.;
 	}
 
 	/**
@@ -276,49 +252,15 @@ public abstract class TimeUtils {
 	 * 
 	 */
 	public static double gstime(double jdut1) {
-		double twopi = 2.0 * PI;
-		double deg2rad = PI / 180.0;
-		double temp, tut1;
-
-		tut1 = (jdut1 - 2451545.0) / 36525.0;
-		temp = -6.2e-6 * tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 +
+		double tut1 = (jdut1 - 2451545.0) / 36525.0;
+		double temp = -6.2e-6 * tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 +
 					(876600.0 * 3600 + 8640184.812866) * tut1 + 67310.54841; // sec
-		temp = temp * deg2rad / 240.0 % 2 * PI; // 360/86400 = 1/240, to deg, to rad
+		temp = temp * (PI / 180.0) / 240.0 % 2 * PI; // 360/86400 = 1/240, to deg, to rad
 
-		// ------------------------ check quadrants ---------------------
 		if (temp < 0.0)
-			temp += twopi;
+			temp += 2.0 * PI;
 
 		return temp;
-	}
-
-	/**
-	 * Converts hours, minutes and seconds into radians.
-	 * 
-	 * 
-	 * @param hms
-	 *            Radians
-	 * 
-	 * @return int[] containing:
-	 *         <ul>
-	 *         <li>hours ; 0 .. 24</li>
-	 *         <li>minutes ; 0 .. 59</li>
-	 *         <li>seconds ; 0.0 .. 59.99</li>
-	 *         </ul>
-	 */
-	public static int[] hms_rad(double hms) {
-		int hr, min;
-		double sec;
-		double rad2deg = 180. / PI;
-		double temp;
-
-		// ------------------------ implementation ------------------
-		temp = 15.0 / rad2deg;
-		temp = hms / temp;
-		hr = (int) (temp);
-		min = (int) ((temp - hr) * 60.0);
-		sec = (temp - hr - min / 60.0) * 3600.0;
-		return new int[] { hr, min, (int) round(sec) };
 	}
 
 	/**
@@ -339,32 +281,6 @@ public abstract class TimeUtils {
 	}
 
 	/**
-	 * Convert hours, minutes and seconds to seconds from the beginning of the day.
-	 * 
-	 * @param utsec
-	 *            seconds ; 0.0 .. 86400.0
-	 * 
-	 * @return int[] containing
-	 *         <ul>
-	 *         <li>hours ;0 .. 24</li>
-	 *         <li>minutes ; 0 .. 59</li>
-	 *         <li>seconds ;0.0 .. 59.99</li>
-	 *         </ul>
-	 * 
-	 */
-	public static int[] hms_sec(double utsec) {
-		int hr, min;
-		double sec, temp;
-
-		// ------------------------ implementation ------------------
-		temp = utsec / 3600.0;
-		hr = (int) floor(temp);
-		min = (int) floor((temp - hr) * 60.0);
-		sec = (temp - hr - min / 60.0) * 3600.0;
-		return new int[] { hr, min, (int) round(sec) };
-	}
-
-	/**
 	 * Convert seconds from the beginning of the day to hours, minutes and seconds.
 	 * 
 	 * @param hr
@@ -379,25 +295,6 @@ public abstract class TimeUtils {
 	 */
 	public static double hms_sec(int hr, int min, double sec) {
 		return hr * 3600.0 + min * 60.0 + sec;
-	}
-
-	/**
-	 * Converts hours, minutes and seconds into universal time.
-	 * 
-	 * @param ut
-	 *            universal time
-	 * @return int[] containing:
-	 *         <ul>
-	 *         <li>hours ; 0 .. 24</li>
-	 *         <li>minutes ; 0 .. 59</li>
-	 *         <li>seconds ; 0.0 .. 59.99</li>
-	 *         </ul>
-	 */
-	public static int[] hms_ut(double ut) {
-		int hr = (int) floor(ut * 0.01);
-		int min = (int) floor(ut - hr * 100.0);
-		double sec = (ut - hr * 100.0 - min) * 100.0;
-		return new int[] { hr, min, (int) round(sec) };
 	}
 
 	/**
@@ -569,6 +466,91 @@ public abstract class TimeUtils {
 		if (lst < 0.0)
 			lst = lst + twopi;
 		return new double[] { lst, gst };
+	}
+
+	/**
+	 * Convert degrees, minutes and seconds into radians.
+	 * 
+	 * @param rad
+	 *            dms ; rad
+	 * 
+	 * @return double[] containing;
+	 *         <ul>
+	 *         <li>degrees ; 0 .. 360</li>
+	 *         <li>minutes ; 0 .. 59</li>
+	 *         <li>seconds ; 0.0 .. 59.99</li>
+	 *         </ul>
+	 */
+	public static int[] rad_dms(double rad) {
+		double temp = rad * 180 / PI;
+
+		int deg = (int) floor(temp);
+		int min = (int) floor((temp - deg) * 60.0);
+		double sec = (temp - deg - min / 60.0) * 3600.0;
+		return new int[] { deg, min, (int) round(sec) };
+	}
+
+	/**
+	 * Converts hours, minutes and seconds into radians.
+	 * 
+	 * 
+	 * @param rad
+	 *            Radians
+	 * 
+	 * @return int[] containing:
+	 *         <ul>
+	 *         <li>hours ; 0 .. 24</li>
+	 *         <li>minutes ; 0 .. 59</li>
+	 *         <li>seconds ; 0.0 .. 59.99</li>
+	 *         </ul>
+	 */
+	public static int[] rad_hms(double rad) {
+		double temp = (rad / 15.0) * (180. / PI);
+		int hr = (int) (temp);
+		int min = (int) ((temp - hr) * 60.0);
+		double sec = (temp - hr - min / 60.0) * 3600.0;
+		return new int[] { hr, min, (int) round(sec) };
+	}
+
+	/**
+	 * Convert hours, minutes and seconds to seconds from the beginning of the day.
+	 * 
+	 * @param utsec
+	 *            seconds ; 0.0 .. 86400.0
+	 * 
+	 * @return int[] containing
+	 *         <ul>
+	 *         <li>hours ;0 .. 24</li>
+	 *         <li>minutes ; 0 .. 59</li>
+	 *         <li>seconds ;0.0 .. 59.99</li>
+	 *         </ul>
+	 * 
+	 */
+	public static int[] sec_hms(double utsec) {
+		double temp = utsec / 3600.0;
+		int hr = (int) floor(temp);
+		int min = (int) floor((temp - hr) * 60.0);
+		double sec = (temp - hr - min / 60.0) * 3600.0;
+		return new int[] { hr, min, (int) round(sec) };
+	}
+
+	/**
+	 * Converts hours, minutes and seconds into universal time.
+	 * 
+	 * @param ut
+	 *            universal time
+	 * @return int[] containing:
+	 *         <ul>
+	 *         <li>hours ; 0 .. 24</li>
+	 *         <li>minutes ; 0 .. 59</li>
+	 *         <li>seconds ; 0.0 .. 59.99</li>
+	 *         </ul>
+	 */
+	public static int[] ut_hms(double ut) {
+		int hr = (int) floor(ut * 0.01);
+		int min = (int) floor(ut - hr * 100.0);
+		double sec = (ut - hr * 100.0 - min) * 100.0;
+		return new int[] { hr, min, (int) round(sec) };
 	}
 
 }
