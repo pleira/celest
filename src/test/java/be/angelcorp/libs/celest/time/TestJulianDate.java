@@ -30,11 +30,18 @@ public class TestJulianDate extends TestCase {
 		GregorianCalendar cal = new GregorianCalendar(2004, 10, 10, 12, 21, 18);
 		JulianDate jd = new JulianDate(2453289.0147916665);
 		JulianDate jd2 = new JulianDate(cal.getTime());
+		JulianDate jd3 = new JulianDate(2453289.0147916665, JulianDateForm.JULIAN_DATE);
+		JulianDate jd4 = new JulianDate(53288.5147916665, JulianDateForm.MODIFIED_JULIAN_DAY);
 
 		/* Check jd get */
 		/* Less then half a second off ? */
 		assertEquals(2453289.0147916665, jd.getJD(), 1. / (24 * 3600 * 1000));
 		assertEquals(2453289.0147916665, jd2.getJD(), 1. / (24 * 3600 * 1000));
+		assertEquals(2453289.0147916665, jd3.getJD(), 1. / (24 * 3600 * 1000));
+		assertEquals(2453289.0147916665, jd4.getJD(), 1. / (24 * 3600 * 1000));
+
+		assertEquals(2453289.0147916665, jd.getJD(JulianDateForm.JULIAN_DATE), 1. / (24 * 3600 * 1000));
+		assertEquals(2453289, jd.getJD(JulianDateForm.JULIAN_DAY_NUMBER), 1e-16);
 
 		/* Check date get */
 		/* Check conversion to date */
@@ -65,6 +72,8 @@ public class TestJulianDate extends TestCase {
 		cal.clear();
 		cal.set(1975, 11, 02, 18, 59, 49);
 		jd.setDate(cal.getTime());
+		assertEquals(2442719.2915393519, jd.getJD(), 1. / (24 * 3600 * 1000));
+		jd.setJD(42718.7915393519, JulianDateForm.MODIFIED_JULIAN_DAY);
 		assertEquals(2442719.2915393519, jd.getJD(), 1. / (24 * 3600 * 1000));
 	}
 }

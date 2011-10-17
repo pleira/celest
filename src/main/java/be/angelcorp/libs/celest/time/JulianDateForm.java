@@ -32,8 +32,8 @@ import static java.lang.Math.floor;
  * </pre>
  */
 public enum JulianDateForm {
-	JULIAN_DATE(1., 1.), // JD
-	JULIAN_DAY_NUMBER(1., 1., true), // JDN
+	JULIAN_DATE(1., 0.), // JD
+	JULIAN_DAY_NUMBER(1., 0., true), // JDN
 	REDUCED_JULIAN_DAY(1., -2400000), // RJD
 	MODIFIED_JULIAN_DAY(1., -2400000.5), // MJD
 	TRUNCATED_JULIAN_DAY(1., -2440000.5), // TJD, nasa def from Noerdlinger, 1995.
