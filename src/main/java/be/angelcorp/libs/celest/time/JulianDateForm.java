@@ -38,7 +38,7 @@ public enum JulianDateForm {
 	MODIFIED_JULIAN_DAY(1., -2400000.5), // MJD
 	TRUNCATED_JULIAN_DAY(1., -2440000.5), // TJD, nasa def from Noerdlinger, 1995.
 	DUBLIN_JULIAN_DAY(1., -2415020), // DJD
-	ANSI_DATE(1., 2305812.5, true),
+	ANSI_DATE(1., -2305812.5, true),
 	UNIX_TIME(86400., -2440587.5 * 86400.);
 
 	double	a;
