@@ -484,8 +484,8 @@ public abstract class TimeUtils {
 	public static int[] rad_dms(double rad) {
 		double temp = rad * 180 / PI;
 
-		int deg = (int) floor(temp);
-		int min = (int) floor((temp - deg) * 60.0);
+		int deg = (int) (temp);
+		int min = (int) ((temp - deg) * 60.0);
 		double sec = (temp - deg - min / 60.0) * 3600.0;
 		return new int[] { deg, min, (int) round(sec) };
 	}
@@ -505,7 +505,7 @@ public abstract class TimeUtils {
 	 *         </ul>
 	 */
 	public static int[] rad_hms(double rad) {
-		double temp = (rad / 15.0) * (180. / PI);
+		double temp = (rad / 15.0) * (180. / PI); // [([rad]/[deg/hr]) * [deg/rad]] = [hr]
 		int hr = (int) (temp);
 		int min = (int) ((temp - hr) * 60.0);
 		double sec = (temp - hr - min / 60.0) * 3600.0;

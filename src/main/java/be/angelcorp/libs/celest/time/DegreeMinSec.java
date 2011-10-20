@@ -19,53 +19,51 @@ import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
  * 
- * Represents an epoch in the format of hh:mm:ss.ss, more information in {@link IHourMinSec}
+ * Represents a direction in the format of aa°mm'ss.ss", more information in {@link IDegreeMinSec}
  * 
  * @author Simon Billemont
- * @see IHourMinSec
+ * @see IDegreeMinSec
  */
-public class HourMinSec implements IHourMinSec {
+public class DegreeMinSec implements IDegreeMinSec {
 
 	/**
-	 * Integer number of hours closest to, but just before the epoch [hour]
+	 * Integer number of degrees closest to, but just before the direction
 	 */
-	private int		hour;
+	private int		degree;
 	/**
-	 * Integer number of minutes closest to, but just before the epoch since the last complete hour
+	 * Integer number of minutes closest to, but just before the direction since the last complete degree
 	 * [minute]
 	 */
 	private int		minute;
 	/**
-	 * Number of seconds to the epoch from the preceding whole minute
+	 * Number of seconds to the direction from the preceding whole minute
 	 */
 	private double	second;
 
 	/**
-	 * Create a HMS time based on known DMS time
+	 * Create a DMS angle based on known HMS angle
 	 * 
-	 * @param dms
-	 *            Known {@link IDegreeMinSec} time
+	 * @param hms
+	 *            {@link IHourMinSec} angle
 	 */
-	public HourMinSec(IDegreeMinSec dms) {
-		// TODO: dont use int[]
-		int[] arr = TimeUtils.rad_hms(dms.getRadian());
-		setHour(arr[0]);
-		setMinute(arr[1]);
-		setSecond(arr[1]);
+	public DegreeMinSec(IHourMinSec hms) {
+		setDegree(hms.getHour() * 15); // 360/15
+		setMinute(minute);
+		setSecond(second);
 	}
 
 	/**
-	 * Create a hms time based on a given integer hour and minute and float second
+	 * Create a DMS angle based on a given integer degrees and minutes and float seconds
 	 * 
-	 * @param hour
-	 *            Hour of the epoch
+	 * @param deg
+	 *            Degrees to the direction
 	 * @param minute
-	 *            Minute of the epoch
+	 *            Minute to the direction
 	 * @param second
-	 *            Second of the epoch
+	 *            Second to the direction
 	 */
-	public HourMinSec(int hour, int minute, double second) {
-		setHour(hour);
+	public DegreeMinSec(int deg, int minute, double second) {
+		setDegree(deg);
 		setMinute(minute);
 		setSecond(second);
 	}
@@ -74,8 +72,8 @@ public class HourMinSec implements IHourMinSec {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getHour() {
-		return hour;
+	public int getDegree() {
+		return degree;
 	}
 
 	/**
@@ -84,6 +82,14 @@ public class HourMinSec implements IHourMinSec {
 	@Override
 	public int getMinute() {
 		return minute;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double getRadian() {
+		return TimeUtils.dms_rad(degree, minute, second);
 	}
 
 	/**
@@ -100,15 +106,15 @@ public class HourMinSec implements IHourMinSec {
 	 * @return A vector containing <hour, min, sec>
 	 */
 	public Vector3D getTime() {
-		return new Vector3D(hour, minute, second);
+		return new Vector3D(degree, minute, second);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setHour(int hour) {
-		this.hour = hour;
+	public void setDegree(int deg) {
+		this.degree = deg;
 	}
 
 	/**
@@ -123,16 +129,28 @@ public class HourMinSec implements IHourMinSec {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void setRadian(double rad) {
+		// TODO:change the array output so we have double seconds
+		int[] arr = TimeUtils.rad_dms(rad);
+		degree = arr[0];
+		minute = arr[1];
+		second = arr[2];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setSecond(double second) {
 		this.second = second;
 	}
 
 	/**
-	 * Represents the HMS epoch as a string in the form of 'hh:mm:ss.sss'
+	 * Represents the HMS epoch as a string in the form of aa°mm'ss.sss"
 	 */
 	@Override
 	public String toString() {
-		return String.format("%d:%d:%f", hour, minute, second);
+		return String.format("%d°%d'%f\"", degree, minute, second);
 	}
 
 }
