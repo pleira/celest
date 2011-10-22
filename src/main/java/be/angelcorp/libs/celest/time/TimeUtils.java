@@ -18,6 +18,7 @@ package be.angelcorp.libs.celest.time;
 import static java.lang.Math.PI;
 import static java.lang.Math.floor;
 import static java.lang.Math.round;
+import be.angelcorp.libs.math.MathUtils2;
 
 /**
  * Large suite of time utils, based partially on the code of fundamentals of astrodynamics and
@@ -27,10 +28,6 @@ import static java.lang.Math.round;
  * 
  */
 public abstract class TimeUtils {
-
-	public enum type {
-		JULIAN, GREGORIAN
-	}
 
 	/**
 	 * Find the time parameters and julian century values for inputs of utc or ut1. numerous outputs are
@@ -142,6 +139,43 @@ public abstract class TimeUtils {
 	}
 
 	/**
+	 * find the fractional days through a year given the year, month, day, hour, minute and second.
+	 * 
+	 * 
+	 * @param year
+	 *            year e.g. 1900 .. 2100
+	 * @param mon
+	 *            month e.g. 1 .. 12
+	 * @param day
+	 *            day e.g. 1 .. 28,29,30,31
+	 * @param hr
+	 *            hour e.g. 0 .. 23
+	 * @param min
+	 *            minute e.g. 0 .. 59
+	 * @param sec
+	 *            second e.g. 0.0 .. 59.999
+	 * 
+	 * @return day of year plus fraction of a day
+	 */
+	public static double dayofyear(int year, int month, int day, int hr, int minute, double sec) {
+		double days;
+		int lmonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		int i;
+
+		if (((year - 1900) % 4) == 0)
+			lmonth[1] = 29;
+
+		i = 1;
+		days = 0.0;
+		while ((i < month) && (i < 12)) {
+			days = days + lmonth[i - 1];
+			i = i + 1;
+		}
+		days = days + day + hr / 24.0 + minute / 1440.0 + sec / 86400.0;
+		return days;
+	}
+
+	/**
 	 * Convert the day of the year, days, to the equivalent month day, hour, minute and second.
 	 * 
 	 * @param year
@@ -158,7 +192,7 @@ public abstract class TimeUtils {
 	 *         <li>second e.g. 0.0 .. 59.999</li>
 	 *         </ul>
 	 */
-	public static int[] days2mdhms(int year, double days) {
+	public static int[] dayofyear_mdhms(int year, double days) {
 		int mon, day, hr, minute;
 		double sec;
 
@@ -182,10 +216,14 @@ public abstract class TimeUtils {
 
 		/* ----------------- find hours minutes and seconds ------------- */
 		temp = (days - dayofyr) * 24.0;
-		hr = (int) floor(temp);
+		hr = (int) (temp);
 		temp = (temp - hr) * 60.0;
-		minute = (int) floor(temp);
+		minute = (int) (temp);
 		sec = (temp - minute) * 60.0;
+		if (round(sec) > 59) { // Artifact due to rounding the seconds
+			minute++;
+			sec = 0;
+		}
 		return new int[] { mon, day, hr, minute, (int) round(sec) };
 	}
 
@@ -206,40 +244,40 @@ public abstract class TimeUtils {
 	}
 
 	/**
-	 * find the fractional days through a year given the year, month, day, hour, minute and second.
+	 * Find the julian date given the year, month, day, and time. the julian date is defined by each
+	 * elapsed day since noon, jan 1, 4713 bc.
 	 * 
+	 * <p>
+	 * This routine uses an accurate calculation for JD, when the year is outside the 1900-2100 interval.
+	 * When it is inside this interval, use {@link TimeUtils#jday(int, int, int, int, int, double)}.
+	 * </p>
 	 * 
 	 * @param year
-	 *            year e.g. 1900 .. 2100
+	 *            year e.g. all, 1900 .. 2100
 	 * @param mon
 	 *            month e.g. 1 .. 12
 	 * @param day
 	 *            day e.g. 1 .. 28,29,30,31
 	 * @param hr
-	 *            hour e.g. 0 .. 23
+	 *            universal time hour e.g. 0 .. 23
 	 * @param min
-	 *            minute e.g. 0 .. 59
+	 *            universal time min e.g. 0 .. 59
 	 * @param sec
-	 *            second e.g. 0.0 .. 59.999
-	 * 
-	 * @return day of year plus fraction of a day
+	 *            universal time sec e.g. 0.0 .. 59.999
+	 * @return julian date
 	 */
-	public static double finddays(int year, int month, int day, int hr, int minute, double sec) {
-		double days;
-		int lmonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		int i;
-
-		if (((year - 1900) % 4) == 0)
-			lmonth[1] = 29;
-
-		i = 1;
-		days = 0.0;
-		while ((i < month) && (i < 12)) {
-			days = days + lmonth[i - 1];
-			i = i + 1;
+	public static double gregorian_jd(int year, int mon, int day, int hr, int minute, double sec) {
+		double b, jd;
+		if (mon <= 2) {
+			year = year - 1;
+			mon = mon + 12;
 		}
-		days = days + day + hr / 24.0 + minute / 1440.0 + sec / 86400.0;
-		return days;
+		b = 2 - floor(year * 0.01) + floor(floor(year * 0.01) * 0.25);
+		jd = floor(365.25 * (year + 4716)) +
+					floor(30.6001 * (mon + 1)) +
+					day + b - 1524.5 +
+					((sec / 60.0 + minute) / 60.0 + hr) / 24.0; // ut in days
+		return jd;
 	}
 
 	/**
@@ -254,11 +292,9 @@ public abstract class TimeUtils {
 	public static double gstime(double jdut1) {
 		double tut1 = (jdut1 - 2451545.0) / 36525.0;
 		double temp = -6.2e-6 * tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 +
-					(876600.0 * 3600 + 8640184.812866) * tut1 + 67310.54841; // sec
-		temp = temp * (PI / 180.0) / 240.0 % 2 * PI; // 360/86400 = 1/240, to deg, to rad
-
-		if (temp < 0.0)
-			temp += 2.0 * PI;
+					(876600.0 * 3600. + 8640184.812866) * tut1 + 67310.54841; // sec
+		temp = temp * (PI / 180.0) / 240.0; // 360/86400 = 1/240, to deg, to rad
+		temp = MathUtils2.mod(temp, 2 * PI);
 
 		return temp;
 	}
@@ -277,7 +313,7 @@ public abstract class TimeUtils {
 	 * 
 	 */
 	public static double hms_rad(int hr, int min, double sec) {
-		return hr + min / 60.0 + sec / 3600.0;
+		return (hr + min / 60.0 + sec / 3600.0) * (15. * PI / 180.);
 	}
 
 	/**
@@ -354,7 +390,7 @@ public abstract class TimeUtils {
 		}
 
 		/* ----------------- find remaing data ------------------------- */
-		int[] mdhms = days2mdhms(year, days);
+		int[] mdhms = dayofyear_mdhms(year, days);
 		double sec = mdhms[4]; // - 0.00000086400;
 		return new int[] { year, mdhms[0], mdhms[1], mdhms[2], mdhms[3], (int) round(sec) };
 	}
@@ -366,15 +402,19 @@ public abstract class TimeUtils {
 	 *            julian date
 	 * @return seconds since epoch 1 jan 2000
 	 */
-	public static double jd2sse(double jd) {
+	public static double jd_sse(double jd) {
 		double temp;
 		temp = (jd - 2451544.5) * 86400.0;
 		return temp;
 	}
 
 	/**
-	 * Find the julian date given the year, month, day, and time. the julian date is defined by each
+	 * Find the Julian Date given the year, month, day, and time. the Julian Date is defined by each
 	 * elapsed day since noon, jan 1, 4713 bc.
+	 * <p>
+	 * This formulation only accurate over the interval year 1900-2100, otherwise use
+	 * {@link TimeUtils#gregorian_jd(int, int, int, int, int, double)}
+	 * </p>
 	 * 
 	 * @param year
 	 *            year e.g. 1900 .. 2100
@@ -400,47 +440,6 @@ public abstract class TimeUtils {
 	}
 
 	/**
-	 * Find the julian date given the year, month, day, and time. the julian date is defined by each
-	 * elapsed day since noon, jan 1, 4713 bc.
-	 * 
-	 * @param year
-	 *            year e.g. all, 1900 .. 2100
-	 * @param mon
-	 *            month e.g. 1 .. 12
-	 * @param day
-	 *            day e.g. 1 .. 28,29,30,31
-	 * @param hr
-	 *            universal time hour e.g. 0 .. 23
-	 * @param min
-	 *            universal time min e.g. 0 .. 59
-	 * @param sec
-	 *            universal time sec e.g. 0.0 .. 59.999
-	 * @param whichtype
-	 *            julian or gregorian calender
-	 * @return julian date
-	 */
-	public static double jdayall(int year, int mon, int day, int hr, int minute, double sec, type whichtype) {
-		double b, jd;
-		if (mon <= 2) {
-			year = year - 1;
-			mon = mon + 12;
-		}
-		/* --------- use for julian calender, every 4 years --------- */
-		if (whichtype == type.JULIAN) {
-			b = 0.0;
-			return b;
-		} else {
-			/* ---------------------- use for gregorian ----------------- */
-			b = 2 - floor(year * 0.01) + floor(floor(year * 0.01) * 0.25);
-			jd = floor(365.25 * (year + 4716)) +
-					floor(30.6001 * (mon + 1)) +
-					day + b - 1524.5 +
-					((sec / 60.0 + minute) / 60.0 + hr) / 24.0; // ut in days
-			return jd;
-		}
-	}
-
-	/**
 	 * Find the local sidereal time at a given location.
 	 * 
 	 * @param lon
@@ -455,16 +454,8 @@ public abstract class TimeUtils {
 	 *         </ul>
 	 */
 	public static double[] lstime(double lon, double jdut1) {
-		double lst, gst;
-		double twopi = 2.0 * PI;
-
-		gst = gstime(jdut1);
-		lst = lon + gst;
-
-		/* ------------------------ check quadrants --------------------- */
-		lst = lst % twopi;
-		if (lst < 0.0)
-			lst = lst + twopi;
+		double gst = gstime(jdut1);
+		double lst = MathUtils2.mod(lon + gst, 2.0 * PI);
 		return new double[] { lst, gst };
 	}
 
