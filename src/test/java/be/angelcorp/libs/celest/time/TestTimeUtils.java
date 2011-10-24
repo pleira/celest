@@ -111,7 +111,10 @@ public class TestTimeUtils extends TestCase {
 	}
 
 	public void testJd2sse() {
-		// jd2sse(double)
+		// Time since 1 januari 2000, 00:00:00 (UTC time); 372802653 seconds
+		// http://www.timeanddate.com/counters/year2000.html
+		// Monday, 24 oct 2011, 20:17:33 UTC
+		assertEquals(372802653.015, TimeUtils.jd_sse(2455859.345521), 1E-3);
 	}
 
 	public void testJday() {
