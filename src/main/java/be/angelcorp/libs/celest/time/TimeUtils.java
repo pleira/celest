@@ -132,7 +132,7 @@ public abstract class TimeUtils {
 	 */
 	public static int dayofweek(double jd) {
 		// ----- Be sure jd is at 0.0 h on the day of interest -----
-		jd = floor(jd); // floor(0.5+jd)
+		jd = floor(0.5 + jd);
 
 		int temp = (int) floor(jd - 7 * floor((jd + 1) / 7) + 2);
 		return temp;
