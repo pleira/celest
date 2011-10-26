@@ -47,11 +47,7 @@ public class HourMinSec implements IHourMinSec {
 	 *            Known {@link IDegreeMinSec} time
 	 */
 	public HourMinSec(IDegreeMinSec dms) {
-		// TODO: dont use int[]
-		int[] arr = TimeUtils.rad_hms(dms.getRadian());
-		setHour(arr[0]);
-		setMinute(arr[1]);
-		setSecond(arr[1]);
+		setRadian(dms.getRadian());
 	}
 
 	/**
@@ -90,6 +86,14 @@ public class HourMinSec implements IHourMinSec {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public double getRadian() {
+		return TimeUtils.hms_rad(hour, minute, second);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public double getSecond() {
 		return second;
 	}
@@ -117,6 +121,18 @@ public class HourMinSec implements IHourMinSec {
 	@Override
 	public void setMinute(int minute) {
 		this.minute = minute;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setRadian(double rad) {
+		// TODO: make it the seconds more accurate then an integer
+		int[] arr = TimeUtils.rad_hms(rad);
+		setHour(arr[0]);
+		setMinute(arr[1]);
+		setSecond(arr[2]);
 	}
 
 	/**

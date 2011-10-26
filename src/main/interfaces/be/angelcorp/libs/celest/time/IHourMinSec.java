@@ -43,6 +43,13 @@ public interface IHourMinSec {
 	public abstract int getMinute();
 
 	/**
+	 * Get the equivalent amount of radians as this HMS. 24h == 360° == 2&pi; rad
+	 * 
+	 * @return Radians to the epoch
+	 */
+	public abstract double getRadian();
+
+	/**
 	 * Get the amount of seconds preceding the epoch from the last complete minute.
 	 * 
 	 * @return Seconds to the epoch
@@ -64,6 +71,14 @@ public interface IHourMinSec {
 	 *            Minutes to the epoch
 	 */
 	public abstract void setMinute(int minute);
+
+	/**
+	 * Set the equivalent amount of radians as this HMS. 24h == 360° == 2&pi; rad
+	 * 
+	 * @param rad
+	 *            Radians to the epoch
+	 */
+	public abstract void setRadian(double rad);
 
 	/**
 	 * Set the amount of seconds preceding the epoch from the last complete minute.

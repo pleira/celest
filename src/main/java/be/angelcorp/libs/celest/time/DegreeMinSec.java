@@ -47,9 +47,7 @@ public class DegreeMinSec implements IDegreeMinSec {
 	 *            {@link IHourMinSec} angle
 	 */
 	public DegreeMinSec(IHourMinSec hms) {
-		setDegree(hms.getHour() * 15); // 360/15
-		setMinute(minute);
-		setSecond(second);
+		setRadian(hms.getRadian());
 	}
 
 	/**

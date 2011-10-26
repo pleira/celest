@@ -15,22 +15,29 @@
  */
 package be.angelcorp.libs.celest.time;
 
+import static java.lang.Math.PI;
 import junit.framework.TestCase;
 import be.angelcorp.libs.celest.unit.Tests;
 
 public class TestHourMinSec extends TestCase {
 
-	public void testGetters() {
+	public void testHourMinSec() {
+		double precision_1s_hms_in_rad = (1 / 3600.0) * (15. * PI / 180.); // ~7E-5
+
 		HourMinSec hms = new HourMinSec(12, 59, 22.1567587);
 		assertEquals(12, hms.getHour());
 		assertEquals(59, hms.getMinute());
 		assertEquals(22.1567587, hms.getSecond(), 1E-16);
-
 		Tests.assertEquals(new double[] { 12, 59, 22.1567587 }, hms.getTime().toArray(), 1E-16);
-	}
 
-	public void testSetters() {
-		HourMinSec hms = new HourMinSec(0, 0, 0);
+		IDegreeMinSec dms = new DegreeMinSec(180, 59, 22.1567587);
+		hms = new HourMinSec(dms);
+		Tests.assertEquals(hms.getRadian(), dms.getRadian(), precision_1s_hms_in_rad);
+		dms = new DegreeMinSec(12, 01, 59.1564);
+		hms.setRadian(dms.getRadian());
+		Tests.assertEquals(hms.getRadian(), dms.getRadian(), precision_1s_hms_in_rad);
+
+		hms = new HourMinSec(0, 0, 0);
 		hms.setHour(12);
 		Tests.assertEquals(new double[] { 12, 0, 0 }, hms.getTime().toArray(), 1E-16);
 		hms.setMinute(59);
@@ -38,5 +45,4 @@ public class TestHourMinSec extends TestCase {
 		hms.setSecond(22.1567587);
 		Tests.assertEquals(new double[] { 12, 59, 22.1567587 }, hms.getTime().toArray(), 1E-16);
 	}
-
 }
