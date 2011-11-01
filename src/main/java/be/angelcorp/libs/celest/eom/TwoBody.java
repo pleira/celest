@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.eom;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.bodyCollection.ITwoBodyCollection;
 import be.angelcorp.libs.celest.body.bodyCollection.TwoBodyCollection;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.eom.forcesmodel.ForceModelCore;
@@ -49,7 +50,7 @@ public class TwoBody extends ForceModelCore {
 	 * @param body
 	 *            The body for which to compute the {@link IStateDerivatives}
 	 */
-	public TwoBody(TwoBodyCollection bodies, CelestialBody body) {
+	public TwoBody(ITwoBodyCollection bodies, CelestialBody body) {
 		super(body);
 		addForce(new GravitationalForce_C(body, bodies.other(body)));
 	}

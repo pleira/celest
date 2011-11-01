@@ -20,16 +20,40 @@ import java.util.LinkedList;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 
-public class TwoBodyCollection implements BodyCollection {
+/**
+ * Implementation of {@link ITwoBodyCollection}, this is a collection holding always just two bodies.
+ * There are some methods to allow for getting the other body in the collection if one is known.
+ * 
+ * @author Simon Billemont
+ * @see ITwoBodyCollection
+ */
+public class TwoBodyCollection implements ITwoBodyCollection {
 
+	/**
+	 * First body in the collection (usually the center body)
+	 */
 	private CelestialBody	body1;
+	/**
+	 * Second body in the collection (usually the satellite body)
+	 */
 	private CelestialBody	body2;
 
+	/**
+	 * Create a collection of two known bodies
+	 * 
+	 * @param body1
+	 *            The first body
+	 * @param body2
+	 *            The second body
+	 */
 	public TwoBodyCollection(CelestialBody body1, CelestialBody body2) {
 		this.body1 = body1;
 		this.body2 = body2;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Collection<CelestialBody> getBodies() {
 		LinkedList<CelestialBody> l = new LinkedList<CelestialBody>();
@@ -38,21 +62,26 @@ public class TwoBodyCollection implements BodyCollection {
 		return l;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public CelestialBody getBody1() {
 		return body1;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public CelestialBody getBody2() {
 		return body2;
 	}
 
 	/**
-	 * Find the other body when one body is known
-	 * 
-	 * @param body
-	 *            One body in the twobody syste�
-	 * @return the other body
+	 * {@inheritDoc}
 	 */
+	@Override
 	public CelestialBody other(CelestialBody body) {
 		if (body == body1)
 			return body2;
@@ -60,10 +89,18 @@ public class TwoBodyCollection implements BodyCollection {
 			return body1;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setBody1(CelestialBody body1) {
 		this.body1 = body1;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setBody2(CelestialBody body2) {
 		this.body2 = body2;
 	}

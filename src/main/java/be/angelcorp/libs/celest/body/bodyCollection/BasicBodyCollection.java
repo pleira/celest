@@ -15,23 +15,36 @@
  */
 package be.angelcorp.libs.celest.body.bodyCollection;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 
 /**
- * Holds a collection of Celestial bodies.eg a universe or solar system
+ * Basic implementation of a {@link IBodyCollection} using a {@link HashSet}
  * 
  * @author simon
  * 
  */
-public interface BodyCollection {
+public class BasicBodyCollection extends HashSet<CelestialBody> implements IBodyCollection {
 
 	/**
-	 * Get the bodies in the container
+	 * Create a body collection based on a Hashset (order is not preserved!) and the given bodies
 	 * 
-	 * @return A collection of bodies in the container
+	 * @param bodies
+	 *            Bodies to add the the set.
 	 */
-	public Collection<CelestialBody> getBodies();
+	public BasicBodyCollection(CelestialBody... bodies) {
+		addAll(Arrays.asList(bodies));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<CelestialBody> getBodies() {
+		return this;
+	}
 
 }

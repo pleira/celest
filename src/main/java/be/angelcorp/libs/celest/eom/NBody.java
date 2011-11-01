@@ -16,7 +16,7 @@
 package be.angelcorp.libs.celest.eom;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.body.bodyCollection.BodyCollection;
+import be.angelcorp.libs.celest.body.bodyCollection.IBodyCollection;
 import be.angelcorp.libs.celest.eom.forcesmodel.ForceModelCore;
 import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce_C;
 
@@ -34,7 +34,7 @@ public class NBody extends ForceModelCore {
 	 * @param bodies
 	 *            All the bodies in the system
 	 */
-	public NBody(CelestialBody body, BodyCollection bodies) {
+	public NBody(CelestialBody body, IBodyCollection bodies) {
 		super(body);
 		for (CelestialBody body2 : bodies.getBodies()) {
 			if (!body2.equals(body))

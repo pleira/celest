@@ -16,21 +16,22 @@
 package be.angelcorp.libs.celest.body.bodyCollection;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 
 /**
- * Basic implementation of a {@link BodyCollection} using a {@link HashSet}
+ * Holds a collection of Celestial bodies. This can be e.g. a universe or solar system
  * 
  * @author simon
  * 
  */
-public class BodyCollectionImpl extends HashSet<CelestialBody> implements BodyCollection {
+public interface IBodyCollection {
 
-	@Override
-	public Collection<CelestialBody> getBodies() {
-		return this;
-	}
+	/**
+	 * Get the bodies in the container
+	 * 
+	 * @return A collection of bodies in the container
+	 */
+	public Collection<CelestialBody> getBodies();
 
 }
