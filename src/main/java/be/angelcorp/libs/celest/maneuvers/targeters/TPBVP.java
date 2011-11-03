@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters;
 import org.apache.commons.math.MathException;
 
 import be.angelcorp.libs.celest.stateVector.IStateVector;
-import be.angelcorp.libs.celest.trajectory.Trajectory;
+import be.angelcorp.libs.celest.trajectory.ITrajectory;
 
 /**
  * 
@@ -75,6 +75,6 @@ public abstract class TPBVP {
 	 * @return An optimal trajectory
 	 * @throws MathException
 	 */
-	public abstract Trajectory getTrajectory() throws MathException;
+	public abstract ITrajectory getTrajectory() throws MathException;
 
 }

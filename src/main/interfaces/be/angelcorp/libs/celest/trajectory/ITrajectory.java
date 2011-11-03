@@ -16,22 +16,26 @@
 package be.angelcorp.libs.celest.trajectory;
 
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.stateVector.IStateVector;
-import be.angelcorp.libs.math.functions.UnivariateVectorFunction;
 
 /**
+ * A trajectory is a function of time which results in a state for that given time. Evaluating a
+ * trajectory over time yields a the path that the satellite follows over the time interval.
  * 
- * @author simon
- * 
+ * @author Simon Billemont
  */
-public abstract class Trajectory implements UnivariateVectorFunction {
+public interface ITrajectory {
 
-	public abstract IStateVector evaluate(double t) throws FunctionEvaluationException;
+	/**
+	 * Find the state of a body at a given time
+	 * 
+	 * @param t
+	 *            Time of the epoch [s] starting from 0
+	 * @return The state at the given epoch
+	 * @throws FunctionEvaluationException
+	 *             When the state cannot be computed
+	 */
+	public IStateVector evaluate(double t) throws FunctionEvaluationException;
 
-	@Override
-	public RealVector value(double t) throws FunctionEvaluationException {
-		return evaluate(t).toVector();
-	}
 }

@@ -21,14 +21,33 @@ import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
 
-public class KeplerTrajectory extends Trajectory {
+/**
+ * Implements a {@link IKeplerTrajectory}, a trajectory based on Kepler elements propagated using
+ * classical Keplerian theory.
+ * 
+ * @author Simon Billemont
+ * @see IKeplerTrajectory
+ */
+public class KeplerTrajectory implements IKeplerTrajectory {
 
+	/**
+	 * Initial Kepler elements that are propagated
+	 */
 	private final IKeplerElements	k;
 
+	/**
+	 * Create a trajectory based on propagated classical (Kepler) elements.
+	 * 
+	 * @param k
+	 *            Initial Kepler elements at time 0.
+	 */
 	public KeplerTrajectory(IKeplerElements k) {
 		this.k = k;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public IStateVector evaluate(double t) throws FunctionEvaluationException {
 		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());

@@ -24,11 +24,11 @@ import org.apache.commons.math.analysis.integration.LegendreGaussIntegrator;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
-import be.angelcorp.libs.celest.trajectory.Trajectory;
+import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
 
-public class ExpoSinTrajectory extends Trajectory {
+public class ExpoSinTrajectory implements ITrajectory {
 
 	private ExponentialSinusoid	exposin;
 	private double				thetaMax;

@@ -25,13 +25,20 @@ import be.angelcorp.libs.celest.stateVector.IStateVector;
 import com.google.common.collect.Maps;
 
 /**
+ * Implements a {@link ICompositeTrajectory}, a trajectory that effectively patches several trajectories
+ * together. The sub-trajectory evaluated is the one with the starting epoch closest to but before the
+ * requested epoch.
  * 
- * @author simon
- * 
+ * @author Simon Billemont
+ * @see ICompositeTrajectory
  */
-public class CompositeTrajectory extends Trajectory {
+public class CompositeTrajectory implements ICompositeTrajectory {
 
-	private TreeMap<Double, Trajectory>	trajectories	= Maps.newTreeMap();
+	/**
+	 * Sorted map that stores trajectories with there corresponding starting time
+	 */
+	private TreeMap<Double, ITrajectory>	trajectories	= Maps.newTreeMap();
+
 	/**
 	 * Make time relative to the start of the trajectory segment
 	 * <p>
@@ -41,26 +48,38 @@ public class CompositeTrajectory extends Trajectory {
 	 * t is the global time at which this CompositeTrajectory is evaluated
 	 * </p>
 	 */
-	private boolean						relativeTime	= true;
+	private boolean							relativeTime	= true;
 
-	public void addTrajectory(Trajectory t, double t0) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addTrajectory(ITrajectory t, double t0) {
 		trajectories.put(t0, t);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public IStateVector evaluate(double t) throws FunctionEvaluationException {
-		Entry<Double, Trajectory> entry = trajectories.floorEntry(t);
-		Trajectory trajectory = entry.getValue();
+		Entry<Double, ITrajectory> entry = trajectories.floorEntry(t);
+		ITrajectory trajectory = entry.getValue();
 
 		if (trajectory == null)
 			throw new FunctionEvaluationException(t, "No trajectory found");
+
 		if (relativeTime)
 			return trajectory.evaluate(t - entry.getKey());
 		else
 			return trajectory.evaluate(t);
 	}
 
-	public void removeTrajectory(Trajectory trajectory) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeTrajectory(ITrajectory trajectory) {
 		for (Double t : trajectories.keySet()) {
 			if (trajectories.get(t) == trajectory)
 				trajectories.remove(t);

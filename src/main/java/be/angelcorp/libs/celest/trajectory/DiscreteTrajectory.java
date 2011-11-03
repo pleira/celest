@@ -25,25 +25,50 @@ import be.angelcorp.libs.celest.stateVector.StateVector;
 
 import com.google.common.collect.Maps;
 
-public class DiscreteTrajectory extends Trajectory {
+/**
+ * Implements a {@link IDiscreteTrajectory}, a trajectory that evaluates based on a set of known states
+ * at known epochs. Does <b>NOT</b> perform interpolation.
+ * 
+ * @author Simon Billemont
+ * @see IDiscreteTrajectory
+ */
+public class DiscreteTrajectory implements IDiscreteTrajectory {
 
-	private TreeMap<Double, StateVector>	states	= Maps.newTreeMap();
+	/**
+	 * Sorting container which sorts all known states at there respective epoch
+	 */
+	private TreeMap<Double, IStateVector>	states	= Maps.newTreeMap();
 
+	/**
+	 * Create a new {@link DiscreteTrajectory}, with no known states
+	 */
 	public DiscreteTrajectory() {
-
 	}
 
+	/**
+	 * Create a new {@link DiscreteTrajectory} with the given state at epoch 0.
+	 * 
+	 * @param state
+	 *            State at epoch t=0s
+	 */
 	public DiscreteTrajectory(StateVector state) {
 		addState(0, state);
 	}
 
-	public void addState(double t, StateVector state) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addState(double t, IStateVector state) {
 		states.put(t, state);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public IStateVector evaluate(double t) throws FunctionEvaluationException {
-		Entry<Double, StateVector> entry = states.floorEntry(t);
+		Entry<Double, IStateVector> entry = states.floorEntry(t);
 		if (entry == null)
 			throw new FunctionEvaluationException(t, "No state found before the given time index");
 		return entry.getValue();
