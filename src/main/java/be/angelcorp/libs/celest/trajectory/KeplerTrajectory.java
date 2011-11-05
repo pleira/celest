@@ -19,7 +19,6 @@ import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.stateVector.IKeplerElements;
-import be.angelcorp.libs.celest.stateVector.IStateVector;
 
 /**
  * Implements a {@link IKeplerTrajectory}, a trajectory based on Kepler elements propagated using
@@ -49,7 +48,7 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IStateVector evaluate(double t) throws FunctionEvaluationException {
+	public IKeplerElements evaluate(double t) throws FunctionEvaluationException {
 		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 		double dM = n * t;
 		IKeplerElements k2 = k.clone();
