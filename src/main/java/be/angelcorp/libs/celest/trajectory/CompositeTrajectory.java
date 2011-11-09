@@ -64,10 +64,10 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	@Override
 	public IStateVector evaluate(double t) throws FunctionEvaluationException {
 		Entry<Double, ITrajectory> entry = trajectories.floorEntry(t);
-		ITrajectory trajectory = entry.getValue();
-
-		if (trajectory == null)
+		if (entry == null)
 			throw new FunctionEvaluationException(t, "No trajectory found");
+
+		ITrajectory trajectory = entry.getValue();
 
 		if (relativeTime)
 			return trajectory.evaluate(t - entry.getKey());
