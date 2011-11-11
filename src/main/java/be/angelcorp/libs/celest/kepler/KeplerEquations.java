@@ -28,8 +28,49 @@ import be.angelcorp.libs.math.linear.Vector3D;
 public abstract class KeplerEquations {
 
 	public static double	angleTolarance					= 1E-6;
-	public static double	eccentricityTolarance			= 1E-3;
+	public static double	eccentricityTolarance			= 1E-4;
 	public static double	eccentricAnomalyIterationTol	= 1E-6;
+
+	/**
+	 * Compute the argument of latitude. This is the angle between the nodal vector (n) and the radius
+	 * vector (r). This is often used for circular inclined orbits, when arguement of pericenter is
+	 * undefined.
+	 * 
+	 * <pre>
+	 * u = &nu; + &omega; = cos<sup>-1</sup>( (n_vec . r_vec) / (|n_vec| |r_vec|) )
+	 * </pre>
+	 * 
+	 * @param w
+	 *            Argument of pericenter [rad]
+	 * @param nu
+	 *            True anomaly [rad]
+	 * @return Argument of latitude [rad]
+	 */
+	public static double arguementOfLatitude(double w, double nu) {
+		return w + nu;
+	}
+
+	/**
+	 * Compute the argument of latitude. This is the angle between the nodal vector (n) and the radius
+	 * vector (r). This is often used for circular inclined orbits, when arguement of pericenter is
+	 * undefined.
+	 * 
+	 * <pre>
+	 * u = &nu; + &omega; = cos<sup>-1</sup>( (n_vec . r_vec) / (|n_vec| |r_vec|) )
+	 * </pre>
+	 * 
+	 * @param nodalVector
+	 *            Vector pointing towards the ascending node of the orbit
+	 * @param radius
+	 *            Vector pointing to the satellite
+	 * @return Argument of latitude [rad]
+	 */
+	public static double arguementOfLatitude(Vector3D nodalVector, Vector3D radius) {
+		double u = Math.acos(nodalVector.dot(radius) / (nodalVector.getNorm() * radius.getNorm()));
+		if (radius.getZ() < 0)// Checking for quadrant
+			u = 2 * Math.PI - u;
+		return u;
+	}
 
 	/**
 	 * Kepler orbital elements ECI Position orbit conversion
@@ -409,6 +450,95 @@ public abstract class KeplerEquations {
 	}
 
 	/**
+	 * Compute the true longitude, the angle from the x-axis to the position of the satellite, measured
+	 * eastwards.
+	 * 
+	 * <pre>
+	 * cos( &lambda;<sub>true</sub> ) = r_vec<sub>x</sub> / |r_vec|
+	 * </pre>
+	 * <p>
+	 * Note when the orbit is known to be equatorial (low inclination), use
+	 * {@link KeplerEquations#trueLongitudeApproximation(double, double, double)} instead as it is
+	 * faster.
+	 * </p>
+	 * 
+	 * @param radius
+	 *            Satellite position vector
+	 * @return The true longitude
+	 */
+	public static double trueLongitude(Vector3D radius) {
+		double lambda_true = Math.acos(radius.getX() / radius.getNorm());
+		if (radius.getY() < 0)// Checking for quadrant
+			lambda_true = 2 * Math.PI - lambda_true;
+		return lambda_true;
+	}
+
+	/**
+	 * Compute the true longitude, the angle from the x-axis to the position of the satellite, measured
+	 * eastwards.
+	 * 
+	 * <pre>
+	 * &lambda;<sub>true</sub> &#8776; &Omega; + &omega; + &nu;
+	 * </pre>
+	 * <p>
+	 * Note only use this when the orbit is known to be equatorial (low inclination). Alternatively use
+	 * {@link KeplerEquations#trueLongitude(Vector3D))}.
+	 * </p>
+	 * 
+	 * @param radius
+	 *            Satellite position vector
+	 * @return The true longitude
+	 */
+	public static double trueLongitudeApproximation(double raan, double w, double nu) {
+		return raan + w + nu;
+	}
+
+	/**
+	 * Return the true longitude of periapse:
+	 * 
+	 * <pre>
+	 * cos(w_true) = (a&#773;;c)
+	 * </pre>
+	 * <p>
+	 * When the known to be low, use
+	 * {@link KeplerEquations#trueLongitudeOfPeriapseApproximate(double, double)}, as it performs faster.
+	 * </p>
+	 * 
+	 * @param RAAN
+	 *            Right ascension of the ascending node [rad]
+	 * @param w
+	 *            Argument of pericenter [RAD]
+	 * @return True longitude of periapse [RAD]
+	 */
+	public static double trueLongitudeOfPeriapse(Vector3D eccentricityVector) {
+		double w_true = Math.acos(eccentricityVector.getX() / eccentricityVector.getNorm());
+		if (eccentricityVector.getY() < 0)// Checking for quadrant
+			w_true = 2 * Math.PI - w_true;
+		return w_true;
+	}
+
+	/**
+	 * Return an approximation to the true longitude of periapse:
+	 * 
+	 * <pre>
+	 * w_true = RAAN + w
+	 * </pre>
+	 * <p>
+	 * Note this approximation is only valid when the inclination i, is low (equatorial). To get accurate
+	 * results, use {@link KeplerEquations#trueLongitudeOfPeriapse(Vector3D)}
+	 * </p>
+	 * 
+	 * @param RAAN
+	 *            Right ascension of the ascending node [rad]
+	 * @param w
+	 *            Argument of pericenter [RAD]
+	 * @return True longitude of periapse [RAD]
+	 */
+	public static double trueLongitudeOfPeriapseApproximate(double RAAN, double w) {
+		return RAAN + w;
+	}
+
+	/**
 	 * Evaluate the Vis Viva equation
 	 * <p>
 	 * V<sup>2</sup> = &mu; (2/r - 1/a)
@@ -461,6 +591,14 @@ public abstract class KeplerEquations {
 	 * @return Areal velocity \dot{A}
 	 */
 	public abstract double arealVel(double mu, double a, double e);
+
+	/**
+	 * @see KeplerEquations#arguementOfLatitude(double, double)
+	 * @return
+	 */
+	public double arguementOfLatitude() {
+		return arguementOfLatitude(k.getArgumentPeriapsis(), k.getTrueAnomaly());
+	}
 
 	/**
 	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
@@ -609,6 +747,42 @@ public abstract class KeplerEquations {
 	 */
 	public double trueAnomalyFromMean(double M) {
 		return trueAnomalyFromMean(M, k.getEccentricity());
+	}
+
+	/**
+	 * @see KeplerEquations#trueLongitude(Vector3D)
+	 */
+	public double trueLongitude() {
+		double ecc = k.getEccentricity();
+		double nu = k.getTrueAnomaly();
+		double p = k.getSemiMajorAxis() * (1 - ecc * ecc);
+		Vector3D R_pqw = new Vector3D(p * Math.cos(nu) / (1 + ecc * Math.cos(nu)),
+				p * Math.sin(nu) / (1 + ecc * Math.cos(nu)),
+				0);
+		Vector3D R = CelestialRotate.PQW2ECI(
+				k.getArgumentPeriapsis(), k.getRaan(), k.getInclination()).cross(R_pqw);
+		return trueLongitude(R);
+	}
+
+	/**
+	 * @see KeplerEquations#trueLongitudeOfPeriapseApproximate(Vector3D)
+	 */
+	public double trueLongitudeOfPeriapse() {
+		double raan = k.getRaan();
+		double w = k.getArgumentPeriapsis();
+		double i = k.getInclination();
+		Vector3D e_unit_vec = new Vector3D(
+				Math.cos(raan) * Math.cos(w) - Math.cos(i) * Math.sin(raan) * Math.sin(w),
+				Math.sin(raan) * Math.cos(w) + Math.cos(i) * Math.cos(raan) * Math.sin(w),
+				Math.sin(i) * Math.sin(w));
+		return trueLongitudeOfPeriapse(e_unit_vec.multiply(k.getEccentricity()));
+	}
+
+	/**
+	 * @see KeplerEquations#trueLongitudeOfPeriapseApproximate(double, double)
+	 */
+	public double trueLongitudeOfPeriapseApproximate() {
+		return trueLongitudeOfPeriapseApproximate(k.getRaan(), k.getArgumentPeriapsis());
 	}
 
 	/**

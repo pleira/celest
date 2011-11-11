@@ -70,9 +70,9 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 			trueA = MathUtils2.quadrantFix(trueA, E);
 			double i = Math.acos(Math.cos(s.delta) * Math.sin(s.psi));
 			double omega = Math.atan2(Math.sin(s.delta) / Math.sin(i),
-						Math.cos(s.delta) * Math.cos(s.psi) / Math.sin(i)) - trueA;
+					Math.cos(s.delta) * Math.cos(s.psi) / Math.sin(i)) - trueA;
 			double raan = s.alpha
-						- Math.atan2(Math.tan(s.delta) / Math.tan(i), Math.cos(s.psi) / Math.sin(i));
+					- Math.atan2(Math.tan(s.delta) / Math.tan(i), Math.cos(s.psi) / Math.sin(i));
 			return new KeplerElements(a, E, i, omega, raan, trueA, center);
 		}
 		ICartesianElements c = state.toCartesianElements();
@@ -328,6 +328,10 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	@Override
 	public double getTrueAnomaly() {
 		return trueA;
+	}
+
+	public boolean isEquatorial() {
+		return Math.abs(getInclination()) < KeplerEquations.angleTolarance;
 	}
 
 	/**

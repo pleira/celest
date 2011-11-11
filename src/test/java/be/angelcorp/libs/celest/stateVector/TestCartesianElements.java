@@ -31,7 +31,7 @@ public class TestCartesianElements extends TestStateVector<CartesianElements> {
 	}
 
 	@Override
-	public void testToCartesianElement(CartesianElements state) {
+	public void testToFromCartesianElements(CartesianElements state) {
 		assertEquals(state, state.toCartesianElements());
 	}
 

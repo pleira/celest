@@ -22,26 +22,26 @@ import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.RealVector;
 
-public abstract class TestStateVector<T extends IStateVector> extends TestCase {
+public abstract class TestStateDerivativeVector<T extends IStateDerivativeVector> extends TestCase {
 
-	public abstract Collection<T> getTestStateVectors();
+	public abstract Collection<T> getTestStateDerivativeVectors();
 
-	public abstract void testToFromCartesianElements(T state);
+	public abstract void testToCartesianDerivative(T state);
 
 	public void testToCartesianElements() {
-		for (T state : getTestStateVectors())
-			testToFromCartesianElements(state);
+		for (T state : getTestStateDerivativeVectors())
+			testToCartesianDerivative(state);
 	}
 
 	public void testVectorConversion() {
-		Collection<T> states = getTestStateVectors();
+		Collection<T> states = getTestStateDerivativeVectors();
 
 		for (T state : states) {
 			RealVector vector = state.toVector();
 			T state2;
 			try {
 				state2 = (T) state.getClass().getDeclaredMethod("fromVector", RealVector.class)
-							.invoke(state, vector);
+						.invoke(state, vector);
 			} catch (Exception e) {
 				throw new AssertionFailedError("Could not invoke comparison");
 			}

@@ -43,10 +43,10 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 * @param center
 	 *            Body where the {@link KeplerElements} are formulated against
 	 */
-	public static ISphericalElements as(IStateVector state, CelestialBody center) {
+	public static SphericalElements as(IStateVector state, CelestialBody center) {
 		Class<? extends IStateVector> clazz = state.getClass();
-		if (ISphericalElements.class.isAssignableFrom(clazz)) {
-			ISphericalElements s2 = (ISphericalElements) state;
+		if (SphericalElements.class.isAssignableFrom(clazz)) {
+			SphericalElements s2 = (SphericalElements) state;
 			if (s2.getCenterbody() == center)
 				return s2;
 			else {

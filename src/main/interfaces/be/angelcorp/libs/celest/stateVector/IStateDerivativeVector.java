@@ -45,9 +45,6 @@ public interface IStateDerivativeVector {
 	 */
 	public abstract CartesianDerivative toCartesianDerivative();
 
-	@Override
-	public abstract String toString();
-
 	/**
 	 * Convert the current state vector to an equivalent vector form
 	 * 

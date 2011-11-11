@@ -45,8 +45,8 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 	/**
 	 * Computes the exposin K1 parameter
 	 */
-	private static double getK1(double log, double tan_gamma, double k2, double theta, double gamma) {
-		double signK1 = (log + (tan_gamma / k2) * Math.sin(k2 * theta))
+	private static double getK1(double log, double tan_gamma_1, double k2, double theta, double gamma) {
+		double signK1 = (log + (tan_gamma_1 / k2) * Math.sin(k2 * theta))
 				/ (1 - Math.cos(k2 * theta));
 		double k1 = Math.signum(signK1)
 				* Math.sqrt(Math.pow(signK1, 2) + (Math.pow(Math.tan(gamma), 2)) / (k2 * k2));
@@ -68,7 +68,7 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 	 * <b>Unit: [-]</b>
 	 * </p>
 	 */
-	private Domain	domain;
+	private Domain	domain_gamma_1;
 
 	/**
 	 * Start radius of the spacecraft
@@ -119,32 +119,32 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 		this.k2 = k2;
 		this.theta = theta;
 		this.mu_center = mu_center;
-		log = Math.log(r1 / r2); // cache value as its commenly needed
+		log = Math.log(r1 / r2); // cache value a s its commenly needed
 
 		/* Compute the domain of gamma [gamma_min, gamma_max] */
 		double delta = (2 * (1 - Math.cos(k2 * theta))) / Math.pow(k2, 4) - (log * log);
-		double gamma_min = Math.atan((k2 / 2)
+		double gamma_1_min = Math.atan((k2 / 2)
 				* (-log * (1 / Math.tan(k2 * theta / 2)) - Math.sqrt(delta)));
-		double gamma_max = Math.atan((k2 / 2)
+		double gamma_1_max = Math.atan((k2 / 2)
 				* (-log * (1 / Math.tan(k2 * theta / 2)) + Math.sqrt(delta)));
 
-		domain = new Domain(gamma_min, gamma_max);
+		domain_gamma_1 = new Domain(gamma_1_min, gamma_1_max);
 	}
 
 	/**
 	 * Domain of gamma over which this function yields valid results
 	 */
 	public Domain getDomain() {
-		return domain;
+		return domain_gamma_1;
 	}
 
 	/**
 	 * Get the exponential sinusiod trajectory that is linked to a given gamma value.
 	 */
-	public ExponentialSinusoid getExpoSin(double gamma) {
-		double tan_gamma = Math.tan(gamma);
+	public ExponentialSinusoid getExpoSin(double gamma_1) {
+		double tan_gamma = Math.tan(gamma_1);
 		/* Compute the exposin parameters */
-		double k1 = getK1(log, tan_gamma, k2, theta, gamma);
+		double k1 = getK1(log, tan_gamma, k2, theta, gamma_1);
 		double phi = getPhi(tan_gamma, k1, k2);
 		double k0 = getK0(r1, k1, phi);
 		return new ExponentialSinusoid(k0, k1, k2, 0, phi);
@@ -161,7 +161,7 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 		/* Try different solvers to find a root of the f(gamma) = tof - dT */
 		try {
 			gamma = new UnivariateRealSolverFactoryImpl().newBrentSolver().
-					solve(this.add(-dT), domain.lowerBound, domain.upperBound, 0);
+					solve(this.add(-dT), domain_gamma_1.lowerBound, domain_gamma_1.upperBound, 0);
 		} catch (Exception e) {
 		}
 		if (gamma == Double.NaN)

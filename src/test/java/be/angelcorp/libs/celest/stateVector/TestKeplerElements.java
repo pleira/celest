@@ -66,7 +66,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 	}
 
 	@Override
-	public void testToCartesianElement(KeplerElements state) {
+	public void testToFromCartesianElements(KeplerElements state) {
 		CartesianElements cart = state.toCartesianElements();
 		KeplerElements k = KeplerEquations.cartesian2kepler(cart, state.getCenterbody());
 
@@ -74,16 +74,34 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 		assertEquals(state.a, k.a, 1);
 		assertEquals(state.e, k.e, KeplerEquations.eccentricityTolarance);
 		Tests.assertEqualsAngle(state.i, k.i, angleTol);
-		if (Math.abs(state.i % Math.PI) > angleTol) {
-			// equatorial orbits have problems with these parameters,
-			// use AlternativeKeplerElements for these
-			Tests.assertEqualsAngle(state.raan, k.raan, angleTol);
-			if (state.getOrbitType() != KeplerOrbitTypes.Circular) {
-				// Similar problem
+
+		if (state.isEquatorial()) {
+			if (state.getOrbitType() == KeplerOrbitTypes.Circular) {
+				// No raan / w defined, use true longitude instead
+				// TODO:ADD TEST CASE FOR THIS
+				Tests.assertEqualsAngle(
+						state.getOrbitEqn().trueLongitude(), k.getOrbitEqn().trueLongitude(), angleTol);
+			} else {
+				// No raan, use true longitude of periapsis instead
+				// TODO:ADD TEST CASE FOR THIS
+				Tests.assertEqualsAngle(state.getOrbitEqn().trueLongitudeOfPeriapse(),
+						k.getOrbitEqn().trueLongitudeOfPeriapse(), angleTol);
+				Tests.assertEqualsAngle(state.omega, k.omega, angleTol);
+			}
+		} else {
+			if (state.getOrbitType() == KeplerOrbitTypes.Circular) {
+				// No w defined, use argument of latitude instead
+				Tests.assertEqualsAngle(state.getOrbitEqn().arguementOfLatitude(),
+						k.getOrbitEqn().arguementOfLatitude(), angleTol);
+				Tests.assertEqualsAngle(state.raan, k.raan, angleTol);
+			} else {
+				// w, raan, nu are properly defined
+				Tests.assertEqualsAngle(state.raan, k.raan, angleTol);
 				Tests.assertEqualsAngle(state.omega, k.omega, angleTol);
 				Tests.assertEqualsAngle(state.trueA, k.trueA, angleTol);
 			}
 		}
+
 		// This should again work for everything
 		CartesianElements cart2 = k.toCartesianElements();
 		assertTrue(Vectors.compare(cart.toVector(), cart2.toVector(), state.getSemiMajorAxis() * 1E-6));
