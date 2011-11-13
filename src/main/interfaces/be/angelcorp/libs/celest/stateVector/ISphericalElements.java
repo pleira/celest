@@ -30,7 +30,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
  * </pre>
  * 
  * <p>
- * This is similar to ADBRAV {&alpha;,&delta;,&beta;,r,&psi;,v} elements where &beta; = 90 - &gamma;
+ * This is similar to ADBARV {&alpha;,&delta;,&beta;,r,&psi;,v} elements where &beta; = 90 - &gamma;
  * </p>
  * 
  * @author Simon Billemont

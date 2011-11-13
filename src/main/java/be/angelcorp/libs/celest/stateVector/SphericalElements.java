@@ -20,6 +20,8 @@ import org.apache.commons.math.linear.MatrixIndexException;
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3DMath;
 
 /**
  * Documentation: {@link ISphericalElements}
@@ -52,14 +54,14 @@ public class SphericalElements extends StateVector implements ISphericalElements
 			else {
 				// TODO: more native implementation
 			}
+		} else if (ISphericalElements.class.isAssignableFrom(clazz)) {
 		} else if (IKeplerElements.class.isAssignableFrom(clazz)) {
 			IKeplerElements k = KeplerElements.as(state, center);
 			// TODO: implement Kepler conversion
 			throw new UnsupportedOperationException("Not implemented yet");
 		}
 		ICartesianElements c = state.toCartesianElements();
-		// TODO: implement Cartesian conversion
-		throw new UnsupportedOperationException("Not implemented yet");
+		return new SphericalElements(c, center);
 	}
 
 	/**
@@ -93,6 +95,7 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 * </p>
 	 */
 	protected double		alpha;
+
 	/**
 	 * Declination, &delta;
 	 * <p>
@@ -121,7 +124,6 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 * </p>
 	 */
 	protected double		gamma;
-
 	/**
 	 * Flight path azimuth, &psi;
 	 * <p>
@@ -188,6 +190,30 @@ public class SphericalElements extends StateVector implements ISphericalElements
 		this.gamma = gamma;
 		this.psi = psi;
 		this.centerbody = centerbody;
+	}
+
+	/**
+	 * Convert {@link ICartesianElements} to {@link SphericalElements}.
+	 * 
+	 * @param elements
+	 *            Cartesian elements to convert [m] and [m/s]
+	 */
+	public SphericalElements(ICartesianElements elements, CelestialBody centerBody) {
+		// See http://www.cdeagle.com/omnum/pdf/csystems.pdf
+		// Orbital Mechanics with Numerit: Astrodynamic Coordinates
+		final Vector3D R = elements.getR();
+		final Vector3D V = elements.getV();
+		setRadius(R.getNorm());
+		setVelocity(V.getNorm());
+		setRightAscension(Math.atan2(R.getY(),
+				R.getX()));
+		setDeclination(Math.atan2(R.getZ(),
+				Math.sqrt(Math.pow(R.getX(), 2) + Math.pow(R.getY(), 2))));
+		setFlightPathAngle(Math.PI / 2 - Vector3DMath.angle(R, V)); // TODO: Quadrant corrections ?
+		setFlightPathAzimuth(Math.atan2(r * (R.getX() * V.getY() - R.getY() * V.getX()),
+				R.getY() * (R.getY() * V.getZ() - R.getZ() * V.getY())
+						- R.getX() * (R.getZ() * V.getX() - R.getX() * V.getZ())));
+		setCenterbody(centerBody);
 	}
 
 	/**
@@ -338,9 +364,27 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 */
 	@Override
 	public ICartesianElements toCartesianElements() {
-		// TODO: direct conversion
-		IKeplerElements k = KeplerElements.as(this, centerbody);
-		return k.toCartesianElements();
+		// See http://www.cdeagle.com/omnum/pdf/csystems.pdf
+		// Orbital Mechanics with Numerit: Astrodynamic Coordinates
+		double cosD = Math.cos(getDeclination());
+		double sinD = Math.sin(getDeclination());
+		double cosAl = Math.cos(getRightAscension());
+		double sinAl = Math.sin(getRightAscension());
+		double cosA = Math.cos(getFlightPathAzimuth());
+		double sinA = Math.sin(getFlightPathAzimuth());
+		double cosG = Math.cos(getFlightPathAngle());
+		double sinG = Math.sin(getFlightPathAngle());
+
+		Vector3D R = new Vector3D(
+				r * cosD * cosAl,
+				r * cosD * sinAl,
+				r * sinD);
+		Vector3D V = new Vector3D(
+				v * (cosAl * (-cosA * cosG * sinD + sinG * cosD) - sinA * cosG * sinAl),
+				v * (sinAl * (-cosA * cosG * sinD + sinG * cosD) + sinA * cosG * cosAl),
+				v * (cosA * cosG * cosD + sinG * cosD));
+
+		return new CartesianElements(R, V);
 	}
 
 	/**
