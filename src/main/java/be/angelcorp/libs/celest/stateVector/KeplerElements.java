@@ -18,6 +18,7 @@ package be.angelcorp.libs.celest.stateVector;
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.MatrixIndexException;
 import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math.util.MathUtils;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerCircular;
@@ -73,7 +74,7 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 					Math.cos(s.delta) * Math.cos(s.psi) / Math.sin(i)) - trueA;
 			double raan = s.alpha
 					- Math.atan2(Math.tan(s.delta) / Math.tan(i), Math.cos(s.psi) / Math.sin(i));
-			return new KeplerElements(a, E, i, omega, raan, trueA, center);
+			return new KeplerElements(a, e, i, omega, raan, trueA, center);
 		}
 		ICartesianElements c = state.toCartesianElements();
 		return KeplerEquations.cartesian2kepler(c, center);
@@ -220,9 +221,55 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	 */
 	@Override
 	public boolean equals(IKeplerElements state2) {
-		return state2.getSemiMajorAxis() == a && state2.getEccentricity() == e &&
-				state2.getInclination() == i && state2.getArgumentPeriapsis() == omega &&
-				state2.getRaan() == raan && state2.getTrueAnomaly() == trueA;
+		double angleTol = KeplerEquations.angleTolarance;
+		boolean equal = true;
+
+		// Do the orbit checks
+		equal &= MathUtils.equals(a, state2.getSemiMajorAxis(), a * 1e-10);
+		equal &= MathUtils.equals(e, state2.getEccentricity(), KeplerEquations.eccentricityTolarance);
+		equal &= MathUtils2.equalsAngle(i, state2.getInclination(), angleTol);
+
+		if (!equal) // Return if false, else do more checks
+			return false;
+
+		// Due to special orbits, the specific elements might not be the same, but they can still
+		// represent the same orbit
+		if (isEquatorial()) {
+			if (getOrbitType() == KeplerOrbitTypes.Circular) {
+				// No raan / w defined, use true longitude instead
+				equal &= MathUtils2.equalsAngle(
+						getOrbitEqn().trueLongitude(), state2.getOrbitEqn().trueLongitude(), angleTol);
+			} else {
+				// No raan, use true longitude of periapsis instead
+				equal &= MathUtils2.equalsAngle(getOrbitEqn().trueLongitudeOfPeriapse(),
+						state2.getOrbitEqn().trueLongitudeOfPeriapse(), angleTol);
+				equal &= MathUtils2.equalsAngle(omega, state2.getArgumentPeriapsis(), angleTol);
+			}
+		} else {
+			if (getOrbitType() == KeplerOrbitTypes.Circular) {
+				// No w defined, use argument of latitude instead
+				equal &= MathUtils2.equalsAngle(getOrbitEqn().arguementOfLatitude(),
+						state2.getOrbitEqn().arguementOfLatitude(), angleTol);
+				equal &= MathUtils2.equalsAngle(raan, state2.getRaan(), angleTol);
+			} else {
+				// w, raan, nu are properly defined
+				equal &= MathUtils2.equalsAngle(raan, state2.getRaan(), angleTol);
+				equal &= MathUtils2.equalsAngle(omega, state2.getArgumentPeriapsis(), angleTol);
+				equal &= MathUtils2.equalsAngle(trueA, state2.getTrueAnomaly(), angleTol);
+			}
+		}
+		return equal;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IStateVector state2) {
+		if (IKeplerElements.class.isAssignableFrom(state2.getClass()))
+			return equals((IKeplerElements) state2);
+		else
+			return super.equals(state2);
 	}
 
 	/**

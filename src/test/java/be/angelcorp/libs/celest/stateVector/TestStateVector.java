@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
-import java.util.Collection;
+import java.util.Set;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -24,29 +24,27 @@ import org.apache.commons.math.linear.RealVector;
 
 public abstract class TestStateVector<T extends IStateVector> extends TestCase {
 
-	public abstract Collection<T> getTestStateVectors();
+	public Set<StateVectorComparisonCase<? extends IStateVector, T>>	testStateCases	= getTestStateVectors();
 
-	public abstract void testToFromCartesianElements(T state);
+	public abstract Set<StateVectorComparisonCase<? extends IStateVector, T>> getTestStateVectors();
 
-	public void testToCartesianElements() {
-		for (T state : getTestStateVectors())
-			testToFromCartesianElements(state);
+	public void testAs() {
+		for (StateVectorComparisonCase<? extends IStateVector, T> test : testStateCases)
+			test.runTest();
 	}
 
 	public void testVectorConversion() {
-		Collection<T> states = getTestStateVectors();
-
-		for (T state : states) {
+		for (StateVectorComparisonCase<? extends IStateVector, T> test : testStateCases) {
+			T state = test.testValidationState;
 			RealVector vector = state.toVector();
 			T state2;
 			try {
 				state2 = (T) state.getClass().getDeclaredMethod("fromVector", RealVector.class)
-							.invoke(state, vector);
+						.invoke(state, vector);
 			} catch (Exception e) {
 				throw new AssertionFailedError("Could not invoke comparison");
 			}
 			assertTrue(state.equals(state2));
 		}
 	}
-
 }

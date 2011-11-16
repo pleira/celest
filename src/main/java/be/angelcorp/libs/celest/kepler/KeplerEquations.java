@@ -24,6 +24,7 @@ import be.angelcorp.libs.celest.stateVector.KeplerElements;
 import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Matrix3D;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3DMath;
 
 public abstract class KeplerEquations {
 
@@ -145,7 +146,7 @@ public abstract class KeplerEquations {
 		if (e_vec.getZ() < 0) // Checking for quadrant
 			w = 2 * Math.PI - w;
 
-		double nu = Math.acos(e_vec.dot(R) / (ecc * rNorm)); // True anomaly
+		double nu = Vector3DMath.angle(e_vec, R); // True anomaly
 		if (R.dot(V) < 0) // Checking for quadrant
 			nu = 2 * Math.PI - nu;
 

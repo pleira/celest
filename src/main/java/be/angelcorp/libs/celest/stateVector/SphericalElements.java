@@ -18,8 +18,11 @@ package be.angelcorp.libs.celest.stateVector;
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.MatrixIndexException;
 import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math.util.MathUtils;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.kepler.KeplerEquations;
+import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3DMath;
 
@@ -229,9 +232,24 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 */
 	@Override
 	public boolean equals(ISphericalElements state2) {
-		return state2.getRadius() == r && state2.getRightAscension() == alpha &&
-				state2.getDeclination() == delta && state2.getVelocity() == v &&
-				state2.getFlightPathAngle() == gamma && state2.getFlightPathAzimuth() == psi;
+		double angleTol = KeplerEquations.angleTolarance;
+		return MathUtils.equals(r, state2.getRadius(), r * 1E-10)
+				&& MathUtils.equals(v, state2.getVelocity(), v * 1E-10)
+				&& MathUtils2.equalsAngle(alpha, state2.getRightAscension(), angleTol)
+				&& MathUtils2.equalsAngle(delta, state2.getDeclination(), angleTol)
+				&& MathUtils2.equalsAngle(gamma, state2.getFlightPathAngle(), angleTol)
+				&& MathUtils2.equalsAngle(psi, state2.getFlightPathAzimuth(), angleTol);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IStateVector state2) {
+		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
+			return equals((ISphericalElements) state2);
+		else
+			return equals(state2);
 	}
 
 	/**
