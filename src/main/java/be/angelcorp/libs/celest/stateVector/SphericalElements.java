@@ -51,17 +51,15 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	public static SphericalElements as(IStateVector state, CelestialBody center) {
 		Class<? extends IStateVector> clazz = state.getClass();
 		if (SphericalElements.class.isAssignableFrom(clazz)) {
-			SphericalElements s2 = (SphericalElements) state;
-			if (s2.getCenterbody() == center)
-				return s2;
-			else {
-				// TODO: more native implementation
-			}
+			return (SphericalElements) state;
 		} else if (ISphericalElements.class.isAssignableFrom(clazz)) {
+			ISphericalElements s = (ISphericalElements) state;
+			return new SphericalElements(s.getRadius(), s.getRightAscension(), s.getDeclination(),
+					s.getVelocity(), s.getFlightPathAngle(), s.getFlightPathAzimuth());
 		} else if (IKeplerElements.class.isAssignableFrom(clazz)) {
 			IKeplerElements k = KeplerElements.as(state, center);
-			// TODO: implement Kepler conversion
-			throw new UnsupportedOperationException("Not implemented yet");
+			ICartesianElements c = state.toCartesianElements();
+			return new SphericalElements(c, center);
 		}
 		ICartesianElements c = state.toCartesianElements();
 		return new SphericalElements(c, center);
