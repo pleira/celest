@@ -31,7 +31,6 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
-import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -55,14 +54,31 @@ public class LambertUV extends TPBVP {
 	 */
 	private boolean			shortWay;
 
+	/**
+	 * Create a Lambert targetter using the universal variables technique.
+	 * 
+	 * @param r1
+	 *            Starting point R1
+	 * @param r2
+	 *            Arrival point R2
+	 * @param centerbody
+	 *            Central body of the Keplerian motion (useually the Sun or the Earth)
+	 * @param dT
+	 *            Transfer time from R1 to R2
+	 * @param shortWay
+	 *            Use short arc transfer (transfer solution over the smallest angle between R1 and R2)
+	 */
 	public LambertUV(IStateVector r1, IStateVector r2, CelestialBody centerbody, double dT, boolean shortWay) {
 		super(r1, r2, dT);
 		this.centerbody = centerbody;
 		this.shortWay = shortWay;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public ITrajectory getTrajectory() throws MathException {
+	public LambertTrajectory getTrajectory() throws MathException {
 		Vector3D r1 = CartesianElements.as(this.r1).getR();
 		Vector3D r2 = CartesianElements.as(this.r2).getR();
 		double r1norm = r1.getNorm();
@@ -75,7 +91,7 @@ public class LambertUV extends TPBVP {
 			throw new MathException("Cannot compute Lambert solution for a problem where " +
 					"A = sqrt(r1norm * r2norm * (1 + cos(Dnu) )) == 0");
 
-		if (shortWay)
+		if (!shortWay)
 			A = -A;
 
 		double x, y, z = 0d, C = 1d / 2d, S = 1d / 6d;
