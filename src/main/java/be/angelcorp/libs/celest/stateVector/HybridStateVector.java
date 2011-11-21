@@ -81,13 +81,28 @@ public class HybridStateVector extends StateVector implements ICartesianElements
 	}
 
 	@Override
+	public boolean equals(ICartesianElements state2, double eps) {
+		return getCartesian().equals(state2, eps);
+	}
+
+	@Override
 	public boolean equals(IKeplerElements state2) {
 		return getKeplerian().equals(state2);
 	}
 
 	@Override
+	public boolean equals(IKeplerElements state2, double eps) {
+		return getKeplerian().equals(state2, eps);
+	}
+
+	@Override
 	public boolean equals(ISphericalElements state2) {
 		return getSpherical().equals(state2);
+	}
+
+	@Override
+	public boolean equals(ISphericalElements state2, double eps) {
+		return getSpherical().equals(state2, eps);
 	}
 
 	@Override

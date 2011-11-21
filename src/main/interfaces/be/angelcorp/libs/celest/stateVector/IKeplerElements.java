@@ -52,6 +52,22 @@ public interface IKeplerElements extends Keplerian, IStateVector {
 	public abstract boolean equals(IKeplerElements state2);
 
 	/**
+	 * Tests if two sets of kepler elements hold the same variables (tests for equal
+	 * a,e,i,&omega;,&Omega;,&nu;) with the given relative accuracy.
+	 * 
+	 * <pre>
+	 * abs(element1 - element2) &lt; element1 * eps
+	 * </pre>
+	 * 
+	 * @param state2
+	 *            Kepler elements to compare with
+	 * @param eps
+	 *            Relative accuracy to test
+	 * @return True if the two sets contain the same orbital elements
+	 */
+	public abstract boolean equals(IKeplerElements state2, double eps);
+
+	/**
 	 * @see KeplerElements#omega
 	 */
 	public abstract double getArgumentPeriapsis();

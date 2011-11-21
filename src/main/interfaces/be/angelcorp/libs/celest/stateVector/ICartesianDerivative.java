@@ -33,15 +33,76 @@ import be.angelcorp.libs.math.linear.Vector3D;
  */
 public interface ICartesianDerivative extends Cartesian, IStateDerivativeVector {
 
+	/**
+	 * Create a deep copy of this object. It returns an exact copy of this {@link IStateDerivativeVector}
+	 * , but with no direct link to the object it was created against. This means changing the original
+	 * {@link IStateDerivativeVector} does not effect the values of the newly created
+	 * {@link IStateDerivativeVector}
+	 */
 	@Override
 	public abstract ICartesianDerivative clone();
 
+	/**
+	 * Check if two {@link ICartesianDerivative} are exactly equal (two NaN elements are considered
+	 * equal).
+	 * 
+	 * @param other
+	 *            Other vector to compare against
+	 * @return True if all the elements of the two {@link ICartesianDerivative} are equal.
+	 */
+	public abstract boolean equals(ICartesianDerivative other);
+
+	/**
+	 * Check if two {@link ICartesianDerivative} are equal (two NaN elements are considered equal).
+	 * 
+	 * <p>
+	 * It tests using a a relative error eps and applies the following test to each element:
+	 * </p>
+	 * 
+	 * <pre>
+	 * abs(vx1 - vx2) &lt; eps * vx1
+	 * </pre>
+	 * 
+	 * @param other
+	 *            Other vector to compare against.
+	 * @param eps
+	 *            Relative error to check against.
+	 * @return True if all the elements of the two {@link ICartesianDerivative} are equal.
+	 */
+	public abstract boolean equals(ICartesianDerivative other, double eps);
+
+	/**
+	 * Get the acceleration vector (the derivative of the velocity vector of the
+	 * {@link ICartesianElements})
+	 * 
+	 * @return The acceleration vector [m/s<sup>2</sup>]
+	 */
 	public abstract Vector3D getA();
 
+	/**
+	 * Get the velocity vector (the derivative of the position vector of the {@link ICartesianElements},
+	 * equal to it velocity elements)
+	 * 
+	 * @return The velocity vector [m/s]
+	 */
 	public abstract Vector3D getV();
 
+	/**
+	 * Set the acceleration vector (the derivative of the velocity vector of the
+	 * {@link ICartesianElements})
+	 * 
+	 * @param a
+	 *            The acceleration vector [m/s<sup>2</sup>]
+	 */
 	public abstract void setA(Vector3D a);
 
+	/**
+	 * Set the velocity vector (the derivative of the position vector of the {@link ICartesianElements},
+	 * equal to it velocity elements)
+	 * 
+	 * @param v
+	 *            The velocity vector [m/s]
+	 */
 	public abstract void setV(Vector3D v);
 
 }

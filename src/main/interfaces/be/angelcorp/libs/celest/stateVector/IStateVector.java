@@ -55,6 +55,26 @@ public interface IStateVector {
 	public abstract boolean equals(IStateVector obj);
 
 	/**
+	 * Tests if two StateVectors are equal. By default, this id done by comparing all elements of the
+	 * {@link StateVector#toVector()} output.
+	 * 
+	 * <p>
+	 * It tests using a a relative error eps and applies the following test to each element:
+	 * </p>
+	 * 
+	 * <pre>
+	 * abs(vx1 - vx2) &lt; eps * vx1
+	 * </pre>
+	 * 
+	 * @param obj
+	 *            Compare the current {@link StateVector} with this ones.
+	 * @param eps
+	 *            Relative error to check against.
+	 * @return true if they are equal.
+	 */
+	public abstract boolean equals(IStateVector obj, double eps);
+
+	/**
 	 * Convert the {@link StateVector} to an equivalent Cartesian one (R, V in Cartesian coordinates)
 	 * 
 	 * @return Cartesian equivalent state vector

@@ -55,6 +55,22 @@ public interface ISphericalElements extends IStateVector {
 	public abstract boolean equals(ISphericalElements state2);
 
 	/**
+	 * Tests if two sets of {@link SphericalElements} hold the same variables (tests for equal
+	 * r,&alpha;,&delta;,V,&gamma;,&psi;) within the given relative accuracy.
+	 * 
+	 * <pre>
+	 * abs(element1 - element2) &lt; element1 * eps
+	 * </pre>
+	 * 
+	 * @param state2
+	 *            {@link SphericalElements} to compare with
+	 * @param eps
+	 *            Relative accuracy
+	 * @return True if the two sets contain the same orbital elements
+	 */
+	public abstract boolean equals(ISphericalElements state2, double eps);
+
+	/**
 	 * @see SphericalElements#centerbody
 	 */
 	public abstract CelestialBody getCenterbody();

@@ -120,9 +120,19 @@ public class CartesianElements extends StateVector implements ICartesianElements
 		return new CartesianElements(R.clone(), V.clone());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(ICartesianElements state2) {
 		return R.equals(state2.getR()) && V.equals(state2.getV());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean equals(ICartesianElements state2, double eps) {
+		return R.equals(state2.getR(), eps) && V.equals(state2.getV(), eps);
 	}
 
 	/**

@@ -265,6 +265,17 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean equals(IKeplerElements state2, double eps) {
+		if (IKeplerElements.class.isAssignableFrom(state2.getClass()))
+			return equals(state2, eps);
+		else
+			return super.equals(state2, eps);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean equals(IStateVector state2) {
 		if (IKeplerElements.class.isAssignableFrom(state2.getClass()))
 			return equals((IKeplerElements) state2);

@@ -15,10 +15,8 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
-import java.util.Iterator;
-
 import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.linear.RealVector.Entry;
+import org.apache.commons.math.util.MathUtils;
 
 /**
  * Abstract base for a state vector that hold the state of a celestial body.
@@ -52,17 +50,35 @@ public abstract class StateVector implements IStateVector {
 	public boolean equals(IStateVector obj) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
-		RealVector error = v1.subtract(v2);
 
-		double max = Double.NEGATIVE_INFINITY;
-		for (Iterator<Entry> it = error.iterator(); it.hasNext();) {
-			Entry type = it.next();
-			if (max < type.getValue())
-				max = type.getValue();
-		}
-		return max < 1E-9;
+		if (v1.getDimension() != v2.getDimension())
+			return false;
+
+		for (int i = 0; i < v1.getDimension(); i++)
+			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i)))
+				return false;
+
+		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IStateVector obj, double eps) {
+		RealVector v1 = toVector();
+		RealVector v2 = obj.toVector();
+
+		if (v1.getDimension() != v2.getDimension())
+			return false;
+
+		for (int i = 0; i < v1.getDimension(); i++) {
+			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i), v1.getEntry(i) * eps))
+				return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * {@inheritDoc}

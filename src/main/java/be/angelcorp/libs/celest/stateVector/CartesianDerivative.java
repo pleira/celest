@@ -60,6 +60,16 @@ public class CartesianDerivative extends StateDerivativeVector implements ICarte
 		return new CartesianDerivative(V.clone(), A.clone());
 	}
 
+	@Override
+	public boolean equals(ICartesianDerivative other) {
+		return V.equals(other.getV()) && A.equals(other.getA());
+	}
+
+	@Override
+	public boolean equals(ICartesianDerivative other, double eps) {
+		return V.equals(other.getV(), eps) && A.equals(other.getA(), eps);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

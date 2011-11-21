@@ -243,6 +243,19 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean equals(ISphericalElements state2, double eps) {
+		return MathUtils.equals(r, state2.getRadius(), r * eps)
+				&& MathUtils.equals(v, state2.getVelocity(), v * eps)
+				&& MathUtils2.equalsAngle(alpha, state2.getRightAscension(), alpha * eps)
+				&& MathUtils2.equalsAngle(delta, state2.getDeclination(), delta * eps)
+				&& MathUtils2.equalsAngle(gamma, state2.getFlightPathAngle(), gamma * eps)
+				&& MathUtils2.equalsAngle(psi, state2.getFlightPathAzimuth(), psi * eps);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean equals(IStateVector state2) {
 		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
 			return equals((ISphericalElements) state2);

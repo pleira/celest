@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.stateVector;
 
 import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math.util.MathUtils;
 
 /**
  * Basis for a state derivative vector that hold the state of a celestial body. This implements a default
@@ -42,6 +43,43 @@ public abstract class StateDerivativeVector implements IStateDerivativeVector {
 	 */
 	@Override
 	public abstract IStateDerivativeVector clone();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IStateVector obj) {
+		RealVector v1 = toVector();
+		RealVector v2 = obj.toVector();
+
+		if (v1.getDimension() != v2.getDimension())
+			return false;
+
+		for (int i = 0; i < v1.getDimension(); i++)
+			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i)))
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IStateVector obj, double eps) {
+		RealVector v1 = toVector();
+		RealVector v2 = obj.toVector();
+
+		if (v1.getDimension() != v2.getDimension())
+			return false;
+
+		for (int i = 0; i < v1.getDimension(); i++) {
+			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i), v1.getEntry(i) * eps))
+				return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * {@inheritDoc}
