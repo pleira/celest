@@ -53,7 +53,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 		}
 
 		@Override
-		protected KeplerElements doConvert(InitiationState sourceState) {
+		protected KeplerElements doForwardConvert(InitiationState sourceState) {
 			try {
 				return (KeplerElements) KeplerElements.class.getDeclaredMethod("as", IStateVector.class,
 						CelestialBody.class).invoke(null, sourceState, body);
@@ -98,7 +98,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 				new CartesianElements(
 						new Vector3D(-3.316179628957708e+10, +1.423339778393807e+11, +1.671050435305531e+10),
 						new Vector3D(-2.950283371376224e+04, -6.692107319756996e+03, -1.547093138889844e+03)),
-				EarthConstants.solarOrbit));
+				EarthConstants.solarOrbit).setEps_reverse(1E-8));
 
 		/* Objects highly elliptical orbits */
 		/* 2212 Hephaistos (1978 SB) (Apollo [NEO]), see http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=2212 */
@@ -108,7 +108,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 						new Vector3D(+5.568161770637649e+04, -3.568999965732438e+04, -1.201301879893813e+04)),
 				new KeplerElements(Length.convert(2.167001873, Length.AU), 0.8338, Angle.convert(11.74,
 						Angle.DEG), Angle.convert(208.56, Angle.DEG), Angle.convert(28.27, Angle.DEG), 0,
-						SolarConstants.body)));
+						SolarConstants.body)).setEps_reverse(1E-8));
 		/* 105140 (2000 NL10) (Aten [NEO]), see http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=105140 */
 		// M = Angle.convert(293.30, Angle.DEG) => trueA = -2.70862
 		s.add(new KeplerStateVectorComparison<CartesianElements>(
@@ -117,7 +117,8 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 						new Vector3D(-1.63473158034754e+004, 1.07405165918640e+004, -1.24696362548472e+004)),
 				new KeplerElements(Length.convert(0.9143, Length.AU), 0.8171,
 						Angle.convert(32.52, Angle.DEG), Angle.convert(281.56, Angle.DEG), Angle.convert(
-								237.44, Angle.DEG), -2.70863, SolarConstants.body)));
+								237.44, Angle.DEG), -2.70863, SolarConstants.body)
+				).setEps_reverse(1E-7));
 
 		/* Hyperbolic orbit */
 		// TODO
@@ -148,7 +149,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 				new CartesianElements(
 						new Vector3D(-1.15037391547548e+008, -3.64408052048568e+008, -1.21513857899935e+007),
 						new Vector3D(+9.67536480042629e+002, -3.46497896859408e+002, +8.78970130662041e+001)),
-				kMoon, jpl_earth));
+				kMoon, jpl_earth).setEps_reverse(1E-8));
 		s.add(new KeplerStateVectorComparison<SphericalElements>(
 				new SphericalElements(3.823277207168130E+08, -1.876578287892178E00, -3.178799710706510E-2,
 						1.031461835283901E+03, Math.PI / 2. - 1.535552685601132E00, 1.484255164403220E00),
@@ -156,4 +157,5 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 
 		return s;
 	}
+
 }

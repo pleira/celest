@@ -30,7 +30,20 @@ public abstract class TestStateVector<T extends IStateVector> extends TestCase {
 
 	public void testAs() {
 		for (StateVectorComparisonCase<? extends IStateVector, T> test : testStateCases)
-			test.runTest();
+			test.runForwardTest();
+	}
+
+	public void testCartesianElements() {
+		boolean anyCartesianElements = false;
+		for (StateVectorComparisonCase<? extends IStateVector, T> test : testStateCases)
+			if (ICartesianElements.class.isAssignableFrom(test.testInitiationState.getClass())) {
+				anyCartesianElements = true;
+				test.runReverseTest();
+			}
+		if (!anyCartesianElements)
+			throw new AssertionFailedError(String.format(
+					"Could not find any cartesian elements to test toCartesianElements with in %s",
+					getClass().getSuperclass()));
 	}
 
 	public void testVectorConversion() {

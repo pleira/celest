@@ -51,7 +51,7 @@ public class TestSphericalElements extends TestStateVector<SphericalElements> {
 		}
 
 		@Override
-		protected SphericalElements doConvert(InitiationState sourceState) {
+		protected SphericalElements doForwardConvert(InitiationState sourceState) {
 			try {
 				return (SphericalElements) SphericalElements.class.getDeclaredMethod("as",
 						IStateVector.class, CelestialBody.class).invoke(null, sourceState, body);
@@ -77,7 +77,8 @@ public class TestSphericalElements extends TestStateVector<SphericalElements> {
 				new CartesianElements(
 						new Vector3D(4.22444282180791e+007, 0.00000000000000e+000, 0.00000000000000e+000),
 						new Vector3D(0.00000000000000e+000, 3.07173798871147e+003, 0.00000000000000e+000)),
-				new SphericalElements(rGEO, 0, 0, 3.0717379887E3, 0, Math.PI / 2, earth)));
+				new SphericalElements(rGEO, 0, 0, 3.0717379887E3, 0, Math.PI / 2, earth)
+				).setEps_reverse(1e-8));
 
 		// ----------------------------------------
 		// Kepler elements

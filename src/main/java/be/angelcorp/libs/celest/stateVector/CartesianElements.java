@@ -131,8 +131,9 @@ public class CartesianElements extends StateVector implements ICartesianElements
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(ICartesianElements state2, double eps) {
-		return R.equals(state2.getR(), eps) && V.equals(state2.getV(), eps);
+		return R.equals(state2.getR(), R.getNorm() * eps) && V.equals(state2.getV(), V.getNorm() * eps);
 	}
 
 	/**

@@ -30,7 +30,8 @@ public class TestCartesianElements extends TestStateVector<CartesianElements> {
 	public Set<StateVectorComparisonCase<? extends IStateVector, CartesianElements>> getTestStateVectors() {
 		Set<StateVectorComparisonCase<? extends IStateVector, CartesianElements>> s = Sets.newHashSet();
 		CartesianElements c = new CartesianElements(Vector3D.random(), Vector3D.random());
-		s.add(new StateVectorComparisonCase<CartesianElements, CartesianElements>(c, c));
+		s.add(new StateVectorComparisonCase<CartesianElements, CartesianElements>(c, c)
+				.setEps_forward(1E-16).setEps_reverse(1E-16));
 
 		return s;
 	}

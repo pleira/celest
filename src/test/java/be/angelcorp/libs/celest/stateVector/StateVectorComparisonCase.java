@@ -23,17 +23,38 @@ public class StateVectorComparisonCase<InitiationState extends IStateVector, Val
 	public final InitiationState	testInitiationState;
 	public final ValidationState	testValidationState;
 
+	/**
+	 * equals eps when testing:
+	 * 
+	 * <pre>
+	 * testValidationState == convert(testInitiationState)
+	 * </pre>
+	 */
+	public Double					eps_forward	= null;
+	/**
+	 * equals eps when testing:
+	 * 
+	 * <pre>
+	 * testValidationState.toCartesianElements() == testInitiationState.toCartesianElements()
+	 * </pre>
+	 */
+	public Double					eps_reverse	= null;
+
 	public StateVectorComparisonCase(InitiationState testInitiationState, ValidationState testValidationState) {
 		this.testInitiationState = testInitiationState;
 		this.testValidationState = testValidationState;
 	}
 
-	protected void doCompare(ValidationState validationState, ValidationState testState) {
-		Assert.assertTrue(String.format("Could not conversion with expected: %s and true: %s",
-				validationState, testState), validationState.equals(testState));
+	protected void doForwardCompare(ValidationState validationState, ValidationState testState) {
+		if (eps_forward != null)
+			Assert.assertTrue(String.format("Could not conversion (forwared) with expected: %s and true: %s",
+					validationState, testState), validationState.equals(testState, eps_forward));
+		else
+			Assert.assertTrue(String.format("Could not conversion (forwared) with expected: %s and true: %s",
+					validationState, testState), validationState.equals(testState));
 	}
 
-	protected ValidationState doConvert(InitiationState sourceState) {
+	protected ValidationState doForwardConvert(InitiationState sourceState) {
 		try {
 			return (ValidationState) sourceState.getClass().getDeclaredMethod("as", IStateVector.class)
 					.invoke(null, sourceState);
@@ -42,9 +63,39 @@ public class StateVectorComparisonCase<InitiationState extends IStateVector, Val
 		}
 	}
 
-	public void runTest() {
-		ValidationState converted = doConvert(testInitiationState);
-		doCompare(testValidationState, converted);
+	protected void doReverseCompare(ICartesianElements validationState, ICartesianElements testState) {
+		if (eps_reverse != null) {
+			boolean value = validationState.equals(testState, eps_reverse);
+			Assert.assertTrue(String.format("Could not conversion (reverse) with expected: %s and true: %s",
+					validationState, testState), value);
+		} else {
+			boolean value = validationState.equals(testState);
+			Assert.assertTrue(String.format("Could not conversion (reverse) with expected: %s and true: %s",
+					validationState, testState), value);
+		}
 	}
 
+	protected ICartesianElements doReverseConvert(ValidationState testValidationState2) {
+		return testValidationState2.toCartesianElements();
+	}
+
+	public void runForwardTest() {
+		ValidationState converted = doForwardConvert(testInitiationState);
+		doForwardCompare(testValidationState, converted);
+	}
+
+	public void runReverseTest() {
+		ICartesianElements converted = doReverseConvert(testValidationState);
+		doReverseCompare(testInitiationState.toCartesianElements(), converted);
+	}
+
+	public StateVectorComparisonCase<InitiationState, ValidationState> setEps_forward(Double eps_forward) {
+		this.eps_forward = eps_forward;
+		return this;
+	}
+
+	public StateVectorComparisonCase<InitiationState, ValidationState> setEps_reverse(Double eps_reverse) {
+		this.eps_reverse = eps_reverse;
+		return this;
+	}
 }

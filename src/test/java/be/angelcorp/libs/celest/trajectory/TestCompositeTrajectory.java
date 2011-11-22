@@ -53,6 +53,11 @@ public class TestCompositeTrajectory extends TestCase {
 		}
 
 		@Override
+		public boolean equals(IStateVector obj, double eps) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
 		public ICartesianElements toCartesianElements() {
 			throw new UnsupportedOperationException();
 		}
