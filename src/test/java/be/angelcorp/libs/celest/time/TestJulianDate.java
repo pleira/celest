@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
+import be.angelcorp.libs.util.physics.Time;
 
 public class TestJulianDate extends TestCase {
 
@@ -75,5 +76,13 @@ public class TestJulianDate extends TestCase {
 		assertEquals(2442719.2915393519, jd.getJD(), 1. / (24 * 3600 * 1000));
 		jd.setJD(42718.7915393519, JulianDateForm.MODIFIED_JULIAN_DAY);
 		assertEquals(2442719.2915393519, jd.getJD(), 1. / (24 * 3600 * 1000));
+	}
+
+	public void testRelative() {
+		JulianDate epoch1 = new JulianDate(0);
+		JulianDate epoch2 = new JulianDate(5.22);
+
+		assertEquals(5.22, epoch2.relativeTo(epoch1));
+		assertEquals(Time.convert(5.22, Time.day), epoch2.relativeTo(epoch1, Time.second));
 	}
 }

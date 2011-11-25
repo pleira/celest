@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import be.angelcorp.libs.util.physics.Time;
+
 /**
  * Basic Julian Date container
  * 
@@ -73,6 +75,14 @@ public class JulianDate implements IJulianDate {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public int compareTo(IJulianDate o) {
+		return Double.compare(getJD(), o.getJD());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Date getDate() {
 		int[] dateArr = TimeUtils.invjday(date);
 		GregorianCalendar calender = new GregorianCalendar(
@@ -94,6 +104,22 @@ public class JulianDate implements IJulianDate {
 	@Override
 	public double getJD(JulianDateForm form) {
 		return form.fromJD(date);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double relativeTo(IJulianDate epoch, Time timeformat) {
+		return Time.convert(getJD() - epoch.getJD(), Time.day, timeformat);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double relativeTo(JulianDate epoch) {
+		return getJD() - epoch.getJD();
 	}
 
 	/**

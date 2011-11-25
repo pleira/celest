@@ -17,13 +17,15 @@ package be.angelcorp.libs.celest.time;
 
 import java.util.Date;
 
+import be.angelcorp.libs.util.physics.Time;
+
 /**
  * A container for a julian date
  * 
  * @author Simon Billemont
  * 
  */
-public interface IJulianDate {
+public interface IJulianDate extends Comparable<IJulianDate> {
 
 	/**
 	 * Get the julian date in a standard date object
@@ -47,6 +49,35 @@ public interface IJulianDate {
 	 * @return Date represented by this julian date in the given form
 	 */
 	double getJD(JulianDateForm form);
+
+	/**
+	 * Get the amount of Julian days that this date is after the specified epoch:
+	 * 
+	 * <pre>
+	 * this_time - epoch_time
+	 * </pre>
+	 * 
+	 * @param epoch
+	 *            Epoch to which to find the relative time
+	 * @param timeformat
+	 *            Format in which to return the time difference
+	 * @return Amount of time from the passed epoch to this epoch
+	 */
+	double relativeTo(IJulianDate epoch, Time timeformat);
+
+	/**
+	 * 
+	 * Get the amount of Julian days that this date is after the specified epoch:
+	 * 
+	 * <pre>
+	 * this_time - epoch_time
+	 * </pre>
+	 * 
+	 * @param epoch
+	 *            Epoch to which to find the relative time
+	 * @return Amount of julian days from the passed epoch to this epoch
+	 */
+	double relativeTo(JulianDate epoch);
 
 	/**
 	 * Set the julian date
