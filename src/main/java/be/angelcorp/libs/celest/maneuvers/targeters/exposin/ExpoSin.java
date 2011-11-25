@@ -21,6 +21,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.lyndir.lhunath.lib.system.logging.Logger;
@@ -73,11 +74,13 @@ public class ExpoSin extends TPBVP {
 	 *            StateVector that defines the starting position [m]
 	 * @param r2
 	 *            StateVector that defines the wanted end position [m]
-	 * @param dT
-	 *            Time between the start position and end position [s]
+	 * @param departure
+	 *            Epoch of departure (epoch at r1) [jd]
+	 * @param arrival
+	 *            Epoch of arrival (epoch at r2) [jd]
 	 */
-	public ExpoSin(IStateVector r1, IStateVector r2, double dT) {
-		super(r1, r2, dT);
+	public ExpoSin(IStateVector r1, IStateVector r2, IJulianDate departure, IJulianDate arrival) {
+		super(r1, r2, departure, arrival);
 	}
 
 	/**
@@ -124,7 +127,7 @@ public class ExpoSin extends TPBVP {
 		double psi = Math.acos(r1vec.dot(r2vec) / (r1 * r2));
 		double theta = psi + 2 * Math.PI * N;
 
-		return new ExpoSinSolutionSet(r1, r2, dT, assumeK2, theta, center.getMu());
+		return new ExpoSinSolutionSet(r1, r2, getdT(), assumeK2, theta, center.getMu());
 	}
 
 	@Override
@@ -134,7 +137,7 @@ public class ExpoSin extends TPBVP {
 		logger.dbg("Gamma optimal: %f", gammaOptimal);
 
 		return new ExpoSinTrajectory(solutions.getExpoSin(gammaOptimal), solutions.getThetaMax(),
-				gammaOptimal, center);
+				gammaOptimal, center, departureEpoch);
 	}
 
 	/**

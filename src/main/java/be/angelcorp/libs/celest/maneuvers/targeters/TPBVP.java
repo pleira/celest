@@ -18,7 +18,9 @@ package be.angelcorp.libs.celest.maneuvers.targeters;
 import org.apache.commons.math.MathException;
 
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
+import be.angelcorp.libs.util.physics.Time;
 
 /**
  * 
@@ -32,12 +34,19 @@ import be.angelcorp.libs.celest.trajectory.ITrajectory;
 public abstract class TPBVP {
 
 	/**
-	 * Travel time between r1 and r2
+	 * Epoch at which the satellite or body departs at r1
 	 * <p>
-	 * <b>Unit: [s]</b>
+	 * <b>Unit: [jd]</b>
 	 * </p>
 	 */
-	protected double		dT;
+	protected IJulianDate	departureEpoch;
+	/**
+	 * Epoch at which the satellite or body arrives at r2
+	 * <p>
+	 * <b>Unit: [jd]</b>
+	 * </p>
+	 */
+	protected IJulianDate	arrivalEpoch;
 	/**
 	 * Start position
 	 * <p>
@@ -60,13 +69,25 @@ public abstract class TPBVP {
 	 *            Start position
 	 * @param r2
 	 *            End position
-	 * @param dT
-	 *            Travel time
+	 * @param departure
+	 *            Epoch of departure (epoch at r1)
+	 * @param arrival
+	 *            Epoch of arrival (epoch at r2)
 	 */
-	public TPBVP(IStateVector r1, IStateVector r2, double dT) {
+	public TPBVP(IStateVector r1, IStateVector r2, IJulianDate departure, IJulianDate arrival) {
 		this.r1 = r1;
 		this.r2 = r2;
-		this.dT = dT;
+		this.departureEpoch = departure;
+		this.arrivalEpoch = arrival;
+	}
+
+	/**
+	 * Travel time in seconds between departure and arrival
+	 * 
+	 * @return Travel time [s]
+	 */
+	public double getdT() {
+		return arrivalEpoch.relativeTo(departureEpoch, Time.second);
 	}
 
 	/**

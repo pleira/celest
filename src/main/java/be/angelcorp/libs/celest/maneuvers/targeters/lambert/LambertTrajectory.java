@@ -22,9 +22,11 @@ import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.celest.trajectory.KeplerTrajectory;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.util.physics.Time;
 
 public class LambertTrajectory implements ITrajectory {
 
@@ -50,9 +52,13 @@ public class LambertTrajectory implements ITrajectory {
 	 */
 	private final double		g_dot;
 	/**
-	 * Time between the points r1 and r2
+	 * Time at r1
 	 */
-	private final double		dt;
+	private final IJulianDate	departureEpoch;
+	/**
+	 * Time at r2
+	 */
+	private final IJulianDate	arrivalEpoch;
 	/**
 	 * Central body. This is the center for the pure Keplerian motion.
 	 */
@@ -82,12 +88,13 @@ public class LambertTrajectory implements ITrajectory {
 	 * @param g_dot
 	 *            G dot function (of the F and G functions, NOT SERIES)
 	 */
-	public LambertTrajectory(Vector3D r1, Vector3D r2, CelestialBody centerbody, double dt,
-			double f, double g, double g_dot) {
+	public LambertTrajectory(Vector3D r1, Vector3D r2, CelestialBody centerbody, IJulianDate departureEpoch,
+			IJulianDate arrivalEpoch, double f, double g, double g_dot) {
 		this.r1 = r1;
 		this.r2 = r2;
 		this.centerBody = centerbody;
-		this.dt = dt;
+		this.departureEpoch = departureEpoch;
+		this.arrivalEpoch = arrivalEpoch;
 		this.f = f;
 		this.g = g;
 		this.g_dot = g_dot;
@@ -101,7 +108,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * </p>
 	 */
 	@Override
-	public IStateVector evaluate(double t) throws FunctionEvaluationException {
+	public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException {
 		return traj.evaluate(t);
 	}
 
@@ -120,7 +127,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * @return Transfer time [s]
 	 */
 	public double getDt() {
-		return dt;
+		return departureEpoch.relativeTo(arrivalEpoch, Time.second);
 	}
 
 	/**
@@ -185,7 +192,6 @@ public class LambertTrajectory implements ITrajectory {
 	 */
 	private void mkTrajectory() {
 		IKeplerElements k = KeplerElements.as(new CartesianElements(r1.clone(), getV1()), centerBody);
-		traj = new KeplerTrajectory(k);
+		traj = new KeplerTrajectory(k, departureEpoch);
 	}
-
 }

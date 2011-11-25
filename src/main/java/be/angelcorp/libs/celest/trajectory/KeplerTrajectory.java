@@ -19,6 +19,8 @@ import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.stateVector.IKeplerElements;
+import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.util.physics.Time;
 
 /**
  * Implements a {@link IKeplerTrajectory}, a trajectory based on Kepler elements propagated using
@@ -33,6 +35,7 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	 * Initial Kepler elements that are propagated
 	 */
 	private final IKeplerElements	k;
+	private final IJulianDate		epoch;
 
 	/**
 	 * Create a trajectory based on propagated classical (Kepler) elements.
@@ -40,17 +43,18 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	 * @param k
 	 *            Initial Kepler elements at time 0.
 	 */
-	public KeplerTrajectory(IKeplerElements k) {
+	public KeplerTrajectory(IKeplerElements k, IJulianDate epoch) {
 		this.k = k;
+		this.epoch = epoch;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IKeplerElements evaluate(double t) throws FunctionEvaluationException {
+	public IKeplerElements evaluate(IJulianDate t) throws FunctionEvaluationException {
 		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
-		double dM = n * t;
+		double dM = n * t.relativeTo(epoch, Time.second);
 		IKeplerElements k2 = k.clone();
 		k2.setTrueAnomaly(k2.getOrbitEqn().trueAnomalyFromMean(k.getOrbitEqn().meanAnomaly() + dM));
 		return k2;

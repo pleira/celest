@@ -18,6 +18,7 @@ package be.angelcorp.libs.celest.trajectory;
 import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
 
 /**
  * A trajectory is a function of time which results in a state for that given time. Evaluating a
@@ -31,11 +32,11 @@ public interface ITrajectory {
 	 * Find the state of a body at a given time
 	 * 
 	 * @param t
-	 *            Time of the epoch [s] starting from 0
+	 *            Time of the epoch [jd, UT]
 	 * @return The state at the given epoch
 	 * @throws FunctionEvaluationException
 	 *             When the state cannot be computed
 	 */
-	public IStateVector evaluate(double t) throws FunctionEvaluationException;
+	public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException;
 
 }

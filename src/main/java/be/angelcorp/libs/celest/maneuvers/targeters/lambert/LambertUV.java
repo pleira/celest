@@ -31,6 +31,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -63,13 +64,16 @@ public class LambertUV extends TPBVP {
 	 *            Arrival point R2
 	 * @param centerbody
 	 *            Central body of the Keplerian motion (useually the Sun or the Earth)
-	 * @param dT
-	 *            Transfer time from R1 to R2
+	 * @param departure
+	 *            Epoch of departure (epoch at r1)
+	 * @param arrival
+	 *            Epoch of arrival (epoch at r2)
 	 * @param shortWay
 	 *            Use short arc transfer (transfer solution over the smallest angle between R1 and R2)
 	 */
-	public LambertUV(IStateVector r1, IStateVector r2, CelestialBody centerbody, double dT, boolean shortWay) {
-		super(r1, r2, dT);
+	public LambertUV(IStateVector r1, IStateVector r2, CelestialBody centerbody, IJulianDate departure,
+			IJulianDate arrival, boolean shortWay) {
+		super(r1, r2, departure, arrival);
 		this.centerbody = centerbody;
 		this.shortWay = shortWay;
 	}
@@ -99,6 +103,7 @@ public class LambertUV extends TPBVP {
 
 		double currentDT = Double.POSITIVE_INFINITY;
 
+		double dT = getdT();
 		do {
 			y = r1norm + r2norm + A * (z * S - 1d) / sqrt(C);
 			if (A > 0d && y < 0d) {
@@ -135,6 +140,6 @@ public class LambertUV extends TPBVP {
 		// Vector3D v1 = r2.subtract(r1.multiply(f)).divide(g);
 		// Vector3D v2 = r2.multiply(g_dot).subtract(r1).divide(g);
 
-		return new LambertTrajectory(r1, r2, centerbody, dT, f, g, g_dot);
+		return new LambertTrajectory(r1, r2, centerbody, departureEpoch, arrivalEpoch, f, g, g_dot);
 	}
 }

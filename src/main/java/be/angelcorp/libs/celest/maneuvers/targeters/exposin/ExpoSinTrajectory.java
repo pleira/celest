@@ -24,9 +24,11 @@ import org.apache.commons.math.analysis.integration.LegendreGaussIntegrator;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.util.physics.Time;
 
 public class ExpoSinTrajectory implements ITrajectory {
 
@@ -34,17 +36,33 @@ public class ExpoSinTrajectory implements ITrajectory {
 	private double				thetaMax;
 	private double				gamma;
 	private CelestialBody		center;
+	private IJulianDate			epoch;
 
+	/**
+	 * Create a solution trajectory to an exposin shape based solution.
+	 * 
+	 * @param exposin
+	 *            Exposin describing the orbit
+	 * @param thetaMax
+	 *            Rotation angle at which the end is reached [rad]
+	 * @param gamma
+	 *            Start flight path angle (&gamma; at r1) [rad]
+	 * @param center
+	 *            Center body of the trajectory e.g. Sun
+	 * @param epoch
+	 *            Epoch at which the transfer starts
+	 */
 	public ExpoSinTrajectory(ExponentialSinusoid exposin, double thetaMax, double gamma,
-			CelestialBody center) {
+			CelestialBody center, IJulianDate epoch) {
 		this.exposin = exposin;
 		this.thetaMax = thetaMax;
 		this.gamma = gamma;
 		this.center = center;
+		this.epoch = epoch;
 	}
 
 	@Override
-	public IStateVector evaluate(double t) throws FunctionEvaluationException {
+	public IStateVector evaluate(IJulianDate evalEpoch) throws FunctionEvaluationException {
 		UnivariateRealFunction thetaDot = new ComposableFunction() {
 			@Override
 			public double value(double theta) throws FunctionEvaluationException {
@@ -57,6 +75,7 @@ public class ExpoSinTrajectory implements ITrajectory {
 				return thetaDot;
 			}
 		};
+		double t = evalEpoch.relativeTo(epoch, Time.second);
 		double theta;
 		try {
 			theta = new LegendreGaussIntegrator(5, 200).integrate(thetaDot, 0, t);

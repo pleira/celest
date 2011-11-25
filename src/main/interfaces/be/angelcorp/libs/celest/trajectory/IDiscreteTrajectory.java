@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.trajectory;
 
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
 
 /**
  * Create a trajectory based on a set of known states at known epochs. Then upon evaluation, the state
@@ -34,6 +35,6 @@ public interface IDiscreteTrajectory extends ITrajectory {
 	 * @param state
 	 *            Known state at the given epoch.
 	 */
-	public abstract void addState(double t, IStateVector state);
+	public abstract void addState(IJulianDate t, IStateVector state);
 
 }

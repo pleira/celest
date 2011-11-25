@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
 
 import com.google.common.collect.Maps;
 
@@ -37,7 +38,7 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	/**
 	 * Sorted map that stores trajectories with there corresponding starting time
 	 */
-	private TreeMap<Double, ITrajectory>	trajectories	= Maps.newTreeMap();
+	private TreeMap<IJulianDate, ITrajectory>	trajectories	= Maps.newTreeMap();
 
 	/**
 	 * Make time relative to the start of the trajectory segment
@@ -48,13 +49,13 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	 * t is the global time at which this CompositeTrajectory is evaluated
 	 * </p>
 	 */
-	private boolean							relativeTime	= true;
+	private boolean								relativeTime	= true;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addTrajectory(ITrajectory t, double t0) {
+	public void addTrajectory(ITrajectory t, IJulianDate t0) {
 		trajectories.put(t0, t);
 	}
 
@@ -62,17 +63,13 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IStateVector evaluate(double t) throws FunctionEvaluationException {
-		Entry<Double, ITrajectory> entry = trajectories.floorEntry(t);
+	public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException {
+		Entry<IJulianDate, ITrajectory> entry = trajectories.floorEntry(t);
 		if (entry == null)
-			throw new FunctionEvaluationException(t, "No trajectory found");
+			throw new FunctionEvaluationException(t.getJD(), "No trajectory found");
 
 		ITrajectory trajectory = entry.getValue();
-
-		if (relativeTime)
-			return trajectory.evaluate(t - entry.getKey());
-		else
-			return trajectory.evaluate(t);
+		return trajectory.evaluate(t);
 	}
 
 	/**
@@ -80,7 +77,7 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	 */
 	@Override
 	public void removeTrajectory(ITrajectory trajectory) {
-		for (Double t : trajectories.keySet()) {
+		for (IJulianDate t : trajectories.keySet()) {
 			if (trajectories.get(t) == trajectory)
 				trajectories.remove(t);
 		}

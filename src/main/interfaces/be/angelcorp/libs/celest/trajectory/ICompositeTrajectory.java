@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
+import be.angelcorp.libs.celest.time.IJulianDate;
+
 /**
  * A {@link ICompositeTrajectory} is a trajectory that is split in discrete trajectory segments.
  * Trajectories are added with a starting time. When this trajectory is evaluated, the evaluation is
@@ -32,7 +34,7 @@ public interface ICompositeTrajectory extends ITrajectory {
 	 * @param t0
 	 *            Time when the trajectory segment starts
 	 */
-	public abstract void addTrajectory(ITrajectory t, double t0);
+	public abstract void addTrajectory(ITrajectory t, IJulianDate t0);
 
 	/**
 	 * Removes a sub-trajectory segment this {@link CompositeTrajectory}.
