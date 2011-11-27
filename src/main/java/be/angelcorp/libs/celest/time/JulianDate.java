@@ -35,6 +35,13 @@ import be.angelcorp.libs.util.physics.Time;
 public class JulianDate implements IJulianDate {
 
 	/**
+	 * Get the J2000 epoch in JulianDate form
+	 */
+	public static JulianDate getJ2000() {
+		return new JulianDate(2451545.0);
+	}
+
+	/**
 	 * Julian Date represented by this class
 	 */
 	double	date;
@@ -69,6 +76,15 @@ public class JulianDate implements IJulianDate {
 	 */
 	public JulianDate(double date, JulianDateForm form) {
 		setJD(date, form);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IJulianDate add(double dt, Time format) {
+		setJD(getJD() + Time.convert(dt, format, Time.day));
+		return this;
 	}
 
 	/**

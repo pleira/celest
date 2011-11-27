@@ -28,6 +28,17 @@ import be.angelcorp.libs.util.physics.Time;
 public interface IJulianDate extends Comparable<IJulianDate> {
 
 	/**
+	 * Add time to this JulianDate
+	 * 
+	 * @param dt
+	 *            Amount of time to add
+	 * @param format
+	 *            Format of dt
+	 * @return This
+	 */
+	IJulianDate add(double dt, Time format);
+
+	/**
 	 * Get the julian date in a standard date object
 	 * 
 	 * @return JD in normal date format

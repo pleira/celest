@@ -23,6 +23,14 @@ import be.angelcorp.libs.util.physics.Time;
 
 public class TestJulianDate extends TestCase {
 
+	public void testAdd() {
+		JulianDate jd0 = new JulianDate(5);
+		double dt = 325;// [s]
+		jd0.add(dt, Time.second);
+
+		assertEquals(5 + Time.convert(dt, Time.second, Time.day), jd0.getJD());
+	}
+
 	public void testJulianDate() {
 		// MATLAB:
 		// % October 10, 2004, at 12:21:18 p.m.:
