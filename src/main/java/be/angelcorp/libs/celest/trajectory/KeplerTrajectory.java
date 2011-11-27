@@ -54,7 +54,8 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	@Override
 	public IKeplerElements evaluate(IJulianDate t) throws FunctionEvaluationException {
 		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
-		double dM = n * t.relativeTo(epoch, Time.second);
+		double dt = t.relativeTo(epoch, Time.second); // Delta between epoch and now in [s]
+		double dM = n * dt;
 		IKeplerElements k2 = k.clone();
 		k2.setTrueAnomaly(k2.getOrbitEqn().trueAnomalyFromMean(k.getOrbitEqn().meanAnomaly() + dM));
 		return k2;

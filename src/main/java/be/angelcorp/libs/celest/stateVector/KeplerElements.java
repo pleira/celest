@@ -221,13 +221,25 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	 */
 	@Override
 	public boolean equals(IKeplerElements state2) {
-		double angleTol = KeplerEquations.angleTolarance;
+		return equals(state2, KeplerEquations.angleTolarance, 1e-12, KeplerEquations.eccentricityTolarance);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IKeplerElements state2, double eps) {
+		return equals(state2, eps, eps, eps);
+	}
+
+	public boolean equals(IKeplerElements state2, double angle_eps, double distance_eps,
+			double eccentricity_eps) {
 		boolean equal = true;
 
 		// Do the orbit checks
-		equal &= MathUtils.equals(a, state2.getSemiMajorAxis(), a * 1e-10);
-		equal &= MathUtils.equals(e, state2.getEccentricity(), KeplerEquations.eccentricityTolarance);
-		equal &= MathUtils2.equalsAngle(i, state2.getInclination(), angleTol);
+		equal &= MathUtils.equals(a, state2.getSemiMajorAxis(), a * distance_eps);
+		equal &= MathUtils.equals(e, state2.getEccentricity(), e * eccentricity_eps);
+		equal &= MathUtils2.equalsAngle(i, state2.getInclination(), angle_eps);
 
 		if (!equal) // Return if false, else do more checks
 			return false;
@@ -238,38 +250,27 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 			if (getOrbitType() == KeplerOrbitTypes.Circular) {
 				// No raan / w defined, use true longitude instead
 				equal &= MathUtils2.equalsAngle(
-						getOrbitEqn().trueLongitude(), state2.getOrbitEqn().trueLongitude(), angleTol);
+						getOrbitEqn().trueLongitude(), state2.getOrbitEqn().trueLongitude(), angle_eps);
 			} else {
 				// No raan, use true longitude of periapsis instead
 				equal &= MathUtils2.equalsAngle(getOrbitEqn().trueLongitudeOfPeriapse(),
-						state2.getOrbitEqn().trueLongitudeOfPeriapse(), angleTol);
-				equal &= MathUtils2.equalsAngle(omega, state2.getArgumentPeriapsis(), angleTol);
+						state2.getOrbitEqn().trueLongitudeOfPeriapse(), angle_eps);
+				equal &= MathUtils2.equalsAngle(omega, state2.getArgumentPeriapsis(), angle_eps);
 			}
 		} else {
 			if (getOrbitType() == KeplerOrbitTypes.Circular) {
 				// No w defined, use argument of latitude instead
 				equal &= MathUtils2.equalsAngle(getOrbitEqn().arguementOfLatitude(),
-						state2.getOrbitEqn().arguementOfLatitude(), angleTol);
-				equal &= MathUtils2.equalsAngle(raan, state2.getRaan(), angleTol);
+						state2.getOrbitEqn().arguementOfLatitude(), angle_eps);
+				equal &= MathUtils2.equalsAngle(raan, state2.getRaan(), angle_eps);
 			} else {
 				// w, raan, nu are properly defined
-				equal &= MathUtils2.equalsAngle(raan, state2.getRaan(), angleTol);
-				equal &= MathUtils2.equalsAngle(omega, state2.getArgumentPeriapsis(), angleTol);
-				equal &= MathUtils2.equalsAngle(trueA, state2.getTrueAnomaly(), angleTol);
+				equal &= MathUtils2.equalsAngle(raan, state2.getRaan(), angle_eps);
+				equal &= MathUtils2.equalsAngle(omega, state2.getArgumentPeriapsis(), angle_eps);
+				equal &= MathUtils2.equalsAngle(trueA, state2.getTrueAnomaly(), angle_eps);
 			}
 		}
 		return equal;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(IKeplerElements state2, double eps) {
-		if (IKeplerElements.class.isAssignableFrom(state2.getClass()))
-			return equals(state2, eps);
-		else
-			return super.equals(state2, eps);
 	}
 
 	/**
@@ -281,6 +282,17 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 			return equals((IKeplerElements) state2);
 		else
 			return super.equals(state2);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IStateVector state2, double eps) {
+		if (IKeplerElements.class.isAssignableFrom(state2.getClass()))
+			return equals((IKeplerElements) state2, eps);
+		else
+			return super.equals(state2, eps);
 	}
 
 	/**

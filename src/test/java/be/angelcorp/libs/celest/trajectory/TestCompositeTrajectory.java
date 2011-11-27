@@ -24,7 +24,10 @@ import org.junit.Test;
 
 import be.angelcorp.libs.celest.stateVector.ICartesianElements;
 import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.util.physics.Time;
 
 public class TestCompositeTrajectory extends TestCase {
 
@@ -34,10 +37,10 @@ public class TestCompositeTrajectory extends TestCase {
 	 * @author simon
 	 */
 	public class TestState implements IStateVector {
-		private final double	constant;
+		private final IJulianDate	constant;
 
-		public TestState(double d) {
-			constant = d;
+		public TestState(IJulianDate t) {
+			constant = t;
 		}
 
 		@Override
@@ -64,7 +67,7 @@ public class TestCompositeTrajectory extends TestCase {
 
 		@Override
 		public RealVector toVector() {
-			return new ArrayRealVector(new double[] { constant });
+			return new ArrayRealVector(new double[] { constant.getJD() });
 		}
 
 	}
@@ -76,10 +79,15 @@ public class TestCompositeTrajectory extends TestCase {
 	 * 
 	 */
 	public class TestTrajectory implements ITrajectory {
+		private double	id;
+
+		public TestTrajectory(double id) {
+			this.id = id;
+		}
 
 		@Override
-		public IStateVector evaluate(double t) throws FunctionEvaluationException {
-			return new TestState(t);
+		public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException {
+			return new TestState(t.add(id, Time.day));
 		}
 
 	}
@@ -89,23 +97,28 @@ public class TestCompositeTrajectory extends TestCase {
 		CompositeTrajectory trajectory = new CompositeTrajectory();
 
 		// Add various trajectories at various times
-		ITrajectory t1 = new TestTrajectory();
-		ITrajectory t2 = new TestTrajectory();
-		ITrajectory t3 = new TestTrajectory();
-		trajectory.addTrajectory(t1, 0);
-		trajectory.addTrajectory(t2, 10);
-		trajectory.addTrajectory(t3, 20);
+		ITrajectory t1 = new TestTrajectory(100);
+		ITrajectory t2 = new TestTrajectory(200);
+		ITrajectory t3 = new TestTrajectory(300);
+		trajectory.addTrajectory(t1, new JulianDate(0));
+		trajectory.addTrajectory(t2, new JulianDate(10));
+		trajectory.addTrajectory(t3, new JulianDate(20));
 
 		// Equal begin time as t1
-		Tests.assertEquals(new double[] { 0 }, trajectory.evaluate(0).toVector().getData(), 1E-16);
+		Tests.assertEquals(new double[] { 100 },
+				trajectory.evaluate(new JulianDate(0)).toVector().getData(), 1E-16);
 		// In between t1 and t2, t1 should be used
-		Tests.assertEquals(new double[] { 5 }, trajectory.evaluate(5).toVector().getData(), 1E-16);
+		Tests.assertEquals(new double[] { 105 },
+				trajectory.evaluate(new JulianDate(5)).toVector().getData(), 1E-16);
 		// Same as above but s2
-		Tests.assertEquals(new double[] { 5 }, trajectory.evaluate(15).toVector().getData(), 1E-16);
+		Tests.assertEquals(new double[] { 215 },
+				trajectory.evaluate(new JulianDate(15)).toVector().getData(), 1E-16);
 		// Same insertion time as s3
-		Tests.assertEquals(new double[] { 0 }, trajectory.evaluate(20).toVector().getData(), 1E-16);
+		Tests.assertEquals(new double[] { 320 },
+				trajectory.evaluate(new JulianDate(20)).toVector().getData(), 1E-16);
 		// Time after the last insertion
-		Tests.assertEquals(new double[] { 5 }, trajectory.evaluate(25).toVector().getData(), 1E-16);
+		Tests.assertEquals(new double[] { 325 },
+				trajectory.evaluate(new JulianDate(25)).toVector().getData(), 1E-16);
 	}
 
 	@Test(expected = FunctionEvaluationException.class)
@@ -113,11 +126,11 @@ public class TestCompositeTrajectory extends TestCase {
 		CompositeTrajectory trajectory = new CompositeTrajectory();
 
 		// Add a state a t=0
-		ITrajectory t1 = new TestTrajectory();
-		trajectory.addTrajectory(t1, 0);
+		ITrajectory t1 = new TestTrajectory(0);
+		trajectory.addTrajectory(t1, new JulianDate(0));
 
 		try {
-			trajectory.evaluate(-1); // There is no state on or before -1 so exception
+			trajectory.evaluate(new JulianDate(-1)); // There is no state on or before -1 so exception
 			fail("The should be not state at t=-1, because the first state is at t=0");
 		} catch (FunctionEvaluationException success) {
 		}

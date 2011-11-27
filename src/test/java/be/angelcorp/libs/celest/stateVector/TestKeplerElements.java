@@ -108,7 +108,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 						new Vector3D(+5.568161770637649e+04, -3.568999965732438e+04, -1.201301879893813e+04)),
 				new KeplerElements(Length.convert(2.167001873, Length.AU), 0.8338, Angle.convert(11.74,
 						Angle.DEG), Angle.convert(208.56, Angle.DEG), Angle.convert(28.27, Angle.DEG), 0,
-						SolarConstants.body)).setEps_reverse(1E-8));
+						SolarConstants.body)).setEps_reverse(1E-8).setEps_forward(1e-8));
 		/* 105140 (2000 NL10) (Aten [NEO]), see http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=105140 */
 		// M = Angle.convert(293.30, Angle.DEG) => trueA = -2.70862
 		s.add(new KeplerStateVectorComparison<CartesianElements>(
