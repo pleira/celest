@@ -47,7 +47,7 @@ public interface IStateDerivativeVector {
 	 *            Compare the current {@link IStateDerivativeVector} with this ones.
 	 * @return true if they are equal.
 	 */
-	public abstract boolean equals(IStateVector obj);
+	public abstract boolean equals(IStateDerivativeVector obj);
 
 	/**
 	 * Tests if two {@link IStateDerivativeVector} are equal. By default, this id done by comparing all
@@ -67,7 +67,7 @@ public interface IStateDerivativeVector {
 	 *            Relative error to check against.
 	 * @return true if they are equal.
 	 */
-	public abstract boolean equals(IStateVector obj, double eps);
+	public abstract boolean equals(IStateDerivativeVector obj, double eps);
 
 	/**
 	 * Convert the StateDerivativeVector to an equivalent Cartesian one (V,A in Cartesian coordinates)

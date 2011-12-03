@@ -48,7 +48,7 @@ public abstract class StateDerivativeVector implements IStateDerivativeVector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector obj) {
+	public boolean equals(IStateDerivativeVector obj) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
 
@@ -66,7 +66,7 @@ public abstract class StateDerivativeVector implements IStateDerivativeVector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector obj, double eps) {
+	public boolean equals(IStateDerivativeVector obj, double eps) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
 
