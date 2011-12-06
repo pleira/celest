@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.trajectory;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
+import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.stateVector.KeplerDerivative;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
@@ -48,16 +49,24 @@ public class KeplerVariationTrajectory implements ITrajectory {
 	@Override
 	public KeplerElements evaluate(IJulianDate t) throws FunctionEvaluationException {
 		double dT = t.relativeTo(referenceDate, Time.second);
-		KeplerElements k2 = new KeplerElements(
-				referenceElements.getSemiMajorAxis() + dT * elementDerivatives.getSemiMajorAxisVariation(),
-				referenceElements.getEccentricity() + dT * elementDerivatives.getEccentricityVariation(),
-				referenceElements.getInclination() + dT * elementDerivatives.getInclinationVariation(),
-				referenceElements.getArgumentPeriapsis() + dT
-						* elementDerivatives.getArgumentPeriapsisVariation(),
-				referenceElements.getRaan() + dT * elementDerivatives.getRaanVariation(),
-				referenceElements.getTrueAnomaly() + dT * elementDerivatives.getTrueAnomalyVariation(),
+
+		double a_new = referenceElements.getSemiMajorAxis()
+				+ dT * elementDerivatives.getSemiMajorAxisVariation();
+		double e_new = referenceElements.getEccentricity()
+				+ dT * elementDerivatives.getEccentricityVariation();
+		double i_new = referenceElements.getInclination()
+				+ dT * elementDerivatives.getInclinationVariation();
+		double w_new = referenceElements.getArgumentPeriapsis()
+				+ dT * elementDerivatives.getArgumentPeriapsisVariation();
+		double W_new = referenceElements.getRaan()
+				+ dT * elementDerivatives.getRaanVariation();
+		double M_new = referenceElements.getOrbitEqn().meanAnomaly()
+				+ dT * elementDerivatives.getMeanAnomalyVariation();
+		double nu_new = KeplerEquations.trueAnomalyFromMean(M_new, e_new);
+
+		KeplerElements k2 = new KeplerElements(a_new, e_new, i_new, w_new, W_new, nu_new,
 				referenceElements.getCenterbody());
+
 		return k2;
 	}
-
 }

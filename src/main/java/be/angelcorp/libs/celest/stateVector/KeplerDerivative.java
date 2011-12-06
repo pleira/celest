@@ -93,15 +93,15 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	protected double		draan;
 
 	/**
-	 * True anomaly variation (d&nu;/dt)
+	 * Mean anomaly variation (dM/dt)
 	 * <p>
-	 * The change of the true anomaly (see {@link KeplerElements#trueA}) per second
+	 * The change of the mean anomaly per second
 	 * </p>
 	 * <p>
 	 * <b>[rad]</b>
 	 * </p>
 	 */
-	protected double		dtrueA;
+	protected double		dM;
 
 	/**
 	 * Center body of the Kepler elements
@@ -121,11 +121,11 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	 *            Argument of pericenter variation [rad/s]
 	 * @param draan
 	 *            Right ascension of ascending node variation [rad/s]
-	 * @param dtrueA
-	 *            True anomaly variation [rad/s]
+	 * @param dM
+	 *            Mean anomaly variation [rad/s]
 	 */
-	public KeplerDerivative(double da, double de, double di, double domega, double draan, double dtrueA) {
-		this(da, de, di, domega, draan, dtrueA, null);
+	public KeplerDerivative(double da, double de, double di, double domega, double draan, double dM) {
+		this(da, de, di, domega, draan, dM, null);
 	}
 
 	/**
@@ -142,12 +142,12 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	 *            Argument of pericenter variation [rad/s]
 	 * @param draan
 	 *            Right ascension of ascending node variation [rad/s]
-	 * @param dtrueA
-	 *            True anomaly variation [rad/s]
+	 * @param dM
+	 *            Mean anomaly variation [rad/s]
 	 * @param centerbody
 	 *            The body that is being orbited by these elements
 	 */
-	public KeplerDerivative(double da, double de, double di, double domega, double draan, double dtrueA,
+	public KeplerDerivative(double da, double de, double di, double domega, double draan, double dM,
 			CelestialBody centerbody) {
 		super();
 		this.da = da;
@@ -155,7 +155,7 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 		this.di = di;
 		this.domega = domega;
 		this.draan = draan;
-		this.dtrueA = dtrueA;
+		this.dM = dM;
 		this.centerbody = centerbody;
 	}
 
@@ -164,7 +164,7 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	 */
 	@Override
 	public KeplerDerivative clone() {
-		return new KeplerDerivative(da, de, di, domega, draan, dtrueA, centerbody);
+		return new KeplerDerivative(da, de, di, domega, draan, dM, centerbody);
 	}
 
 	@Override
@@ -218,6 +218,16 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	}
 
 	/**
+	 * Documentation: {@link KeplerDerivative#dM}
+	 * 
+	 * @see KeplerDerivative#dM
+	 */
+	@Override
+	public double getMeanAnomalyVariation() {
+		return dM;
+	}
+
+	/**
 	 * Documentation: {@link KeplerDerivative#draan}
 	 * 
 	 * @see KeplerDerivative#draan
@@ -235,16 +245,6 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	@Override
 	public double getSemiMajorAxisVariation() {
 		return da;
-	}
-
-	/**
-	 * Documentation: {@link KeplerDerivative#dtrueA}
-	 * 
-	 * @see KeplerDerivative#dtrueA
-	 */
-	@Override
-	public double getTrueAnomalyVariation() {
-		return dtrueA;
 	}
 
 	/**
@@ -281,13 +281,13 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setElements(double da, double de, double di, double domega, double draan, double dtrueA) {
+	public void setElements(double da, double de, double di, double domega, double draan, double dM) {
 		setSemiMajorAxisVariation(da);
 		setEccentricityVariation(de);
 		setInclinationVariation(di);
 		setArgumentPeriapsisVariation(domega);
 		setRaanVariation(draan);
-		setTrueAnomalyVariation(dtrueA);
+		setMeanAnomalyVariation(dM);
 	}
 
 	/**
@@ -298,6 +298,16 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	@Override
 	public void setInclinationVariation(double di) {
 		this.di = di;
+	}
+
+	/**
+	 * Documentation: {@link KeplerDerivative#dM}
+	 * 
+	 * @see KeplerDerivative#dM
+	 */
+	@Override
+	public void setMeanAnomalyVariation(double dM) {
+		this.dM = dM;
 	}
 
 	/**
@@ -320,16 +330,6 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 		this.da = da;
 	}
 
-	/**
-	 * Documentation: {@link KeplerDerivative#dtrueA}
-	 * 
-	 * @see KeplerDerivative#dtrueA
-	 */
-	@Override
-	public void setTrueAnomalyVariation(double dtrueA) {
-		this.dtrueA = dtrueA;
-	}
-
 	@Override
 	public CartesianDerivative toCartesianDerivative() {
 		throw new UnsupportedOperationException("Cannot convert KeplerDerivative to CartesianDerivative!");
@@ -340,7 +340,7 @@ public class KeplerDerivative extends StateDerivativeVector implements IKeplerDe
 	 */
 	@Override
 	public RealVector toVector() {
-		return new ArrayRealVector(new double[] { da, de, di, domega, draan, dtrueA });
+		return new ArrayRealVector(new double[] { da, de, di, domega, draan, dM });
 	}
 
 }

@@ -24,7 +24,7 @@ import be.angelcorp.libs.celest.math.Keplerian;
  * Holds the state variation using the variation of the classical Keplerian elements:
  * 
  * <pre>
- * Elements: { da,    de,      i,       &omega;,       &Omega;,       &nu;   }
+ * Elements: { da,    de,     di,      d&omega;,      d&Omega;,      dM   }
  * Units:    {[m/s], [-/s], [rad/s], [rad/s], [rad/s], [rad/s]}
  * </pre>
  * 
@@ -41,7 +41,7 @@ public interface IKeplerDerivative extends Keplerian, IStateDerivativeVector {
 
 	/**
 	 * Tests if two sets of kepler derivartives hold the same variables (tests for equal
-	 * da,de,di,d&omega;,d&Omega;,d&nu;)
+	 * da,de,di,d&omega;,d&Omega;,dM)
 	 * 
 	 * @param state2
 	 *            Kepler derivative elements to compare with
@@ -51,7 +51,7 @@ public interface IKeplerDerivative extends Keplerian, IStateDerivativeVector {
 
 	/**
 	 * Tests if two sets of kepler derivative elements hold the same variables (tests for equal
-	 * da,de,di,d&omega;,d&Omega;,d&nu;) with the given relative accuracy.
+	 * da,de,di,d&omega;,d&Omega;,dM) with the given relative accuracy.
 	 * 
 	 * <pre>
 	 * abs(element1 - element2) &lt; eps
@@ -86,6 +86,11 @@ public interface IKeplerDerivative extends Keplerian, IStateDerivativeVector {
 	public abstract double getInclinationVariation();
 
 	/**
+	 * @see KeplerElements#trueA
+	 */
+	public abstract double getMeanAnomalyVariation();
+
+	/**
 	 * @see KeplerElements#raan
 	 */
 	public abstract double getRaanVariation();
@@ -94,11 +99,6 @@ public interface IKeplerDerivative extends Keplerian, IStateDerivativeVector {
 	 * @see KeplerElements#a
 	 */
 	public abstract double getSemiMajorAxisVariation();
-
-	/**
-	 * @see KeplerElements#trueA
-	 */
-	public abstract double getTrueAnomalyVariation();
 
 	/**
 	 * @see KeplerElements#omega
@@ -140,6 +140,11 @@ public interface IKeplerDerivative extends Keplerian, IStateDerivativeVector {
 	public abstract void setInclinationVariation(double di);
 
 	/**
+	 * @see KeplerElements#trueA
+	 */
+	public abstract void setMeanAnomalyVariation(double dtrueA);
+
+	/**
 	 * @see KeplerElements#raan
 	 */
 	public abstract void setRaanVariation(double draan);
@@ -148,11 +153,6 @@ public interface IKeplerDerivative extends Keplerian, IStateDerivativeVector {
 	 * @see KeplerElements#a
 	 */
 	public abstract void setSemiMajorAxisVariation(double da);
-
-	/**
-	 * @see KeplerElements#trueA
-	 */
-	public abstract void setTrueAnomalyVariation(double dtrueA);
 
 	/**
 	 * {@inheritDoc}
