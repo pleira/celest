@@ -16,8 +16,15 @@
 package be.angelcorp.libs.celest.constants;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
+import be.angelcorp.libs.celest.stateVector.KeplerDerivative;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.time.JulianDate;
+import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory;
+import be.angelcorp.libs.util.physics.Angle;
+import be.angelcorp.libs.util.physics.Length;
+import be.angelcorp.libs.util.physics.Time;
 
 /**
  * Different constants specific to the earth. Has constants in the following categories:
@@ -38,23 +45,23 @@ public abstract class EarthConstants {
 	 * <b>Unit: [kg]</b>
 	 * </p>
 	 */
-	public static final double			mass				= 5.9736E24;
+	public static final double				mass				= 5.9736E24;
 	/**
 	 * Standard gravitational parameter of the earth
 	 * <p>
 	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
 	 * </p>
 	 */
-	public static final double			mu					= Constants.mass2mu(mass);
+	public static final double				mu					= Constants.mass2mu(mass);
 	/**
 	 * Mean density of the entire earth (average)
 	 * <p>
 	 * <b>Unit: [kg/m<sup>3</sup>]</b>
 	 * </p>
 	 */
-	public static final double			meanDensity			= 5.515E3;								// kg
-																									// per
-																									// m^3
+	public static final double				meanDensity			= 5.515E3;								// kg
+																										// per
+																										// m^3
 
 	/**
 	 * Mean earth radius
@@ -62,21 +69,21 @@ public abstract class EarthConstants {
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
-	public static final double			radiusMean			= 6371E3;								// m
+	public static final double				radiusMean			= 6371E3;								// m
 	/**
 	 * Radius of the earth at the equator (great circle)
 	 * <p>
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
-	public static final double			radiusEquatorial	= 6378.1E3;							// m
+	public static final double				radiusEquatorial	= 6378.1E3;							// m
 	/**
 	 * Radius of the earth at the poles (great circle)
 	 * <p>
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
-	public static final double			radiusPolar			= 6356.8E3;							// m
+	public static final double				radiusPolar			= 6356.8E3;							// m
 
 	/**
 	 * How the earth is "deformed" relative to a perfect sphere
@@ -92,28 +99,28 @@ public abstract class EarthConstants {
 	 * <b>Unit: [-]</b>
 	 * </p>
 	 */
-	public static final double			flattening			= 0.0033528;
+	public static final double				flattening			= 0.0033528;
 	/**
 	 * Circumference of the earth (not confirmed mean circumference)
 	 * <p>
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
-	public static final double			circumference		= 40075.16E3;
+	public static final double				circumference		= 40075.16E3;
 	/**
 	 * Earth total surface area
 	 * <p>
 	 * <b>Unit: [m<sup>2</sup>]</b>
 	 * </p>
 	 */
-	public static final double			surfaceArea			= 510072000E6;
+	public static final double				surfaceArea			= 510072000E6;
 	/**
 	 * Earth total volume
 	 * <p>
 	 * <b>Unit: [m<sup>3</sup>]</b>
 	 * </p>
 	 */
-	public static final double			volume				= (1.08321E9 * 10E12);
+	public static final double				volume				= (1.08321E9 * 10E12);
 
 	/**
 	 * Semi-major axis (a) of the orbit of the earth around the sun
@@ -121,40 +128,40 @@ public abstract class EarthConstants {
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
-	public static final double			semiMajorAxis		= 149.598261E9;
+	public static final double				semiMajorAxis		= 149.598261E9;
 	/**
 	 * Eccentricity (e) of the orbit of the earth around the sun
 	 * <p>
 	 * <b>Unit: [-]</b>
 	 * </p>
 	 */
-	public static final double			eccentricity		= 0.01671123;
+	public static final double				eccentricity		= 0.01671123;
 	/**
 	 * Inclination (i) of the orbit of the earth around the sun
 	 * <p>
 	 * <b>Unit: [rad]</b>
 	 * </p>
 	 */
-	public static final double			inclination			= 0.124878;
+	public static final double				inclination			= 0.124878;
 	/**
 	 * Argument of perigee (&omega;) of the orbit of the earth around the sun
 	 * <p>
 	 * <b>Unit: [rad]</b>
 	 * </p>
 	 */
-	public static final double			argPerigee			= 1.99330267;
+	public static final double				argPerigee			= 1.99330267;
 	/**
 	 * Right ascension of the ascending node (&Omega;) of the orbit of the earth around the sun
 	 * <p>
 	 * <b>Unit: [rad]</b>
 	 * </p>
 	 */
-	public static final double			raan				= 6.08665;
+	public static final double				raan				= 6.08665;
 
 	/**
 	 * Kepler state vector of the earth, around the sub
 	 */
-	public static final KeplerElements	solarOrbit;
+	public static final KeplerElements		solarOrbit;
 	static {
 		solarOrbit = new KeplerElements(semiMajorAxis, eccentricity, inclination,
 				argPerigee, raan, 0, SolarConstants.body);
@@ -162,10 +169,34 @@ public abstract class EarthConstants {
 	/**
 	 * Celestial body representation of the earth around the sun
 	 */
-	public static CelestialBody			body				= new CelestialBody(solarOrbit, mass);
+	public static CelestialBody				body				= new CelestialBody(solarOrbit, mass);
 	/**
 	 * Celestial body representation of the earth in the center
 	 */
-	public static CelestialBody			bodyCenter			= new CelestialBody(
-																	new CartesianElements(), mass);
+	public static CelestialBody				bodyCenter			= new CelestialBody(
+																		new CartesianElements(), mass);
+
+	public static KeplerVariationTrajectory	orbit;
+	static {
+		// Based on: http://ssd.jpl.nasa.gov/?planet_pos
+		double a0 = Length.convert(1.00000018, Length.AU);
+		double e0 = 0.01673163;
+		double i0 = Angle.convert(-0.00054346, Angle.DEG);
+		double L0 = Angle.convert(100.46691572, Angle.DEG);
+		double w_bar0 = Angle.convert(102.93005885, Angle.DEG);
+		double W0 = Angle.convert(-5.11260389, Angle.DEG);
+		double nu0 = KeplerEquations.trueAnomalyFromMean(L0 - w_bar0, e0);
+		KeplerElements keplerAtJ2000 = new KeplerElements(a0, e0, i0, L0 - W0, W0, nu0);
+
+		double centuryToS = Time.convert(100, Time.day);
+		double da0 = Length.convert(-0.00000003, Length.AU) / centuryToS;
+		double de0 = -0.00003661 / centuryToS;
+		double di0 = Angle.convert(-0.01337178, Angle.DEG) / centuryToS;
+		double dL0 = Angle.convert(35999.37306329, Angle.DEG) / centuryToS;
+		double dw_bar0 = Angle.convert(0.31795260, Angle.DEG) / centuryToS;
+		double dW0 = Angle.convert(-0.24123856, Angle.DEG) / centuryToS;
+		KeplerDerivative keplerVariation = new KeplerDerivative(da0, de0, di0, dw_bar0 - dW0, dW0, dL0 - dW0);
+
+		orbit = new KeplerVariationTrajectory(JulianDate.getJ2000(), keplerAtJ2000, keplerVariation);
+	}
 }

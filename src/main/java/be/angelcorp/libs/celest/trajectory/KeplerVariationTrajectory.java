@@ -39,7 +39,7 @@ public class KeplerVariationTrajectory implements ITrajectory {
 	private KeplerElements		referenceElements;
 	private KeplerDerivative	elementDerivatives;
 
-	private KeplerVariationTrajectory(JulianDate referenceDate, KeplerElements referenceElements,
+	public KeplerVariationTrajectory(JulianDate referenceDate, KeplerElements referenceElements,
 			KeplerDerivative elementDerivatives) {
 		this.referenceDate = referenceDate;
 		this.referenceElements = referenceElements;
