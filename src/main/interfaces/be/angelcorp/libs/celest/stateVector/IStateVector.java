@@ -37,7 +37,7 @@ import org.apache.commons.math.linear.RealVector;
  * public static [StateVectorClass] as(IStateVector state, CelestialBody center);
  * </pre>
  */
-public interface IStateVector {
+public interface IStateVector extends Cloneable {
 
 	/**
 	 * Create a new {@link StateVector} with identical properties

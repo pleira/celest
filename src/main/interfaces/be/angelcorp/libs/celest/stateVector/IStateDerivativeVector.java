@@ -31,7 +31,7 @@ import org.apache.commons.math.linear.RealVector;
  * @author Simon Billemont
  * 
  */
-public interface IStateDerivativeVector {
+public interface IStateDerivativeVector extends Cloneable {
 
 	/**
 	 * Create a new StateDerivativeVector with identical properties

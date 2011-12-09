@@ -164,7 +164,7 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 					solve(this.add(-dT), domain_gamma_1.lowerBound, domain_gamma_1.upperBound, 0);
 		} catch (Exception e) {
 		}
-		if (gamma == Double.NaN)
+		if (Double.isNaN(gamma))
 			/* We could not solve the problem to tell the user */
 			throw new OptimizationException(new MathException("Could not find root solution"));
 		return gamma; // return the optimam gamma value

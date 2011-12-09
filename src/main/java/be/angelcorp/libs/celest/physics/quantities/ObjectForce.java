@@ -63,7 +63,7 @@ public class ObjectForce extends Force {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Force clone() {
+	public ObjectForce clone() {
 		return new ObjectForce(getObject(), getForce().clone());
 	}
 

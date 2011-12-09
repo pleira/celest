@@ -39,7 +39,7 @@ public class TestGravitationalForce extends TestCase {
 
 		/* Test the f/a in a simple earth system all components */
 		CelestialBody sat1 = new CelestialBody(new SphericalElements(10E6, Math.PI / 3, 0,
-				KeplerCircular.Vc(10E6, earth.getMu()), 0, 0, earth), 5);
+				KeplerCircular.vc(10E6, earth.getMu()), 0, 0, earth), 5);
 		GravitationalForce_C g1 = new GravitationalForce_C(sat1, earth);
 		Tests.assertEquals(
 				new Vector3D(Math.cos(Math.PI / 3) * -19.93d, Math.sin(Math.PI / 3) * -19.93d, 0),

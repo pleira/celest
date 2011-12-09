@@ -95,6 +95,14 @@ public class JulianDate implements IJulianDate {
 		return Double.compare(getJD(), o.getJD());
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && IJulianDate.class.isAssignableFrom(obj.getClass())) {
+			return compareTo((IJulianDate) obj) == 0;
+		}
+		return false;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -120,6 +128,11 @@ public class JulianDate implements IJulianDate {
 	@Override
 	public double getJD(JulianDateForm form) {
 		return form.fromJD(date);
+	}
+
+	@Override
+	public int hashCode() {
+		return new Double(getJD()).hashCode();
 	}
 
 	/**

@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.physics.quantities;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3DMath;
 
-public abstract class Force implements Comparable<Force> {
+public abstract class Force implements Comparable<Force>, Cloneable {
 
 	private Vector3D	force;
 
@@ -30,9 +30,6 @@ public abstract class Force implements Comparable<Force> {
 	public void add(Vector3D term) {
 		setForce(getForce().add(term));
 	}
-
-	@Override
-	public abstract Force clone();
 
 	@Override
 	public int compareTo(Force o) {

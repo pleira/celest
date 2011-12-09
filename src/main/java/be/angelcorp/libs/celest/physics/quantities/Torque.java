@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.physics.quantities;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3DMath;
 
-public class Torque {
+public class Torque implements Cloneable {
 
 	private Vector3D	torque;
 

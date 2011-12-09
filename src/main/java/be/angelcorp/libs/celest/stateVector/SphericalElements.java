@@ -58,6 +58,7 @@ public class SphericalElements extends StateVector implements ISphericalElements
 					s.getVelocity(), s.getFlightPathAngle(), s.getFlightPathAzimuth());
 		} else if (IKeplerElements.class.isAssignableFrom(clazz)) {
 			IKeplerElements k = KeplerElements.as(state, center);
+			// TODO: direct conversion
 			ICartesianElements c = state.toCartesianElements();
 			return new SphericalElements(c, center);
 		}

@@ -54,7 +54,6 @@ public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 					throws DerivativeException {
 				/* point: ____ [rx, ry, rz, vx, vy, vz] */
 				/* derivative: [vx, vy, vz, ax, ay, az], note no t derivative */
-				ICartesianElements state = new CartesianElements(y);
 				CartesianDerivative derivs = dState.getDerivatives(t).toCartesianDerivative();
 				System.arraycopy(derivs.toVector().toArray(), 0, yDot, 0, 6);
 				// RealVector aVector = accelleration.value(new Vector3D(y[0], y[1], y[2]));

@@ -19,7 +19,7 @@ import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 
 public class KeplerCircular extends KeplerEllipse {
 
-	public static double Vc(double r, double mhu) {
+	public static double vc(double r, double mhu) {
 		return Math.sqrt(mhu / r);
 	}
 

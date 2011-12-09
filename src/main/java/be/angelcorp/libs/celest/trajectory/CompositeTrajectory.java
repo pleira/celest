@@ -41,17 +41,6 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	private TreeMap<IJulianDate, ITrajectory>	trajectories	= Maps.newTreeMap();
 
 	/**
-	 * Make time relative to the start of the trajectory segment
-	 * <p>
-	 * tEval = t0 - t<br />
-	 * where tEval is the time passed to the underlying trajectory<br />
-	 * t0 is the start time of the trajectory <br />
-	 * t is the global time at which this CompositeTrajectory is evaluated
-	 * </p>
-	 */
-	private boolean								relativeTime	= true;
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
