@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
+import static java.lang.Math.PI;
+
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.MatrixIndexException;
 import org.apache.commons.math.linear.RealVector;
@@ -247,10 +249,10 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	public boolean equals(ISphericalElements state2, double eps) {
 		return MathUtils.equals(r, state2.getRadius(), r * eps)
 				&& MathUtils.equals(v, state2.getVelocity(), v * eps)
-				&& MathUtils2.equalsAngle(alpha, state2.getRightAscension(), alpha * eps)
-				&& MathUtils2.equalsAngle(delta, state2.getDeclination(), delta * eps)
-				&& MathUtils2.equalsAngle(gamma, state2.getFlightPathAngle(), gamma * eps)
-				&& MathUtils2.equalsAngle(psi, state2.getFlightPathAzimuth(), psi * eps);
+				&& MathUtils2.equalsAngle(alpha, state2.getRightAscension(), PI * eps)
+				&& MathUtils2.equalsAngle(delta, state2.getDeclination(), PI * eps)
+				&& MathUtils2.equalsAngle(gamma, state2.getFlightPathAngle(), PI * eps)
+				&& MathUtils2.equalsAngle(psi, state2.getFlightPathAzimuth(), PI * eps);
 	}
 
 	/**
@@ -260,6 +262,17 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	public boolean equals(IStateVector state2) {
 		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
 			return equals((ISphericalElements) state2);
+		else
+			return equals(state2);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IStateVector state2, double eps) {
+		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
+			return equals((ISphericalElements) state2, eps);
 		else
 			return equals(state2);
 	}

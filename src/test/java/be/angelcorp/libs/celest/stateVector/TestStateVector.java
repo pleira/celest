@@ -15,49 +15,71 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
-import java.util.Set;
-
+import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.unit.Tests;
+
 public abstract class TestStateVector<T extends IStateVector> extends TestCase {
 
-	public Set<StateVectorComparisonCase<? extends IStateVector, T>>	testStateCases	= getTestStateVectors();
+	protected Class<T>	clazz;
 
-	public abstract Set<StateVectorComparisonCase<? extends IStateVector, T>> getTestStateVectors();
-
-	public void testAs() {
-		for (StateVectorComparisonCase<? extends IStateVector, T> test : testStateCases)
-			test.runForwardTest();
+	public TestStateVector(Class<T> clazz) {
+		this.clazz = clazz;
 	}
 
-	public void testCartesianElements() {
-		boolean anyCartesianElements = false;
-		for (StateVectorComparisonCase<? extends IStateVector, T> test : testStateCases)
-			if (ICartesianElements.class.isAssignableFrom(test.testInitiationState.getClass())) {
-				anyCartesianElements = true;
-				test.runReverseTest();
-			}
-		if (!anyCartesianElements)
-			throw new AssertionFailedError(String.format(
-					"Could not find any cartesian elements to test toCartesianElements with in %s",
-					getClass().getSuperclass()));
-	}
-
-	public void testVectorConversion() {
-		for (StateVectorComparisonCase<? extends IStateVector, T> test : testStateCases) {
-			T state = test.testValidationState;
-			RealVector vector = state.toVector();
-			T state2;
-			try {
-				state2 = (T) state.getClass().getDeclaredMethod("fromVector", RealVector.class)
-						.invoke(state, vector);
-			} catch (Exception e) {
-				throw new AssertionFailedError("Could not invoke comparison");
-			}
-			assertTrue(state.equals(state2));
+	@SuppressWarnings("unchecked")
+	protected T doConvertAs(IStateVector sourceState) {
+		try {
+			return (T) clazz.getDeclaredMethod("as", IStateVector.class).invoke(null, sourceState);
+		} catch (Exception e) {
+			throw new AssertionFailedError("Could not convert using as(IStatevector) method.");
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	protected T doConvertFromVector(RealVector vector) {
+		try {
+			return (T) clazz.getDeclaredMethod("fromVector", RealVector.class).invoke(null, vector);
+		} catch (Exception e) {
+			throw new AssertionFailedError("Could not realvector to state using static fromVector(RealVector) method.");
+		}
+	}
+
+	protected void doTestAs(T true_state, IStateVector state_to_convert) {
+		T converted = doConvertAs(state_to_convert);
+		equalStateVector(true_state, converted);
+	}
+
+	protected void doTestAs(T true_state, IStateVector state_to_convert, double eps) {
+		T converted = doConvertAs(state_to_convert);
+		equalStateVector(true_state, converted, eps);
+	}
+
+	protected void doTestVector(T state, RealVector vector_expected, double eps) {
+		RealVector vector_converted = state.toVector();
+		Tests.assertEquals(vector_expected, vector_converted, eps);
+
+		T state2 = doConvertFromVector(vector_converted);
+		equalStateVector(state, state2, eps);
+	}
+
+	protected <S extends IStateVector> void equalStateVector(S true_state, S actual) {
+		Assert.assertTrue(String.format("Could not conversion (forwared) with expected: %s and true: %s",
+				true_state, actual), true_state.equals(actual));
+	}
+
+	protected <S extends IStateVector> void equalStateVector(S true_state, S actual, double eps) {
+		Assert.assertTrue(String.format("Could not conversion (forwared) with expected: %s and true: %s",
+				true_state, actual), true_state.equals(actual, eps));
+	}
+
+	public abstract void testAs();
+
+	public abstract void testToCartesianElements();
+
+	public abstract void testVectorConversion();
 }

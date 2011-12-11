@@ -20,7 +20,9 @@ import junit.framework.Assert;
 import org.apache.commons.math.linear.RealVector;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
-public abstract class Tests extends Assert {
+import be.angelcorp.libs.math.functions.domain.AngularDomain;
+
+public abstract class Tests {
 
 	/**
 	 * Tests if the elements between two vectors are all within the given tolerance
@@ -47,18 +49,18 @@ public abstract class Tests extends Assert {
 	 * Tests if the elements between two vectors are all within the given tolerance
 	 */
 	public static void assertEquals(String message, double[] expected, double[] actual, double tol) {
-		assertEquals("Vectors must be the same length", expected.length, actual.length);
+		Assert.assertEquals("Vectors must be the same length", expected.length, actual.length);
 		for (int i = 0; i < expected.length; i++)
-			assertEquals(message, expected[i], actual[i], tol);
+			Assert.assertEquals(message, expected[i], actual[i], tol);
 	}
 
 	/**
 	 * Tests if the elements between two vectors are all within the given tolerance
 	 */
 	public static void assertEquals(String message, double[] expected, double[] actual, double[] tol) {
-		assertEquals("Vectors must be the same length", expected.length, actual.length);
+		Assert.assertEquals("Vectors must be the same length", expected.length, actual.length);
 		for (int i = 0; i < expected.length; i++)
-			assertEquals(message, expected[i], actual[i], tol[i]);
+			Assert.assertEquals(message, expected[i], actual[i], tol[i]);
 	}
 
 	/**
@@ -92,7 +94,6 @@ public abstract class Tests extends Assert {
 	 * This is a computational intensive test, it uses 10 Math calls, with 8 of these trigonometric
 	 * functions
 	 * </p>
-	 * TODO: find a faster way of doing this
 	 * 
 	 * @param message
 	 * @param a
@@ -103,9 +104,10 @@ public abstract class Tests extends Assert {
 	 *            Tolerance to which the angles need to be equal
 	 */
 	public static void assertEqualsAngle(String message, double a, double b, double tol) {
-		boolean sinTrue = Math.abs(Math.asin(Math.sin(a)) - Math.asin(Math.sin(b))) < tol;
-		boolean cosTrue = Math.abs(Math.acos(Math.cos(a)) - Math.acos(Math.cos(b))) < tol;
-		assertTrue(message, sinTrue && cosTrue);
+		AngularDomain dom = new AngularDomain(a, tol, tol);
+		Assert.assertTrue(String.format(
+				"The angle of %f rad is not equal to the expected angle %f rad with a tolerance of %f", b, a, tol),
+				dom.inDomain(b));
 	}
 
 	/**

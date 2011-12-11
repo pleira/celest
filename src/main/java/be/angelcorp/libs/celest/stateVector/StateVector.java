@@ -73,7 +73,8 @@ public abstract class StateVector implements IStateVector {
 			return false;
 
 		for (int i = 0; i < v1.getDimension(); i++) {
-			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i), v1.getEntry(i) * eps))
+			double e1 = v1.getEntry(i);
+			if (!MathUtils.equals(e1, v2.getEntry(i), (e1 == 0) ? eps : Math.abs(e1) * eps))
 				return false;
 		}
 

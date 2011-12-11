@@ -74,7 +74,7 @@ public abstract class StateDerivativeVector implements IStateDerivativeVector {
 			return false;
 
 		for (int i = 0; i < v1.getDimension(); i++) {
-			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i), v1.getEntry(i) * eps))
+			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i), eps))
 				return false;
 		}
 

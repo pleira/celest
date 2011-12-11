@@ -15,25 +15,22 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
-import java.util.Set;
-
 import org.apache.commons.math.linear.ArrayRealVector;
+import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.math.linear.Vector3D;
 
-import com.google.common.collect.Sets;
-
 public class TestCartesianElements extends TestStateVector<CartesianElements> {
 
-	@Override
-	public Set<StateVectorComparisonCase<? extends IStateVector, CartesianElements>> getTestStateVectors() {
-		Set<StateVectorComparisonCase<? extends IStateVector, CartesianElements>> s = Sets.newHashSet();
-		CartesianElements c = new CartesianElements(Vector3D.random(), Vector3D.random());
-		s.add(new StateVectorComparisonCase<CartesianElements, CartesianElements>(c, c)
-				.setEps_forward(1E-16).setEps_reverse(1E-16));
+	public TestCartesianElements() {
+		super(CartesianElements.class);
+	}
 
-		return s;
+	@Override
+	public void testAs() {
+		CartesianElements c = new CartesianElements(Vector3D.random(), Vector3D.random());
+		doTestAs(c, c);
 	}
 
 	public void testConstructor() {
@@ -66,15 +63,28 @@ public class TestCartesianElements extends TestStateVector<CartesianElements> {
 	public void testGettersSetters() {
 		// Check getters
 		CartesianElements c = new CartesianElements(new Vector3D(2, 3, 4), new Vector3D(9, 8, 7));
-		Tests.assertEquals(c.getR(), new Vector3D(2, 3, 4));
-		Tests.assertEquals(c.getV(), new Vector3D(9, 8, 7));
+		Tests.assertEquals(c.getR(), new Vector3D(2, 3, 4), 1e-18);
+		Tests.assertEquals(c.getV(), new Vector3D(9, 8, 7), 1e-18);
 
 		// Check setters
 		c.setR(new Vector3D(1, 2, 3));
 		c.setV(new Vector3D(4, 5, 6));
-		Tests.assertEquals(c.getR(), new Vector3D(1, 2, 3));
-		Tests.assertEquals(c.getV(), new Vector3D(4, 5, 6));
+		Tests.assertEquals(c.getR(), new Vector3D(1, 2, 3), 1e-18);
+		Tests.assertEquals(c.getV(), new Vector3D(4, 5, 6), 1e-18);
 
+	}
+
+	@Override
+	public void testToCartesianElements() {
+		CartesianElements c = new CartesianElements(Vector3D.random(), Vector3D.random());
+		equalStateVector(c, c.toCartesianElements());
+	}
+
+	@Override
+	public void testVectorConversion() {
+		RealVector v = new ArrayRealVector(new double[] { 1, 2, 3, 4, 5, 6 });
+		CartesianElements c = new CartesianElements(new Vector3D(1, 2, 3), new Vector3D(4, 5, 6));
+		doTestVector(c, v, 1e-18);
 	}
 
 }

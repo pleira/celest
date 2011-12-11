@@ -32,10 +32,10 @@ public class TestDegreeMinSec extends TestCase {
 
 		IHourMinSec hms = new HourMinSec(12, 59, 22.1567587);
 		dms = new DegreeMinSec(hms);
-		Tests.assertEquals(dms.getRadian(), hms.getRadian(), precision_1s_dms_in_rad);
+		assertEquals(dms.getRadian(), hms.getRadian(), precision_1s_dms_in_rad);
 		hms = new HourMinSec(19, 01, 59.1564);
 		dms.setRadian(hms.getRadian());
-		Tests.assertEquals(dms.getRadian(), hms.getRadian(), precision_1s_dms_in_rad);
+		assertEquals(dms.getRadian(), hms.getRadian(), precision_1s_dms_in_rad);
 
 		dms = new DegreeMinSec(0, 0, 0);
 		dms.setDegree(180);
