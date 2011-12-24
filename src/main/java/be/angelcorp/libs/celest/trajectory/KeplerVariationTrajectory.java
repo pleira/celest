@@ -17,16 +17,16 @@ package be.angelcorp.libs.celest.trajectory;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
-import be.angelcorp.libs.celest.kepler.KeplerEquations;
-import be.angelcorp.libs.celest.stateVector.KeplerDerivative;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.stateVector.NonSignuarElements;
+import be.angelcorp.libs.celest.stateVector.NonSingularDerivative;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
  * A trajectory that computes the instantaneous {@link KeplerElements} based on an initial set of
- * {@link KeplerElements} and there variation ({@link KeplerDerivative}). Compared to
+ * {@link KeplerElements} and there variation ({@link NonSingularDerivative}). Compared to
  * {@link KeplerTrajectory}, this trajectory uses varying Kepler elements whereas
  * {@link KeplerTrajectory} uses pure Keplerian propagation (2 body motion).
  * 
@@ -35,19 +35,19 @@ import be.angelcorp.libs.util.physics.Time;
  */
 public class KeplerVariationTrajectory implements ITrajectory {
 
-	private JulianDate			referenceDate;
-	private KeplerElements		referenceElements;
-	private KeplerDerivative	elementDerivatives;
+	private final JulianDate			referenceDate;
+	private final NonSignuarElements	referenceElements;
+	private final NonSingularDerivative	elementDerivatives;
 
-	public KeplerVariationTrajectory(JulianDate referenceDate, KeplerElements referenceElements,
-			KeplerDerivative elementDerivatives) {
+	public KeplerVariationTrajectory(JulianDate referenceDate, NonSignuarElements referenceElements,
+			NonSingularDerivative elementDerivatives) {
 		this.referenceDate = referenceDate;
 		this.referenceElements = referenceElements;
 		this.elementDerivatives = elementDerivatives;
 	}
 
 	@Override
-	public KeplerElements evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public NonSignuarElements evaluate(IJulianDate t) throws FunctionEvaluationException {
 		double dT = t.relativeTo(referenceDate, Time.second);
 
 		double a_new = referenceElements.getSemiMajorAxis()
@@ -56,17 +56,28 @@ public class KeplerVariationTrajectory implements ITrajectory {
 				+ dT * elementDerivatives.getEccentricityVariation();
 		double i_new = referenceElements.getInclination()
 				+ dT * elementDerivatives.getInclinationVariation();
-		double w_new = referenceElements.getArgumentPeriapsis()
-				+ dT * elementDerivatives.getArgumentPeriapsisVariation();
+		double w_true_new = referenceElements.getLongitudePerihelion()
+				+ dT * elementDerivatives.getLongitudePerihelionVariation();
 		double W_new = referenceElements.getRaan()
 				+ dT * elementDerivatives.getRaanVariation();
-		double M_new = referenceElements.getOrbitEqn().meanAnomaly()
-				+ dT * elementDerivatives.getMeanAnomalyVariation();
-		double nu_new = KeplerEquations.trueAnomalyFromMean(M_new, e_new);
+		double lambda_M_new = referenceElements.getMeanLongditude()
+				+ dT * elementDerivatives.getMeanLongitudeVariation();
 
-		KeplerElements k2 = new KeplerElements(a_new, e_new, i_new, w_new, W_new, nu_new,
+		NonSignuarElements k2 = new NonSignuarElements(a_new, e_new, i_new, w_true_new, W_new, lambda_M_new,
 				referenceElements.getCenterbody());
 
 		return k2;
+	}
+
+	public NonSingularDerivative getElementDerivatives() {
+		return elementDerivatives;
+	}
+
+	public JulianDate getReferenceDate() {
+		return referenceDate;
+	}
+
+	public NonSignuarElements getReferenceElements() {
+		return referenceElements;
 	}
 }

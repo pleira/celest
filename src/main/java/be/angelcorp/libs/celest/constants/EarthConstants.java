@@ -16,10 +16,10 @@
 package be.angelcorp.libs.celest.constants;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.KeplerDerivative;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.stateVector.NonSignuarElements;
+import be.angelcorp.libs.celest.stateVector.NonSingularDerivative;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory;
 import be.angelcorp.libs.util.physics.Angle;
@@ -179,23 +179,25 @@ public abstract class EarthConstants {
 	public static KeplerVariationTrajectory	orbit;
 	static {
 		// Based on: http://ssd.jpl.nasa.gov/?planet_pos
-		double a0 = Length.convert(1.00000018, Length.AU);
-		double e0 = 0.01673163;
-		double i0 = Angle.convert(-0.00054346, Angle.DEG);
-		double L0 = Angle.convert(100.46691572, Angle.DEG);
-		double w_bar0 = Angle.convert(102.93005885, Angle.DEG);
-		double W0 = Angle.convert(-5.11260389, Angle.DEG);
-		double nu0 = KeplerEquations.trueAnomalyFromMean(L0 - w_bar0, e0);
-		KeplerElements keplerAtJ2000 = new KeplerElements(a0, e0, i0, L0 - W0, W0, nu0);
+		CelestialBody jpl_sun = new CelestialBody();
+		jpl_sun.setMass(Constants.mu2mass(1.32712440018E20));
 
-		double centuryToS = Time.convert(100, Time.day);
-		double da0 = Length.convert(-0.00000003, Length.AU) / centuryToS;
-		double de0 = -0.00003661 / centuryToS;
-		double di0 = Angle.convert(-0.01337178, Angle.DEG) / centuryToS;
-		double dL0 = Angle.convert(35999.37306329, Angle.DEG) / centuryToS;
-		double dw_bar0 = Angle.convert(0.31795260, Angle.DEG) / centuryToS;
-		double dW0 = Angle.convert(-0.24123856, Angle.DEG) / centuryToS;
-		KeplerDerivative keplerVariation = new KeplerDerivative(da0, de0, di0, dw_bar0 - dW0, dW0, dL0 - dW0);
+		double a0 = Length.convert(1.00000261, Length.AU);
+		double e0 = 0.01671123;
+		double i0 = Angle.convert(-0.00001531, Angle.DEG);
+		double w_bar0 = Angle.convert(102.93768193, Angle.DEG);
+		double W0 = 0;
+		double L0 = Angle.convert(100.46457166, Angle.DEG);
+		NonSignuarElements keplerAtJ2000 = new NonSignuarElements(a0, e0, i0, w_bar0, W0, L0, jpl_sun);
+
+		double centuryToS = Time.convert(100, Time.year);
+		double da0 = Length.convert(0.00000562, Length.AU) / centuryToS;
+		double de0 = -0.00004392 / centuryToS;
+		double di0 = Angle.convert(-0.01294668, Angle.DEG) / centuryToS;
+		double dw_bar0 = Angle.convert(0.32327364, Angle.DEG) / centuryToS;
+		double dW0 = 0;
+		double dL0 = Angle.convert(35999.37244981, Angle.DEG) / centuryToS;
+		NonSingularDerivative keplerVariation = new NonSingularDerivative(da0, de0, di0, dw_bar0, dW0, dL0);
 
 		orbit = new KeplerVariationTrajectory(JulianDate.getJ2000(), keplerAtJ2000, keplerVariation);
 	}

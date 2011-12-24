@@ -15,6 +15,9 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.asin;
+import static java.lang.Math.sin;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.CelestialRotate;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
@@ -211,6 +214,22 @@ public abstract class KeplerEquations {
 	}
 
 	/**
+	 * Compute the declination from a set of the classical kepler elements
+	 * 
+	 * @param i
+	 *            Inclination [rad]
+	 * @param nu
+	 *            $nu; True anomaly [rad]
+	 * @param argPeri
+	 *            $omega;, Arguement of periapsis
+	 * @return Declination [rad]
+	 */
+	public static double declination(double i, double nu, double argPeri) {
+		double dec = asin(sin(i) * sin(nu + argPeri));
+		return dec;
+	}
+
+	/**
 	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
 	 * simple Newton-Raphson iteration
 	 * 
@@ -222,6 +241,7 @@ public abstract class KeplerEquations {
 	 */
 	public static double eccentricAnomaly(double M, double ecc) {
 		double E;
+		M = MathUtils2.mod(M, 2 * PI);
 		if ((M > -Math.PI && M < 0) || M > Math.PI)
 			E = M - ecc;
 		else
@@ -599,6 +619,15 @@ public abstract class KeplerEquations {
 	 */
 	public double arguementOfLatitude() {
 		return arguementOfLatitude(k.getArgumentPeriapsis(), k.getTrueAnomaly());
+	}
+
+	/**
+	 * Compute the declination from a set of the classical kepler elements
+	 * 
+	 * @return Declination [rad]
+	 */
+	public double declination() {
+		return declination(k.getInclination(), k.getTrueAnomaly(), k.getArgumentPeriapsis());
 	}
 
 	/**
