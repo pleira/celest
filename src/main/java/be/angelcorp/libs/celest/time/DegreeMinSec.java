@@ -19,7 +19,8 @@ import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
  * 
- * Represents a direction in the format of aa°mm'ss.ss", more information in {@link IDegreeMinSec}
+ * Represents a direction in the format of aa<sup>o</sup>mm'ss.ss", more information in
+ * {@link IDegreeMinSec}
  * 
  * @author Simon Billemont
  * @see IDegreeMinSec
@@ -144,11 +145,11 @@ public class DegreeMinSec implements IDegreeMinSec {
 	}
 
 	/**
-	 * Represents the HMS epoch as a string in the form of aa°mm'ss.sss"
+	 * Represents the HMS epoch as a string in the form of aa<sup>o</sup>mm'ss.sss"
 	 */
 	@Override
 	public String toString() {
-		return String.format("%d°%d'%f\"", degree, minute, second);
+		return String.format("%ddeg%d'%f\"", degree, minute, second);
 	}
 
 }

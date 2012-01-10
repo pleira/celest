@@ -20,7 +20,7 @@ package be.angelcorp.libs.celest.time;
  * known event or direction.
  * 
  * <p>
- * An angle in the form of aa°mm'ss.sss"
+ * An angle in the form of aa<sup>o</sup>mm'ss.sss"
  * </p>
  * 
  * @author simon
