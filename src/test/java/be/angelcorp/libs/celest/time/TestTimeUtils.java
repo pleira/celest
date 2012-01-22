@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 simon <aodtorusan@gmail.com>
+ * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -74,7 +74,7 @@ public class TestTimeUtils extends TestCase {
 
 	public void testDms_rad() {
 		// Fundamentals of Astrodynamics and Applications Example 3-8, page 204
-		// -35° -15m -53.63s == -0.6154886 rad
+		// -35ï¿½ -15m -53.63s == -0.6154886 rad
 		assertEquals(-0.6154886, TimeUtils.dms_rad(-35, -15, -53.63), 1E-7);
 	}
 
@@ -135,7 +135,7 @@ public class TestTimeUtils extends TestCase {
 
 	public void testLstime() {
 		// Fundamentals of Astrodynamics and Applications Example 3-5, page 194
-		// August 20, 1992, 12:14 PM UT1 at 104° W long ==
+		// August 20, 1992, 12:14 PM UT1 at 104ï¿½ W long ==
 		double jdut1 = TimeUtils.jday(1992, 8, 20, 12, 14, 0);
 		double[] arr = TimeUtils.lstime(-104. * Math.PI / 180., jdut1);
 		assertEquals(48.578787886 * (Math.PI / 180.), arr[0], 1E-8);
@@ -144,7 +144,7 @@ public class TestTimeUtils extends TestCase {
 
 	public void testRad_Dms() {
 		// Fundamentals of Astrodynamics and Applications Example 3-8, page 204
-		// -35° -15m -53.63s == -0.6154886 rad
+		// -35ï¿½ -15m -53.63s == -0.6154886 rad
 		int[] arr = TimeUtils.rad_dms(-0.6154886);
 		// TODO: change return from int[] so we have double precision for seconds
 		assertEquals(-35, arr[0]); // Degrees
