@@ -15,25 +15,23 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.asin;
-import static java.lang.Math.sin;
+import org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction;
+
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.CelestialRotate;
 import be.angelcorp.libs.celest.stateVector.CartesianElements;
 import be.angelcorp.libs.celest.stateVector.ICartesianElements;
 import be.angelcorp.libs.celest.stateVector.IKeplerElements;
 import be.angelcorp.libs.celest.stateVector.KeplerElements;
-import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Matrix3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3DMath;
 
 public abstract class KeplerEquations {
 
-	public static double	angleTolarance					= 1E-6;
-	public static double	eccentricityTolarance			= 1E-4;
-	public static double	eccentricAnomalyIterationTol	= 1E-6;
+	public static double	angleTolarance			= 1E-6;
+	public static double	eccentricityTolarance	= 1E-4;
+	public static double	anomalyIterationTol		= 1E-6;
 
 	/**
 	 * Compute the argument of latitude. This is the angle between the nodal vector (n) and the radius
@@ -214,62 +212,6 @@ public abstract class KeplerEquations {
 	}
 
 	/**
-	 * Compute the declination from a set of the classical kepler elements
-	 * 
-	 * @param i
-	 *            Inclination [rad]
-	 * @param nu
-	 *            $nu; True anomaly [rad]
-	 * @param argPeri
-	 *            $omega;, Arguement of periapsis
-	 * @return Declination [rad]
-	 */
-	public static double declination(double i, double nu, double argPeri) {
-		double dec = asin(sin(i) * sin(nu + argPeri));
-		return dec;
-	}
-
-	/**
-	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
-	 * simple Newton-Raphson iteration
-	 * 
-	 * @param M
-	 *            Mean anomaly
-	 * @param ecc
-	 *            Eccentricity
-	 * @return The eccentric anomaly
-	 */
-	public static double eccentricAnomaly(double M, double ecc) {
-		double E;
-		M = MathUtils2.mod(M, 2 * PI);
-		if ((M > -Math.PI && M < 0) || M > Math.PI)
-			E = M - ecc;
-		else
-			E = M + ecc;
-
-		double Etemp = E + (M - E + ecc * Math.sin(E)) / (1 - ecc * Math.cos(E));
-
-		while (Math.abs(Etemp - E) > eccentricAnomalyIterationTol) {
-			Etemp = E;
-			E = Etemp + (M - Etemp + ecc * Math.sin(Etemp)) / (1 - ecc * Math.cos(Etemp));
-		}
-		return E;
-	}
-
-	/**
-	 * Compute the eccentric anomaly E from the true anomaly &nu;.
-	 * 
-	 * @param nu
-	 *            True anomaly [rad]
-	 * @param e
-	 *            Eccentricity [-]
-	 * @return Eccentric anomaly [rad]
-	 */
-	public static double eccentricAnomalyFromTrue(double nu, double e) {
-		return Math.atan2(Math.sqrt(1 - e * e) * Math.sin(nu), e + Math.cos(nu));
-	}
-
-	/**
 	 * Compute the eccentricity from an elliptical orbit using the pericenter and apocenter distances
 	 * 
 	 * @param rp
@@ -416,58 +358,12 @@ public abstract class KeplerEquations {
 	}
 
 	/**
-	 * Compute the mean anomaly M from the true anomaly &nu;
-	 * 
-	 * @param nu
-	 *            True anomaly [rad]
-	 * @param e
-	 *            Eccentricity [-]
-	 * @return Mean anomaly [rad]
-	 */
-	public static double meanAnomalyFromTrue(double nu, double e) {
-		double ea = MathUtils2.mod(
-				Math.atan2(Math.sqrt(1 - e * e) * Math.sin(nu), e + Math.cos(nu)), 2 * Math.PI);
-		return ea - e * Math.sin(ea);
-	}
-
-	/**
 	 * Calculate the mean angular motion
 	 * 
 	 * @return Mean motion in [rad/s]
 	 */
 	public static double meanMotion(double mu, double a) {
 		return Math.sqrt(mu / Math.abs(a * a * a));
-	}
-
-	/**
-	 * Compute the true anomaly from the eccentric anomaly
-	 * 
-	 * @param E
-	 *            Eccentric anomaly [rad]
-	 * @param ecc
-	 *            Eccentricity [-]
-	 * @return True anomaly [rad]
-	 */
-	public static double trueAnomalyFromEccentric(double E, double ecc) {
-		// Since tan(x) = sin(x)/cos(x), we can use atan2 to ensure that the angle for nu
-		// is in the correct quadrant since we know both sin(nu) and cos(nu). [see help atan2]
-		return Math.atan2((Math.sin(E) * Math.sqrt(1 - ecc * ecc)), (Math.cos(E) - ecc));
-		// return 2 * Math.atan2((Math.sin(E) * Math.sqrt(1 - ecc * ecc)), (1 - ecc) * (Math.cos(E) +
-		// 1));
-	}
-
-	/**
-	 * Compute the true anomaly from the mean anomaly
-	 * 
-	 * @param M
-	 *            Mean anomaly [rad]
-	 * @param ecc
-	 *            Eccentricity [-]
-	 * @return True anomaly [rad]
-	 */
-	public static double trueAnomalyFromMean(double M, double ecc) {
-		double E = eccentricAnomaly(M, ecc);
-		return trueAnomalyFromEccentric(E, ecc);
 	}
 
 	/**
@@ -594,6 +490,38 @@ public abstract class KeplerEquations {
 	}
 
 	/**
+	 * Get the Eccentric (E), Parabolic(B) or Hyperbolic(H) anomaly (Depends on which exact orbit which
+	 * is returend)
+	 * 
+	 * @return The Eccentric/Parabolic/Hyperbolic anomaly [rad]
+	 */
+	public double anomaly() {
+		return anomalyFromTrueAnomaly(k.getTrueAnomaly());
+	}
+
+	/**
+	 * Get the Eccentric (E), Parabolic(B) or Hyperbolic(H) anomaly (Depends on which exact orbit which
+	 * is returend) from for the current orbital elements, except for the exact position which is given.
+	 * 
+	 * @param M
+	 *            Mean anomlay to create the anomly from [rad]
+	 * 
+	 * @return The Eccentric/Parabolic/Hyperbolic anomaly [rad]
+	 */
+	public abstract double anomalyFromMeanAnomaly(double M);
+
+	/**
+	 * Get the Eccentric (E), Parabolic(B) or Hyperbolic(H) anomaly (Depends on which exact orbit which
+	 * is returend) from for the current orbital elements, except for the exact position which is given.
+	 * 
+	 * @param nu
+	 *            ,&nu;, True anomlay to create the anomly from [rad]
+	 * 
+	 * @return The Eccentric/Parabolic/Hyperbolic anomaly [rad]
+	 */
+	public abstract double anomalyFromTrueAnomaly(double nu);
+
+	/**
 	 * Areal velocity in function of Semi-major axis and the gravitational constant
 	 * 
 	 * @return Areal velocity \dot{A}
@@ -622,25 +550,6 @@ public abstract class KeplerEquations {
 	}
 
 	/**
-	 * Compute the declination from a set of the classical kepler elements
-	 * 
-	 * @return Declination [rad]
-	 */
-	public double declination() {
-		return declination(k.getInclination(), k.getTrueAnomaly(), k.getArgumentPeriapsis());
-	}
-
-	/**
-	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
-	 * simple Newton-Raphson iteration
-	 * 
-	 * @return The eccentric anomaly
-	 */
-	public double eccentricAnomaly() {
-		return eccentricAnomaly(meanAnomalyFromTrue(k.getTrueAnomaly()), k.getEccentricity());
-	}
-
-	/**
 	 * Compute the flight path angle &gamma; for the current positions. (Angle between the tangent on the
 	 * radius vector and the velocity vector
 	 * 
@@ -651,19 +560,24 @@ public abstract class KeplerEquations {
 	}
 
 	/**
-	 * Compute the focal parameter of the orbit
-	 * 
-	 * @return Focal parameter [m]
-	 */
-	public abstract double focalParameter();
-
-	/**
 	 * Compute the apcocenter distance (distance from the center body to the furthest point in the
 	 * orbit).
 	 * 
 	 * @return Apocenter distance [m]
 	 */
 	public abstract double getApocenter();
+
+	/**
+	 * Create a functional representation of the Fundamental (Kepler) Equation linling the
+	 * (Hyperbolic/Parabolic/Eccentric) anomlay to the mean anomaly. This is done in the form of a
+	 * root-finding function so that when f(anomlay) = 0 when the Mean anomaly to construct the eqyation
+	 * and the anomlay passed in are equivalent.
+	 * 
+	 * @param e
+	 * @param M
+	 * @return
+	 */
+	protected abstract DifferentiableUnivariateRealFunction getFundamentalEquation(final double e, final double M);
 
 	/**
 	 * Compute the pericenter distance (distance from the center body to the closest point in the orbit).
@@ -692,19 +606,27 @@ public abstract class KeplerEquations {
 	 * @return Mean anomaly [rad]
 	 */
 	public double meanAnomaly() {
-		return meanAnomalyFromTrue(k.getTrueAnomaly());
+		return meanAnomalyFromAnomaly(anomaly());
 	}
 
 	/**
-	 * Find the true anomaly for this set of Kepler elements with the given true anomaly.
+	 * Find the mean anomaly for this set of Kepler elements with the given anomaly (Eccentric E,
+	 * Parabolic B, Hyperbolic H).
+	 * 
+	 * @param anomaly
+	 *            Anomaly to find the mean anomaly from [rad]
+	 * @return Mean anomaly at the given true anomaly [rad]
+	 */
+	public abstract double meanAnomalyFromAnomaly(double anomaly);
+
+	/**
+	 * Find the mean anomaly for this set of Kepler elements with the given true anomaly.
 	 * 
 	 * @param nu
 	 *            True anomaly to find the mean anomaly from [rad]
 	 * @return Mean anomaly at the given true anomaly [rad]
 	 */
-	public double meanAnomalyFromTrue(double nu) {
-		return meanAnomalyFromTrue(nu, k.getEccentricity());
-	}
+	public abstract double meanAnomalyFromTrue(double nu);
 
 	/**
 	 * Compute the mean motion of the body in the orbit
@@ -749,6 +671,13 @@ public abstract class KeplerEquations {
 	}
 
 	/**
+	 * Compute the semi-latus rectum (focal parameter) of the orbit
+	 * 
+	 * @return semi-latus rectum [m]
+	 */
+	public abstract double semiLatusRectum();
+
+	/**
 	 * Compute the total energy per unit mass for the orbit
 	 * 
 	 * @return Total energy per unit mass [m^2/s^2]
@@ -769,6 +698,33 @@ public abstract class KeplerEquations {
 	public abstract double totEnergyPerMass(double mu, double a);
 
 	/**
+	 * Compute the true anomaly from the current anomaly (Eccentric E, Parabolic B, or Hyperbolic H)
+	 * 
+	 * @return True anomaly [rad]
+	 */
+	public double trueAnomalyFromAnomaly() {
+		return trueAnomalyFromAnomaly(anomaly());
+	}
+
+	/**
+	 * Compute the true anomaly from the anomaly (Eccentric E, Parabolic B, or Hyperbolic H)
+	 * 
+	 * @param anomaly
+	 *            Anomaly [rad]
+	 * @return True anomaly [rad]
+	 */
+	public abstract double trueAnomalyFromAnomaly(double anomaly);
+
+	/**
+	 * Compute the true anomaly from the current mean anomaly
+	 * 
+	 * @return True anomaly [rad]
+	 */
+	public double trueAnomalyFromMean() {
+		return trueAnomalyFromAnomaly(anomaly());
+	}
+
+	/**
 	 * Compute the true anomaly from the mean anomaly
 	 * 
 	 * @param M
@@ -776,7 +732,7 @@ public abstract class KeplerEquations {
 	 * @return True anomaly [rad]
 	 */
 	public double trueAnomalyFromMean(double M) {
-		return trueAnomalyFromMean(M, k.getEccentricity());
+		return trueAnomalyFromAnomaly(anomalyFromMeanAnomaly(M));
 	}
 
 	/**
@@ -825,5 +781,4 @@ public abstract class KeplerEquations {
 	public double visViva(double r) {
 		return visViva(k.getCenterbody().getMu(), r, k.getSemiMajorAxis());
 	}
-
 }

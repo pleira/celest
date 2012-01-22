@@ -50,7 +50,7 @@ public class KeplerCircular extends KeplerEllipse {
 	}
 
 	@Override
-	public double focalParameter() {
+	public double semiLatusRectum() {
 		return k.getSemiMajorAxis();
 	}
 

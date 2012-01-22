@@ -96,6 +96,12 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	 * The semi-major axis is one half of the major axis, and thus runs from the centre, through a focus,
 	 * and to the edge of the ellipse.
 	 * </p>
+	 * <b> Parabolic orbits;
+	 * <p>
+	 * If the orbit is parabolic, this parameter represents the semi-latus rectem for the parabolic
+	 * orbit!
+	 * </p>
+	 * </b>
 	 * <p>
 	 * <b>[m]</b>
 	 * </p>
