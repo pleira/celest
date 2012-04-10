@@ -18,6 +18,7 @@ package be.angelcorp.libs.celest.stateVector;
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.math.linear.Vector3D;
 

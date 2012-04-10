@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.MatrixIndexException;
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.state.positionState.IKeplerDerivative;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 
 /**
  * Documentation: {@link IKeplerDerivative}

@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.body.CelestialBody;
+
 /**
- * This is the interface for each state vector (representation of a body's current location/velocity
+ * This is the interface for each position state (representation of a body's current location/velocity
  * coordinates).
  * 
  * <p>
- * StateVectors extending this class should also implement the following for convenience:
+ * {@link IPositionState}'s extending this class should also implement the following for convenience:
  * </p>
  * 
  * <pre>
- * public static IStateVector fromVector(RealVector vector);
+ * public static {@link IPositionState} fromVector(RealVector vector);
  * </pre>
  * 
  * <p>
@@ -34,29 +36,29 @@ import org.apache.commons.math.linear.RealVector;
  * </p>
  * 
  * <pre>
- * public static [StateVectorClass] as(IStateVector state, CelestialBody center);
+ * public static [StateVectorClass] as({@link IPositionState} state, {@link CelestialBody} center);
  * </pre>
  */
-public interface IStateVector extends Cloneable {
+public interface IPositionState extends Cloneable {
 
 	/**
-	 * Create a new {@link StateVector} with identical properties
+	 * Create a new {@link IPositionState} with identical properties
 	 */
-	public abstract IStateVector clone();
+	public abstract IPositionState clone();
 
 	/**
-	 * Tests if two StateVectors are equal. By default, this id done by comparing all elements of the
-	 * {@link StateVector#toVector()} output.
+	 * Tests if two {@link IPositionState} are equal. By default, this is done by comparing all elements
+	 * of the {@link IPositionState#toVector()} output.
 	 * 
 	 * @param obj
-	 *            Compare the current {@link StateVector} with this ones
+	 *            Compare the current {@link IPositionState} with this ones
 	 * @return true if they are equal
 	 */
-	public abstract boolean equals(IStateVector obj);
+	public abstract boolean equals(IPositionState obj);
 
 	/**
-	 * Tests if two StateVectors are equal. By default, this id done by comparing all elements of the
-	 * {@link StateVector#toVector()} output.
+	 * Tests if two {@link IPositionState}'s are equal. By default, this is done by comparing all
+	 * elements of the {@link IPositionState#toVector()} output.
 	 * 
 	 * <p>
 	 * It tests using a a relative error eps and applies the following test to each element:
@@ -67,15 +69,15 @@ public interface IStateVector extends Cloneable {
 	 * </pre>
 	 * 
 	 * @param obj
-	 *            Compare the current {@link StateVector} with this ones.
+	 *            Compare the current {@link IPositionState} with this ones.
 	 * @param eps
 	 *            Relative error to check against.
 	 * @return true if they are equal.
 	 */
-	public abstract boolean equals(IStateVector obj, double eps);
+	public abstract boolean equals(IPositionState obj, double eps);
 
 	/**
-	 * Convert the {@link StateVector} to an equivalent Cartesian one (R, V in Cartesian coordinates)
+	 * Convert the {@link IPositionState} to an equivalent Cartesian one (R, V in Cartesian coordinates)
 	 * 
 	 * @return Cartesian equivalent state vector
 	 */

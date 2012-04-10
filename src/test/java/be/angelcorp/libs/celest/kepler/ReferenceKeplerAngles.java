@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.util.MathUtils;
 
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.math.functions.domain.AngularDomain;
 import be.angelcorp.libs.util.physics.Angle;
 

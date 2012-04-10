@@ -21,9 +21,10 @@ import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.unit.Tests;
 
-public abstract class TestStateVector<T extends IStateVector> extends TestCase {
+public abstract class TestStateVector<T extends IPositionState> extends TestCase {
 
 	protected Class<T>	clazz;
 
@@ -32,9 +33,9 @@ public abstract class TestStateVector<T extends IStateVector> extends TestCase {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T doConvertAs(IStateVector sourceState) {
+	protected T doConvertAs(IPositionState sourceState) {
 		try {
-			return (T) clazz.getDeclaredMethod("as", IStateVector.class).invoke(null, sourceState);
+			return (T) clazz.getDeclaredMethod("as", IPositionState.class).invoke(null, sourceState);
 		} catch (Exception e) {
 			throw new AssertionFailedError("Could not convert using as(IStatevector) method.");
 		}
@@ -49,12 +50,12 @@ public abstract class TestStateVector<T extends IStateVector> extends TestCase {
 		}
 	}
 
-	protected void doTestAs(T true_state, IStateVector state_to_convert) {
+	protected void doTestAs(T true_state, IPositionState state_to_convert) {
 		T converted = doConvertAs(state_to_convert);
 		equalStateVector(true_state, converted);
 	}
 
-	protected void doTestAs(T true_state, IStateVector state_to_convert, double eps) {
+	protected void doTestAs(T true_state, IPositionState state_to_convert, double eps) {
 		T converted = doConvertAs(state_to_convert);
 		equalStateVector(true_state, converted, eps);
 	}
@@ -67,12 +68,12 @@ public abstract class TestStateVector<T extends IStateVector> extends TestCase {
 		equalStateVector(state, state2, eps);
 	}
 
-	protected <S extends IStateVector> void equalStateVector(S true_state, S actual) {
+	protected <S extends IPositionState> void equalStateVector(S true_state, S actual) {
 		Assert.assertTrue(String.format("Could not conversion (forwared) with expected: %s and true: %s",
 				true_state, actual), true_state.equals(actual));
 	}
 
-	protected <S extends IStateVector> void equalStateVector(S true_state, S actual, double eps) {
+	protected <S extends IPositionState> void equalStateVector(S true_state, S actual, double eps) {
 		Assert.assertTrue(String.format("Could not conversion (forwared) with expected: %s and true: %s",
 				true_state, actual), true_state.equals(actual, eps));
 	}

@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 import org.apache.commons.math.util.MathUtils;
+
+import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
 
 /**
  * Basis for a state derivative vector that hold the state of a celestial body. This implements a default
  * human readable toString using the vector notation if the state derivative.
  * 
  * @author Simon Billemont
- * @see IStateDerivativeVector
+ * @see IPositionStateDerivative
  */
-public abstract class StateDerivativeVector implements IStateDerivativeVector {
+public abstract class StateDerivativeVector implements IPositionStateDerivative {
 
 	/**
 	 * Restore the StateDerivativeVector from a vector
@@ -34,7 +36,7 @@ public abstract class StateDerivativeVector implements IStateDerivativeVector {
 	 *            Vector to restore the the state from
 	 * @return State vector as contained in the given vector
 	 */
-	public static IStateDerivativeVector fromVector(RealVector vector) {
+	public static IPositionStateDerivative fromVector(RealVector vector) {
 		throw new UnsupportedOperationException("This method must be overwritten");
 	}
 
@@ -42,13 +44,13 @@ public abstract class StateDerivativeVector implements IStateDerivativeVector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public abstract IStateDerivativeVector clone();
+	public abstract IPositionStateDerivative clone();
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateDerivativeVector obj) {
+	public boolean equals(IPositionStateDerivative obj) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
 
@@ -66,7 +68,7 @@ public abstract class StateDerivativeVector implements IStateDerivativeVector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateDerivativeVector obj, double eps) {
+	public boolean equals(IPositionStateDerivative obj, double eps) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
 

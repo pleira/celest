@@ -22,8 +22,8 @@ import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.RealVector;
 import org.junit.Test;
 
-import be.angelcorp.libs.celest.stateVector.ICartesianElements;
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.Tests;
@@ -36,7 +36,7 @@ public class TestCompositeTrajectory extends TestCase {
 	 * 
 	 * @author simon
 	 */
-	public class TestState implements IStateVector {
+	public class TestState implements IPositionState {
 		private final IJulianDate	constant;
 
 		public TestState(IJulianDate t) {
@@ -49,14 +49,14 @@ public class TestCompositeTrajectory extends TestCase {
 		}
 
 		@Override
-		public boolean equals(IStateVector obj) {
+		public boolean equals(IPositionState obj) {
 			if (TestState.class.isAssignableFrom(obj.getClass()))
 				return ((TestState) obj).constant == constant;
 			return false;
 		}
 
 		@Override
-		public boolean equals(IStateVector obj, double eps) {
+		public boolean equals(IPositionState obj, double eps) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -86,7 +86,7 @@ public class TestCompositeTrajectory extends TestCase {
 		}
 
 		@Override
-		public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException {
+		public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
 			return new TestState(t.add(id, Time.day));
 		}
 

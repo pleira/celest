@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -26,19 +28,19 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author Simon Billemont
  * @see ICartesianElements
  */
-public class CartesianElements extends StateVector implements ICartesianElements {
+public class CartesianElements extends PositionState implements ICartesianElements {
 
 	/**
-	 * Create the {@link CartesianElements} from another {@link StateVector}.
+	 * Create the {@link CartesianElements} from another {@link PositionState}.
 	 * <p>
-	 * Guarantees that the return of a {@link CartesianElements} {@link StateVector}, but not necessarily
-	 * a clone (can be the same {@link StateVector})
+	 * Guarantees that the return of a {@link CartesianElements} {@link PositionState}, but not necessarily
+	 * a clone (can be the same {@link PositionState})
 	 * </p>
 	 * 
 	 * @param state
-	 *            {@link StateVector} to convert
+	 *            {@link PositionState} to convert
 	 */
-	public static ICartesianElements as(IStateVector state) {
+	public static ICartesianElements as(IPositionState state) {
 		return state.toCartesianElements();
 	}
 

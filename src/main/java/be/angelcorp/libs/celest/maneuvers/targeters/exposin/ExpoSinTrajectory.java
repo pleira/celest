@@ -22,8 +22,8 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.apache.commons.math.analysis.integration.LegendreGaussIntegrator;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
@@ -62,7 +62,7 @@ public class ExpoSinTrajectory implements ITrajectory {
 	}
 
 	@Override
-	public IStateVector evaluate(IJulianDate evalEpoch) throws FunctionEvaluationException {
+	public IPositionState evaluate(IJulianDate evalEpoch) throws FunctionEvaluationException {
 		UnivariateRealFunction thetaDot = new ComposableFunction() {
 			@Override
 			public double value(double theta) throws FunctionEvaluationException {

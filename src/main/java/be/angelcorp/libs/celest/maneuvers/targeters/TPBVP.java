@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters;
 
 import org.apache.commons.math.MathException;
 
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.util.physics.Time;
@@ -53,14 +53,14 @@ public abstract class TPBVP {
 	 * <b>If converted to Cartesian coordinates; unit: [m]</b>
 	 * </p>
 	 */
-	protected IStateVector	r1;
+	protected IPositionState	r1;
 	/**
 	 * Targeted end position
 	 * <p>
 	 * <b>If converted to Cartesian coordinates; unit: [m]</b>
 	 * </p>
 	 */
-	protected IStateVector	r2;
+	protected IPositionState	r2;
 
 	/**
 	 * Construct a TPBVP problem with known, start/end points and the travel time between r1 and r2.
@@ -74,7 +74,7 @@ public abstract class TPBVP {
 	 * @param arrival
 	 *            Epoch of arrival (epoch at r2)
 	 */
-	public TPBVP(IStateVector r1, IStateVector r2, IJulianDate departure, IJulianDate arrival) {
+	public TPBVP(IPositionState r1, IPositionState r2, IJulianDate departure, IJulianDate arrival) {
 		this.r1 = r1;
 		this.r2 = r2;
 		this.departureEpoch = departure;

@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.linear.Vector3D;
 
-public class HybridStateVector extends StateVector implements ICartesianElements, IKeplerElements,
+public class HybridPositionState extends PositionState implements ICartesianElements, IKeplerElements,
 		ISphericalElements {
 
 	private enum MasterType {
@@ -35,9 +39,9 @@ public class HybridStateVector extends StateVector implements ICartesianElements
 	 * WARN, you must reinitialize the central body
 	 * </p>
 	 */
-	public static HybridStateVector fromVector(RealVector vector) {
+	public static HybridPositionState fromVector(RealVector vector) {
 		ICartesianElements cart = CartesianElements.fromVector(vector);
-		return new HybridStateVector(cart, null);
+		return new HybridPositionState(cart, null);
 	}
 
 	private ICartesianElements	cartesian;
@@ -47,12 +51,12 @@ public class HybridStateVector extends StateVector implements ICartesianElements
 
 	private CelestialBody		center;
 
-	private HybridStateVector() {
+	private HybridPositionState() {
 	}
 
-	public HybridStateVector(IStateVector vector, CelestialBody center) {
+	public HybridPositionState(IPositionState vector, CelestialBody center) {
 		this.center = center;
-		Class<? extends IStateVector> clazz = vector.getClass();
+		Class<? extends IPositionState> clazz = vector.getClass();
 		if (ICartesianElements.class.isAssignableFrom(clazz)) {
 			reset(MasterType.CARTESIAN, vector);
 		} else if (IKeplerElements.class.isAssignableFrom(clazz)) {
@@ -65,8 +69,8 @@ public class HybridStateVector extends StateVector implements ICartesianElements
 	}
 
 	@Override
-	public HybridStateVector clone() {
-		HybridStateVector h = new HybridStateVector();
+	public HybridPositionState clone() {
+		HybridPositionState h = new HybridPositionState();
 		h.master = master;
 		h.cartesian = cartesian.clone();
 		h.keplerian = keplerian.clone();
@@ -106,8 +110,8 @@ public class HybridStateVector extends StateVector implements ICartesianElements
 	}
 
 	@Override
-	public boolean equals(IStateVector state2) {
-		Class<? extends IStateVector> clazz = state2.getClass();
+	public boolean equals(IPositionState state2) {
+		Class<? extends IPositionState> clazz = state2.getClass();
 		if (ICartesianElements.class.isAssignableFrom(clazz)) {
 			return equals((ICartesianElements) state2);
 		} else if (IKeplerElements.class.isAssignableFrom(clazz)) {
@@ -234,7 +238,7 @@ public class HybridStateVector extends StateVector implements ICartesianElements
 		spherical = SphericalElements.as(master == MasterType.KEPLER ? keplerian : cartesian, center);
 	}
 
-	private void reset(MasterType type, IStateVector v) {
+	private void reset(MasterType type, IPositionState v) {
 		cartesian = null;
 		keplerian = null;
 		spherical = null;

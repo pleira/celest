@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import be.angelcorp.libs.celest.math.Cartesian;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -31,13 +32,13 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author Simon Billemont
  * 
  */
-public interface ICartesianDerivative extends Cartesian, IStateDerivativeVector {
+public interface ICartesianDerivative extends Cartesian, IPositionStateDerivative {
 
 	/**
-	 * Create a deep copy of this object. It returns an exact copy of this {@link IStateDerivativeVector}
+	 * Create a deep copy of this object. It returns an exact copy of this {@link IPositionStateDerivative}
 	 * , but with no direct link to the object it was created against. This means changing the original
-	 * {@link IStateDerivativeVector} does not effect the values of the newly created
-	 * {@link IStateDerivativeVector}
+	 * {@link IPositionStateDerivative} does not effect the values of the newly created
+	 * {@link IPositionStateDerivative}
 	 */
 	@Override
 	public abstract ICartesianDerivative clone();

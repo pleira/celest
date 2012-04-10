@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.trajectory;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 /**
@@ -37,6 +37,6 @@ public interface ITrajectory {
 	 * @throws FunctionEvaluationException
 	 *             When the state cannot be computed
 	 */
-	public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException;
+	public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException;
 
 }

@@ -20,7 +20,7 @@ import org.apache.commons.math.MathException;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -79,7 +79,7 @@ public class ExpoSin extends TPBVP {
 	 * @param arrival
 	 *            Epoch of arrival (epoch at r2) [jd]
 	 */
-	public ExpoSin(IStateVector r1, IStateVector r2, IJulianDate departure, IJulianDate arrival) {
+	public ExpoSin(IPositionState r1, IPositionState r2, IJulianDate departure, IJulianDate arrival) {
 		super(r1, r2, departure, arrival);
 	}
 

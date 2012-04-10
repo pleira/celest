@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 /**
@@ -35,6 +35,6 @@ public interface IDiscreteTrajectory extends ITrajectory {
 	 * @param state
 	 *            Known state at the given epoch.
 	 */
-	public abstract void addState(IJulianDate t, IStateVector state);
+	public abstract void addState(IJulianDate t, IPositionState state);
 
 }

@@ -19,8 +19,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.RealVector;
 
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 
 public class TestKeplerElements extends TestCase {
 

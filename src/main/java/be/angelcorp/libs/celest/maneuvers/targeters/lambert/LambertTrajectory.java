@@ -18,10 +18,10 @@ package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
-import be.angelcorp.libs.celest.stateVector.IStateVector;
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.celest.trajectory.KeplerTrajectory;
@@ -108,7 +108,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * </p>
 	 */
 	@Override
-	public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
 		return traj.evaluate(t);
 	}
 

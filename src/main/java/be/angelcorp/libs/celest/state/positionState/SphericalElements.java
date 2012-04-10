@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import static java.lang.Math.PI;
 
@@ -24,6 +24,10 @@ import org.apache.commons.math.util.MathUtils;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3DMath;
@@ -34,24 +38,24 @@ import be.angelcorp.libs.math.linear.Vector3DMath;
  * @author Simon Billemont
  * @see ISphericalElements
  */
-public class SphericalElements extends StateVector implements ISphericalElements {
+public class SphericalElements extends PositionState implements ISphericalElements {
 
 	/**
-	 * Create a set of {@link SphericalElements} from another {@link StateVector}. Chooses itself what
+	 * Create a set of {@link SphericalElements} from another {@link PositionState}. Chooses itself what
 	 * the best way of converting is.
 	 * 
 	 * <p>
-	 * Guarantees that the return of a {@link SphericalElements} {@link StateVector}, but not necessarily
-	 * a clone (can be the same {@link StateVector})
+	 * Guarantees that the return of a {@link SphericalElements} {@link PositionState}, but not necessarily
+	 * a clone (can be the same {@link PositionState})
 	 * </p>
 	 * 
 	 * @param state
-	 *            {@link StateVector} to convert
+	 *            {@link PositionState} to convert
 	 * @param center
 	 *            Body where the {@link KeplerElements} are formulated against
 	 */
-	public static SphericalElements as(IStateVector state, CelestialBody center) {
-		Class<? extends IStateVector> clazz = state.getClass();
+	public static SphericalElements as(IPositionState state, CelestialBody center) {
+		Class<? extends IPositionState> clazz = state.getClass();
 		if (SphericalElements.class.isAssignableFrom(clazz)) {
 			return (SphericalElements) state;
 		} else if (ISphericalElements.class.isAssignableFrom(clazz)) {
@@ -259,7 +263,7 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector state2) {
+	public boolean equals(IPositionState state2) {
 		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
 			return equals((ISphericalElements) state2);
 		else
@@ -270,7 +274,7 @@ public class SphericalElements extends StateVector implements ISphericalElements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector state2, double eps) {
+	public boolean equals(IPositionState state2, double eps) {
 		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
 			return equals((ISphericalElements) state2, eps);
 		else

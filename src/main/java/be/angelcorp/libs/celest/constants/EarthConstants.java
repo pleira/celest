@@ -16,10 +16,10 @@
 package be.angelcorp.libs.celest.constants;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
-import be.angelcorp.libs.celest.stateVector.NonSignuarElements;
-import be.angelcorp.libs.celest.stateVector.NonSingularDerivative;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.NonSignuarElements;
+import be.angelcorp.libs.celest.state.positionState.NonSingularDerivative;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory;
 import be.angelcorp.libs.util.physics.Angle;

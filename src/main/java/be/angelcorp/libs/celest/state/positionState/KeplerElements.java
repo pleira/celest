@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.MatrixIndexException;
@@ -27,6 +27,10 @@ import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerHyperbola;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.kepler.KeplerParabola;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.MathUtils2;
 
 /**
@@ -35,23 +39,23 @@ import be.angelcorp.libs.math.MathUtils2;
  * @author Simon Billemont
  * @see IKeplerElements
  */
-public class KeplerElements extends StateVector implements IKeplerElements {
+public class KeplerElements extends PositionState implements IKeplerElements {
 
 	/**
-	 * Create a set of Kepler elements from another {@link StateVector}. Chooses itself what the best way
+	 * Create a set of Kepler elements from another {@link PositionState}. Chooses itself what the best way
 	 * of converting is.
 	 * <p>
-	 * Guarantees that the return of a {@link KeplerElements} {@link StateVector}, but not necessarily a
-	 * clone (can be the same {@link StateVector})
+	 * Guarantees that the return of a {@link KeplerElements} {@link PositionState}, but not necessarily a
+	 * clone (can be the same {@link PositionState})
 	 * </p>
 	 * 
 	 * @param state
-	 *            {@link StateVector} to convert
+	 *            {@link PositionState} to convert
 	 * @param center
 	 *            Body where the {@link KeplerElements} are formulated against
 	 */
-	public static IKeplerElements as(IStateVector state, CelestialBody center) {
-		Class<? extends IStateVector> clazz = state.getClass();
+	public static IKeplerElements as(IPositionState state, CelestialBody center) {
+		Class<? extends IPositionState> clazz = state.getClass();
 		if (IKeplerElements.class.isAssignableFrom(clazz)) {
 			IKeplerElements k2 = (IKeplerElements) state;
 			if (k2.getCenterbody().equals(center))
@@ -283,7 +287,7 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector state2) {
+	public boolean equals(IPositionState state2) {
 		if (IKeplerElements.class.isAssignableFrom(state2.getClass()))
 			return equals((IKeplerElements) state2);
 		else
@@ -294,7 +298,7 @@ public class KeplerElements extends StateVector implements IKeplerElements {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector state2, double eps) {
+	public boolean equals(IPositionState state2, double eps) {
 		if (IKeplerElements.class.isAssignableFrom(state2.getClass()))
 			return equals((IKeplerElements) state2, eps);
 		else

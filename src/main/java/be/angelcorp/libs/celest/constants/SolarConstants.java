@@ -16,7 +16,7 @@
 package be.angelcorp.libs.celest.constants;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 
 /**
  * Different constants specific to the sun. Has constants in the following categories:

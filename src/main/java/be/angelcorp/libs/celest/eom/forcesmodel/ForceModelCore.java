@@ -21,9 +21,9 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.eom.IStateDerivatives;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.celest.physics.quantities.Torque;
-import be.angelcorp.libs.celest.stateVector.CartesianDerivative;
-import be.angelcorp.libs.celest.stateVector.ICartesianElements;
-import be.angelcorp.libs.celest.stateVector.IStateDerivativeVector;
+import be.angelcorp.libs.celest.state.positionState.CartesianDerivative;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.google.common.collect.Lists;
@@ -91,7 +91,7 @@ public class ForceModelCore implements IStateDerivatives {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IStateDerivativeVector getDerivatives(double t) {
+	public IPositionStateDerivative getDerivatives(double t) {
 		Vector3D a = Vector3D.ZERO;
 		for (ObjectForce f : getForcesList()) {
 			Vector3D dA = f.toAcceleration();

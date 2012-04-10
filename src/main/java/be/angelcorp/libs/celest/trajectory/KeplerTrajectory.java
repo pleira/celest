@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.trajectory;
 import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.util.physics.Time;
 

@@ -17,9 +17,9 @@ package be.angelcorp.libs.celest.trajectory;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
-import be.angelcorp.libs.celest.stateVector.NonSignuarElements;
-import be.angelcorp.libs.celest.stateVector.NonSingularDerivative;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.NonSignuarElements;
+import be.angelcorp.libs.celest.state.positionState.NonSingularDerivative;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.util.physics.Time;

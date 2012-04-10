@@ -22,8 +22,8 @@ import org.apache.commons.math.FunctionEvaluationException;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.math.MathUtils2;

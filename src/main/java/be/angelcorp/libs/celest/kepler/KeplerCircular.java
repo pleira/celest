@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 
 public class KeplerCircular extends KeplerEllipse {
 

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 
 /**
  * Spherical elements are basically the length of the radius r and velocity vector v, and its orientation
@@ -36,7 +37,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
  * @author Simon Billemont
  * 
  */
-public interface ISphericalElements extends IStateVector {
+public interface ISphericalElements extends IPositionState {
 
 	/**
 	 * {@inheritDoc}

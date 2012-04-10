@@ -22,7 +22,9 @@ import junit.framework.TestCase;
 
 import org.apache.commons.math.linear.RealVector;
 
-public abstract class TestStateDerivativeVector<T extends IStateDerivativeVector> extends TestCase {
+import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
+
+public abstract class TestStateDerivativeVector<T extends IPositionStateDerivative> extends TestCase {
 
 	public abstract Collection<T> getTestStateDerivativeVectors();
 

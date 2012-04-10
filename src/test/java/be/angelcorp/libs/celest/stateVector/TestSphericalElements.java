@@ -23,6 +23,12 @@ import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 public class TestSphericalElements extends TestStateVector<SphericalElements> {
@@ -33,10 +39,10 @@ public class TestSphericalElements extends TestStateVector<SphericalElements> {
 		super(SphericalElements.class);
 	}
 
-	protected SphericalElements doConvertAs(IStateVector sourceState, CelestialBody body) {
+	protected SphericalElements doConvertAs(IPositionState sourceState, CelestialBody body) {
 		try {
 			return (SphericalElements) SphericalElements.class
-					.getDeclaredMethod("as", IStateVector.class, CelestialBody.class)
+					.getDeclaredMethod("as", IPositionState.class, CelestialBody.class)
 					.invoke(null, sourceState, body);
 		} catch (Exception e) {
 			throw new AssertionFailedError("Could not convert using as(IStatevector, CelestialBody) method.");

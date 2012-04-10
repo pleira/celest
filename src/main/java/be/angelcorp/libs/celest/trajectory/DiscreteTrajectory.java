@@ -20,8 +20,8 @@ import java.util.TreeMap;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
-import be.angelcorp.libs.celest.stateVector.IStateVector;
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 import com.google.common.collect.Maps;
@@ -38,7 +38,7 @@ public class DiscreteTrajectory implements IDiscreteTrajectory {
 	/**
 	 * Sorting container which sorts all known states at there respective epoch
 	 */
-	private TreeMap<IJulianDate, IStateVector>	states	= Maps.newTreeMap();
+	private TreeMap<IJulianDate, IPositionState>	states	= Maps.newTreeMap();
 
 	/**
 	 * Create a new {@link DiscreteTrajectory}, with no known states
@@ -52,7 +52,7 @@ public class DiscreteTrajectory implements IDiscreteTrajectory {
 	 * @param state
 	 *            State at specified epoch
 	 */
-	public DiscreteTrajectory(StateVector state, IJulianDate epoch) {
+	public DiscreteTrajectory(PositionState state, IJulianDate epoch) {
 		addState(epoch, state);
 	}
 
@@ -60,7 +60,7 @@ public class DiscreteTrajectory implements IDiscreteTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addState(IJulianDate t, IStateVector state) {
+	public void addState(IJulianDate t, IPositionState state) {
 		states.put(t, state);
 	}
 
@@ -68,8 +68,8 @@ public class DiscreteTrajectory implements IDiscreteTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException {
-		Entry<IJulianDate, IStateVector> entry = states.floorEntry(t);
+	public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
+		Entry<IJulianDate, IPositionState> entry = states.floorEntry(t);
 		if (entry == null)
 			throw new FunctionEvaluationException(t.getJD(), "No state found before the given time index");
 		return entry.getValue();

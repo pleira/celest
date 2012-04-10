@@ -20,10 +20,10 @@ import junit.framework.TestCase;
 import org.apache.commons.math.linear.ArrayRealVector;
 
 import be.angelcorp.libs.celest.constants.EarthConstants;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.ICartesianElements;
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
-import be.angelcorp.libs.celest.stateVector.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Vector3D;

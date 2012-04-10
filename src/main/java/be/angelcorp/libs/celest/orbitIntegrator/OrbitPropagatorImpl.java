@@ -23,9 +23,9 @@ import org.apache.commons.math.ode.nonstiff.ClassicalRungeKuttaIntegrator;
 
 import be.angelcorp.libs.celest.eom.IStateDerivatives;
 import be.angelcorp.libs.celest.math.Cartesian;
-import be.angelcorp.libs.celest.stateVector.CartesianDerivative;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.CartesianDerivative;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 
 public class OrbitPropagatorImpl implements OrbitPropagator, Cartesian {
 

@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 import org.apache.commons.math.util.MathUtils;
 
 /**
- * Abstract base for a state vector that hold the state of a celestial body.
+ * Abstract base for a {@link IPositionState} that hold the positional state of a celestial body.
  * 
  * @author Simon Billemont
- * @see IStateVector
+ * @see IPositionState
  */
-public abstract class StateVector implements IStateVector {
+public abstract class PositionState implements IPositionState {
 
 	/**
-	 * Restore the {@link StateVector} from a vector
+	 * Restore the {@link PositionState} from a vector
 	 * 
 	 * @param vector
 	 *            Vector to restore the the state from
-	 * @return State vector as contained in the given vector
+	 * @return {@link IPositionState} as contained in the given vector
 	 */
-	public static IStateVector fromVector(RealVector vector) {
+	public static IPositionState fromVector(RealVector vector) {
 		throw new UnsupportedOperationException("This method must be overwritten");
 	}
 
@@ -41,13 +41,13 @@ public abstract class StateVector implements IStateVector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public abstract IStateVector clone();
+	public abstract IPositionState clone();
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector obj) {
+	public boolean equals(IPositionState obj) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
 
@@ -65,7 +65,7 @@ public abstract class StateVector implements IStateVector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector obj, double eps) {
+	public boolean equals(IPositionState obj, double eps) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 
@@ -21,6 +21,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.math.Keplerian;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 
 /**
  * Holds the state using the classical Keplerian elements:
@@ -33,7 +34,7 @@ import be.angelcorp.libs.celest.math.Keplerian;
  * @author Simon Billemont
  * 
  */
-public interface IKeplerElements extends Keplerian, IStateVector {
+public interface IKeplerElements extends Keplerian, IPositionState {
 
 	/**
 	 * {@inheritDoc}

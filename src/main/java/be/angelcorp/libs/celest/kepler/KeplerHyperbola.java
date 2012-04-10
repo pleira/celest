@@ -30,7 +30,7 @@ import org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.apache.commons.math.util.FastMath;
 
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 
 public class KeplerHyperbola extends KeplerEquations {
 

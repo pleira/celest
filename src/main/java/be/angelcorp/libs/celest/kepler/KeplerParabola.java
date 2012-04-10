@@ -25,7 +25,7 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.apache.commons.math.analysis.solvers.UnivariateRealSolver;
 import org.apache.commons.math.analysis.solvers.UnivariateRealSolverFactory;
 
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.math.MathUtils2;
 
 public class KeplerParabola extends KeplerEquations {

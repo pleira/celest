@@ -19,9 +19,9 @@ import junit.framework.TestCase;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.NonSignuarElements;
-import be.angelcorp.libs.celest.stateVector.SphericalElements;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.NonSignuarElements;
+import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory;
 import be.angelcorp.libs.math.linear.Vector3D;

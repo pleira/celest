@@ -25,7 +25,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 
-import be.angelcorp.libs.celest.stateVector.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.math.MathUtils2;
 
 public class KeplerEllipse extends KeplerEquations {

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**

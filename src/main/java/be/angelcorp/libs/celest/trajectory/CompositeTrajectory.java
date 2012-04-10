@@ -20,7 +20,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.math.FunctionEvaluationException;
 
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 import com.google.common.collect.Maps;
@@ -52,7 +52,7 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IStateVector evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
 		Entry<IJulianDate, ITrajectory> entry = trajectories.floorEntry(t);
 		if (entry == null)
 			throw new FunctionEvaluationException(t.getJD(), "No trajectory found");

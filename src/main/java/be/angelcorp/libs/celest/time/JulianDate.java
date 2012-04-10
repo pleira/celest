@@ -181,4 +181,9 @@ public class JulianDate implements IJulianDate {
 		this.date = form.toJD(date2);
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%fJD", getJD());
+	}
+
 }

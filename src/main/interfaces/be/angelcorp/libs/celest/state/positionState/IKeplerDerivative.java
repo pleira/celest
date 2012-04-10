@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.Keplerian;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 
 /**
  * Holds the state variation using the variation of the classical Keplerian elements:
@@ -31,7 +32,7 @@ import be.angelcorp.libs.celest.math.Keplerian;
  * @author Simon Billemont
  * 
  */
-public interface IKeplerDerivative extends Keplerian, IStateDerivativeVector {
+public interface IKeplerDerivative extends Keplerian, IPositionStateDerivative {
 
 	/**
 	 * {@inheritDoc}

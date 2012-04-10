@@ -13,45 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 
 /**
- * This hold the derivatives of the state of a given body
+ * This hold the derivatives of the {@link IPositionState} of a given body
  * 
  * <p>
- * StateDerivatives extending this class should also implement the following for convenience:
+ * Classes extending this class should also implement the following for convenience:
  * </p>
  * 
  * <pre>
- * public static IStateDerivativeVector fromVector(RealVector vector);
+ * public static {@link IPositionStateDerivative} fromVector({@link RealVector} vector);
  * </pre>
  * 
  * @author Simon Billemont
  * 
  */
-public interface IStateDerivativeVector extends Cloneable {
+public interface IPositionStateDerivative extends Cloneable {
 
 	/**
 	 * Create a new StateDerivativeVector with identical properties
 	 */
-	public abstract IStateDerivativeVector clone();
+	public abstract IPositionStateDerivative clone();
 
 	/**
-	 * Tests if two {@link IStateDerivativeVector} are equal. By default, this id done by comparing all
-	 * elements of the {@link IStateDerivativeVector#toVector()} output. Each elemet must have an
+	 * Tests if two {@link IPositionStateDerivative} are equal. By default, this id done by comparing all
+	 * elements of the {@link IPositionStateDerivative#toVector()} output. Each element must have an
 	 * identical value to be considered equal.
 	 * 
 	 * @param obj
-	 *            Compare the current {@link IStateDerivativeVector} with this ones.
+	 *            Compare the current {@link IPositionStateDerivative} with this ones.
 	 * @return true if they are equal.
 	 */
-	public abstract boolean equals(IStateDerivativeVector obj);
+	public abstract boolean equals(IPositionStateDerivative obj);
 
 	/**
-	 * Tests if two {@link IStateDerivativeVector} are equal. By default, this id done by comparing all
-	 * elements of the {@link IStateDerivativeVector#toVector()} output.
+	 * Tests if two {@link IPositionStateDerivative} are equal. By default, this id done by comparing all
+	 * elements of the {@link IPositionStateDerivative#toVector()} output.
 	 * 
 	 * <p>
 	 * It tests using a a relative error eps and applies the following test to each element:
@@ -62,15 +62,16 @@ public interface IStateDerivativeVector extends Cloneable {
 	 * </pre>
 	 * 
 	 * @param obj
-	 *            Compare the current {@link IStateDerivativeVector} with this ones.
+	 *            Compare the current {@link IPositionStateDerivative} with this ones.
 	 * @param eps
 	 *            Relative error to check against.
 	 * @return true if they are equal.
 	 */
-	public abstract boolean equals(IStateDerivativeVector obj, double eps);
+	public abstract boolean equals(IPositionStateDerivative obj, double eps);
 
 	/**
-	 * Convert the StateDerivativeVector to an equivalent Cartesian one (V,A in Cartesian coordinates)
+	 * Convert the {@link IPositionStateDerivative} to an equivalent Cartesian one (V,A in Cartesian
+	 * coordinates)
 	 * 
 	 * @return Cartesian equivalent state derivative vector
 	 */

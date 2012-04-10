@@ -20,8 +20,8 @@ import junit.framework.TestCase;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.junit.Test;
 
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.StateVector;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.celest.time.JulianDate;
 
 public class TestDiscreteTrajectory extends TestCase {
@@ -31,7 +31,7 @@ public class TestDiscreteTrajectory extends TestCase {
 		DiscreteTrajectory trajectory = new DiscreteTrajectory();
 
 		// Add a state a t=0
-		StateVector s1 = new CartesianElements();
+		PositionState s1 = new CartesianElements();
 		trajectory.addState(new JulianDate(0), s1);
 
 		try {
@@ -46,9 +46,9 @@ public class TestDiscreteTrajectory extends TestCase {
 		DiscreteTrajectory trajectory = new DiscreteTrajectory();
 
 		// Add various states at various times
-		StateVector s1 = new CartesianElements();
-		StateVector s2 = new CartesianElements();
-		StateVector s3 = new CartesianElements();
+		PositionState s1 = new CartesianElements();
+		PositionState s2 = new CartesianElements();
+		PositionState s3 = new CartesianElements();
 		trajectory.addState(new JulianDate(0), s1);
 		trajectory.addState(new JulianDate(10), s2);
 		trajectory.addState(new JulianDate(20), s3);

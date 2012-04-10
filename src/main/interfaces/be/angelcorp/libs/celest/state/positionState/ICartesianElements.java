@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import be.angelcorp.libs.celest.math.Cartesian;
+import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
  * 
- * {@link StateVector} in the form of the Cartesian position R (x,y,z) and velocity V (&#7819;, &#7823;,
+ * {@link PositionState} in the form of the Cartesian position R (x,y,z) and velocity V (&#7819;, &#7823;,
  * &#380;).
  * 
  * <pre>
@@ -31,7 +32,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author Simon Billemont
  * 
  */
-public interface ICartesianElements extends Cartesian, IStateVector {
+public interface ICartesianElements extends Cartesian, IPositionState {
 
 	/**
 	 * {@inheritDoc}

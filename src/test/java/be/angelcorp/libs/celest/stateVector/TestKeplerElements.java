@@ -24,6 +24,12 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.constants.SolarConstants;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Angle;
 import be.angelcorp.libs.util.physics.Length;
@@ -36,9 +42,9 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 		super(KeplerElements.class);
 	}
 
-	protected KeplerElements doConvertAs(IStateVector sourceState, CelestialBody body) {
+	protected KeplerElements doConvertAs(IPositionState sourceState, CelestialBody body) {
 		try {
-			return (KeplerElements) KeplerElements.class.getDeclaredMethod("as", IStateVector.class,
+			return (KeplerElements) KeplerElements.class.getDeclaredMethod("as", IPositionState.class,
 					CelestialBody.class)
 					.invoke(null, sourceState, body);
 		} catch (Exception e) {

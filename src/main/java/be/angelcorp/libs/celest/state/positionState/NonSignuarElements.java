@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateVector;
+package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.MatrixIndexException;
@@ -27,6 +27,8 @@ import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerHyperbola;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.kepler.KeplerParabola;
+import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.MathUtils2;
 
 /**
@@ -49,22 +51,22 @@ import be.angelcorp.libs.math.MathUtils2;
  * @author Simon Billemont
  * @see IKeplerElements
  */
-public class NonSignuarElements extends StateVector implements IKeplerElements {
+public class NonSignuarElements extends PositionState implements IKeplerElements {
 
 	/**
-	 * Create a set of {@link NonSignuarElements} from another {@link StateVector}. Chooses itself what
+	 * Create a set of {@link NonSignuarElements} from another {@link PositionState}. Chooses itself what
 	 * the best way of converting is.
 	 * <p>
-	 * Guarantees that the return of a {@link NonSignuarElements} {@link StateVector}, but not
-	 * necessarily a clone (can be the same {@link StateVector})
+	 * Guarantees that the return of a {@link NonSignuarElements} {@link PositionState}, but not
+	 * necessarily a clone (can be the same {@link PositionState})
 	 * </p>
 	 * 
 	 * @param state
-	 *            {@link StateVector} to convert
+	 *            {@link PositionState} to convert
 	 * @param center
 	 *            Central body where the {@link NonSignuarElements} are formulated against
 	 */
-	public static NonSignuarElements as(IStateVector state, CelestialBody center) {
+	public static NonSignuarElements as(IPositionState state, CelestialBody center) {
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
@@ -241,7 +243,7 @@ public class NonSignuarElements extends StateVector implements IKeplerElements {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector state2) {
+	public boolean equals(IPositionState state2) {
 		if (NonSignuarElements.class.isAssignableFrom(state2.getClass()))
 			return equals((NonSignuarElements) state2);
 		else
@@ -252,7 +254,7 @@ public class NonSignuarElements extends StateVector implements IKeplerElements {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(IStateVector state2, double eps) {
+	public boolean equals(IPositionState state2, double eps) {
 		if (NonSignuarElements.class.isAssignableFrom(state2.getClass()))
 			return equals((NonSignuarElements) state2, eps);
 		else

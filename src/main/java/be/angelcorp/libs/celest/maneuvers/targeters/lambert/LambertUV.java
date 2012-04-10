@@ -24,13 +24,16 @@ import static java.lang.Math.sin;
 import static java.lang.Math.sinh;
 import static java.lang.Math.sqrt;
 
+import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.MathException;
+import org.apache.commons.math.analysis.ComposableFunction;
+import org.apache.commons.math.analysis.solvers.BrentSolver;
 import org.apache.commons.math.util.MathUtils;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.stateVector.CartesianElements;
-import be.angelcorp.libs.celest.stateVector.IStateVector;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -44,11 +47,64 @@ import be.angelcorp.libs.math.linear.Vector3D;
  */
 public class LambertUV extends TPBVP {
 
+	private class LambertFunctionUV extends ComposableFunction {
+		double	A, r1norm, r2norm;
+
+		private LambertFunctionUV(double A, double r1norm, double r2norm) {
+			this.A = A;
+			this.r1norm = r1norm;
+			this.r2norm = r2norm;
+		}
+
+		public double computeY(double z) {
+			double C, S;
+			if (z > MathUtils.EPSILON) {
+				C = (1d - cos(sqrt(z))) / z;
+				S = (sqrt(z) - sin(sqrt(z))) / pow(z, 3d / 2d);
+			} else if (z < -MathUtils.EPSILON) {
+				C = (1d - cosh(sqrt(-z))) / z;
+				S = (sinh(sqrt(-z)) - sqrt(-z)) / pow(-z, 3d / 2d);
+			} else {
+				C = 1d / 2d;
+				S = 1d / 6d;
+			}
+			return computeY(z, C, S);
+		}
+
+		private double computeY(double z, double C, double S) {
+			double y = r1norm + r2norm + A * (z * S - 1d) / sqrt(C);
+			return y;
+		}
+
+		@Override
+		public double value(double z) throws FunctionEvaluationException {
+			double C, S;
+
+			if (z > MathUtils.EPSILON) {
+				C = (1d - cos(sqrt(z))) / z;
+				S = (sqrt(z) - sin(sqrt(z))) / pow(z, 3d / 2d);
+			} else if (z < -MathUtils.EPSILON) {
+				C = (1d - cosh(sqrt(-z))) / z;
+				S = (sinh(sqrt(-z)) - sqrt(-z)) / pow(-z, 3d / 2d);
+			} else {
+				C = 1d / 2d;
+				S = 1d / 6d;
+			}
+
+			double y = computeY(z, C, S);
+
+			double x = sqrt(y / C);
+			double currentDT = (pow(x, 3) * S + A * sqrt(y)) / centerbody.getMu();
+			return currentDT;
+		}
+	}
+
 	/**
 	 * Body at the center of the Keplerian motion, r1 and r2 are measured wrt this body. This us usually
 	 * The Earth for near Earth orbits, and the Sun for interplanetary missions.
 	 */
 	private CelestialBody	centerbody;
+
 	/**
 	 * Indicates if the direction of motion is the small angle between r1 and r2, or the large angle
 	 * between r1 and r2.
@@ -71,7 +127,7 @@ public class LambertUV extends TPBVP {
 	 * @param shortWay
 	 *            Use short arc transfer (transfer solution over the smallest angle between R1 and R2)
 	 */
-	public LambertUV(IStateVector r1, IStateVector r2, CelestialBody centerbody, IJulianDate departure,
+	public LambertUV(IPositionState r1, IPositionState r2, CelestialBody centerbody, IJulianDate departure,
 			IJulianDate arrival, boolean shortWay) {
 		super(r1, r2, departure, arrival);
 		this.centerbody = centerbody;
@@ -98,40 +154,12 @@ public class LambertUV extends TPBVP {
 		if (!shortWay)
 			A = -A;
 
-		double x, y, z = 0d, C = 1d / 2d, S = 1d / 6d;
-		double z_upper = 4d * PI * PI, z_lower = -4d * PI;
-
-		double currentDT = Double.POSITIVE_INFINITY;
-
 		double dT = getdT();
-		do {
-			y = r1norm + r2norm + A * (z * S - 1d) / sqrt(C);
-			if (A > 0d && y < 0d) {
+		LambertFunctionUV func = new LambertFunctionUV(A, r1norm, r2norm);
+		BrentSolver solver = new BrentSolver(1e-12);
+		double z = solver.solve(100, func.add(-dT), -4d * PI, 5. * PI * PI, 0);
 
-			}
-			x = sqrt(y / C);
-			currentDT = (pow(x, 3d) * S + A * sqrt(y)) / centerbody.getMu();
-
-			if (currentDT <= dT)
-				z_lower = z;
-			else
-				z_upper = z;
-
-			z = (z_lower + z_upper) / 2d;
-
-			if (z > MathUtils.EPSILON) {
-				C = (1d - cos(sqrt(z))) / z;
-				S = (sqrt(z) - sin(sqrt(z))) / pow(z, 3d / 2d);
-			} else if (z < -MathUtils.EPSILON) {
-				C = (1d - cosh(sqrt(-z))) / z;
-				S = (sinh(sqrt(-z)) - sqrt(-z)) / pow(-z, 3d / 2d);
-			} else {
-				C = 1d / 2d;
-				S = 1d / 6d;
-			}
-		} while (currentDT - dT > 1E-6);
-		// TODO:magic number 1E-6
-
+		double y = func.computeY(z);
 		double f = 1d - y / r1norm;
 		double g = A * sqrt(y / centerbody.getMu());
 		double g_dot = 1d - y / r2norm;
