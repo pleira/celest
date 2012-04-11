@@ -17,6 +17,8 @@ package be.angelcorp.libs.celest.state.positionState;
 
 import org.apache.commons.math.linear.RealVector;
 
+import be.angelcorp.libs.celest.state.IStateDerivative;
+
 /**
  * This hold the derivatives of the {@link IPositionState} of a given body
  * 
@@ -31,12 +33,13 @@ import org.apache.commons.math.linear.RealVector;
  * @author Simon Billemont
  * 
  */
-public interface IPositionStateDerivative extends Cloneable {
+public interface IPositionStateDerivative extends IStateDerivative {
 
 	/**
-	 * Create a new StateDerivativeVector with identical properties
+	 * {@inheritDoc}
 	 */
-	public abstract IPositionStateDerivative clone();
+	@Override
+	public IStateDerivative clone();
 
 	/**
 	 * Tests if two {@link IPositionStateDerivative} are equal. By default, this id done by comparing all
@@ -82,6 +85,7 @@ public interface IPositionStateDerivative extends Cloneable {
 	 * 
 	 * @return Vector equivalent of the state vector
 	 */
+	@Override
 	public abstract RealVector toVector();
 
 }

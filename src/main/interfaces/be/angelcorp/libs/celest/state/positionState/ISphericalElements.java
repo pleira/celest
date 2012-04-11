@@ -18,7 +18,6 @@ package be.angelcorp.libs.celest.state.positionState;
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 
 /**
  * Spherical elements are basically the length of the radius r and velocity vector v, and its orientation
@@ -167,5 +166,4 @@ public interface ISphericalElements extends IPositionState {
 	 */
 	@Override
 	public abstract RealVector toVector();
-
 }

@@ -24,10 +24,6 @@ import org.apache.commons.math.util.MathUtils;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
-import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3DMath;
@@ -45,8 +41,8 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	 * the best way of converting is.
 	 * 
 	 * <p>
-	 * Guarantees that the return of a {@link SphericalElements} {@link PositionState}, but not necessarily
-	 * a clone (can be the same {@link PositionState})
+	 * Guarantees that the return of a {@link SphericalElements} {@link PositionState}, but not
+	 * necessarily a clone (can be the same {@link PositionState})
 	 * </p>
 	 * 
 	 * @param state
@@ -236,6 +232,28 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean equals(IPositionState state2) {
+		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
+			return equals((ISphericalElements) state2);
+		else
+			return equals(state2);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(IPositionState state2, double eps) {
+		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
+			return equals((ISphericalElements) state2, eps);
+		else
+			return equals(state2);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean equals(ISphericalElements state2) {
 		double angleTol = KeplerEquations.angleTolarance;
 		return MathUtils.equals(r, state2.getRadius(), r * 1E-10)
@@ -257,28 +275,6 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 				&& MathUtils2.equalsAngle(delta, state2.getDeclination(), PI * eps)
 				&& MathUtils2.equalsAngle(gamma, state2.getFlightPathAngle(), PI * eps)
 				&& MathUtils2.equalsAngle(psi, state2.getFlightPathAzimuth(), PI * eps);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(IPositionState state2) {
-		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
-			return equals((ISphericalElements) state2);
-		else
-			return equals(state2);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(IPositionState state2, double eps) {
-		if (ISphericalElements.class.isAssignableFrom(state2.getClass()))
-			return equals((ISphericalElements) state2, eps);
-		else
-			return equals(state2);
 	}
 
 	/**

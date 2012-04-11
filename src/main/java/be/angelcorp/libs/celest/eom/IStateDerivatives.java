@@ -16,14 +16,20 @@
 package be.angelcorp.libs.celest.eom;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.state.IStateDerivative;
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
 
 /**
  * Computes the derivatives of the state vector of a specific body
  * 
+ * <p>
+ * Use {@link IStateDerivative} instead
+ * </p>
+ * 
  * @author simon
  * 
  */
+@Deprecated
 public interface IStateDerivatives {
 
 	/**

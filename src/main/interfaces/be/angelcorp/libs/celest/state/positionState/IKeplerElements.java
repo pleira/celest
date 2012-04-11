@@ -21,7 +21,6 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.math.Keplerian;
-import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 
 /**
  * Holds the state using the classical Keplerian elements:

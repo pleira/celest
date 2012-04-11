@@ -16,13 +16,12 @@
 package be.angelcorp.libs.celest.state.positionState;
 
 import be.angelcorp.libs.celest.math.Cartesian;
-import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
  * 
- * {@link PositionState} in the form of the Cartesian position R (x,y,z) and velocity V (&#7819;, &#7823;,
- * &#380;).
+ * {@link PositionState} in the form of the Cartesian position R (x,y,z) and velocity V (&#7819;,
+ * &#7823;, &#380;).
  * 
  * <pre>
  * Elements: { x,   y,   z,    &#7819;,     &#7823;,     &#380;  }
@@ -38,7 +37,7 @@ public interface ICartesianElements extends Cartesian, IPositionState {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public abstract ICartesianElements clone();
+	public ICartesianElements clone();
 
 	/**
 	 * Tests if two sets of Cartesian elements hold the same variables (tests for equal

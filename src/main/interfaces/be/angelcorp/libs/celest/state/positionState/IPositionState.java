@@ -18,6 +18,7 @@ package be.angelcorp.libs.celest.state.positionState;
 import org.apache.commons.math.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.state.IState;
 
 /**
  * This is the interface for each position state (representation of a body's current location/velocity
@@ -39,12 +40,13 @@ import be.angelcorp.libs.celest.body.CelestialBody;
  * public static [StateVectorClass] as({@link IPositionState} state, {@link CelestialBody} center);
  * </pre>
  */
-public interface IPositionState extends Cloneable {
+public interface IPositionState extends IState {
 
 	/**
-	 * Create a new {@link IPositionState} with identical properties
+	 * {@inheritDoc}
 	 */
-	public abstract IPositionState clone();
+	@Override
+	public IPositionState clone();
 
 	/**
 	 * Tests if two {@link IPositionState} are equal. By default, this is done by comparing all elements
@@ -84,16 +86,11 @@ public interface IPositionState extends Cloneable {
 	public abstract ICartesianElements toCartesianElements();
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public abstract String toString();
-
-	/**
 	 * Convert the current state vector to an equivalent vector form
 	 * 
 	 * @return Vector equivalent of the state vector
 	 */
+	@Override
 	public abstract RealVector toVector();
 
 }
