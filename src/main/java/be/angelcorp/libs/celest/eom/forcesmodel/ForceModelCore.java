@@ -17,13 +17,17 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import java.util.List;
 
+import org.apache.commons.math.linear.RealVector;
+
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.eom.IStateDerivatives;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.celest.physics.quantities.Torque;
+import be.angelcorp.libs.celest.state.IStateEquation;
 import be.angelcorp.libs.celest.state.positionState.CartesianDerivative;
+import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
+import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.google.common.collect.Lists;
@@ -35,7 +39,7 @@ import com.google.common.collect.Lists;
  * @author simon
  * 
  */
-public class ForceModelCore implements IStateDerivatives {
+public class ForceModelCore implements IStateEquation<ICartesianElements, ICartesianDerivative> {
 
 	/**
 	 * Body where all the forces/torques act on
@@ -79,27 +83,31 @@ public class ForceModelCore implements IStateDerivatives {
 		torques.add(t);
 	}
 
-	/**
-	 * @see ForceModelCore#body
-	 */
 	@Override
-	public CelestialBody getBody() {
-		return body;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IPositionStateDerivative getDerivatives(double t) {
+	public ICartesianDerivative calculateDerivatives(IJulianDate t, ICartesianElements y) {
 		Vector3D a = Vector3D.ZERO;
 		for (ObjectForce f : getForcesList()) {
 			Vector3D dA = f.toAcceleration();
 			a = a.add(dA);
 		}
+		return new CartesianDerivative(y.getV(), a);
+	}
 
-		ICartesianElements thisState = body.getState().toCartesianElements();
-		return new CartesianDerivative(thisState.getV(), a);
+	@Override
+	public ICartesianElements createState(RealVector y) {
+		return new CartesianElements(y.getData());
+	}
+
+	/**
+	 * @see ForceModelCore#body
+	 */
+	public CelestialBody getBody() {
+		return body;
+	}
+
+	@Override
+	public int getDimension() {
+		return 6;
 	}
 
 	/**

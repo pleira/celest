@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.orbitIntegrator;
+package be.angelcorp.libs.celest.stateIntegrator;
 
-public interface OrbitPropagator {
+import be.angelcorp.libs.celest.state.IState;
+import be.angelcorp.libs.celest.state.IStateDerivative;
+import be.angelcorp.libs.celest.time.IJulianDate;
+
+public interface IStateIntegrator<Y extends IState, DY extends IStateDerivative> {
+
+	Y integrate(IJulianDate t0, IJulianDate t, Y y0);
 
 }

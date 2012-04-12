@@ -21,6 +21,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.ode.AbstractIntegrator;
 import org.apache.commons.math.ode.DerivativeException;
+import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.nonstiff.ClassicalRungeKuttaIntegrator;
 import org.apache.commons.math.ode.sampling.StepHandler;
 import org.apache.commons.math.ode.sampling.StepInterpolator;
@@ -28,13 +29,16 @@ import org.apache.commons.math.ode.sampling.StepInterpolator;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.eom.TwoBody;
-import be.angelcorp.libs.celest.orbitIntegrator.OrbitPropagatorImpl;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import be.angelcorp.libs.celest.stateIntegrator.CommonsMathPropagator;
+import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.Tests;
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException;
+import be.angelcorp.libs.util.physics.Time;
 
 public class TestOrbitPropagatorImpl extends TestCase {
 
@@ -47,14 +51,19 @@ public class TestOrbitPropagatorImpl extends TestCase {
 	 * @throws FunctionEvaluationException
 	 */
 	public void testRK4integrationTestGeo() throws Exception {
-		OrbitPropagatorImpl integrator = new OrbitPropagatorImpl(60);
+
 		/* Geostationairy start position */
 		CartesianElements x0 = new CartesianElements(new double[] { 42164000, 0, 0, 0, 3074.6663, 0 });
 
 		/* Create the two body problem */
 		TwoBody tb = new TwoBody(new CelestialBody(x0, 1));
 
-		ICartesianElements ans2 = integrator.integrate(tb, 0, 30 * 24 * 360);
+		FirstOrderIntegrator integrator = new ClassicalRungeKuttaIntegrator(60.);
+		CommonsMathPropagator<ICartesianElements, ICartesianDerivative> propagator =
+				new CommonsMathPropagator<>(integrator, tb);
+
+		ICartesianElements ans2 = propagator.integrate(
+				JulianDate.getJ2000(), JulianDate.getJ2000().add(1, Time.month), x0);
 		// System.out.println(x0.getSubVector(0, 3).getNorm());
 		// System.out.println(ans2.getSubVector(0, 3).getNorm());
 		// System.out.println(x0.getSubVector(0, 3).getNorm() - ans2.getSubVector(0, 3).getNorm());
@@ -67,9 +76,8 @@ public class TestOrbitPropagatorImpl extends TestCase {
 		AbstractIntegrator rk4 = new ClassicalRungeKuttaIntegrator(2);
 		rk4.addStepHandler(new StepHandler() {
 			@Override
-			public void handleStep(StepInterpolator interpolator, boolean isLast)
-					throws DerivativeException {
-				double t = interpolator.getCurrentTime();
+			public void handleStep(StepInterpolator interpolator, boolean isLast) throws DerivativeException {
+				double t = interpolator.getCurrentTime() - JulianDate.getJ2000().getJD();
 				double[] y = interpolator.getInterpolatedState();
 				if (Math.abs(t - 2) < delta) {
 					double[] step1True = new double[] { 6640305.22, 16251.75, 0, -18.08, 8125.86, 0 };
@@ -97,13 +105,15 @@ public class TestOrbitPropagatorImpl extends TestCase {
 			}
 
 		});
-		OrbitPropagatorImpl integrator = new OrbitPropagatorImpl(rk4);
 
 		/* Leo orbit */
 		IKeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, EarthConstants.bodyCenter);
 		CartesianElements c = k.getOrbitEqn().kepler2cartesian();
 		/* Create the two body problem */
 		TwoBody tb = new TwoBody(new CelestialBody(c, 1));
-		integrator.integrate(tb, 0, 4);
+
+		CommonsMathPropagator<ICartesianElements, ICartesianDerivative> integrator =
+				new CommonsMathPropagator<>(rk4, tb);
+		integrator.integrate(JulianDate.getJ2000(), JulianDate.getJ2000().add(4, Time.day), c);
 	}
 }

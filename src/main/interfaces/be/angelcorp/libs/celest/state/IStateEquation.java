@@ -1,5 +1,6 @@
 package be.angelcorp.libs.celest.state;
 
+import org.apache.commons.math.linear.RealVector;
 import org.apache.commons.math.ode.SecondOrderDifferentialEquations;
 
 import be.angelcorp.libs.celest.time.IJulianDate;
@@ -9,7 +10,7 @@ import be.angelcorp.libs.celest.time.IJulianDate;
  * the form of:
  * 
  * <pre>
- * dy/dt = f(t, x, y)
+ * dy/dt = f(t, y)
  * </pre>
  * 
  * If the system can be described by a set of second order differential equations, than these state
@@ -18,13 +19,13 @@ import be.angelcorp.libs.celest.time.IJulianDate;
  * @author Simon Billemont
  * 
  */
-public interface IStateEquation<X extends IState, Y extends IState, DY extends IStateDerivative> {
+public interface IStateEquation<Y extends IState, DY extends IStateDerivative> {
 
 	/**
-	 * Compute the value of the state derivatives for a known {@link IState}: *
+	 * Compute the value of the state derivatives for a known {@link IState}:
 	 * 
 	 * <pre>
-	 * dy/dt = f(t, x, y)
+	 * dy/dt = f(t, y)
 	 * </pre>
 	 * 
 	 * @param t
@@ -35,6 +36,10 @@ public interface IStateEquation<X extends IState, Y extends IState, DY extends I
 	 *            Dependent state variables
 	 * @return The derivatives of the dependent state variables
 	 */
-	DY calculateDerivatives(IJulianDate t, X x, Y y);
+	DY calculateDerivatives(IJulianDate t, Y y);
+
+	Y createState(RealVector y);
+
+	int getDimension();
 
 }

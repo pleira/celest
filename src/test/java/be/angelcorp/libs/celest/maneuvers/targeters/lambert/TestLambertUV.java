@@ -3,6 +3,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 import junit.framework.TestCase;
 
 import org.apache.commons.math.MathException;
+import org.junit.Ignore;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.Constants;
@@ -14,6 +15,7 @@ import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
 
+@Ignore
 public class TestLambertUV extends TestCase {
 
 	public void testRossettaLeg1() throws MathException {
