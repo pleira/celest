@@ -15,15 +15,11 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
-import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 public class HybridPositionState extends PositionState implements ICartesianElements, IKeplerElements,
@@ -100,16 +96,6 @@ public class HybridPositionState extends PositionState implements ICartesianElem
 	}
 
 	@Override
-	public boolean equals(ISphericalElements state2) {
-		return getSpherical().equals(state2);
-	}
-
-	@Override
-	public boolean equals(ISphericalElements state2, double eps) {
-		return getSpherical().equals(state2, eps);
-	}
-
-	@Override
 	public boolean equals(IPositionState state2) {
 		Class<? extends IPositionState> clazz = state2.getClass();
 		if (ICartesianElements.class.isAssignableFrom(clazz)) {
@@ -121,6 +107,16 @@ public class HybridPositionState extends PositionState implements ICartesianElem
 		} else {
 			return equals(state2.toCartesianElements());
 		}
+	}
+
+	@Override
+	public boolean equals(ISphericalElements state2) {
+		return getSpherical().equals(state2);
+	}
+
+	@Override
+	public boolean equals(ISphericalElements state2, double eps) {
+		return getSpherical().equals(state2, eps);
 	}
 
 	@Override

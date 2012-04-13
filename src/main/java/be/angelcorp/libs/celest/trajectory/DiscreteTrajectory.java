@@ -18,8 +18,6 @@ package be.angelcorp.libs.celest.trajectory;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.apache.commons.math.FunctionEvaluationException;
-
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
@@ -68,10 +66,10 @@ public class DiscreteTrajectory implements IDiscreteTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public IPositionState evaluate(IJulianDate t) {
 		Entry<IJulianDate, IPositionState> entry = states.floorEntry(t);
 		if (entry == null)
-			throw new FunctionEvaluationException(t.getJD(), "No state found before the given time index");
+			throw new ArithmeticException("No state found before the the julian date " + t.getJD());
 		return entry.getValue();
 	}
 

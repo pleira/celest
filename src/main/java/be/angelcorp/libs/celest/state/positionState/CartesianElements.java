@@ -15,11 +15,9 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -33,8 +31,8 @@ public class CartesianElements extends PositionState implements ICartesianElemen
 	/**
 	 * Create the {@link CartesianElements} from another {@link PositionState}.
 	 * <p>
-	 * Guarantees that the return of a {@link CartesianElements} {@link PositionState}, but not necessarily
-	 * a clone (can be the same {@link PositionState})
+	 * Guarantees that the return of a {@link CartesianElements} {@link PositionState}, but not
+	 * necessarily a clone (can be the same {@link PositionState})
 	 * </p>
 	 * 
 	 * @param state
@@ -48,7 +46,7 @@ public class CartesianElements extends PositionState implements ICartesianElemen
 	 * {@inheritDoc}
 	 */
 	public static CartesianElements fromVector(RealVector v) {
-		return new CartesianElements(v.getData());
+		return new CartesianElements(v.toArray());
 	}
 
 	/**

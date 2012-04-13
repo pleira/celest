@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import org.apache.commons.math.FunctionEvaluationException;
-
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
@@ -52,7 +50,7 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IKeplerElements evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public IKeplerElements evaluate(IJulianDate t) {
 		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 		double dt = t.relativeTo(epoch, Time.second); // Delta between epoch and now in [s]
 		double dM = n * dt;

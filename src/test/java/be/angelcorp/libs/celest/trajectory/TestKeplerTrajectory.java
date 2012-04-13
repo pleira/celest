@@ -17,9 +17,6 @@ package be.angelcorp.libs.celest.trajectory;
 
 import static java.lang.Math.PI;
 import junit.framework.TestCase;
-
-import org.apache.commons.math.FunctionEvaluationException;
-
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
@@ -34,7 +31,7 @@ public class TestKeplerTrajectory extends TestCase {
 	/**
 	 * Check KeplerTrajectory using a geostationairy orbit, at specific hours, rotations should match
 	 */
-	public void testGeoStationairyOrbit() throws FunctionEvaluationException {
+	public void testGeoStationairyOrbit() {
 		CelestialBody earth = EarthConstants.bodyCenter;
 		double a = Math.pow(earth.getMu() / Math.pow((2. * PI) / (3600. * 24.), 2), 1. / 3.);
 		IKeplerElements k = new KeplerElements(a, 0, 0, 0, 0, 0, earth);
@@ -74,7 +71,7 @@ public class TestKeplerTrajectory extends TestCase {
 	/**
 	 * Test a pseudo random 3d KeplerTrajectory
 	 */
-	public void testOrbit() throws FunctionEvaluationException {
+	public void testOrbit() {
 		CelestialBody earth = EarthConstants.bodyCenter;
 		// Some pseudo random start elements
 		KeplerElements k = new KeplerElements(1E8, 0.3, 1.1, 0.3, 0.9, 0.2, earth);

@@ -15,11 +15,8 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
-import org.apache.commons.math.ConvergenceException;
-import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.ComposableFunction;
-import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.analysis.integration.LegendreGaussIntegrator;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.integration.LegendreGaussIntegrator;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
@@ -62,10 +59,10 @@ public class ExpoSinTrajectory implements ITrajectory {
 	}
 
 	@Override
-	public IPositionState evaluate(IJulianDate evalEpoch) throws FunctionEvaluationException {
-		UnivariateRealFunction thetaDot = new ComposableFunction() {
+	public IPositionState evaluate(IJulianDate evalEpoch) {
+		UnivariateFunction thetaDot = new UnivariateFunction() {
 			@Override
-			public double value(double theta) throws FunctionEvaluationException {
+			public double value(double theta) {
 				double r = exposin.value(theta);
 				double s = Math.sin(exposin.getK2() * theta + exposin.getPhi());
 				double thetaDot = (center.getMu() / Math.pow(r, 3))
@@ -76,12 +73,7 @@ public class ExpoSinTrajectory implements ITrajectory {
 			}
 		};
 		double t = evalEpoch.relativeTo(epoch, Time.second);
-		double theta;
-		try {
-			theta = new LegendreGaussIntegrator(5, 200).integrate(thetaDot, 0, t);
-		} catch (ConvergenceException e) {
-			throw new FunctionEvaluationException(e, t);
-		}
+		double theta = new LegendreGaussIntegrator(5, 1e-12, 1e-12).integrate(50, thetaDot, 0, t);
 		double r = exposin.value(theta);
 		return new CartesianElements(
 				new Vector3D(r * Math.cos(theta), r * Math.sin(theta), 0), Vector3D.ZERO);

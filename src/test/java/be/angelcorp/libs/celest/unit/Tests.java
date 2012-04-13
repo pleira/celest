@@ -17,8 +17,8 @@ package be.angelcorp.libs.celest.unit;
 
 import junit.framework.Assert;
 
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.stat.descriptive.SummaryStatistics;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import be.angelcorp.libs.math.functions.domain.AngularDomain;
 
@@ -42,7 +42,7 @@ public abstract class Tests {
 	 * Tests if the elements between two vectors are all within the given tolerance
 	 */
 	public static void assertEquals(RealVector expected, RealVector actual, double tol) {
-		assertEquals(expected.getData(), actual.getData(), tol);
+		assertEquals(expected.toArray(), actual.toArray(), tol);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public abstract class Tests {
 	 * Tests if the elements between two vectors are all within the given tolerance
 	 */
 	public static void assertEquals(String message, RealVector expected, RealVector actual, double tol) {
-		assertEquals(message, expected.getData(), actual.getData(), tol);
+		assertEquals(message, expected.toArray(), actual.toArray(), tol);
 	}
 
 	/**
@@ -132,6 +132,6 @@ public abstract class Tests {
 	 * @see Tests#getStatistics(double[], double[])
 	 */
 	public static SummaryStatistics getStatistics(RealVector v1, RealVector v2) {
-		return getStatistics(v1.getData(), v2.getData());
+		return getStatistics(v1.toArray(), v2.toArray());
 	}
 }

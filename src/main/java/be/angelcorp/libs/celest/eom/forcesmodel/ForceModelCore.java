@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import java.util.List;
 
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
@@ -95,7 +95,7 @@ public class ForceModelCore implements IStateEquation<ICartesianElements, ICarte
 
 	@Override
 	public ICartesianElements createState(RealVector y) {
-		return new CartesianElements(y.getData());
+		return new CartesianElements(y.toArray());
 	}
 
 	/**

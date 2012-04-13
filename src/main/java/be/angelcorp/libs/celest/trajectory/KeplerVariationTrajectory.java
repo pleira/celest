@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import org.apache.commons.math.FunctionEvaluationException;
-
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.state.positionState.NonSignuarElements;
 import be.angelcorp.libs.celest.state.positionState.NonSingularDerivative;
@@ -47,7 +45,7 @@ public class KeplerVariationTrajectory implements ITrajectory {
 	}
 
 	@Override
-	public NonSignuarElements evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public NonSignuarElements evaluate(IJulianDate t) {
 		double dT = t.relativeTo(referenceDate, Time.second);
 
 		double a_new = referenceElements.getSemiMajorAxis()

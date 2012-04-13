@@ -15,10 +15,8 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.util.MathUtils;
-
-import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.util.Precision;
 
 /**
  * Basis for a state derivative vector that hold the state of a celestial body. This implements a default
@@ -58,7 +56,7 @@ public abstract class StateDerivativeVector implements IPositionStateDerivative 
 			return false;
 
 		for (int i = 0; i < v1.getDimension(); i++)
-			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i)))
+			if (!Precision.equals(v1.getEntry(i), v2.getEntry(i)))
 				return false;
 
 		return true;
@@ -76,7 +74,7 @@ public abstract class StateDerivativeVector implements IPositionStateDerivative 
 			return false;
 
 		for (int i = 0; i < v1.getDimension(); i++) {
-			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i), eps))
+			if (!Precision.equals(v1.getEntry(i), v2.getEntry(i), eps))
 				return false;
 		}
 

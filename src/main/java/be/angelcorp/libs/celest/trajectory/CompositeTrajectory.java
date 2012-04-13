@@ -18,8 +18,6 @@ package be.angelcorp.libs.celest.trajectory;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.apache.commons.math.FunctionEvaluationException;
-
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 
@@ -52,10 +50,10 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public IPositionState evaluate(IJulianDate t) {
 		Entry<IJulianDate, ITrajectory> entry = trajectories.floorEntry(t);
 		if (entry == null)
-			throw new FunctionEvaluationException(t.getJD(), "No trajectory found");
+			throw new ArithmeticException("No trajectory found for julian date " + t.getJD());
 
 		ITrajectory trajectory = entry.getValue();
 		return trajectory.evaluate(t);

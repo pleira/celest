@@ -25,10 +25,9 @@ import static java.lang.Math.sin;
 import static java.lang.Math.sinh;
 import static java.lang.Math.sqrt;
 
-import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction;
-import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.util.FastMath;
+import org.apache.commons.math3.analysis.DifferentiableUnivariateFunction;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.util.FastMath;
 
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 
@@ -105,20 +104,20 @@ public class KeplerHyperbola extends KeplerEquations {
 	}
 
 	@Override
-	protected DifferentiableUnivariateRealFunction getFundamentalEquation(final double e, final double M) {
-		return new DifferentiableUnivariateRealFunction() {
+	protected DifferentiableUnivariateFunction getFundamentalEquation(final double e, final double M) {
+		return new DifferentiableUnivariateFunction() {
 			@Override
-			public UnivariateRealFunction derivative() {
-				return new UnivariateRealFunction() {
+			public UnivariateFunction derivative() {
+				return new UnivariateFunction() {
 					@Override
-					public double value(double H) throws FunctionEvaluationException {
+					public double value(double H) {
 						return e * cosh(H) - 1;
 					}
 				};
 			}
 
 			@Override
-			public double value(double H) throws FunctionEvaluationException {
+			public double value(double H) {
 				return e * sinh(H) - H - M;
 			}
 		};

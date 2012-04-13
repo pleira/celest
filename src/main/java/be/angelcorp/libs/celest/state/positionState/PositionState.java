@@ -15,8 +15,8 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.util.Precision;
 
 /**
  * Abstract base for a {@link IPositionState} that hold the positional state of a celestial body.
@@ -55,7 +55,7 @@ public abstract class PositionState implements IPositionState {
 			return false;
 
 		for (int i = 0; i < v1.getDimension(); i++)
-			if (!MathUtils.equals(v1.getEntry(i), v2.getEntry(i)))
+			if (!Precision.equals(v1.getEntry(i), v2.getEntry(i)))
 				return false;
 
 		return true;
@@ -74,7 +74,7 @@ public abstract class PositionState implements IPositionState {
 
 		for (int i = 0; i < v1.getDimension(); i++) {
 			double e1 = v1.getEntry(i);
-			if (!MathUtils.equals(e1, v2.getEntry(i), (e1 == 0) ? eps : Math.abs(e1) * eps))
+			if (!Precision.equals(e1, v2.getEntry(i), (e1 == 0) ? eps : Math.abs(e1) * eps))
 				return false;
 		}
 

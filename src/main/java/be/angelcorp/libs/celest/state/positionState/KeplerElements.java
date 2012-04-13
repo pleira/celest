@@ -15,10 +15,9 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.MatrixIndexException;
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.util.Precision;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerCircular;
@@ -27,10 +26,6 @@ import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.KeplerHyperbola;
 import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.kepler.KeplerParabola;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
-import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.MathUtils2;
 
 /**
@@ -42,11 +37,11 @@ import be.angelcorp.libs.math.MathUtils2;
 public class KeplerElements extends PositionState implements IKeplerElements {
 
 	/**
-	 * Create a set of Kepler elements from another {@link PositionState}. Chooses itself what the best way
-	 * of converting is.
+	 * Create a set of Kepler elements from another {@link PositionState}. Chooses itself what the best
+	 * way of converting is.
 	 * <p>
-	 * Guarantees that the return of a {@link KeplerElements} {@link PositionState}, but not necessarily a
-	 * clone (can be the same {@link PositionState})
+	 * Guarantees that the return of a {@link KeplerElements} {@link PositionState}, but not necessarily
+	 * a clone (can be the same {@link PositionState})
 	 * </p>
 	 * 
 	 * @param state
@@ -89,9 +84,14 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 	 */
 	public static KeplerElements fromVector(RealVector vector) {
 		if (vector.getDimension() != 6)
-			throw new MatrixIndexException("Vector must have 6 indices: [a, e, i, omega, raan, trueA]");
-		double[] d = vector.getData();
-		return new KeplerElements(d[0], d[1], d[2], d[3], d[4], d[5]);
+			throw new ArithmeticException("Vector must have 6 indices: [a, e, i, omega, raan, trueA]");
+		return new KeplerElements(
+				vector.getEntry(0),
+				vector.getEntry(1),
+				vector.getEntry(2),
+				vector.getEntry(3),
+				vector.getEntry(4),
+				vector.getEntry(5));
 	}
 
 	/**
@@ -247,8 +247,8 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 		boolean equal = true;
 
 		// Do the orbit checks
-		equal &= MathUtils.equals(a, state2.getSemiMajorAxis(), a * distance_eps);
-		equal &= MathUtils.equals(e, state2.getEccentricity(), e * eccentricity_eps);
+		equal &= Precision.equals(a, state2.getSemiMajorAxis(), a * distance_eps);
+		equal &= Precision.equals(e, state2.getEccentricity(), e * eccentricity_eps);
 		equal &= MathUtils2.equalsAngle(i, state2.getInclination(), angle_eps);
 
 		if (!equal) // Return if false, else do more checks

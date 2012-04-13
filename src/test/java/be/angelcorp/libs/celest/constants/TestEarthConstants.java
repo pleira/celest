@@ -16,9 +16,6 @@
 package be.angelcorp.libs.celest.constants;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.math.FunctionEvaluationException;
-
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.NonSignuarElements;
 import be.angelcorp.libs.celest.state.positionState.SphericalElements;
@@ -31,7 +28,7 @@ import be.angelcorp.libs.util.physics.Time;
 
 public class TestEarthConstants extends TestCase {
 
-	public void testOrbit() throws FunctionEvaluationException {
+	public void testOrbit() {
 		KeplerVariationTrajectory trajectory = EarthConstants.orbit;
 
 		// Validation state based on JPL Horizons data Body: Earth (399)

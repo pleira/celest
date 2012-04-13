@@ -15,11 +15,10 @@
  */
 package be.angelcorp.libs.celest.stateIntegrator;
 
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.ode.DerivativeException;
-import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
-import org.apache.commons.math.ode.FirstOrderIntegrator;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+import org.apache.commons.math3.ode.FirstOrderIntegrator;
 
 import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.state.IState;
@@ -34,7 +33,7 @@ public class CommonsMathPropagator<Y extends IState, DY extends IStateDerivative
 	private class StateEquationsWrapper implements FirstOrderDifferentialEquations {
 
 		@Override
-		public void computeDerivatives(double t, double[] y, double[] yDot) throws DerivativeException {
+		public void computeDerivatives(double t, double[] y, double[] yDot) {
 			Y yState = equations.createState(new ArrayRealVector(y, false));
 			DY dyState = equations.calculateDerivatives(new JulianDate(t), yState);
 
@@ -42,7 +41,7 @@ public class CommonsMathPropagator<Y extends IState, DY extends IStateDerivative
 			if (dyVector instanceof ArrayRealVector) {
 				System.arraycopy(((ArrayRealVector) dyVector).getDataRef(), 0, yDot, 0, dyVector.getDimension());
 			} else {
-				System.arraycopy(dyVector.getData(), 0, yDot, 0, dyVector.getDimension());
+				System.arraycopy(dyVector.toArray(), 0, yDot, 0, dyVector.getDimension());
 			}
 		}
 

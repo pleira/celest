@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
-import org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction;
+import org.apache.commons.math3.analysis.DifferentiableUnivariateFunction;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.CelestialRotate;
@@ -577,7 +577,7 @@ public abstract class KeplerEquations {
 	 * @param M
 	 * @return
 	 */
-	protected abstract DifferentiableUnivariateRealFunction getFundamentalEquation(final double e, final double M);
+	protected abstract DifferentiableUnivariateFunction getFundamentalEquation(final double e, final double M);
 
 	/**
 	 * Compute the pericenter distance (distance from the center body to the closest point in the orbit).

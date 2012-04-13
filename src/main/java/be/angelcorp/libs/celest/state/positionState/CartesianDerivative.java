@@ -15,10 +15,9 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 
-import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -30,7 +29,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
 public class CartesianDerivative extends StateDerivativeVector implements ICartesianDerivative {
 
 	public static CartesianDerivative fromVector(RealVector v) {
-		return new CartesianDerivative(v.getData());
+		return new CartesianDerivative(v.toArray());
 	}
 
 	public Vector3D	V;

@@ -21,9 +21,8 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 
-import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction;
-import org.apache.commons.math.analysis.UnivariateRealFunction;
+import org.apache.commons.math3.analysis.DifferentiableUnivariateFunction;
+import org.apache.commons.math3.analysis.UnivariateFunction;
 
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.math.MathUtils2;
@@ -111,20 +110,20 @@ public class KeplerEllipse extends KeplerEquations {
 	}
 
 	@Override
-	protected DifferentiableUnivariateRealFunction getFundamentalEquation(final double e, final double M) {
-		return new DifferentiableUnivariateRealFunction() {
+	protected DifferentiableUnivariateFunction getFundamentalEquation(final double e, final double M) {
+		return new DifferentiableUnivariateFunction() {
 			@Override
-			public UnivariateRealFunction derivative() {
-				return new UnivariateRealFunction() {
+			public UnivariateFunction derivative() {
+				return new UnivariateFunction() {
 					@Override
-					public double value(double H) throws FunctionEvaluationException {
+					public double value(double H) {
 						return 1 - e * cos(H);
 					}
 				};
 			}
 
 			@Override
-			public double value(double E) throws FunctionEvaluationException {
+			public double value(double E) {
 				return E - e * sin(E) - M;
 			}
 		};

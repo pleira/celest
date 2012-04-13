@@ -15,11 +15,10 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.Keplerian;
-import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 
 /**
  * Holds the state variation using the variation of the classical Keplerian elements:

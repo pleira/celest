@@ -24,11 +24,12 @@ import static java.lang.Math.sin;
 import static java.lang.Math.sinh;
 import static java.lang.Math.sqrt;
 
-import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.MathException;
-import org.apache.commons.math.analysis.ComposableFunction;
-import org.apache.commons.math.analysis.solvers.BrentSolver;
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.analysis.FunctionUtils;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.function.Add;
+import org.apache.commons.math3.analysis.function.Constant;
+import org.apache.commons.math3.analysis.solvers.BrentSolver;
+import org.apache.commons.math3.util.Precision;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
@@ -47,7 +48,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  */
 public class LambertUV extends TPBVP {
 
-	private class LambertFunctionUV extends ComposableFunction {
+	private class LambertFunctionUV implements UnivariateFunction {
 		double	A, r1norm, r2norm;
 
 		private LambertFunctionUV(double A, double r1norm, double r2norm) {
@@ -58,10 +59,10 @@ public class LambertUV extends TPBVP {
 
 		public double computeY(double z) {
 			double C, S;
-			if (z > MathUtils.EPSILON) {
+			if (z > Precision.EPSILON) {
 				C = (1d - cos(sqrt(z))) / z;
 				S = (sqrt(z) - sin(sqrt(z))) / pow(z, 3d / 2d);
-			} else if (z < -MathUtils.EPSILON) {
+			} else if (z < -Precision.EPSILON) {
 				C = (1d - cosh(sqrt(-z))) / z;
 				S = (sinh(sqrt(-z)) - sqrt(-z)) / pow(-z, 3d / 2d);
 			} else {
@@ -77,13 +78,13 @@ public class LambertUV extends TPBVP {
 		}
 
 		@Override
-		public double value(double z) throws FunctionEvaluationException {
+		public double value(double z) {
 			double C, S;
 
-			if (z > MathUtils.EPSILON) {
+			if (z > Precision.EPSILON) {
 				C = (1d - cos(sqrt(z))) / z;
 				S = (sqrt(z) - sin(sqrt(z))) / pow(z, 3d / 2d);
-			} else if (z < -MathUtils.EPSILON) {
+			} else if (z < -Precision.EPSILON) {
 				C = (1d - cosh(sqrt(-z))) / z;
 				S = (sinh(sqrt(-z)) - sqrt(-z)) / pow(-z, 3d / 2d);
 			} else {
@@ -138,7 +139,7 @@ public class LambertUV extends TPBVP {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LambertTrajectory getTrajectory() throws MathException {
+	public LambertTrajectory getTrajectory() {
 		Vector3D r1 = CartesianElements.as(this.r1).getR();
 		Vector3D r2 = CartesianElements.as(this.r2).getR();
 		double r1norm = r1.getNorm();
@@ -147,8 +148,8 @@ public class LambertUV extends TPBVP {
 		double cosDnu = r1.dot(r2) / (r1norm * r2norm);
 		double A = sqrt(r1norm * r2norm * (1d + cosDnu));
 
-		if (abs(A) < MathUtils.EPSILON)
-			throw new MathException("Cannot compute Lambert solution for a problem where " +
+		if (abs(A) < Precision.EPSILON)
+			throw new ArithmeticException("Cannot compute Lambert solution for a problem where " +
 					"A = sqrt(r1norm * r2norm * (1 + cos(Dnu) )) == 0");
 
 		if (!shortWay)
@@ -157,7 +158,8 @@ public class LambertUV extends TPBVP {
 		double dT = getdT();
 		LambertFunctionUV func = new LambertFunctionUV(A, r1norm, r2norm);
 		BrentSolver solver = new BrentSolver(1e-12);
-		double z = solver.solve(100, func.add(-dT), -4d * PI, 5. * PI * PI, 0);
+		double z = solver.solve(100, FunctionUtils.combine(new Add(), new Constant(-dT), func),
+				-4d * PI, 5. * PI * PI, 0);
 
 		double y = func.computeY(z);
 		double f = 1d - y / r1norm;

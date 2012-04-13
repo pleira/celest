@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.state;
 
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 /**
  * An {@link IState} is the representation of a set of variables that are dependent on time and each

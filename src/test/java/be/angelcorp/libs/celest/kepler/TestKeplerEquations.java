@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.kepler;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.math.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.ArrayRealVector;
 
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
@@ -88,9 +88,9 @@ public class TestKeplerEquations extends TestCase {
 		double[] expected = new double[] {
 				1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560 };
 		double[] tol = new ArrayRealVector(expected).mapMultiply(1E-3).toArray();
-		Tests.assertEquals(expected, k.toVector().getData(), tol);
+		Tests.assertEquals(expected, k.toVector().toArray(), tol);
 		k = KeplerEquations.cartesian2kepler(c, EarthConstants.bodyCenter);
-		Tests.assertEquals(expected, k.toVector().getData(), tol);
+		Tests.assertEquals(expected, k.toVector().toArray(), tol);
 	}
 
 	public void testStaticCartesian2kepler2D() {

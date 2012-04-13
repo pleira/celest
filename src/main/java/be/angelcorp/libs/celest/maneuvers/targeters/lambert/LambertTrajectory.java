@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
-import org.apache.commons.math.FunctionEvaluationException;
-
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
@@ -108,7 +106,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * </p>
 	 */
 	@Override
-	public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
+	public IPositionState evaluate(IJulianDate t) {
 		return traj.evaluate(t);
 	}
 

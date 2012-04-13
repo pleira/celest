@@ -17,9 +17,8 @@ package be.angelcorp.libs.celest.trajectory;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import org.junit.Test;
 
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
@@ -86,14 +85,14 @@ public class TestCompositeTrajectory extends TestCase {
 		}
 
 		@Override
-		public IPositionState evaluate(IJulianDate t) throws FunctionEvaluationException {
+		public IPositionState evaluate(IJulianDate t) {
 			return new TestState(t.add(id, Time.day));
 		}
 
 	}
 
 	@Test
-	public void testCompositeTrajectory() throws FunctionEvaluationException {
+	public void testCompositeTrajectory() {
 		CompositeTrajectory trajectory = new CompositeTrajectory();
 
 		// Add various trajectories at various times
@@ -106,22 +105,22 @@ public class TestCompositeTrajectory extends TestCase {
 
 		// Equal begin time as t1
 		Tests.assertEquals(new double[] { 100 },
-				trajectory.evaluate(new JulianDate(0)).toVector().getData(), 1E-16);
+				trajectory.evaluate(new JulianDate(0)).toVector().toArray(), 1E-16);
 		// In between t1 and t2, t1 should be used
 		Tests.assertEquals(new double[] { 105 },
-				trajectory.evaluate(new JulianDate(5)).toVector().getData(), 1E-16);
+				trajectory.evaluate(new JulianDate(5)).toVector().toArray(), 1E-16);
 		// Same as above but s2
 		Tests.assertEquals(new double[] { 215 },
-				trajectory.evaluate(new JulianDate(15)).toVector().getData(), 1E-16);
+				trajectory.evaluate(new JulianDate(15)).toVector().toArray(), 1E-16);
 		// Same insertion time as s3
 		Tests.assertEquals(new double[] { 320 },
-				trajectory.evaluate(new JulianDate(20)).toVector().getData(), 1E-16);
+				trajectory.evaluate(new JulianDate(20)).toVector().toArray(), 1E-16);
 		// Time after the last insertion
 		Tests.assertEquals(new double[] { 325 },
-				trajectory.evaluate(new JulianDate(25)).toVector().getData(), 1E-16);
+				trajectory.evaluate(new JulianDate(25)).toVector().toArray(), 1E-16);
 	}
 
-	@Test(expected = FunctionEvaluationException.class)
+	@Test(expected = ArithmeticException.class)
 	public void testInalidDiscreteTrajectory() {
 		CompositeTrajectory trajectory = new CompositeTrajectory();
 
@@ -132,7 +131,7 @@ public class TestCompositeTrajectory extends TestCase {
 		try {
 			trajectory.evaluate(new JulianDate(-1)); // There is no state on or before -1 so exception
 			fail("The should be not state at t=-1, because the first state is at t=0");
-		} catch (FunctionEvaluationException success) {
+		} catch (ArithmeticException success) {
 		}
 	}
 

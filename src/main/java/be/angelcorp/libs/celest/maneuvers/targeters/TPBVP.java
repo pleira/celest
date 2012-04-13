@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters;
 
-import org.apache.commons.math.MathException;
-
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
@@ -39,14 +37,14 @@ public abstract class TPBVP {
 	 * <b>Unit: [jd]</b>
 	 * </p>
 	 */
-	protected IJulianDate	departureEpoch;
+	protected IJulianDate		departureEpoch;
 	/**
 	 * Epoch at which the satellite or body arrives at r2
 	 * <p>
 	 * <b>Unit: [jd]</b>
 	 * </p>
 	 */
-	protected IJulianDate	arrivalEpoch;
+	protected IJulianDate		arrivalEpoch;
 	/**
 	 * Start position
 	 * <p>
@@ -96,6 +94,6 @@ public abstract class TPBVP {
 	 * @return An optimal trajectory
 	 * @throws MathException
 	 */
-	public abstract ITrajectory getTrajectory() throws MathException;
+	public abstract ITrajectory getTrajectory();
 
 }

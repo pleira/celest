@@ -17,14 +17,13 @@ package be.angelcorp.libs.celest.kepler;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.ode.AbstractIntegrator;
-import org.apache.commons.math.ode.DerivativeException;
-import org.apache.commons.math.ode.FirstOrderIntegrator;
-import org.apache.commons.math.ode.nonstiff.ClassicalRungeKuttaIntegrator;
-import org.apache.commons.math.ode.sampling.StepHandler;
-import org.apache.commons.math.ode.sampling.StepInterpolator;
+import org.apache.commons.math3.analysis.function.Abs;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.ode.AbstractIntegrator;
+import org.apache.commons.math3.ode.FirstOrderIntegrator;
+import org.apache.commons.math3.ode.nonstiff.ClassicalRungeKuttaIntegrator;
+import org.apache.commons.math3.ode.sampling.StepHandler;
+import org.apache.commons.math3.ode.sampling.StepInterpolator;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
@@ -76,17 +75,17 @@ public class TestOrbitPropagatorImpl extends TestCase {
 		AbstractIntegrator rk4 = new ClassicalRungeKuttaIntegrator(2);
 		rk4.addStepHandler(new StepHandler() {
 			@Override
-			public void handleStep(StepInterpolator interpolator, boolean isLast) throws DerivativeException {
+			public void handleStep(StepInterpolator interpolator, boolean isLast) {
 				double t = interpolator.getCurrentTime() - JulianDate.getJ2000().getJD();
 				double[] y = interpolator.getInterpolatedState();
 				if (Math.abs(t - 2) < delta) {
 					double[] step1True = new double[] { 6640305.22, 16251.75, 0, -18.08, 8125.86, 0 };
 					Tests.assertEquals("Step one is not computed correctly", step1True, y,
-							new ArrayRealVector(step1True).mapAbs().mapMultiply(delta).getData());
+							new ArrayRealVector(step1True).map(new Abs()).mapMultiply(delta).toArray());
 				} else if (Math.abs(t - 4) < delta) {
 					double[] step2True = new double[] { 6640287.14, 32503.54, 0, -36.16, 8125.84, 0 };
 					Tests.assertEquals("Step two is not computed correctly", step2True, y,
-							new ArrayRealVector(step2True).mapAbs().mapMultiply(delta).getData());
+							new ArrayRealVector(step2True).map(new Abs()).mapMultiply(delta).toArray());
 				} else {
 					throw new GenericRuntimeException(
 							"Errr, time steps should either be 2 or 4 but t = %f"
@@ -96,12 +95,7 @@ public class TestOrbitPropagatorImpl extends TestCase {
 			}
 
 			@Override
-			public boolean requiresDenseOutput() {
-				return false;
-			}
-
-			@Override
-			public void reset() {
+			public void init(double t0, double[] y0, double t) {
 			}
 
 		});

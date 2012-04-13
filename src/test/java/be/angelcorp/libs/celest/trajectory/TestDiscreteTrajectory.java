@@ -17,7 +17,6 @@ package be.angelcorp.libs.celest.trajectory;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.math.FunctionEvaluationException;
 import org.junit.Test;
 
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
@@ -26,7 +25,7 @@ import be.angelcorp.libs.celest.time.JulianDate;
 
 public class TestDiscreteTrajectory extends TestCase {
 
-	@Test(expected = FunctionEvaluationException.class)
+	@Test(expected = ArithmeticException.class)
 	public void testInalidDiscreteTrajectory() {
 		DiscreteTrajectory trajectory = new DiscreteTrajectory();
 
@@ -37,12 +36,12 @@ public class TestDiscreteTrajectory extends TestCase {
 		try {
 			trajectory.evaluate(new JulianDate(-1)); // There is no state on or before -1 so exception
 			fail("The should be not state at t=-1, because the first state is at t=0");
-		} catch (FunctionEvaluationException success) {
+		} catch (ArithmeticException success) {
 		}
 	}
 
 	@Test
-	public void testValidDiscreteTrajectory() throws FunctionEvaluationException {
+	public void testValidDiscreteTrajectory() {
 		DiscreteTrajectory trajectory = new DiscreteTrajectory();
 
 		// Add various states at various times

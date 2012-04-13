@@ -17,10 +17,9 @@ package be.angelcorp.libs.celest.state.positionState;
 
 import static java.lang.Math.PI;
 
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.MatrixIndexException;
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.util.Precision;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
@@ -73,9 +72,14 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	 */
 	public static SphericalElements fromVector(RealVector vector) {
 		if (vector.getDimension() != 6)
-			throw new MatrixIndexException("Vector must have 6 indices: [a, e, i, omega, raan, trueA]");
-		double[] d = vector.getData();
-		return new SphericalElements(d[0], d[1], d[2], d[3], d[4], d[5]);
+			throw new ArithmeticException("Vector must have 6 indices: [a, e, i, omega, raan, trueA]");
+		return new SphericalElements(
+				vector.getEntry(0),
+				vector.getEntry(1),
+				vector.getEntry(2),
+				vector.getEntry(3),
+				vector.getEntry(4),
+				vector.getEntry(5));
 	}
 
 	/**
@@ -256,8 +260,8 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	@Override
 	public boolean equals(ISphericalElements state2) {
 		double angleTol = KeplerEquations.angleTolarance;
-		return MathUtils.equals(r, state2.getRadius(), r * 1E-10)
-				&& MathUtils.equals(v, state2.getVelocity(), v * 1E-10)
+		return Precision.equals(r, state2.getRadius(), r * 1E-10)
+				&& Precision.equals(v, state2.getVelocity(), v * 1E-10)
 				&& MathUtils2.equalsAngle(alpha, state2.getRightAscension(), angleTol)
 				&& MathUtils2.equalsAngle(delta, state2.getDeclination(), angleTol)
 				&& MathUtils2.equalsAngle(gamma, state2.getFlightPathAngle(), angleTol)
@@ -269,8 +273,8 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	 */
 	@Override
 	public boolean equals(ISphericalElements state2, double eps) {
-		return MathUtils.equals(r, state2.getRadius(), r * eps)
-				&& MathUtils.equals(v, state2.getVelocity(), v * eps)
+		return Precision.equals(r, state2.getRadius(), r * eps)
+				&& Precision.equals(v, state2.getVelocity(), v * eps)
 				&& MathUtils2.equalsAngle(alpha, state2.getRightAscension(), PI * eps)
 				&& MathUtils2.equalsAngle(delta, state2.getDeclination(), PI * eps)
 				&& MathUtils2.equalsAngle(gamma, state2.getFlightPathAngle(), PI * eps)

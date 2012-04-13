@@ -15,11 +15,11 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
-import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.MathException;
-import org.apache.commons.math.analysis.ComposableFunction;
-import org.apache.commons.math.analysis.solvers.UnivariateRealSolverFactoryImpl;
-import org.apache.commons.math.optimization.OptimizationException;
+import org.apache.commons.math3.analysis.FunctionUtils;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.function.Add;
+import org.apache.commons.math3.analysis.function.Constant;
+import org.apache.commons.math3.analysis.solvers.BrentSolver;
 
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.functions.domain.Domain;
@@ -32,7 +32,7 @@ import be.angelcorp.libs.math.functions.domain.Domain;
  * @author Simon Billemont
  * 
  */
-public class ExpoSinSolutionSet extends ComposableFunction {
+public class ExpoSinSolutionSet implements UnivariateFunction {
 
 	/**
 	 * Computes the exposin K0 parameter
@@ -156,17 +156,15 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 	 * @return The optimal gamma value
 	 * @throws OptimizationException
 	 */
-	public double getOptimalSolution() throws OptimizationException {
+	public double getOptimalSolution() {
 		double gamma = Double.NaN;
 		/* Try different solvers to find a root of the f(gamma) = tof - dT */
-		try {
-			gamma = new UnivariateRealSolverFactoryImpl().newBrentSolver().
-					solve(this.add(-dT), domain_gamma_1.lowerBound, domain_gamma_1.upperBound, 0);
-		} catch (Exception e) {
-		}
+		BrentSolver solver = new BrentSolver();
+		gamma = solver.solve(50, FunctionUtils.combine(new Add(), new Constant(-dT), this), domain_gamma_1.lowerBound,
+				domain_gamma_1.upperBound);
 		if (Double.isNaN(gamma))
 			/* We could not solve the problem to tell the user */
-			throw new OptimizationException(new MathException("Could not find root solution"));
+			throw new ArithmeticException("Could not find root solution");
 		return gamma; // return the optimam gamma value
 	}
 
@@ -188,7 +186,7 @@ public class ExpoSinSolutionSet extends ComposableFunction {
 	 * {@inheritDoc} Find the time of flight for a given value of gamma.
 	 */
 	@Override
-	public double value(double gamma) throws FunctionEvaluationException {
+	public double value(double gamma) {
 		double tan_gamma = Math.tan(gamma);
 		/* Compute the exposin parameters */
 		double k1 = getK1(log, tan_gamma, k2, theta, gamma);

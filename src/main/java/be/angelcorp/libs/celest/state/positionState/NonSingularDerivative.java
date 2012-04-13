@@ -15,13 +15,10 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.MatrixIndexException;
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.state.positionState.IKeplerDerivative;
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 
 /**
  * Documentation: {@link IKeplerDerivative}
@@ -36,9 +33,14 @@ public class NonSingularDerivative extends StateDerivativeVector {
 	 */
 	public static NonSingularDerivative fromVector(RealVector vector) {
 		if (vector.getDimension() != 6)
-			throw new MatrixIndexException("Vector must have 6 indices: [da, de, di, domega_true, draan, dlambda_M]");
-		double[] d = vector.getData();
-		return new NonSingularDerivative(d[0], d[1], d[2], d[3], d[4], d[5]);
+			throw new ArithmeticException("Vector must have 6 indices: [da, de, di, domega_true, draan, dlambda_M]");
+		return new NonSingularDerivative(
+				vector.getEntry(0),
+				vector.getEntry(1),
+				vector.getEntry(2),
+				vector.getEntry(3),
+				vector.getEntry(4),
+				vector.getEntry(5));
 	}
 
 	/**

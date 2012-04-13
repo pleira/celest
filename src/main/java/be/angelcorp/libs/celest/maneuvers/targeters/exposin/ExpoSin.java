@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
-import org.apache.commons.math.MathException;
-
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
@@ -131,7 +129,7 @@ public class ExpoSin extends TPBVP {
 	}
 
 	@Override
-	public ExpoSinTrajectory getTrajectory() throws MathException {
+	public ExpoSinTrajectory getTrajectory() {
 		ExpoSinSolutionSet solutions = getSolutionSet();
 		double gammaOptimal = solutions.getOptimalSolution();
 		logger.dbg("Gamma optimal: %f", gammaOptimal);

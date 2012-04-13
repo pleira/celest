@@ -19,11 +19,9 @@ import static java.lang.Math.PI;
 import static java.lang.Math.atan2;
 import static java.lang.Math.pow;
 
-import org.apache.commons.math.MathRuntimeException;
-import org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction;
-import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.analysis.solvers.UnivariateRealSolver;
-import org.apache.commons.math.analysis.solvers.UnivariateRealSolverFactory;
+import org.apache.commons.math3.analysis.DifferentiableUnivariateFunction;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.solvers.NewtonSolver;
 
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.math.MathUtils2;
@@ -41,11 +39,11 @@ public class KeplerParabola extends KeplerEquations {
 
 	@Override
 	public double anomalyFromMeanAnomaly(final double M) {
-		UnivariateRealFunction f = new DifferentiableUnivariateRealFunction() {
+		DifferentiableUnivariateFunction f = new DifferentiableUnivariateFunction() {
 
 			@Override
-			public UnivariateRealFunction derivative() {
-				return new UnivariateRealFunction() {
+			public UnivariateFunction derivative() {
+				return new UnivariateFunction() {
 					@Override
 					public double value(double B) {
 						return 1 + 1 * B * B;
@@ -59,13 +57,9 @@ public class KeplerParabola extends KeplerEquations {
 			}
 		};
 
-		UnivariateRealSolver solver = UnivariateRealSolverFactory.newInstance().newNewtonSolver();
-		try {
-			final double B = solver.solve(f, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
-			return B;
-		} catch (Exception e) {
-			throw new MathRuntimeException(e);
-		}
+		NewtonSolver solver = new NewtonSolver();
+		final double B = solver.solve(50, f, M);
+		return B;
 	}
 
 	@Override
@@ -97,7 +91,7 @@ public class KeplerParabola extends KeplerEquations {
 	}
 
 	@Override
-	protected DifferentiableUnivariateRealFunction getFundamentalEquation(double e, double M) {
+	protected DifferentiableUnivariateFunction getFundamentalEquation(double e, double M) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}

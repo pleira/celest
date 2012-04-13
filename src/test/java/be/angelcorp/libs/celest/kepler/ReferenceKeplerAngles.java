@@ -22,8 +22,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.util.Precision;
 
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.math.functions.domain.AngularDomain;
@@ -286,7 +286,7 @@ abstract public class ReferenceKeplerAngles {
 			AngularDomain dom = new AngularDomain(true_value, 1E-10, 1E-10);
 			return dom.inBounds(computed_value);
 		} else {
-			return MathUtils.equals(true_value, computed_value, 1E-8);
+			return Precision.equals(true_value, computed_value, 1E-8);
 		}
 	}
 

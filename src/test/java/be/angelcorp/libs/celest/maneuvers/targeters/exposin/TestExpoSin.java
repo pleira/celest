@@ -17,7 +17,8 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.math.linear.ArrayRealVector;
+import org.apache.commons.math3.analysis.function.Abs;
+import org.apache.commons.math3.linear.ArrayRealVector;
 
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.time.JulianDate;
@@ -70,7 +71,7 @@ public class TestExpoSin extends TestCase {
 			Tests.assertEquals(
 					actualParam[n],
 					new double[] { f.getK0(), f.getK1(), f.getK2(), f.getPhi() },
-					new ArrayRealVector(actualParam[n]).mapAbs().mapMultiply(1E-4).getData());
+					new ArrayRealVector(actualParam[n]).map(new Abs()).mapMultiply(1E-4).toArray());
 		}
 	}
 }

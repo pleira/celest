@@ -17,7 +17,6 @@ package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.math.MathException;
 import org.junit.Ignore;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
@@ -33,7 +32,7 @@ import be.angelcorp.libs.util.physics.Time;
 @Ignore
 public class TestLambertUV extends TestCase {
 
-	public void testRossettaLeg1() throws MathException {
+	public void testRossettaLeg1() {
 		// Rosetta Earth (launch) - Earth (swingby1)
 		// data from NASA horizons, results generated using GTOP lambert targetter
 

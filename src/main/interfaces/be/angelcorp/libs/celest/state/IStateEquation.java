@@ -15,8 +15,8 @@
  */
 package be.angelcorp.libs.celest.state;
 
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.ode.SecondOrderDifferentialEquations;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.ode.SecondOrderDifferentialEquations;
 
 import be.angelcorp.libs.celest.time.IJulianDate;
 

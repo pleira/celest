@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.kepler;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.math.linear.RealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
