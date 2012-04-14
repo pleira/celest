@@ -20,6 +20,7 @@ import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.lyndir.lhunath.lib.system.logging.Logger;
@@ -125,17 +126,20 @@ public class ExpoSin extends TPBVP {
 		double psi = Math.acos(r1vec.dot(r2vec) / (r1 * r2));
 		double theta = psi + 2 * Math.PI * N;
 
-		return new ExpoSinSolutionSet(r1, r2, getdT(), assumeK2, theta, center.getMu());
+		return new ExpoSinSolutionSet(r1, r2, assumeK2, theta, center.getMu());
 	}
 
 	@Override
 	public ExpoSinTrajectory getTrajectory() {
+		// Create a set of exposin solutions leading from r1 to r2
 		ExpoSinSolutionSet solutions = getSolutionSet();
-		double gammaOptimal = solutions.getOptimalSolution();
+		// Find the curve for which the tof is equal the the required tof
+		double gammaOptimal = solutions.getOptimalSolution(getdT());
 		logger.dbg("Gamma optimal: %f", gammaOptimal);
 
-		return new ExpoSinTrajectory(solutions.getExpoSin(gammaOptimal), solutions.getThetaMax(),
-				gammaOptimal, center, departureEpoch);
+		// Create a trajectory from the found solution
+		ExponentialSinusoid solution = solutions.getExpoSin(gammaOptimal);
+		return new ExpoSinTrajectory(solution, gammaOptimal, center, departureEpoch);
 	}
 
 	/**

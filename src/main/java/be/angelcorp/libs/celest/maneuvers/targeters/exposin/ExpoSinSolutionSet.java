@@ -15,12 +15,23 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
-import org.apache.commons.math3.analysis.FunctionUtils;
-import org.apache.commons.math3.analysis.UnivariateFunction;
-import org.apache.commons.math3.analysis.function.Add;
-import org.apache.commons.math3.analysis.function.Constant;
-import org.apache.commons.math3.analysis.solvers.BrentSolver;
+import static org.apache.commons.math3.util.FastMath.acos;
+import static org.apache.commons.math3.util.FastMath.atan;
+import static org.apache.commons.math3.util.FastMath.cos;
+import static org.apache.commons.math3.util.FastMath.exp;
+import static org.apache.commons.math3.util.FastMath.pow;
+import static org.apache.commons.math3.util.FastMath.sin;
+import static org.apache.commons.math3.util.FastMath.sqrt;
+import static org.apache.commons.math3.util.FastMath.tan;
 
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.integration.RombergIntegrator;
+import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
+import org.apache.commons.math3.analysis.solvers.SecantSolver;
+import org.apache.commons.math3.analysis.solvers.UnivariateSolver;
+import org.apache.commons.math3.util.FastMath;
+
+import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.functions.domain.Domain;
 
@@ -35,55 +46,54 @@ import be.angelcorp.libs.math.functions.domain.Domain;
 public class ExpoSinSolutionSet implements UnivariateFunction {
 
 	/**
-	 * Computes the exposin K0 parameter
+	 * Computes the exposin k0 parameter
+	 * 
+	 * @see ExponentialSinusoid#k0
 	 */
 	private static double getK0(double r1, double k1, double phi) {
-		double k0 = r1 * (Math.exp(-k1 * Math.sin(phi)));
+		double k0 = r1 / exp(k1 * sin(phi));
 		return k0;
 	}
 
 	/**
-	 * Computes the exposin K1 parameter
+	 * Computes the exposin k1 parameter
+	 * 
+	 * @see ExponentialSinusoid#k1
 	 */
-	private static double getK1(double log, double tan_gamma_1, double k2, double theta, double gamma) {
-		double signK1 = (log + (tan_gamma_1 / k2) * Math.sin(k2 * theta))
-				/ (1 - Math.cos(k2 * theta));
-		double k1 = Math.signum(signK1)
-				* Math.sqrt(Math.pow(signK1, 2) + (Math.pow(Math.tan(gamma), 2)) / (k2 * k2));
+	private static double getK1(double log, double tan_gamma_1, double k2, double theta) {
+		double k1_base = log + (tan_gamma_1 / k2) * sin(k2 * theta);
+		double k1 = Math.signum(k1_base)
+				* Math.sqrt(pow(k1_base / (1 - cos(k2 * theta)), 2) + (pow(tan_gamma_1, 2)) / (k2 * k2));
 		return k1;
 	}
 
 	/**
-	 * Computes the exposin phi parameter
+	 * Computes the exposin &phi; parameter
+	 * 
+	 * @see ExponentialSinusoid#phi
 	 */
-	private static double getPhi(double tan_gamma, double k1, double k2) {
-		double phi = Math.acos(tan_gamma / (k1 * k2));
+	private static double getPhi(double tan_gamma_1, double k1, double k2) {
+		double phi = acos(tan_gamma_1 / (k1 * k2));
 		return phi;
 
 	}
 
 	/**
-	 * Domain (of gamma) over which this function has valid solutions.
+	 * Domain (of &gamma;_1, flight path angle at departure) over which this function has valid
+	 * solutions.
 	 * <p>
-	 * <b>Unit: [-]</b>
+	 * <b>Unit: [rad]</b>
 	 * </p>
 	 */
 	private Domain	domain_gamma_1;
 
 	/**
-	 * Start radius of the spacecraft
+	 * Start radius of the transfer orbit (r1 of the {@link TPBVP})
 	 * <p>
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
 	private double	r1;
-	/**
-	 * Wanted travel time between r1 and r2
-	 * <p>
-	 * <b>Unit: [s]</b>
-	 * </p>
-	 */
-	private double	dT;
 	/**
 	 * Cached value of log(r1 / r2)
 	 * <p>
@@ -113,21 +123,22 @@ public class ExpoSinSolutionSet implements UnivariateFunction {
 	 */
 	private double	mu_center;
 
-	public ExpoSinSolutionSet(double r1, double r2, double dT, double k2, double theta, double mu_center) {
-		this.r1 = r1; // Store stuff
-		this.dT = dT;
+	public ExpoSinSolutionSet(double r1, double r2, double k2, double theta, double mu_center) {
+		// Store the exposin base variables
+		this.r1 = r1;
 		this.k2 = k2;
 		this.theta = theta;
 		this.mu_center = mu_center;
-		log = Math.log(r1 / r2); // cache value a s its commenly needed
+
+		// Cache values commonly used
+		log = FastMath.log(r1 / r2);
 
 		/* Compute the domain of gamma [gamma_min, gamma_max] */
-		double delta = (2 * (1 - Math.cos(k2 * theta))) / Math.pow(k2, 4) - (log * log);
-		double gamma_1_min = Math.atan((k2 / 2)
-				* (-log * (1 / Math.tan(k2 * theta / 2)) - Math.sqrt(delta)));
-		double gamma_1_max = Math.atan((k2 / 2)
-				* (-log * (1 / Math.tan(k2 * theta / 2)) + Math.sqrt(delta)));
-
+		double sqrt_delta = sqrt((2 * (1 - cos(k2 * theta))) / pow(k2, 4) - (log * log));
+		double gamma_1_min = atan((k2 / 2)
+				* (-log * (1 / tan(k2 * theta / 2)) - sqrt_delta));
+		double gamma_1_max = atan((k2 / 2)
+				* (-log * (1 / tan(k2 * theta / 2)) + sqrt_delta));
 		domain_gamma_1 = new Domain(gamma_1_min, gamma_1_max);
 	}
 
@@ -142,60 +153,77 @@ public class ExpoSinSolutionSet implements UnivariateFunction {
 	 * Get the exponential sinusiod trajectory that is linked to a given gamma value.
 	 */
 	public ExponentialSinusoid getExpoSin(double gamma_1) {
-		double tan_gamma = Math.tan(gamma_1);
 		/* Compute the exposin parameters */
-		double k1 = getK1(log, tan_gamma, k2, theta, gamma_1);
-		double phi = getPhi(tan_gamma, k1, k2);
+		double tan_gamma_1 = tan(gamma_1);
+		double k1 = getK1(log, tan_gamma_1, k2, theta);
+		double phi = getPhi(tan_gamma_1, k1, k2);
 		double k0 = getK0(r1, k1, phi);
+		// Return the given exposin
 		return new ExponentialSinusoid(k0, k1, k2, 0, phi);
 	}
 
 	/**
-	 * Compute the function of gamma for which the travel time is the set dT.
+	 * Compute the value of &gamma;1 (flight path angle at departure, r1), when the transfer time between
+	 * r1 and r2 is equal the the required time passed to this function.
+	 * 
+	 * @param dT
+	 *            The required travel time from r1-r2 [s]
 	 * 
 	 * @return The optimal gamma value
 	 * @throws OptimizationException
 	 */
-	public double getOptimalSolution() {
-		double gamma = Double.NaN;
-		/* Try different solvers to find a root of the f(gamma) = tof - dT */
-		BrentSolver solver = new BrentSolver();
-		gamma = solver.solve(50, FunctionUtils.combine(new Add(), new Constant(-dT), this), domain_gamma_1.lowerBound,
-				domain_gamma_1.upperBound);
-		if (Double.isNaN(gamma))
-			/* We could not solve the problem to tell the user */
-			throw new ArithmeticException("Could not find root solution");
-		return gamma; // return the optimam gamma value
+	public double getOptimalSolution(final double dT) {
+		// Root finding technique
+		UnivariateSolver solver = new SecantSolver();
+
+		// Find the root of where the tof equals dT
+		UnivariateFunction rootFunction = new UnivariateFunction() {
+			@Override
+			public double value(double gamma_1) {
+				return ExpoSinSolutionSet.this.value(gamma_1) - dT;
+			}
+		};
+		double gamma = solver.solve(50, rootFunction, domain_gamma_1.lowerBound, domain_gamma_1.upperBound);
+
+		// return the optimal gamma value
+		return gamma;
 	}
 
+	/**
+	 * Maximum rotation angle, angle between r1 and r2, including any complete loops around the central
+	 * body.
+	 * <p>
+	 * <b><Unit: [rad]/b>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	public double getThetaMax() {
 		return theta;
 	}
 
 	/**
-	 * Set the wanted travel time between r1 and r2
-	 * 
-	 * @param dT
-	 *            Wanted travel time [s]
-	 */
-	public void setdT(double dT) {
-		this.dT = dT;
-	}
-
-	/**
-	 * {@inheritDoc} Find the time of flight for a given value of gamma.
+	 * Find the time of flight for a given value of &gamma;_1 (flight path angle at departure point).
 	 */
 	@Override
-	public double value(double gamma) {
-		double tan_gamma = Math.tan(gamma);
-		/* Compute the exposin parameters */
-		double k1 = getK1(log, tan_gamma, k2, theta, gamma);
-		double phi = getPhi(tan_gamma, k1, k2);
-		double k0 = getK0(r1, k1, phi);
+	public double value(double gamma_1) {
+		/* Create the exposin for the given departure flight path angle */
+		ExponentialSinusoid exposin = getExpoSin(gamma_1);
+
 		/* Formulate the tof equation */
-		ExpoSinTOF tof = new ExpoSinTOF(k0, k1, k2, phi, theta, mu_center);
-		double y = tof.value(gamma); // Return the actual tof value
-		return y;
+		final ExpoSinAngularRate theta_dot = new ExpoSinAngularRate(exposin, mu_center);
+		UnivariateFunction tof = new UnivariateFunction() {
+			@Override
+			public double value(double theta) {
+				return 1. / theta_dot.value(theta);
+			}
+		};
+
+		// Integrate the tof equation from 0 to theta max to find the total time of flight
+		UnivariateIntegrator integrator = new RombergIntegrator(1e-6, 1e-6, 2, 16);
+		double timeOfFlight = integrator.integrate(2048, tof, 0, theta);
+
+		return timeOfFlight;
 	}
 
 }

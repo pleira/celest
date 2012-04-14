@@ -15,80 +15,135 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
+import static org.apache.commons.math3.util.FastMath.abs;
+import static org.apache.commons.math3.util.FastMath.cos;
+
+import org.apache.commons.math3.analysis.FunctionUtils;
 import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.function.Inverse;
 import org.apache.commons.math3.analysis.integration.LegendreGaussIntegrator;
+import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
+import org.apache.commons.math3.analysis.solvers.SecantSolver;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
 
+/**
+ * Creates an {@link ITrajectory} from a known {@link ExpoSin} solution to the {@link TPBVP}. This allows
+ * you to perform all common {@link ITrajectory} operations of that {@link ExpoSin} solution.
+ * 
+ * @author Simon Billemont
+ */
 public class ExpoSinTrajectory implements ITrajectory {
 
 	private ExponentialSinusoid	exposin;
-	private double				thetaMax;
-	private double				gamma;
 	private CelestialBody		center;
 	private IJulianDate			epoch;
+	private double				gamma;
 
 	/**
 	 * Create a solution trajectory to an exposin shape based solution.
 	 * 
 	 * @param exposin
 	 *            Exposin describing the orbit
-	 * @param thetaMax
-	 *            Rotation angle at which the end is reached [rad]
-	 * @param gamma
-	 *            Start flight path angle (&gamma; at r1) [rad]
 	 * @param center
 	 *            Center body of the trajectory e.g. Sun
 	 * @param epoch
 	 *            Epoch at which the transfer starts
 	 */
-	public ExpoSinTrajectory(ExponentialSinusoid exposin, double thetaMax, double gamma,
-			CelestialBody center, IJulianDate epoch) {
+	public ExpoSinTrajectory(ExponentialSinusoid exposin, CelestialBody center, IJulianDate epoch) {
+		this(exposin, Double.NaN, center, epoch);
+	}
+
+	/**
+	 * Create a solution trajectory to an exposin shape based solution.
+	 * 
+	 * @param exposin
+	 *            Exposin describing the orbit
+	 * @param gamma
+	 *            Value of the flight path angle at departure for this specific solution
+	 * @param center
+	 *            Center body of the trajectory e.g. Sun
+	 * @param epoch
+	 *            Epoch at which the transfer starts
+	 */
+	public ExpoSinTrajectory(ExponentialSinusoid exposin, double gamma, CelestialBody center, IJulianDate epoch) {
 		this.exposin = exposin;
-		this.thetaMax = thetaMax;
 		this.gamma = gamma;
 		this.center = center;
 		this.epoch = epoch;
 	}
 
+	/**
+	 * Returns the planar postion in the trajectory at the given time. The position at departure is
+	 * &lt;r1, 0, 0&gt;, and moves around in the XY plane over time.
+	 */
 	@Override
-	public IPositionState evaluate(IJulianDate evalEpoch) {
-		UnivariateFunction thetaDot = new UnivariateFunction() {
-			@Override
-			public double value(double theta) {
-				double r = exposin.value(theta);
-				double s = Math.sin(exposin.getK2() * theta + exposin.getPhi());
-				double thetaDot = (center.getMu() / Math.pow(r, 3))
-						* (1 / (Math.pow(Math.tan(gamma), 2) + exposin.getK1() * exposin.getK2()
-								* exposin.getK2() * s + 1));
-				thetaDot = Math.sqrt(thetaDot);
-				return thetaDot;
-			}
-		};
-		double t = evalEpoch.relativeTo(epoch, Time.second);
-		double theta = new LegendreGaussIntegrator(5, 1e-12, 1e-12).integrate(50, thetaDot, 0, t);
+	public ICartesianElements evaluate(IJulianDate evalEpoch) {
+		// Travel time from the start position [s]
+		final double t = evalEpoch.relativeTo(epoch, Time.second);
+
+		// Equation of d(theta)/dt
+		final ExpoSinAngularRate thetaDot = new ExpoSinAngularRate(exposin, center.getMu());
+
+		// Find the angle (theta) of the satellite at the time t
+		double theta = 0;
+		if (abs(t) > 1E-16) {
+			// Equation of dt/d(theta) - t
+			UnivariateFunction rootFunction = new UnivariateFunction() {
+				UnivariateIntegrator	integrator	= new LegendreGaussIntegrator(3, 1e-8, 1e-8);
+
+				@Override
+				public double value(double theta) {
+					double tof = integrator.integrate(1024, FunctionUtils.compose(new Inverse(), thetaDot), 0, theta);
+					return tof - t;
+				}
+			};
+			double est = thetaDot.value(0) * t;
+
+			// Find the point where the tof(theta) == t
+			theta = new SecantSolver().solve(64, rootFunction, 0.2 * est, 1.8 * est, est);
+		}
+
+		// Find the radius for the current theta
+		double c = cos(exposin.getK2() * theta + exposin.getPhi());
+		double theta_dot = thetaDot.value(theta);
 		double r = exposin.value(theta);
-		return new CartesianElements(
-				new Vector3D(r * Math.cos(theta), r * Math.sin(theta), 0), Vector3D.ZERO);
+		double r_dot = theta_dot * (exposin.getQ0() + exposin.getK1() * exposin.getK2() * c) * r;
+
+		Vector3D R = new Vector3D(r * Math.cos(theta), r * Math.sin(theta), 0);
+		Vector3D V = Vector3D.K.cross(R).normalize().multiply(r * theta_dot);
+
+		// Convert to the position in cartesian elements (in plane coordinates)
+		return new CartesianElements(R, V);
 	}
 
+	/**
+	 * Retrieve the {@link ExponentialSinusoid} that describes the trajectory
+	 * 
+	 * @return The internal {@link ExponentialSinusoid} used to compute trajectory positions
+	 */
 	public ExponentialSinusoid getExposin() {
 		return exposin;
 	}
 
+	/**
+	 * Get the value of the flight path angle &gamma; at departure (r1)
+	 * <p>
+	 * Note: this value is optional and might be {@link Double#NaN} if it was not set.
+	 * </p>
+	 * 
+	 * @return Flight path angle at r1 [rad]
+	 */
 	public double getGamma() {
 		return gamma;
-	}
-
-	public double getThetaMax() {
-		return thetaMax;
 	}
 
 }
