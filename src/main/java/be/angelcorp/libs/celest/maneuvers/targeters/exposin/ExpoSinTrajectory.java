@@ -33,6 +33,8 @@ import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.rotation.IRotation;
+import be.angelcorp.libs.math.rotation.RotationMatrix;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
@@ -118,8 +120,19 @@ public class ExpoSinTrajectory implements ITrajectory {
 		double r = exposin.value(theta);
 		double r_dot = theta_dot * (exposin.getQ0() + exposin.getK1() * exposin.getK2() * c) * r;
 
-		Vector3D R = new Vector3D(r * Math.cos(theta), r * Math.sin(theta), 0);
-		Vector3D V = Vector3D.K.cross(R).normalize().multiply(r * theta_dot);
+		// Compose the radial vector
+		Vector3D R_norm = new Vector3D(Math.cos(theta), Math.sin(theta), 0);
+		Vector3D R = R_norm.multiply(r);
+
+		// Compute the scale of the velocity components
+		double V_r = r_dot;
+		double V_theta = r * theta_dot;
+		Vector3D V_theta_norm = Vector3D.K.cross(R_norm);
+
+		// TODO: make inherit this rotation from the ExpoSin input states
+		IRotation rotation = RotationMatrix.NO_ROTATION;
+		// Compose the velocity vector from radial and tangential velocities
+		Vector3D V = rotation.applyTo(new Vector3D(V_r, R.normalize(), V_theta, V_theta_norm));
 
 		// Convert to the position in cartesian elements (in plane coordinates)
 		return new CartesianElements(R, V);

@@ -221,7 +221,7 @@ public class ExpoSinSolutionSet implements UnivariateFunction {
 
 		// Integrate the tof equation from 0 to theta max to find the total time of flight
 		UnivariateIntegrator integrator = new RombergIntegrator(1e-6, 1e-6, 2, 16);
-		double timeOfFlight = integrator.integrate(2048, tof, 0, theta);
+		double timeOfFlight = integrator.integrate(4096, tof, 0, theta);
 
 		return timeOfFlight;
 	}
