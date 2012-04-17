@@ -19,7 +19,7 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 public class TestCartesianElements extends TestStateVector<CartesianElements> {
@@ -37,11 +37,11 @@ public class TestCartesianElements extends TestStateVector<CartesianElements> {
 	public void testConstructor() {
 		/* Check default constructor */
 		CartesianElements c = new CartesianElements();
-		Tests.assertEquals(c.toVector(), new ArrayRealVector(6, 0), 1E-16);
+		CelestTest.assertEquals(c.toVector(), new ArrayRealVector(6, 0), 1E-16);
 
 		/* Check array constructor */
 		c = new CartesianElements(new double[] { 0, 1, 2, 3, 4, 5 });
-		Tests.assertEquals(c.toVector(), new ArrayRealVector(new double[] { 0, 1, 2, 3, 4, 5 }), 1E-16);
+		CelestTest.assertEquals(c.toVector(), new ArrayRealVector(new double[] { 0, 1, 2, 3, 4, 5 }), 1E-16);
 
 		/* Should cash if incorrect number of arguments is given */
 		try {
@@ -57,21 +57,21 @@ public class TestCartesianElements extends TestStateVector<CartesianElements> {
 
 		/* Check vector constructor */
 		c = new CartesianElements(new Vector3D(2, 3, 4), new Vector3D(9, 8, 7));
-		Tests.assertEquals(c.toVector(), new ArrayRealVector(new double[] { 2, 3, 4, 9, 8, 7 }), 1E-16);
+		CelestTest.assertEquals(c.toVector(), new ArrayRealVector(new double[] { 2, 3, 4, 9, 8, 7 }), 1E-16);
 
 	}
 
 	public void testGettersSetters() {
 		// Check getters
 		CartesianElements c = new CartesianElements(new Vector3D(2, 3, 4), new Vector3D(9, 8, 7));
-		Tests.assertEquals(c.getR(), new Vector3D(2, 3, 4), 1e-18);
-		Tests.assertEquals(c.getV(), new Vector3D(9, 8, 7), 1e-18);
+		CelestTest.assertEquals(c.getR(), new Vector3D(2, 3, 4), 1e-18);
+		CelestTest.assertEquals(c.getV(), new Vector3D(9, 8, 7), 1e-18);
 
 		// Check setters
 		c.setR(new Vector3D(1, 2, 3));
 		c.setV(new Vector3D(4, 5, 6));
-		Tests.assertEquals(c.getR(), new Vector3D(1, 2, 3), 1e-18);
-		Tests.assertEquals(c.getV(), new Vector3D(4, 5, 6), 1e-18);
+		CelestTest.assertEquals(c.getR(), new Vector3D(1, 2, 3), 1e-18);
+		CelestTest.assertEquals(c.getV(), new Vector3D(4, 5, 6), 1e-18);
 
 	}
 

@@ -16,17 +16,16 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import static org.apache.commons.math3.util.FastMath.PI;
-import junit.framework.TestCase;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3DMath;
 import be.angelcorp.libs.util.physics.Time;
 
-public class TestExpoSinSolution extends TestCase {
+public class TestExpoSinSolution extends CelestTest {
 
 	/**
 	 * <p>
@@ -67,7 +66,7 @@ public class TestExpoSinSolution extends TestCase {
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		// Equal R
-		Tests.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
+		CelestTest.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
 		assertEquals(r1, c1.getR().getNorm(), R_tol);
 		assertEquals(r2, c2.getR().getNorm(), R_tol);
 		// Equal V
@@ -114,7 +113,7 @@ public class TestExpoSinSolution extends TestCase {
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		// Equal R
-		Tests.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
+		CelestTest.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
 		assertEquals(r1, c1.getR().getNorm(), R_tol);
 		assertEquals(r2, c2.getR().getNorm(), R_tol);
 		// Equal V
@@ -161,7 +160,7 @@ public class TestExpoSinSolution extends TestCase {
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		// Equal R
-		Tests.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
+		CelestTest.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
 		assertEquals(r1, c1.getR().getNorm(), R_tol);
 		assertEquals(r2, c2.getR().getNorm(), R_tol);
 		// Equal V

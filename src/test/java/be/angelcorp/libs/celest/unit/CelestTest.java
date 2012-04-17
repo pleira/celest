@@ -16,13 +16,14 @@
 package be.angelcorp.libs.celest.unit;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import be.angelcorp.libs.math.functions.domain.AngularDomain;
 
-public abstract class Tests {
+public abstract class CelestTest extends TestCase {
 
 	/**
 	 * Tests if the elements between two vectors are all within the given tolerance
@@ -129,7 +130,7 @@ public abstract class Tests {
 	}
 
 	/**
-	 * @see Tests#getStatistics(double[], double[])
+	 * @see CelestTest#getStatistics(double[], double[])
 	 */
 	public static SummaryStatistics getStatistics(RealVector v1, RealVector v2) {
 		return getStatistics(v1.toArray(), v2.toArray());

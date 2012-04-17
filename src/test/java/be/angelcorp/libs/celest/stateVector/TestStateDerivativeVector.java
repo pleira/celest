@@ -18,13 +18,13 @@ package be.angelcorp.libs.celest.stateVector;
 import java.util.Collection;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
+import be.angelcorp.libs.celest.unit.CelestTest;
 
-public abstract class TestStateDerivativeVector<T extends IPositionStateDerivative> extends TestCase {
+public abstract class TestStateDerivativeVector<T extends IPositionStateDerivative> extends CelestTest {
 
 	public abstract Collection<T> getTestStateDerivativeVectors();
 

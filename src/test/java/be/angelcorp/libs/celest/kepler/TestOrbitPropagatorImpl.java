@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.ode.AbstractIntegrator;
@@ -35,11 +33,11 @@ import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.stateIntegrator.CommonsMathPropagator;
 import be.angelcorp.libs.celest.time.JulianDate;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException;
 import be.angelcorp.libs.util.physics.Time;
 
-public class TestOrbitPropagatorImpl extends TestCase {
+public class TestOrbitPropagatorImpl extends CelestTest {
 
 	public static final double	delta	= 1E-3; // 0.1%
 
@@ -80,11 +78,11 @@ public class TestOrbitPropagatorImpl extends TestCase {
 				double[] y = interpolator.getInterpolatedState();
 				if (Math.abs(t - 2) < delta) {
 					double[] step1True = new double[] { 6640305.22, 16251.75, 0, -18.08, 8125.86, 0 };
-					Tests.assertEquals("Step one is not computed correctly", step1True, y,
+					CelestTest.assertEquals("Step one is not computed correctly", step1True, y,
 							new ArrayRealVector(step1True).map(new Abs()).mapMultiply(delta).toArray());
 				} else if (Math.abs(t - 4) < delta) {
 					double[] step2True = new double[] { 6640287.14, 32503.54, 0, -36.16, 8125.84, 0 };
-					Tests.assertEquals("Step two is not computed correctly", step2True, y,
+					CelestTest.assertEquals("Step two is not computed correctly", step2True, y,
 							new ArrayRealVector(step2True).map(new Abs()).mapMultiply(delta).toArray());
 				} else {
 					throw new GenericRuntimeException(

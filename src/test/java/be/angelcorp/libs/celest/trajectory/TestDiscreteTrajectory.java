@@ -15,15 +15,14 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.celest.time.JulianDate;
+import be.angelcorp.libs.celest.unit.CelestTest;
 
-public class TestDiscreteTrajectory extends TestCase {
+public class TestDiscreteTrajectory extends CelestTest {
 
 	@Test(expected = ArithmeticException.class)
 	public void testInalidDiscreteTrajectory() {

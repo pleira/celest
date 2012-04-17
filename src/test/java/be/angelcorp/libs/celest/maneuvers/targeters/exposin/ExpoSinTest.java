@@ -16,12 +16,11 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import static org.apache.commons.math3.util.FastMath.PI;
-import junit.framework.TestCase;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
@@ -39,7 +38,7 @@ import be.angelcorp.libs.util.physics.Time;
  * @author Simon Billemont
  * 
  */
-public class ExpoSinTest extends TestCase {
+public class ExpoSinTest extends CelestTest {
 
 	public void test1() throws Exception {
 		double r1 = 151366683.169E3;
@@ -78,16 +77,16 @@ public class ExpoSinTest extends TestCase {
 		assertEquals(ml_k0, shape.getK0(), ml_k0 * 1E-8);
 		assertEquals(ml_k1, shape.getK1(), 1E-8);
 		assertEquals(ml_k2, shape.getK2(), 1E-8);
-		Tests.assertEqualsAngle(ml_phi, shape.getPhi(), 1E-8);
+		CelestTest.assertEqualsAngle(ml_phi, shape.getPhi(), 1E-8);
 		assertEquals(0, shape.getQ0(), 1E-16);
-		Tests.assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-8);
+		CelestTest.assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-8);
 
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		assertEquals(r1, c1.getR().getNorm(), 1e-16);
 		assertEquals(r2, c2.getR().getNorm(), 1);
-		Tests.assertEquals(ml_V2, c2.getV(), 1E-1);
-		Tests.assertEquals(ml_V1, c1.getV(), 1E-1);
+		CelestTest.assertEquals(ml_V2, c2.getV(), 1E-1);
+		CelestTest.assertEquals(ml_V1, c1.getV(), 1E-1);
 
 	}
 }

@@ -16,10 +16,9 @@
 package be.angelcorp.libs.celest.time;
 
 import static java.lang.Math.PI;
-import junit.framework.TestCase;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 
-public class TestHourMinSec extends TestCase {
+public class TestHourMinSec extends CelestTest {
 
 	public void testHourMinSec() {
 		double precision_1s_hms_in_rad = (1 / 3600.0) * (15. * PI / 180.); // ~7E-5
@@ -28,7 +27,7 @@ public class TestHourMinSec extends TestCase {
 		assertEquals(12, hms.getHour());
 		assertEquals(59, hms.getMinute());
 		assertEquals(22.1567587, hms.getSecond(), 1E-16);
-		Tests.assertEquals(new double[] { 12, 59, 22.1567587 }, hms.getTime().toArray(), 1E-16);
+		CelestTest.assertEquals(new double[] { 12, 59, 22.1567587 }, hms.getTime().toArray(), 1E-16);
 
 		IDegreeMinSec dms = new DegreeMinSec(180, 59, 22.1567587);
 		hms = new HourMinSec(dms);
@@ -39,10 +38,10 @@ public class TestHourMinSec extends TestCase {
 
 		hms = new HourMinSec(0, 0, 0);
 		hms.setHour(12);
-		Tests.assertEquals(new double[] { 12, 0, 0 }, hms.getTime().toArray(), 1E-16);
+		CelestTest.assertEquals(new double[] { 12, 0, 0 }, hms.getTime().toArray(), 1E-16);
 		hms.setMinute(59);
-		Tests.assertEquals(new double[] { 12, 59, 0 }, hms.getTime().toArray(), 1E-16);
+		CelestTest.assertEquals(new double[] { 12, 59, 0 }, hms.getTime().toArray(), 1E-16);
 		hms.setSecond(22.1567587);
-		Tests.assertEquals(new double[] { 12, 59, 22.1567587 }, hms.getTime().toArray(), 1E-16);
+		CelestTest.assertEquals(new double[] { 12, 59, 22.1567587 }, hms.getTime().toArray(), 1E-16);
 	}
 }

@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import org.junit.Test;
@@ -25,10 +23,10 @@ import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.util.physics.Time;
 
-public class TestCompositeTrajectory extends TestCase {
+public class TestCompositeTrajectory extends CelestTest {
 
 	/**
 	 * test state that can return a given constant in the tovector form
@@ -104,19 +102,19 @@ public class TestCompositeTrajectory extends TestCase {
 		trajectory.addTrajectory(t3, new JulianDate(20));
 
 		// Equal begin time as t1
-		Tests.assertEquals(new double[] { 100 },
+		CelestTest.assertEquals(new double[] { 100 },
 				trajectory.evaluate(new JulianDate(0)).toVector().toArray(), 1E-16);
 		// In between t1 and t2, t1 should be used
-		Tests.assertEquals(new double[] { 105 },
+		CelestTest.assertEquals(new double[] { 105 },
 				trajectory.evaluate(new JulianDate(5)).toVector().toArray(), 1E-16);
 		// Same as above but s2
-		Tests.assertEquals(new double[] { 215 },
+		CelestTest.assertEquals(new double[] { 215 },
 				trajectory.evaluate(new JulianDate(15)).toVector().toArray(), 1E-16);
 		// Same insertion time as s3
-		Tests.assertEquals(new double[] { 320 },
+		CelestTest.assertEquals(new double[] { 320 },
 				trajectory.evaluate(new JulianDate(20)).toVector().toArray(), 1E-16);
 		// Time after the last insertion
-		Tests.assertEquals(new double[] { 325 },
+		CelestTest.assertEquals(new double[] { 325 },
 				trajectory.evaluate(new JulianDate(25)).toVector().toArray(), 1E-16);
 	}
 

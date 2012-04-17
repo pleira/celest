@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
-import junit.framework.TestCase;
-
 import org.junit.Ignore;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
@@ -26,11 +24,12 @@ import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
 
 @Ignore
-public class TestLambertUV extends TestCase {
+public class TestLambertUV extends CelestTest {
 
 	public void testRossettaLeg1() {
 		// Rosetta Earth (launch) - Earth (swingby1)

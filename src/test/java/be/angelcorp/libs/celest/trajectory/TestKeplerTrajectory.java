@@ -16,17 +16,16 @@
 package be.angelcorp.libs.celest.trajectory;
 
 import static java.lang.Math.PI;
-import junit.framework.TestCase;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.time.JulianDate;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.util.physics.Time;
 
-public class TestKeplerTrajectory extends TestCase {
+public class TestKeplerTrajectory extends CelestTest {
 
 	/**
 	 * Check KeplerTrajectory using a geostationairy orbit, at specific hours, rotations should match
@@ -40,14 +39,14 @@ public class TestKeplerTrajectory extends TestCase {
 		double time = 0;
 		IKeplerElements k2_predict = new KeplerElements(a, 0, 0, 0, 0, 0);
 		IKeplerElements k2_true = t.evaluate(JulianDate.getJ2000().add(time, Time.second));
-		Tests.assertEquals(
+		CelestTest.assertEquals(
 				String.format("At t=%f, the computed state %s is not equal to the predicted state %s",
 						time, k2_predict, k2_true), k2_predict.toVector(), k2_true.toVector(), 1E-12);
 
 		time = 6 * 3600; // 90�
 		k2_predict = new KeplerElements(a, 0, 0, 0, 0, PI / 2);
 		k2_true = t.evaluate(JulianDate.getJ2000().add(time, Time.second));
-		Tests.assertEquals(
+		CelestTest.assertEquals(
 				String.format("At t=%f, the computed state %s is not equal to the predicted state %s",
 						time, k2_predict, k2_true), k2_predict.toVector(), k2_true.toVector(), 1E-12);
 
@@ -55,7 +54,7 @@ public class TestKeplerTrajectory extends TestCase {
 		k2_predict = new KeplerElements(a, 0, 0, 0, 0, PI);
 		k2_true = t.evaluate(JulianDate.getJ2000().add(time, Time.second));
 		k2_true.setTrueAnomaly(MathUtils2.mod(k2_true.getTrueAnomaly(), 2 * PI)); // its -pi otherwise
-		Tests.assertEquals(
+		CelestTest.assertEquals(
 				String.format("At t=%f, the computed state %s is not equal to the predicted state %s",
 						time, k2_predict, k2_true), k2_predict.toVector(), k2_true.toVector(), 1E-12);
 

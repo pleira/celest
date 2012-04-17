@@ -17,14 +17,13 @@ package be.angelcorp.libs.celest.stateVector;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 
-public abstract class TestStateVector<T extends IPositionState> extends TestCase {
+public abstract class TestStateVector<T extends IPositionState> extends CelestTest {
 
 	protected Class<T>	clazz;
 
@@ -62,7 +61,7 @@ public abstract class TestStateVector<T extends IPositionState> extends TestCase
 
 	protected void doTestVector(T state, RealVector vector_expected, double eps) {
 		RealVector vector_converted = state.toVector();
-		Tests.assertEquals(vector_expected, vector_converted, eps);
+		CelestTest.assertEquals(vector_expected, vector_converted, eps);
 
 		T state2 = doConvertFromVector(vector_converted);
 		equalStateVector(state, state2, eps);

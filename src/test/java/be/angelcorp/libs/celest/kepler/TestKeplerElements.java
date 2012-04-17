@@ -15,14 +15,13 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import be.angelcorp.libs.celest.unit.CelestTest;
 
-public class TestKeplerElements extends TestCase {
+public class TestKeplerElements extends CelestTest {
 
 	public void testEquationType() {
 		IKeplerElements kCirc = new KeplerElements(1E3, 0, 1, 0.9, 0.8, 0.7);

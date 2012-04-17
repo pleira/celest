@@ -18,10 +18,10 @@ package be.angelcorp.libs.celest.time;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import junit.framework.TestCase;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.util.physics.Time;
 
-public class TestJulianDate extends TestCase {
+public class TestJulianDate extends CelestTest {
 
 	public void testAdd() {
 		JulianDate jd0 = new JulianDate(5);

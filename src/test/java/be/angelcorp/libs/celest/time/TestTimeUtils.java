@@ -15,9 +15,9 @@
  */
 package be.angelcorp.libs.celest.time;
 
-import junit.framework.TestCase;
+import be.angelcorp.libs.celest.unit.CelestTest;
 
-public class TestTimeUtils extends TestCase {
+public class TestTimeUtils extends CelestTest {
 
 	public void testConvtime() {
 		// Fundamentals of Astrodynamics and Applications Example 3-7, page 201

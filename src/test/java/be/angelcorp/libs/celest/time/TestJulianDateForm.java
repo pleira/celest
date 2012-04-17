@@ -23,9 +23,9 @@ import static be.angelcorp.libs.celest.time.JulianDateForm.MODIFIED_JULIAN_DAY;
 import static be.angelcorp.libs.celest.time.JulianDateForm.REDUCED_JULIAN_DAY;
 import static be.angelcorp.libs.celest.time.JulianDateForm.TRUNCATED_JULIAN_DAY;
 import static be.angelcorp.libs.celest.time.JulianDateForm.UNIX_TIME;
-import junit.framework.TestCase;
+import be.angelcorp.libs.celest.unit.CelestTest;
 
-public class TestJulianDateForm extends TestCase {
+public class TestJulianDateForm extends CelestTest {
 
 	public void testJulianDateForm() {
 		// based on http://en.wikipedia.org/wiki/Julian_day numbers

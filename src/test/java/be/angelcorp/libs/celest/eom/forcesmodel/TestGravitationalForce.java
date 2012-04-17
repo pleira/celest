@@ -15,18 +15,17 @@
  */
 package be.angelcorp.libs.celest.eom.forcesmodel;
 
-import junit.framework.TestCase;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.kepler.KeplerCircular;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.state.positionState.SphericalElements;
-import be.angelcorp.libs.celest.unit.Tests;
+import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Length;
 
-public class TestGravitationalForce extends TestCase {
+public class TestGravitationalForce extends CelestTest {
 
 	public void testForce() throws Exception {
 		/* Test the f/a in a simple earth system (norm only) */
@@ -41,10 +40,10 @@ public class TestGravitationalForce extends TestCase {
 		CelestialBody sat1 = new CelestialBody(new SphericalElements(10E6, Math.PI / 3, 0,
 				KeplerCircular.vc(10E6, earth.getMu()), 0, 0, earth), 5);
 		GravitationalForce_C g1 = new GravitationalForce_C(sat1, earth);
-		Tests.assertEquals(
+		CelestTest.assertEquals(
 				new Vector3D(Math.cos(Math.PI / 3) * -19.93d, Math.sin(Math.PI / 3) * -19.93d, 0),
 				g1.getForce(), 1E-1);
-		Tests.assertEquals(
+		CelestTest.assertEquals(
 				new Vector3D(Math.cos(Math.PI / 3) * -3.986d, Math.sin(Math.PI / 3) * -3.986d, 0),
 				g1.toAcceleration(), 1E-2);
 
