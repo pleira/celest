@@ -53,8 +53,17 @@ public interface IStateEquation<Y extends IState, DY extends IStateDerivative> {
 	 */
 	DY calculateDerivatives(IJulianDate t, Y y);
 
+	/**
+	 * TODO: is this required?
+	 */
 	Y createState(RealVector y);
 
+	/**
+	 * Get the number of state equations. This must be the same number as parameters that are in the
+	 * vector representation of {@link IState} {@link Y} should have.
+	 * 
+	 * @return Number of embedded state equations.
+	 */
 	int getDimension();
 
 }
