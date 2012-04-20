@@ -39,7 +39,7 @@ import be.angelcorp.libs.util.physics.Time;
  * @author Simon Billemont
  * 
  */
-public class ExpoSinTest extends CelestTest {
+public class TestExpoSin extends CelestTest {
 
 	public void testN0() throws Exception {
 		double r1 = 151366683.169E3;
