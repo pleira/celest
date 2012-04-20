@@ -55,7 +55,7 @@ public class GravitationalForce_C extends ObjectForce implements Cartesian {
 	 */
 	@Override
 	public Vector3D getForce() {
-		Vector3D f = toAcceleration().multiply(getObject().getMass());
+		Vector3D f = toAcceleration().multiply(getObject().getTotalMass());
 		return f;
 	}
 

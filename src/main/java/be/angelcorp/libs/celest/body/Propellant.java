@@ -45,7 +45,7 @@ public class Propellant {
 	public void consumeDV(CelestialBody body, double dV) {
 		// Tsiolkovsky:
 		// m0/m1 = e ^ (Dv / Veff)
-		double m = body.getMass();
+		double m = body.getTotalMass();
 		double dM = m - Math.exp(-dV / getVeff()) * m;
 		consumeMass(dM);
 	}
@@ -62,7 +62,7 @@ public class Propellant {
 	 * @return Maximum dV that can be given with the given amount of propellant
 	 */
 	public double getDvMax(CelestialBody body) {
-		double m0 = body.getMass();
+		double m0 = body.getTotalMass();
 		double mProp = getPropellantMass();
 		double dV = getVeff() * Math.log(m0 / (m0 - mProp));
 		return dV;

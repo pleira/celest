@@ -132,7 +132,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 		// X =-1.947136151107762E+05 Y =-3.249790482942117E+05 Z =-1.934593293850985E+04 [km]
 		// VX= 8.680230862574665E-01 VY=-5.629777269508974E-01 VZ= 7.784227958608481E-02 [km/s]
 		CelestialBody jpl_earth = new CelestialBody();
-		jpl_earth.setMass(Constants.mu2mass(398600.440E9));
+		jpl_earth.setTotalMass(Constants.mu2mass(398600.440E9));
 		KeplerElements kMoon = new KeplerElements(3.903213584163071E+08, 4.074916709908236e-002,
 				9.218093894982124E-2, 4.850831512485626E00,
 				4.757761494574442E00, 1.079822859502195E00, jpl_earth);

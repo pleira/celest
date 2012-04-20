@@ -180,7 +180,7 @@ public abstract class EarthConstants {
 	static {
 		// Based on: http://ssd.jpl.nasa.gov/?planet_pos
 		CelestialBody jpl_sun = new CelestialBody();
-		jpl_sun.setMass(Constants.mu2mass(1.32712440018E20));
+		jpl_sun.setTotalMass(Constants.mu2mass(1.32712440018E20));
 
 		double a0 = Length.convert(1.00000261, Length.AU);
 		double e0 = 0.01671123;

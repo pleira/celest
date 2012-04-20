@@ -23,7 +23,7 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.function.Inverse;
 import org.apache.commons.math3.analysis.integration.LegendreGaussIntegrator;
 import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
-import org.apache.commons.math3.analysis.solvers.SecantSolver;
+import org.apache.commons.math3.analysis.solvers.RiddersSolver;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
@@ -104,14 +104,14 @@ public class ExpoSinTrajectory implements ITrajectory {
 
 				@Override
 				public double value(double theta) {
-					double tof = integrator.integrate(1024, FunctionUtils.compose(new Inverse(), thetaDot), 0, theta);
+					double tof = integrator.integrate(102400, FunctionUtils.compose(new Inverse(), thetaDot), 0, theta);
 					return tof - t;
 				}
 			};
 			double est = thetaDot.value(0) * t;
 
 			// Find the point where the tof(theta) == t
-			theta = new SecantSolver().solve(64, rootFunction, 0.2 * est, 1.8 * est, est);
+			theta = new RiddersSolver().solve(64, rootFunction, 1E-6, 2 * est, est);
 		}
 
 		// Find the radius for the current theta

@@ -104,6 +104,6 @@ public class ObjectForce extends Force {
 	public Vector3D toAcceleration() {
 		// F = m a
 		// a = F/m
-		return getForce().divide(getObject().getMass());
+		return getForce().divide(getObject().getTotalMass());
 	}
 }

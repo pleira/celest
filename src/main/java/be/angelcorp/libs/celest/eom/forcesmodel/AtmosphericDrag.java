@@ -112,7 +112,7 @@ abstract public class AtmosphericDrag extends ObjectForce {
 	 */
 	@Override
 	public Vector3D getForce() {
-		return toAcceleration().multiply(getObject().getMass());
+		return toAcceleration().multiply(getObject().getTotalMass());
 	}
 
 	/**
@@ -169,7 +169,7 @@ abstract public class AtmosphericDrag extends ObjectForce {
 		double vrmag = vr.getNorm();
 
 		// form -1/2 (Cd*A/m) rho
-		double beta = cd * area / getObject().getMass(); // [m^2/kg]
+		double beta = cd * area / getObject().getTotalMass(); // [m^2/kg]
 		double coeff = -0.5 * beta * rho;
 		double coeff2 = coeff * vrmag;
 

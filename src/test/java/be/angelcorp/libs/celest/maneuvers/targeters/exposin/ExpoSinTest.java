@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import static org.apache.commons.math3.util.FastMath.PI;
+import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
@@ -40,7 +41,7 @@ import be.angelcorp.libs.util.physics.Time;
  */
 public class ExpoSinTest extends CelestTest {
 
-	public void test1() throws Exception {
+	public void testN0() throws Exception {
 		double r1 = 151366683.169E3;
 		double r2 = 206953872.627E3;
 		double dTheta = 1.9532 + 0 * (2 * PI);
@@ -72,21 +73,76 @@ public class ExpoSinTest extends CelestTest {
 		double ml_gamma_m = -6.505324139843980e-001;
 		double ml_gamma_M = 7.999869059004543e-001;
 
+		ExpoSinSolutionSet solutionSet = exposin.getSolutionSet();
+		assertEquals(ml_gamma_m, solutionSet.getDomain().lowerBound, 1E-1);
+		assertEquals(ml_gamma_M, solutionSet.getDomain().upperBound, 1E-1);
+
 		ExpoSinTrajectory trajectory = exposin.getTrajectory();
 		ExponentialSinusoid shape = trajectory.getExposin();
 		assertEquals(ml_k0, shape.getK0(), ml_k0 * 1E-8);
 		assertEquals(ml_k1, shape.getK1(), 1E-8);
 		assertEquals(ml_k2, shape.getK2(), 1E-8);
-		CelestTest.assertEqualsAngle(ml_phi, shape.getPhi(), 1E-8);
+		assertEqualsAngle(ml_phi, shape.getPhi(), 1E-8);
 		assertEquals(0, shape.getQ0(), 1E-16);
-		CelestTest.assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-8);
+		assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-8);
 
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		assertEquals(r1, c1.getR().getNorm(), 1e-16);
 		assertEquals(r2, c2.getR().getNorm(), 1);
-		CelestTest.assertEquals(ml_V2, c2.getV(), 1E-1);
-		CelestTest.assertEquals(ml_V1, c1.getV(), 1E-1);
+		assertEquals(ml_V2, c2.getV(), 1E-1);
+		assertEquals(ml_V1, c1.getV(), 1E-1);
+	}
 
+	public void testN3() throws Exception {
+		double k2 = 1. / 12.;
+		double dt = Time.convert(1E-3, Time.day);
+		int N = 3;
+		ICartesianElements r1 = new CartesianElements(new Vector3D(2, 0, 0), Vector3D.ZERO);
+		ICartesianElements r2 = new CartesianElements(new Vector3D(0.2, -1, 0), Vector3D.ZERO);
+
+		IJulianDate t1 = JulianDate.getJ2000();
+		IJulianDate t2 = JulianDate.getJ2000().add(dt, Time.second);
+		CelestialBody center = new CelestialBody();
+		center.setMu(1E4);
+
+		ExpoSin exposin = new ExpoSin(r1, r2, t1, t2);
+		exposin.setCenter(center);
+		exposin.setN(N);
+		exposin.assumeK2(k2);
+
+		// Results as computed by the Matlab routine:
+		Vector3D ml_V1 = new Vector3D(+4.279665287258510e+001, +5.461017978436156e+001, 0);
+		Vector3D ml_V2 = new Vector3D(-8.557155856649688e+001, -4.647847748181721e+001, 0);
+		double ml_k0 = 2.494219696832175e-004;
+		double ml_k1 = 1.300955416481242e+001;
+		double ml_k2 = 8.333333333333333e-002;
+		double ml_phi = 7.628619402579907e-001;
+		double ml_tf = 8.640000000000001e+001;
+		double ml_N = 3;
+		double ml_dth = 2.022295668848377e+001;
+		double ml_gamma1 = 6.647073338793147e-001;
+		double ml_gamma_m = -1.459915193676833e+000;
+		double ml_gamma_M = 1.459299027659339e+000;
+
+		ExpoSinSolutionSet solutionSet = exposin.getSolutionSet();
+		assertEquals(ml_gamma_m, solutionSet.getDomain().lowerBound, 1E-1);
+		assertEquals(ml_gamma_M, solutionSet.getDomain().upperBound, 1E-1);
+
+		ExpoSinTrajectory trajectory = exposin.getTrajectory();
+		ExponentialSinusoid shape = trajectory.getExposin();
+		assertEquals(ml_k0, shape.getK0(), ml_k0 * 1E-2);
+		assertEquals(ml_k1, shape.getK1(), 1E-2);
+		assertEquals(ml_k2, shape.getK2(), 1E-8);
+		assertEqualsAngle(ml_phi, shape.getPhi(), 1E-2);
+		assertEquals(0, shape.getQ0(), 1E-16);
+		assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-2);
+
+		ICartesianElements c1 = trajectory.evaluate(t1);
+		ICartesianElements c2 = trajectory.evaluate(t2);
+		assertEquals(r1.getR().getNorm(), c1.getR().getNorm(), 1e-14);
+		assertEquals(r2.getR().getNorm(), c2.getR().getNorm(), 1);
+		assertEquals(ml_V2, c2.getV(), 1E-1);
+		assertEquals(ml_V1, c1.getV(), 1E-1);
 	}
 }

@@ -27,7 +27,7 @@ import static org.apache.commons.math3.util.FastMath.tan;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.integration.RombergIntegrator;
 import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
-import org.apache.commons.math3.analysis.solvers.SecantSolver;
+import org.apache.commons.math3.analysis.solvers.RiddersSolver;
 import org.apache.commons.math3.analysis.solvers.UnivariateSolver;
 import org.apache.commons.math3.util.FastMath;
 
@@ -174,7 +174,7 @@ public class ExpoSinSolutionSet implements UnivariateFunction {
 	 */
 	public double getOptimalSolution(final double dT) {
 		// Root finding technique
-		UnivariateSolver solver = new SecantSolver();
+		UnivariateSolver solver = new RiddersSolver(1E-10);
 
 		// Find the root of where the tof equals dT
 		UnivariateFunction rootFunction = new UnivariateFunction() {

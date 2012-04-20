@@ -95,7 +95,7 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 	 */
 	@Override
 	public Vector3D getForce() {
-		return toAcceleration().multiply(getObject().getMass());
+		return toAcceleration().multiply(getObject().getTotalMass());
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 
 		double Ls = getSpectrum().totalFlux() / d.getNormSq(); // [W]
 
-		double factor = CR * (area / getObject().getMass()) *
+		double factor = CR * (area / getObject().getTotalMass()) *
 							Ls / (4 * Math.PI * Constants.SPEED_LIGHT * dcube);
 
 		return d.multiply(factor);

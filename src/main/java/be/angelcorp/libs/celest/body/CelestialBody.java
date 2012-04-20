@@ -62,19 +62,19 @@ public class CelestialBody {
 	 */
 	public CelestialBody(IPositionState state, double mass) {
 		setState(state);
-		setMass(mass);
+		setTotalMass(mass);
 	}
 
 	/**
-	 * Get the dry mass of the celestial body (mass without the propellant mass)
+	 * Get the dry mass of the body. This is the mass of the body without propellent.
 	 * <p>
 	 * <b>Unit: [kg]</b>
 	 * </p>
 	 * 
-	 * @return Mass of the body
+	 * @return Dry mass of the body [kg]
 	 */
 	public double getDryMass() {
-		return dryMass;
+		return this.dryMass;
 	}
 
 	/**
@@ -87,19 +87,8 @@ public class CelestialBody {
 	}
 
 	/**
-	 * Get the total mass of the celestial body
-	 * <p>
-	 * <b>Unit: [kg]</b>
-	 * </p>
-	 * 
-	 * @return Mass of the body
-	 */
-	public double getMass() {
-		return getDryMass() + getWetMass();
-	}
-
-	/**
-	 * Get the gravitational parameter of the celestial body (&mu; = G * m)
+	 * Get the gravitational parameter of the celestial body (&mu; = G * m). This is the result of both
+	 * the dry and wet mass of the body.
 	 * <p>
 	 * <b>Unit: [m<sup>3</sup> / s<sup>2</sup>]</b>
 	 * </p>
@@ -107,7 +96,7 @@ public class CelestialBody {
 	 * @return Mu of the body
 	 */
 	public double getMu() {
-		final double mu = Constants.mass2mu(getMass());
+		final double mu = Constants.mass2mu(getTotalMass());
 		return mu;
 	}
 
@@ -121,25 +110,50 @@ public class CelestialBody {
 	}
 
 	/**
-	 * Get the wet mass of the body (Propellant mass)
+	 * Get the total mass of the celestial body
 	 * <p>
 	 * <b>Unit: [kg]</b>
 	 * </p>
 	 * 
 	 * @return Mass of the body
 	 */
+	public double getTotalMass() {
+		return getDryMass() + getWetMass();
+	}
+
+	/**
+	 * Get the wet mass of the body (Propellant mass)
+	 * <p>
+	 * <b>Unit: [kg]</b>
+	 * </p>
+	 * 
+	 * @return Wet mass of the body [kg]
+	 */
 	public double getWetMass() {
 		return 0;
 	}
 
 	/**
-	 * Set the mass of the celestial body
+	 * Set the dry mass of the body. This is the mass of the body without propellent.
+	 * <p>
+	 * <b>Unit: [kg]</b>
+	 * </p>
 	 * 
 	 * @param mass
-	 *            new mass of the body [kg]
+	 *            Dry mass of the body [kg]
 	 */
-	public void setMass(double mass) {
+	public void setDryMass(double mass) {
 		this.dryMass = mass;
+	}
+
+	/**
+	 * Set the (dry) mass of the celestial body using the body standard gravitational parameter
+	 * 
+	 * @param mu
+	 *            New value for the body standard gravitational parameter [m<sup>3</sup>/s<sup>2</sup>]
+	 */
+	public void setMu(double mu) {
+		this.dryMass = Constants.mu2mass(mu);
 	}
 
 	/**
@@ -150,6 +164,29 @@ public class CelestialBody {
 	 */
 	public void setState(IPositionState state) {
 		this.state = state;
+	}
+
+	/**
+	 * Set the mass of the celestial body
+	 * 
+	 * @param mass
+	 *            new mass of the body [kg]
+	 */
+	public void setTotalMass(double mass) {
+		this.dryMass = mass;
+	}
+
+	/**
+	 * Set the wet mass of the body (Propellant mass)
+	 * <p>
+	 * <b>Unit: [kg]</b>
+	 * </p>
+	 * 
+	 * @param mass
+	 *            Wet mass of the body [kg]
+	 */
+	public void setWetMass(double mass) {
+		this.dryMass += mass;
 	}
 
 }

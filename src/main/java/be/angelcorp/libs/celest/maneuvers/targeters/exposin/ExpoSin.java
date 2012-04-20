@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
+import static org.apache.commons.math3.util.FastMath.PI;
+import static org.apache.commons.math3.util.FastMath.acos;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
@@ -123,8 +125,8 @@ public class ExpoSin extends TPBVP {
 		double r1 = r1vec.getNorm();
 		double r2 = r2vec.getNorm();
 
-		double psi = Math.acos(r1vec.dot(r2vec) / (r1 * r2));
-		double theta = psi + 2 * Math.PI * N;
+		double psi = acos(r1vec.dot(r2vec) / (r1 * r2));
+		double theta = psi + 2 * PI * N;
 
 		return new ExpoSinSolutionSet(r1, r2, assumeK2, theta, center.getMu());
 	}
