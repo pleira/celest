@@ -19,6 +19,8 @@ import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.state.IState;
+import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.rotation.IRotation;
 
 /**
  * This is the interface for the orientation or attitude of a specific body's (e.g. the current
@@ -77,16 +79,33 @@ public interface IOrientationState extends IState {
 	public abstract boolean equals(IOrientationState obj, double eps);
 
 	/**
-	 * Convert the {@link IOrientationState} to an equivalent quaternion one.
+	 * Get the current orientation of the body.
 	 * 
-	 * @return Quaternion equivalent state vector.
+	 * @return The current {@link IRotation}.
 	 */
-	public abstract IQuaternionOrientation toCartesianElements();
+	public abstract IRotation getRotation();
 
 	/**
-	 * Convert the current state vector to an equivalent vector form
+	 * Get the orientation rate of the body. The rate is stored in a 3d vector, where each element is the
+	 * rotation rate along the specified axes:
 	 * 
-	 * @return Vector equivalent of the state vector
+	 * <pre>
+	 * {&alpha;, &beta;, &gamma;}
+	 * </pre>
+	 * 
+	 * <p>
+	 * Where &alpha; is the rotation rate around the first axis (x), &beta; the second (y), and &gamma;
+	 * the third (z). The units are [rad/s].
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public abstract Vector3D getRotationRate();
+
+	/**
+	 * Convert the current {@link IOrientationState} to an equivalent vector form.
+	 * 
+	 * @return Vector equivalent of the {@link IOrientationState}.
 	 */
 	@Override
 	public abstract RealVector toVector();
