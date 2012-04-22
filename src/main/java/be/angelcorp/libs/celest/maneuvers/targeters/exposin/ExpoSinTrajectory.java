@@ -130,7 +130,7 @@ public class ExpoSinTrajectory implements ITrajectory {
 		Vector3D V_theta_norm = Vector3D.K.cross(R_norm);
 
 		// TODO: make inherit this rotation from the ExpoSin input states
-		IRotation rotation = RotationMatrix.NO_ROTATION;
+		IRotation rotation = RotationMatrix.IDENTITY;
 		// Compose the velocity vector from radial and tangential velocities
 		Vector3D V = rotation.applyTo(new Vector3D(V_r, R.normalize(), V_theta, V_theta_norm));
 
