@@ -17,6 +17,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
 import net.miginfocom.swing.MigLayout;
+import be.angelcorp.libs.util.gui.config.confgGui.ConfigGui;
 
 import com.lyndir.lhunath.lib.system.logging.Logger;
 
@@ -95,14 +96,25 @@ public class SimpleGui extends JFrame {
 				SimpleGui.this.dispose();
 			}
 		});
-		add(exit, "split 2");
+		add(exit, "split 3");
+
+		JButton settings = new JButton("Settings");
+		settings.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ConfigGui gui = new ConfigGui();
+				gui.setVisible(true);
+				gui.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			}
+		});
+		add(settings, "");
 
 		JButton run = new JButton("Run example");
 		run.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-				if (Example.class.isAssignableFrom(node.getUserObject().getClass())) {
+				if (node != null && Example.class.isAssignableFrom(node.getUserObject().getClass())) {
 					invoker.invoke(((Example) node.getUserObject()).getClazz());
 				} else {
 					logger.wrn("You need to select an example before pressing RUN");

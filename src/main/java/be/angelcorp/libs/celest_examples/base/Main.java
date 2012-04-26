@@ -6,6 +6,10 @@ import java.util.TreeSet;
 
 import org.reflections.Reflections;
 
+import be.angelcorp.libs.util.gui.config.Config;
+import be.angelcorp.libs.util.gui.objectGuiSerializer.ObjectGuiSerializer;
+import be.angelcorp.libs.util.gui.objectGuiSerializer.selectableList.SelectableListSerializer;
+
 import com.lyndir.lhunath.lib.system.logging.Logger;
 
 public class Main implements Runnable {
@@ -16,7 +20,16 @@ public class Main implements Runnable {
 	}
 
 	private String				examplesPackage	= "be.angelcorp.libs.celest_examples";
+
 	private static final Logger	logger			= Logger.get(ExampleRunner.class);
+
+	public Main() {
+		Config config = new Config();
+		config.addSettings(new Settings());
+		Config.setInstance(config);
+
+		ObjectGuiSerializer.getInstance().addGuiSerializer(new SelectableListSerializer<>());
+	}
 
 	private TreeSet<Class<Runnable>> discoverExamples() {
 		Reflections reflections = new Reflections(examplesPackage);
