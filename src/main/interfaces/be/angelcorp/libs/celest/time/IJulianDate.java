@@ -28,36 +28,36 @@ import be.angelcorp.libs.util.physics.Time;
 public interface IJulianDate extends Comparable<IJulianDate> {
 
 	/**
-	 * Add time to this JulianDate
+	 * Add time to this JulianDate.
 	 * 
 	 * @param dt
-	 *            Amount of time to add
+	 *            Amount of time to add.
 	 * @param format
-	 *            Format of dt
-	 * @return This
+	 *            Format of dt.
+	 * @return New {@link IJulianDate}.
 	 */
 	IJulianDate add(double dt, Time format);
 
 	/**
-	 * Get the julian date in a standard date object
+	 * Get the Julian date in a standard date object.
 	 * 
-	 * @return JD in normal date format
+	 * @return JD in java.ulit.Date format.
 	 */
 	public abstract Date getDate();
 
 	/**
-	 * Get the julian date
+	 * Get the Julian date.
 	 * 
-	 * @return JD
+	 * @return JD The Julian date of the epoch.
 	 */
 	public abstract double getJD();
 
 	/**
-	 * Get the internal julian date, but in the given external form
+	 * Get the internal Julian date, but in the given external form.
 	 * 
 	 * @param form
 	 *            Form to return the date in
-	 * @return Date represented by this julian date in the given form
+	 * @return Date represented by this Julian date in the given form.
 	 */
 	double getJD(JulianDateForm form);
 
@@ -69,10 +69,10 @@ public interface IJulianDate extends Comparable<IJulianDate> {
 	 * </pre>
 	 * 
 	 * @param epoch
-	 *            Epoch to which to find the relative time
+	 *            Epoch to which to find the relative time.
 	 * @param timeformat
-	 *            Format in which to return the time difference
-	 * @return Amount of time from the passed epoch to this epoch
+	 *            Format in which to return the time difference.
+	 * @return Amount of time from the passed epoch to this epoch.
 	 */
 	double relativeTo(IJulianDate epoch, Time timeformat);
 
@@ -85,35 +85,9 @@ public interface IJulianDate extends Comparable<IJulianDate> {
 	 * </pre>
 	 * 
 	 * @param epoch
-	 *            Epoch to which to find the relative time
-	 * @return Amount of julian days from the passed epoch to this epoch
+	 *            Epoch to which to find the relative time.
+	 * @return Amount of julian days from the passed epoch to this epoch.
 	 */
 	double relativeTo(JulianDate epoch);
-
-	/**
-	 * Set the julian date
-	 * 
-	 * @param date
-	 *            Standard date object
-	 */
-	public abstract void setDate(Date date);
-
-	/**
-	 * Set the julian date
-	 * 
-	 * @param date
-	 *            JD
-	 */
-	public abstract void setJD(double date);
-
-	/**
-	 * Set the julian date
-	 * 
-	 * @param date
-	 *            date number in a form given by form
-	 * @param form
-	 *            Form that the given date is in
-	 */
-	void setJD(double date2, JulianDateForm form);
 
 }

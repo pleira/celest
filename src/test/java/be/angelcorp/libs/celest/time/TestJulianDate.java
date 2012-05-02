@@ -70,20 +70,6 @@ public class TestJulianDate extends CelestTest {
 		assertEquals(12, cal.get(Calendar.HOUR_OF_DAY));
 		assertEquals(21, cal.get(Calendar.MINUTE));
 		assertEquals(18, cal.get(Calendar.SECOND));
-
-		/* Check the setting */
-		// MATLAB:
-		// % November 2, 1975, at 18:49:49:
-		// fprintf('%.10f\n', juliandate(1975,11,2,18,59,49))
-		// 2442719.2915393519
-		jd.setJD(812);
-		assertEquals(812., jd.getJD(), 1E-15);
-		cal.clear();
-		cal.set(1975, 11, 02, 18, 59, 49);
-		jd.setDate(cal.getTime());
-		assertEquals(2442719.2915393519, jd.getJD(), 1. / (24 * 3600 * 1000));
-		jd.setJD(42718.7915393519, JulianDateForm.MODIFIED_JULIAN_DAY);
-		assertEquals(2442719.2915393519, jd.getJD(), 1. / (24 * 3600 * 1000));
 	}
 
 	public void testRelative() {

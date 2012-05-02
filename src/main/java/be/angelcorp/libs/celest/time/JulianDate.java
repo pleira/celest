@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.annotation.concurrent.Immutable;
+
 import be.angelcorp.libs.util.physics.Time;
 
 /**
@@ -32,19 +34,26 @@ import be.angelcorp.libs.util.physics.Time;
  * 
  */
 // TODO: remove (int) sec casts
+@Immutable
 public class JulianDate implements IJulianDate {
 
+	/** The J2000 epoch in JulianDate form. */
+	public static final JulianDate	J2000	= new JulianDate(2451545.0);
+
 	/**
-	 * Get the J2000 epoch in JulianDate form
+	 * The J2000 epoch in JulianDate form.
+	 * 
+	 * @deprecated Use {@link JulianDate#J2000}
 	 */
+	@Deprecated
 	public static JulianDate getJ2000() {
-		return new JulianDate(2451545.0);
+		return J2000;
 	}
 
 	/**
 	 * Julian Date represented by this class
 	 */
-	double	date;
+	final double	date;
 
 	/**
 	 * Create a Julian Date from a given {@link Date}
@@ -53,7 +62,13 @@ public class JulianDate implements IJulianDate {
 	 *            Date to convert to a Julian Date
 	 */
 	public JulianDate(Date date) {
-		setDate(date);
+		Calendar cal = new GregorianCalendar();
+		cal.clear();
+		cal.setTime(date);
+
+		this.date = TimeUtils.jday(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+				cal.get(Calendar.DATE), cal.get(Calendar.HOUR_OF_DAY),
+				cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 	}
 
 	/**
@@ -63,7 +78,7 @@ public class JulianDate implements IJulianDate {
 	 *            Set the internal date to the given JD
 	 */
 	public JulianDate(double date) {
-		setJD(date);
+		this.date = date;
 	}
 
 	/**
@@ -75,26 +90,23 @@ public class JulianDate implements IJulianDate {
 	 *            Form that the given date is in
 	 */
 	public JulianDate(double date, JulianDateForm form) {
-		setJD(date, form);
+		this.date = form.toJD(date);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public IJulianDate add(double dt, Time format) {
-		setJD(getJD() + Time.convert(dt, format, Time.day));
-		return this;
+	public JulianDate add(double dt, Time format) {
+		JulianDate jd2 = new JulianDate(getJD() + Time.convert(dt, format, Time.day));
+		return jd2;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(IJulianDate o) {
 		return Double.compare(getJD(), o.getJD());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && IJulianDate.class.isAssignableFrom(obj.getClass())) {
@@ -103,9 +115,7 @@ public class JulianDate implements IJulianDate {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Date getDate() {
 		int[] dateArr = TimeUtils.invjday(date);
@@ -114,73 +124,37 @@ public class JulianDate implements IJulianDate {
 		return calender.getTime();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public double getJD() {
 		return date;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public double getJD(JulianDateForm form) {
 		return form.fromJD(date);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return new Double(getJD()).hashCode();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public double relativeTo(IJulianDate epoch, Time timeformat) {
 		return Time.convert(getJD() - epoch.getJD(), Time.day, timeformat);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public double relativeTo(JulianDate epoch) {
 		return getJD() - epoch.getJD();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setDate(Date date) {
-		Calendar cal = new GregorianCalendar();
-		cal.clear();
-		cal.setTime(date);
-
-		this.date = TimeUtils.jday(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-				cal.get(Calendar.DATE), cal.get(Calendar.HOUR_OF_DAY),
-				cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setJD(double date) {
-		this.date = date;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setJD(double date2, JulianDateForm form) {
-		this.date = form.toJD(date2);
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return String.format("%fJD", getJD());
