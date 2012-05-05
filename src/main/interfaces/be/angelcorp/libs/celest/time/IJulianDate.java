@@ -17,13 +17,14 @@ package be.angelcorp.libs.celest.time;
 
 import java.util.Date;
 
+import be.angelcorp.libs.celest.time.dateStandard.IDateStandard;
+import be.angelcorp.libs.celest.time.timeStandard.ITimeStandard;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
- * A container for a julian date
+ * A container for a Julian date
  * 
  * @author Simon Billemont
- * 
  */
 public interface IJulianDate extends Comparable<IJulianDate> {
 
@@ -36,7 +37,7 @@ public interface IJulianDate extends Comparable<IJulianDate> {
 	 *            Format of dt.
 	 * @return New {@link IJulianDate}.
 	 */
-	IJulianDate add(double dt, Time format);
+	public abstract IJulianDate add(double dt, Time format);
 
 	/**
 	 * Get the Julian date in a standard date object.
@@ -56,10 +57,38 @@ public interface IJulianDate extends Comparable<IJulianDate> {
 	 * Get the internal Julian date, but in the given external form.
 	 * 
 	 * @param form
-	 *            Form to return the date in
+	 *            Form to return the date in.
 	 * @return Date represented by this Julian date in the given form.
 	 */
-	double getJD(JulianDateForm form);
+	public abstract double getJulianDate(IDateStandard form);
+
+	/**
+	 * Get the Julian date in an alternate {@link ITimeStandard}.
+	 * 
+	 * @return Julian date of the epoch, in an alternative {@link ITimeStandard}.
+	 */
+	public abstract IJulianDate getJulianDate(ITimeStandard timeStandard);
+
+	/**
+	 * Get the {@link ITimeStandard} used within this Julian date.
+	 * 
+	 * @return {@link ITimeStandard} used by this {@link JulianDate}.
+	 */
+	public abstract ITimeStandard getTimeStandard();
+
+	/**
+	 * 
+	 * Get the amount of Julian days that this date is after the specified epoch:
+	 * 
+	 * <pre>
+	 * this_time - epoch_time
+	 * </pre>
+	 * 
+	 * @param epoch
+	 *            Epoch to which to find the relative time.
+	 * @return Amount of julian days from the passed epoch to this epoch.
+	 */
+	public abstract double relativeTo(IJulianDate epoch);
 
 	/**
 	 * Get the amount of Julian days that this date is after the specified epoch:
@@ -74,20 +103,6 @@ public interface IJulianDate extends Comparable<IJulianDate> {
 	 *            Format in which to return the time difference.
 	 * @return Amount of time from the passed epoch to this epoch.
 	 */
-	double relativeTo(IJulianDate epoch, Time timeformat);
-
-	/**
-	 * 
-	 * Get the amount of Julian days that this date is after the specified epoch:
-	 * 
-	 * <pre>
-	 * this_time - epoch_time
-	 * </pre>
-	 * 
-	 * @param epoch
-	 *            Epoch to which to find the relative time.
-	 * @return Amount of julian days from the passed epoch to this epoch.
-	 */
-	double relativeTo(JulianDate epoch);
+	public abstract double relativeTo(IJulianDate epoch, Time timeformat);
 
 }

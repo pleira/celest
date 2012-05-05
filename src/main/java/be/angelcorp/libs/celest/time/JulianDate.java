@@ -21,6 +21,10 @@ import java.util.GregorianCalendar;
 
 import javax.annotation.concurrent.Immutable;
 
+import be.angelcorp.libs.celest.time.dateStandard.IDateStandard;
+import be.angelcorp.libs.celest.time.timeStandard.ITimeStandard;
+import be.angelcorp.libs.celest.time.timeStandard.TimeStandards;
+import be.angelcorp.libs.celest.time.timeStandard.UTC;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
@@ -38,28 +42,37 @@ import be.angelcorp.libs.util.physics.Time;
 public class JulianDate implements IJulianDate {
 
 	/** The J2000 epoch in JulianDate form. */
-	public static final JulianDate	J2000	= new JulianDate(2451545.0);
+	public static final JulianDate	J2000_EPOCH	= new JulianDate(2451545.0, TimeStandards.TT);
+
+	/** The starting epoch of the TAI timeline (same as TAI/TT/TCG/TCB). */
+	public static final JulianDate	TAI_EPOCH	= new JulianDate(2443144.5, TimeStandards.TAI);
+	/** The starting epoch of the TT timeline (same as TAI/TT/TCG/TCB). */
+	public static final JulianDate	TT_EPOCH	= TAI_EPOCH.getJulianDate(TimeStandards.TT);
+	/** The starting epoch of the TCG timeline (same as TAI/TT/TCG/TCB). */
+	public static final JulianDate	TCG_EPOCH	= TAI_EPOCH.getJulianDate(TimeStandards.TCG);
+	/** The starting epoch of the TCB timeline (same as TAI/TT/TCG/TCB). */
+	public static final JulianDate	TCB_EPOCH	= TAI_EPOCH;
 
 	/**
 	 * The J2000 epoch in JulianDate form.
 	 * 
-	 * @deprecated Use {@link JulianDate#J2000}
+	 * @deprecated Use {@link JulianDate#J2000_EPOCH}
 	 */
 	@Deprecated
 	public static JulianDate getJ2000() {
-		return J2000;
+		return J2000_EPOCH;
 	}
 
-	/**
-	 * Julian Date represented by this class
-	 */
-	final double	date;
+	/** Julian Date represented by this class */
+	private final double		date;
+	/** Time standard of the embedded Julian date */
+	private final ITimeStandard	timeStandard;
 
 	/**
 	 * Create a Julian Date from a given {@link Date}
 	 * 
 	 * @param date
-	 *            Date to convert to a Julian Date
+	 *            Date to convert to a Julian Date (UTC time)
 	 */
 	public JulianDate(Date date) {
 		Calendar cal = new GregorianCalendar();
@@ -69,34 +82,65 @@ public class JulianDate implements IJulianDate {
 		this.date = TimeUtils.jday(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
 				cal.get(Calendar.DATE), cal.get(Calendar.HOUR_OF_DAY),
 				cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+		this.timeStandard = UTC.get();
 	}
 
 	/**
-	 * Create a Julian Date from the given Julian Date number
+	 * Create a Julian Date from the given Julian Date number.
 	 * 
 	 * @param date
-	 *            Set the internal date to the given JD
+	 *            Set the internal date to the given JD (UTC time).
 	 */
 	public JulianDate(double date) {
 		this.date = date;
+		this.timeStandard = UTC.get();
 	}
 
 	/**
-	 * Create a Julian Date from a given date in the given form
+	 * Create a Julian Date from a given date in the given form.
 	 * 
 	 * @param date
-	 *            Date to create the Julian Date
-	 * @param form
-	 *            Form that the given date is in
+	 *            Date to create the Julian Date (UTC time).
+	 * @param dateStandard
+	 *            Date standard that the given epoch is in.
 	 */
-	public JulianDate(double date, JulianDateForm form) {
-		this.date = form.toJD(date);
+	public JulianDate(double date, IDateStandard dateStandard) {
+		this.date = dateStandard.toJD(date);
+		this.timeStandard = UTC.get();
+	}
+
+	/**
+	 * Create a Julian Date from a given date in the given form.
+	 * 
+	 * @param date
+	 *            Date to create the Julian Date.
+	 * @param dateStandard
+	 *            Date standard that the given epoch is in.
+	 * @param timeStandard
+	 *            Time standard that the epoch is given in.
+	 */
+	public JulianDate(double date, IDateStandard dateStandard, ITimeStandard timeStandard) {
+		this.date = dateStandard.toJD(date);
+		this.timeStandard = timeStandard;
+	}
+
+	/**
+	 * Create a Julian Date from the given Julian Date number.
+	 * 
+	 * @param date
+	 *            Set the internal epoch to the given JD.
+	 * @param timeStandard
+	 *            Time standard that the epoch is given in.
+	 */
+	public JulianDate(double date, ITimeStandard timeStandard) {
+		this.date = date;
+		this.timeStandard = timeStandard;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public JulianDate add(double dt, Time format) {
-		JulianDate jd2 = new JulianDate(getJD() + Time.convert(dt, format, Time.day));
+		JulianDate jd2 = new JulianDate(getJD() + Time.convert(dt, format, Time.day), timeStandard);
 		return jd2;
 	}
 
@@ -110,7 +154,8 @@ public class JulianDate implements IJulianDate {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && IJulianDate.class.isAssignableFrom(obj.getClass())) {
-			return compareTo((IJulianDate) obj) == 0;
+			IJulianDate other = (IJulianDate) obj;
+			return compareTo(other) == 0 && timeStandard == other.getTimeStandard();
 		}
 		return false;
 	}
@@ -132,26 +177,50 @@ public class JulianDate implements IJulianDate {
 
 	/** {@inheritDoc} */
 	@Override
-	public double getJD(JulianDateForm form) {
+	public double getJulianDate(IDateStandard form) {
 		return form.fromJD(date);
 	}
 
 	/** {@inheritDoc} */
 	@Override
+	public JulianDate getJulianDate(ITimeStandard timeStandard) {
+		if (this.timeStandard.equals(timeStandard))
+			return this;
+
+		/* First convert this to TAI form */
+		double offset = this.timeStandard.offsetToTAI(this);
+		JulianDate this_tai = new JulianDate(getJD(), TimeStandards.TAI).add(offset, Time.second);
+
+		/* Then convert the TAI jd form to the requested type */
+		offset = timeStandard.offsetFromTAI(this_tai);
+		JulianDate jd_new = new JulianDate(this_tai.getJD(), timeStandard).add(offset, Time.second);
+
+		return jd_new;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ITimeStandard getTimeStandard() {
+		return timeStandard;
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public int hashCode() {
-		return new Double(getJD()).hashCode();
+		return new Double(getJD()).hashCode() ^ timeStandard.hashCode();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public double relativeTo(IJulianDate epoch) {
+		return getJulianDate(timeStandard).getJD() - epoch.getJD();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public double relativeTo(IJulianDate epoch, Time timeformat) {
-		return Time.convert(getJD() - epoch.getJD(), Time.day, timeformat);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public double relativeTo(JulianDate epoch) {
-		return getJD() - epoch.getJD();
+		double delta_julian_days = getJD() - epoch.getJulianDate(timeStandard).getJD();
+		return Time.convert(delta_julian_days, Time.day, timeformat);
 	}
 
 	/** {@inheritDoc} */
@@ -159,5 +228,4 @@ public class JulianDate implements IJulianDate {
 	public String toString() {
 		return String.format("%fJD", getJD());
 	}
-
 }
