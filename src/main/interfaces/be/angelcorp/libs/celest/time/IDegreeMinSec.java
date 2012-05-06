@@ -56,36 +56,4 @@ public interface IDegreeMinSec {
 	 */
 	public abstract double getSecond();
 
-	/**
-	 * Set the integer amount of degrees preceding the epoch.
-	 * 
-	 * @param hour
-	 *            Degrees to the direction
-	 */
-	public abstract void setDegree(int deg);
-
-	/**
-	 * Set the integer amount of minutes preceding the epoch/direction from the last complete degree.
-	 * 
-	 * @param minute
-	 *            Minutes to the direction
-	 */
-	public abstract void setMinute(int minute);
-
-	/**
-	 * Set the angle representation as an equivalent amount of radians (complete rad => DMS)
-	 * 
-	 * @param rad
-	 *            Set radians for in this DMS
-	 */
-	public abstract void setRadian(double rad);
-
-	/**
-	 * Set the amount of seconds preceding the epoch/direction from the last complete minute.
-	 * 
-	 * @param second
-	 *            Seconds to the direction
-	 */
-	public abstract void setSecond(double second);
-
 }

@@ -29,6 +29,18 @@ package be.angelcorp.libs.celest.time;
 public interface IHourMinSec {
 
 	/**
+	 * Get the amount of days represented by this set of {@link IHourMinSec}. For example:
+	 * <ul>
+	 * <li>h=0, m=0, s=0 &rarr; 0</li>
+	 * <li>h=1, m=0, s=0 &rarr; 1/24</li>
+	 * <li>h=24, m=0, s=0 &rarr; 1</li>
+	 * </ul>
+	 * 
+	 * @return Fraction of a Julian day represented by this {@link IHourMinSec}.
+	 */
+	public abstract double getDayFraction();
+
+	/**
 	 * Get the integer amount of hours preceding the epoch.
 	 * 
 	 * @return Hours to the epoch
@@ -55,37 +67,5 @@ public interface IHourMinSec {
 	 * @return Seconds to the epoch
 	 */
 	public abstract double getSecond();
-
-	/**
-	 * Set the integer amount of hours preceding the epoch.
-	 * 
-	 * @param hour
-	 *            Hours to the epoch
-	 */
-	public abstract void setHour(int hour);
-
-	/**
-	 * Set the integer amount of minutes preceding the epoch from the last hour.
-	 * 
-	 * @param minute
-	 *            Minutes to the epoch
-	 */
-	public abstract void setMinute(int minute);
-
-	/**
-	 * Set the equivalent amount of radians as this HMS. 24h == 360deg == 2&pi; rad
-	 * 
-	 * @param rad
-	 *            Radians to the epoch
-	 */
-	public abstract void setRadian(double rad);
-
-	/**
-	 * Set the amount of seconds preceding the epoch from the last complete minute.
-	 * 
-	 * @param second
-	 *            Seconds to the epoch
-	 */
-	public abstract void setSecond(double second);
 
 }

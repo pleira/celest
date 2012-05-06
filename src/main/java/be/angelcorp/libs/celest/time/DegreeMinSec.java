@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.time;
 
+import javax.annotation.concurrent.Immutable;
+
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -25,21 +27,15 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author Simon Billemont
  * @see IDegreeMinSec
  */
+@Immutable
 public class DegreeMinSec implements IDegreeMinSec {
 
-	/**
-	 * Integer number of degrees closest to, but just before the direction
-	 */
-	private int		degree;
-	/**
-	 * Integer number of minutes closest to, but just before the direction since the last complete degree
-	 * [minute]
-	 */
-	private int		minute;
-	/**
-	 * Number of seconds to the direction from the preceding whole minute
-	 */
-	private double	second;
+	/** Integer number of degrees closest to, but just before the epoch */
+	private final int		degree;
+	/** Integer number of minutes closest to, but just before the epoch since the last complete degree */
+	private final int		minute;
+	/** Number of seconds to the direction from the preceding whole minute */
+	private final double	second;
 
 	/**
 	 * Create a DMS angle based on known HMS angle
@@ -48,7 +44,12 @@ public class DegreeMinSec implements IDegreeMinSec {
 	 *            {@link IHourMinSec} angle
 	 */
 	public DegreeMinSec(IHourMinSec hms) {
-		setRadian(hms.getRadian());
+		double rad = hms.getRadian();
+		// TODO:change the array output so we have double seconds
+		int[] arr = TimeUtils.rad_dms(rad);
+		degree = arr[0];
+		minute = arr[1];
+		second = arr[2];
 	}
 
 	/**
@@ -62,9 +63,9 @@ public class DegreeMinSec implements IDegreeMinSec {
 	 *            Second to the direction
 	 */
 	public DegreeMinSec(int deg, int minute, double second) {
-		setDegree(deg);
-		setMinute(minute);
-		setSecond(second);
+		this.degree = deg;
+		this.minute = minute;
+		this.second = second;
 	}
 
 	/**
@@ -106,42 +107,6 @@ public class DegreeMinSec implements IDegreeMinSec {
 	 */
 	public Vector3D getTime() {
 		return new Vector3D(degree, minute, second);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setDegree(int deg) {
-		this.degree = deg;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setMinute(int minute) {
-		this.minute = minute;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setRadian(double rad) {
-		// TODO:change the array output so we have double seconds
-		int[] arr = TimeUtils.rad_dms(rad);
-		degree = arr[0];
-		minute = arr[1];
-		second = arr[2];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setSecond(double second) {
-		this.second = second;
 	}
 
 	/**

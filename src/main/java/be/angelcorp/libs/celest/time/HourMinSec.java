@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.time;
 
+import javax.annotation.concurrent.Immutable;
+
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -24,21 +26,22 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author Simon Billemont
  * @see IHourMinSec
  */
+@Immutable
 public class HourMinSec implements IHourMinSec {
 
 	/**
 	 * Integer number of hours closest to, but just before the epoch [hour]
 	 */
-	private int		hour;
+	private final int		hour;
 	/**
 	 * Integer number of minutes closest to, but just before the epoch since the last complete hour
 	 * [minute]
 	 */
-	private int		minute;
+	private final int		minute;
 	/**
 	 * Number of seconds to the epoch from the preceding whole minute
 	 */
-	private double	second;
+	private final double	second;
 
 	/**
 	 * Create a HMS time based on known DMS time
@@ -47,7 +50,12 @@ public class HourMinSec implements IHourMinSec {
 	 *            Known {@link IDegreeMinSec} time
 	 */
 	public HourMinSec(IDegreeMinSec dms) {
-		setRadian(dms.getRadian());
+		// TODO: make it the seconds more accurate then an integer
+		double rad = dms.getRadian();
+		int[] arr = TimeUtils.rad_hms(rad);
+		this.hour = arr[0];
+		this.minute = arr[1];
+		this.second = arr[2];
 	}
 
 	/**
@@ -61,9 +69,14 @@ public class HourMinSec implements IHourMinSec {
 	 *            Second of the epoch
 	 */
 	public HourMinSec(int hour, int minute, double second) {
-		setHour(hour);
-		setMinute(minute);
-		setSecond(second);
+		this.hour = hour;
+		this.minute = minute;
+		this.second = second;
+	}
+
+	@Override
+	public double getDayFraction() {
+		return (((second / 60. + minute) / 60.) + hour) / 24.;
 	}
 
 	/**
@@ -105,42 +118,6 @@ public class HourMinSec implements IHourMinSec {
 	 */
 	public Vector3D getTime() {
 		return new Vector3D(hour, minute, second);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setHour(int hour) {
-		this.hour = hour;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setMinute(int minute) {
-		this.minute = minute;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setRadian(double rad) {
-		// TODO: make it the seconds more accurate then an integer
-		int[] arr = TimeUtils.rad_hms(rad);
-		setHour(arr[0]);
-		setMinute(arr[1]);
-		setSecond(arr[2]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setSecond(double second) {
-		this.second = second;
 	}
 
 	/**
