@@ -15,7 +15,11 @@ NOTICE.txt - credits and copyright notices
 		Orbit & Constellation Design & Management (OCDM)
 			by James R. Wertz
 			Second printing 2009
-			
+		
+		Fundamentals of Astrodynamics and Applications
+			by: David A. Vallado
+			Thrid Edition 2007
+			ISBN: 978-0-387-71831-6
 
 See LICENSE.txt for licensing information.
 See http://angelcorp.be for further information.

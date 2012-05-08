@@ -38,7 +38,7 @@ import be.angelcorp.libs.util.physics.Time;
 public class TCG implements ITimeStandard {
 
 	/**
-	 * LG is a scale constant accounting for the Earth’s gravitational and rotational potential affecting
+	 * LG is a scale constant accounting for the Earth's gravitational and rotational potential affecting
 	 * the rate of clocks according to the IAU-specified relativistic metric. IAU Resolution B1.9 (2000)
 	 * recommends LG as a defining constant, so the relationship cannot change. [1]
 	 */

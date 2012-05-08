@@ -103,7 +103,7 @@ public class UTC implements ITimeStandard {
 		double offset = -entry.getValue().value(jd);
 
 		// Check if the leap second pushes over a TAI - UTC bound
-		if (jd + Time.convert(offset, Time.day_julian) < entry.getKey()) {
+		if (jd + Time.convert(offset, Time.second, Time.day_julian) < entry.getKey()) {
 			entry = TAI_UTC.floorEntry(jd - 1);
 			offset = -entry.getValue().value(jd);
 		}

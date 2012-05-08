@@ -21,6 +21,7 @@ import java.util.GregorianCalendar;
 
 import javax.annotation.concurrent.Immutable;
 
+import be.angelcorp.libs.celest.time.dateStandard.DateStandards;
 import be.angelcorp.libs.celest.time.dateStandard.IDateStandard;
 import be.angelcorp.libs.celest.time.timeStandard.ITimeStandard;
 import be.angelcorp.libs.celest.time.timeStandard.TimeStandards;
@@ -28,10 +29,17 @@ import be.angelcorp.libs.celest.time.timeStandard.UTC;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
- * Basic Julian Date container
+ * Basic Julian Date, a time/date of a specific epoch. Internaly the representation is handled as a
+ * Julian Date number (see {@link DateStandards}), in a specific time standated (UTC/TAI/TT/... see
+ * {@link ITimeStandard}).
  * 
  * <p>
- * WARNING: Any arithmetic in this class is only accurate to the second ! (double => int for seconds)
+ * The general accuracy of this class is generally lower a millisecond.
+ * </p>
+ * 
+ * <p>
+ * WARNING: Any date (yr/mo/day/hr/min/sec) arithmetic in this class is only accurate to the second !
+ * (double => int for seconds).
  * </p>
  * 
  * @author Simon Billemont

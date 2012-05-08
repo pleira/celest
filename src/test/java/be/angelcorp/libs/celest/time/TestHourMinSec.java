@@ -33,15 +33,5 @@ public class TestHourMinSec extends CelestTest {
 		hms = new HourMinSec(dms);
 		assertEquals(hms.getRadian(), dms.getRadian(), precision_1s_hms_in_rad);
 		dms = new DegreeMinSec(12, 01, 59.1564);
-		hms.setRadian(dms.getRadian());
-		assertEquals(hms.getRadian(), dms.getRadian(), precision_1s_hms_in_rad);
-
-		hms = new HourMinSec(0, 0, 0);
-		hms.setHour(12);
-		CelestTest.assertEquals(new double[] { 12, 0, 0 }, hms.getTime().toArray(), 1E-16);
-		hms.setMinute(59);
-		CelestTest.assertEquals(new double[] { 12, 59, 0 }, hms.getTime().toArray(), 1E-16);
-		hms.setSecond(22.1567587);
-		CelestTest.assertEquals(new double[] { 12, 59, 22.1567587 }, hms.getTime().toArray(), 1E-16);
 	}
 }
