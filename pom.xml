@@ -29,6 +29,13 @@
         	<artifactId>miglayout-swing</artifactId>
         	<version>4.2</version>
         </dependency>
+        
+        <dependency>
+	        <groupId>be.angelcorp.libs</groupId>
+			<artifactId>matlabConnect</artifactId>
+			<version>${version.libs.connect}</version>
+			<optional>true</optional>
+        </dependency>
 	</dependencies>
 
 	<build>

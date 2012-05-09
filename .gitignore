@@ -7,3 +7,4 @@ classes
 .project
 .settings
 config.xml
+*.csv

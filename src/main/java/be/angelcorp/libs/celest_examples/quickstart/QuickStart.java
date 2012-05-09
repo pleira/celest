@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ *
+ * Licensed under the Non-Profit Open Software License version 3.0
+ * (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *        http://www.opensource.org/licenses/NOSL3.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package be.angelcorp.libs.celest_examples.quickstart;
 
 import java.io.File;
@@ -55,7 +70,7 @@ public class QuickStart implements Runnable {
 
 		/* First leg of the trajectory, the orbit as it was injected by the atlas launcher */
 		/* Without any intervention, it would keep this orbit */
-		IJulianDate t0 = JulianDate.J2000;
+		IJulianDate t0 = JulianDate.J2000_EPOCH;
 		trajectory.addTrajectory(new KeplerTrajectory(k, t0), t0);
 
 		/* Add first kick to the satellite */
@@ -110,7 +125,7 @@ public class QuickStart implements Runnable {
 			long samples = 1000L;
 			File ephemerisFile = Services.newFile("quickstart.csv");
 			CsvWriter writer = new CsvWriter(ephemerisFile, "t", "rx", "ry", "rz", "vx", "vy", "vz");
-			IJulianDate t0 = JulianDate.J2000;
+			IJulianDate t0 = JulianDate.J2000_EPOCH;
 
 			logger.inf("Saving ephemeris to file %s", ephemerisFile);
 			List<ICartesianElements> states = new LinkedList<>();
