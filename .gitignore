@@ -1,8 +1,12 @@
-config.xml
-vfsDB.xml
 target
 distribution
 eclipse
 .svn
 bin
 classes
+
+config.xml
+vfsDB.xml
+.settings
+.classpath
+.project
