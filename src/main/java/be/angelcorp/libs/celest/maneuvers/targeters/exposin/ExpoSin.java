@@ -17,6 +17,10 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import static org.apache.commons.math3.util.FastMath.PI;
 import static org.apache.commons.math3.util.FastMath.acos;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
@@ -24,8 +28,6 @@ import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
-
-import com.lyndir.lhunath.lib.system.logging.Logger;
 
 /**
  * 
@@ -38,7 +40,7 @@ import com.lyndir.lhunath.lib.system.logging.Logger;
  */
 public class ExpoSin extends TPBVP {
 
-	private static final Logger	logger		= Logger.get(ExpoSin.class);
+	private static final Logger	logger		= LoggerFactory.getLogger(ExpoSin.class);
 
 	/**
 	 * Standard gravitational parameter of the center body (body with the strongest influence on the
@@ -95,16 +97,16 @@ public class ExpoSin extends TPBVP {
 	}
 
 	/**
-	 * Set the k2 parameter (winding parameter) used in the exposin solution by inferring it from the set
-	 * amount of revolutions around the center body.
+	 * Set the k2 parameter (winding parameter) used in the exposin solution by inferring it from
+	 * the set amount of revolutions around the center body.
 	 */
 	public void assumeK2FromN() {
 		assumeK2FromN(N);
 	}
 
 	/**
-	 * Set the k2 parameter (winding parameter) used in the exposin solution by inferring it from the
-	 * given amount of revolutions around the center body.
+	 * Set the k2 parameter (winding parameter) used in the exposin solution by inferring it from
+	 * the given amount of revolutions around the center body.
 	 * 
 	 * @param N
 	 *            Revolutions to assume [N]
@@ -114,8 +116,8 @@ public class ExpoSin extends TPBVP {
 	}
 
 	/**
-	 * Get all the possible exposin solutions for reaching r2 from r1 (without time constraignt). It is a
-	 * function of a generic parameter gamma.
+	 * Get all the possible exposin solutions for reaching r2 from r1 (without time constraignt). It
+	 * is a function of a generic parameter gamma.
 	 * 
 	 * @return All possible exposin solutions
 	 */
@@ -137,7 +139,7 @@ public class ExpoSin extends TPBVP {
 		ExpoSinSolutionSet solutions = getSolutionSet();
 		// Find the curve for which the tof is equal the the required tof
 		double gammaOptimal = solutions.getOptimalSolution(getdT());
-		logger.dbg("Gamma optimal: %f", gammaOptimal);
+		logger.debug("Gamma optimal: {}", gammaOptimal);
 
 		// Create a trajectory from the found solution
 		ExponentialSinusoid solution = solutions.getExpoSin(gammaOptimal);
