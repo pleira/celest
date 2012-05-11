@@ -20,23 +20,23 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import be.angelcorp.libs.util.gui.config.Config;
 import be.angelcorp.libs.util.gui.objectGuiSerializer.ObjectGuiSerializer;
 import be.angelcorp.libs.util.gui.objectGuiSerializer.selectableList.SelectableListSerializer;
 
-import com.lyndir.lhunath.lib.system.logging.Logger;
-
 public class Main implements Runnable {
+
+	private static final Logger	logger	= LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
 		Main runner = new Main();
 		runner.run();
 	}
 
-	private String				examplesPackage	= "be.angelcorp.libs.celest_examples";
-
-	private static final Logger	logger			= Logger.get(ExampleRunner.class);
+	private String	examplesPackage	= "be.angelcorp.libs.celest_examples";
 
 	public Main() {
 		Config config = new Config();
@@ -60,10 +60,10 @@ public class Main implements Runnable {
 		});
 		for (Class<?> raw_example : raw_examples) {
 			if (Runnable.class.isAssignableFrom(raw_example)) {
-				logger.dbg("Found CelestExample class: %s", raw_example);
+				logger.debug("Found CelestExample class: {}", raw_example.getSimpleName());
 				examples.add((Class<Runnable>) raw_example);
 			} else {
-				logger.dbg("Found a class tagged with CelestExample, which is not a Runnable: %s", raw_example);
+				logger.debug("Found a class tagged with CelestExample, which is not a Runnable: {}", raw_example);
 			}
 		}
 		return examples;

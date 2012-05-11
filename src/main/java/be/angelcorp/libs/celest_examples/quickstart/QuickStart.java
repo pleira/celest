@@ -19,6 +19,9 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.body.bodyCollection.TwoBodyCollection;
 import be.angelcorp.libs.celest.constants.EarthConstants;
@@ -38,8 +41,6 @@ import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.io.CsvWriter;
 import be.angelcorp.libs.util.physics.Time;
 
-import com.lyndir.lhunath.lib.system.logging.Logger;
-
 @CelestExample(name = "Quickstart example",
 		description = "This is an example that uses a veriaty of tools in libs.celest to compute a sample scenario for a GTO orbit; raiging of the pericenter using impulive maneuvers.")
 public class QuickStart implements Runnable {
@@ -52,7 +53,7 @@ public class QuickStart implements Runnable {
 	/** Time after the three kicks and an additional orbit */
 	public IJulianDate			tf;
 
-	private static final Logger	logger	= Logger.get(QuickStart.class);
+	private static final Logger	logger	= LoggerFactory.getLogger(QuickStart.class);
 
 	public ITrajectory getTrajectory() throws Exception {
 		// Original orbit
@@ -118,7 +119,7 @@ public class QuickStart implements Runnable {
 	public void run() {
 		try {
 			/* Compute the trajectory of the AEHF satellite for the first three kicks by the LAE engine */
-			logger.inf("Creating the quickstart trajectory");
+			logger.info("Creating the quickstart trajectory");
 			ITrajectory trajectory = getTrajectory();
 
 			/* Now you can simply evaluate the trajectory, and plot the results using an external app */
@@ -127,21 +128,21 @@ public class QuickStart implements Runnable {
 			CsvWriter writer = new CsvWriter(ephemerisFile, "t", "rx", "ry", "rz", "vx", "vy", "vz");
 			IJulianDate t0 = JulianDate.J2000_EPOCH;
 
-			logger.inf("Saving ephemeris to file %s", ephemerisFile);
+			logger.info("Saving ephemeris to file {}", ephemerisFile);
 			List<ICartesianElements> states = new LinkedList<>();
 			double tFinal = tf.relativeTo(t0, Time.second);
 			for (double t = 0; t < tFinal; t += tFinal / samples) {
 				IJulianDate time = t0.add(t, Time.second);
 				ICartesianElements state = trajectory.evaluate(time).toCartesianElements();
 
-				logger.dbg("At jd=%s the state is: %s", time, state);
+				logger.debug("At jd={} the state is: {}", time, state);
 				states.add(state);
 
 				writer.write(t, state.getR().getX(), state.getR().getY(), state.getR().getZ(),
 						state.getV().getX(), state.getV().getY(), state.getV().getZ());
 			}
 
-			logger.inf("Plotting the ephemeris");
+			logger.info("Plotting the ephemeris");
 			double[] x = new double[states.size()];
 			double[] y = new double[states.size()];
 			int i = 0;
@@ -155,7 +156,7 @@ public class QuickStart implements Runnable {
 			}
 			Services.newPlot().addData(x, y).makeFrame();
 		} catch (Exception e) {
-			logger.err(e, "Unexpected exception when trying to solve the quickstart example: ");
+			logger.error("Unexpected exception when trying to solve the quickstart example: ", e);
 		}
 	}
 }

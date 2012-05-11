@@ -32,9 +32,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
 import net.miginfocom.swing.MigLayout;
-import be.angelcorp.libs.util.gui.config.confgGui.ConfigGui;
 
-import com.lyndir.lhunath.lib.system.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import be.angelcorp.libs.util.gui.config.confgGui.ConfigGui;
 
 public class SimpleGui extends JFrame {
 
@@ -60,7 +62,7 @@ public class SimpleGui extends JFrame {
 		}
 	}
 
-	private static final Logger		logger	= Logger.get(SimpleGui.class);
+	private static final Logger		logger	= LoggerFactory.getLogger(SimpleGui.class);
 
 	private Set<Class<Runnable>>	examples;
 	private ExampleRunner			invoker;
@@ -132,7 +134,7 @@ public class SimpleGui extends JFrame {
 				if (node != null && Example.class.isAssignableFrom(node.getUserObject().getClass())) {
 					invoker.invoke(((Example) node.getUserObject()).getClazz());
 				} else {
-					logger.wrn("You need to select an example before pressing RUN");
+					logger.warn("You need to select an example before pressing RUN");
 					details.setText("Select an example to run!");
 				}
 			}
