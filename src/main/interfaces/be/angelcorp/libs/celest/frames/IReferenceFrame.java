@@ -15,6 +15,22 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-public interface IReferenceFrame {
+
+/**
+ * A {@link IReferenceFrame} is the logic capable of producing a specific reference frame at specified
+ * epochs.
+ * 
+ * <p>
+ * All {@link IReferenceFrame}'s are linked together using {@link IReferenceFrameTransform} and form a
+ * graph. This graph is used to find {@link IReferenceFrameTransform} between two arbitrary
+ * {@link IReferenceFrame}'s.
+ * </p>
+ * 
+ * @author Simon Billemont
+ * 
+ * @param <F>
+ *            Implementing frame class.
+ */
+public interface IReferenceFrame<F extends IReferenceFrame<F>> {
 
 }
