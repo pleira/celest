@@ -43,12 +43,6 @@ import be.angelcorp.libs.celest.state.IState;
 public interface IPositionState extends IState {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IPositionState clone();
-
-	/**
 	 * Tests if two {@link IPositionState} are equal. By default, this is done by comparing all elements
 	 * of the {@link IPositionState#toVector()} output.
 	 * 

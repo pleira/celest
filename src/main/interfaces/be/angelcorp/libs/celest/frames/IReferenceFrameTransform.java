@@ -15,12 +15,11 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
-
 import be.angelcorp.libs.celest.state.orientationState.IOrientationState;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.rotation.IRotation;
 
 /**
  * Transform between different {@link IReferenceFrame}'s.
@@ -121,7 +120,7 @@ public interface IReferenceFrameTransform<F0 extends IReferenceFrame<F0>, F1 ext
 	 * @returnA new orientation which is equivalent to given provided orientation, but in the new
 	 *          {@link IReferenceFrame}.
 	 */
-	public abstract Rotation transformOrientation(Rotation orientation);
+	public abstract IRotation transformOrientation(IRotation orientation);
 
 	/**
 	 * Transform only the orientation rate of a body into a new {@link IReferenceFrame}.

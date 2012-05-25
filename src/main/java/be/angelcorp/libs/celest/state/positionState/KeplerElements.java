@@ -219,6 +219,25 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 	}
 
 	/**
+	 * Create a new set of {@link KeplerElements}, identical to the given set of elements, except for the
+	 * fast variable (True anomaly &nu;), which is provided by the user.
+	 * 
+	 * @param k
+	 *            Basis for all the constant Kepler elements.
+	 * @param trueA
+	 *            New value for the true anomaly [rad].
+	 */
+	public KeplerElements(IKeplerElements k, double trueA) {
+		this(k.getSemiMajorAxis(),
+				k.getEccentricity(),
+				k.getInclination(),
+				k.getArgumentPeriapsis(),
+				k.getRaan(),
+				trueA,
+				k.getCenterbody());
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

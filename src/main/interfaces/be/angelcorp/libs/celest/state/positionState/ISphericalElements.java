@@ -39,12 +39,6 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 public interface ISphericalElements extends IPositionState {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ISphericalElements clone();
-
-	/**
 	 * Tests if two sets of {@link SphericalElements} hold the same variables (tests for equal
 	 * r,&alpha;,&delta;,V,&gamma;,&psi;)
 	 * 

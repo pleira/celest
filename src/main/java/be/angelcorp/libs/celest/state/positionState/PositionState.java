@@ -41,12 +41,6 @@ public abstract class PositionState implements IPositionState {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public abstract IPositionState clone();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public boolean equals(IPositionState obj) {
 		RealVector v1 = toVector();
 		RealVector v2 = obj.toVector();

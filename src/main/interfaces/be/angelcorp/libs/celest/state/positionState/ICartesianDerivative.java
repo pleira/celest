@@ -34,15 +34,6 @@ import be.angelcorp.libs.math.linear.Vector3D;
 public interface ICartesianDerivative extends Cartesian, IPositionStateDerivative {
 
 	/**
-	 * Create a deep copy of this object. It returns an exact copy of this
-	 * {@link IPositionStateDerivative} , but with no direct link to the object it was created against.
-	 * This means changing the original {@link IPositionStateDerivative} does not effect the values of
-	 * the newly created {@link IPositionStateDerivative}
-	 */
-	@Override
-	public abstract ICartesianDerivative clone();
-
-	/**
 	 * Check if two {@link ICartesianDerivative} are exactly equal (two NaN elements are considered
 	 * equal).
 	 * 

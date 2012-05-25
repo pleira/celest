@@ -36,12 +36,6 @@ import be.angelcorp.libs.celest.state.IStateDerivative;
 public interface IPositionStateDerivative extends IStateDerivative {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IStateDerivative clone();
-
-	/**
 	 * Tests if two {@link IPositionStateDerivative} are equal. By default, this id done by comparing all
 	 * elements of the {@link IPositionStateDerivative#toVector()} output. Each element must have an
 	 * identical value to be considered equal.

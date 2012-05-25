@@ -34,12 +34,6 @@ import be.angelcorp.libs.celest.math.Keplerian;
 public interface IKeplerDerivative extends Keplerian, IPositionStateDerivative {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IKeplerDerivative clone();
-
-	/**
 	 * Tests if two sets of kepler derivartives hold the same variables (tests for equal
 	 * da,de,di,d&omega;,d&Omega;,dM)
 	 * 

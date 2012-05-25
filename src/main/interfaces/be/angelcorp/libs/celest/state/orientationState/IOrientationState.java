@@ -45,12 +45,6 @@ import be.angelcorp.libs.math.rotation.IRotation;
 public interface IOrientationState extends IState {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IOrientationState clone();
-
-	/**
 	 * Tests if two {@link IOrientationState} are equal.
 	 * 
 	 * @param obj

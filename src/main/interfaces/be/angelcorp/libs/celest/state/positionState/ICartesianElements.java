@@ -34,12 +34,6 @@ import be.angelcorp.libs.math.linear.Vector3D;
 public interface ICartesianElements extends Cartesian, IPositionState {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ICartesianElements clone();
-
-	/**
 	 * Tests if two sets of Cartesian elements hold the same variables (tests for equal
 	 * x,y,z,&#7819;,&#7823;,&#380;)
 	 * 

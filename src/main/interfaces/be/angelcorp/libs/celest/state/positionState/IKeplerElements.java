@@ -36,12 +36,6 @@ import be.angelcorp.libs.celest.math.Keplerian;
 public interface IKeplerElements extends Keplerian, IPositionState {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IKeplerElements clone();
-
-	/**
 	 * Tests if two sets of kepler elements hold the same variables (tests for equal
 	 * a,e,i,&omega;,&Omega;,&nu;)
 	 * 
@@ -121,16 +115,19 @@ public interface IKeplerElements extends Keplerian, IPositionState {
 	/**
 	 * @see KeplerElements#omega
 	 */
+	@Deprecated
 	public abstract void setArgumentPeriapsis(double omega);
 
 	/**
 	 * @see KeplerElements#centerbody
 	 */
+	@Deprecated
 	public abstract void setCenterbody(CelestialBody centerbody);
 
 	/**
 	 * @see KeplerElements#e
 	 */
+	@Deprecated
 	public abstract void setEccentricity(double e);
 
 	/**
@@ -149,26 +146,31 @@ public interface IKeplerElements extends Keplerian, IPositionState {
 	 * @param trueA
 	 *            True anomaly {@link KeplerElements#trueA} [rad]
 	 */
+	@Deprecated
 	public abstract void setElements(double a, double e, double i, double omega, double raan, double trueA);
 
 	/**
 	 * @see KeplerElements#i
 	 */
+	@Deprecated
 	public abstract void setInclination(double i);
 
 	/**
 	 * @see KeplerElements#raan
 	 */
+	@Deprecated
 	public abstract void setRaan(double raan);
 
 	/**
 	 * @see KeplerElements#a
 	 */
+	@Deprecated
 	public abstract void setSemiMajorAxis(double a);
 
 	/**
 	 * @see KeplerElements#trueA
 	 */
+	@Deprecated
 	public abstract void setTrueAnomaly(double trueA);
 
 	/**

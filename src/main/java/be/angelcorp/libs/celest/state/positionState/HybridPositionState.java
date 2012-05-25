@@ -65,17 +65,6 @@ public class HybridPositionState extends PositionState implements ICartesianElem
 	}
 
 	@Override
-	public HybridPositionState clone() {
-		HybridPositionState h = new HybridPositionState();
-		h.master = master;
-		h.cartesian = cartesian.clone();
-		h.keplerian = keplerian.clone();
-		h.spherical = spherical.clone();
-		h.center = center;
-		return h;
-	}
-
-	@Override
 	public boolean equals(ICartesianElements state2) {
 		return getCartesian().equals(state2);
 	}

@@ -24,10 +24,4 @@ package be.angelcorp.libs.celest.state;
  */
 public interface IStateDerivative extends IState {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IStateDerivative clone();
-
 }

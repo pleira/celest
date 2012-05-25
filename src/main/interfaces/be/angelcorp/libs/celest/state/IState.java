@@ -29,11 +29,6 @@ import org.apache.commons.math3.linear.RealVector;
 public interface IState extends Cloneable {
 
 	/**
-	 * Create a new {@link IState} with identical properties
-	 */
-	public abstract IState clone();
-
-	/**
 	 * Get the vector representation of all the variables in the state.
 	 * 
 	 * @return A statevector which contains all the state variables.
