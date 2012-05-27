@@ -15,10 +15,16 @@
  */
 package be.angelcorp.libs.celest_examples.base;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import be.angelcorp.libs.math.plot.IPlot2;
 import be.angelcorp.libs.math.plot.Plot2;
 import be.angelcorp.libs.util.gui.config.ConfigField;
 import be.angelcorp.libs.util.gui.objectGuiSerializer.selectableList.SelectableList;
+
+import com.google.inject.Binder;
+import com.google.inject.Module;
 
 public class Settings extends be.angelcorp.libs.util.gui.config.Settings {
 
@@ -41,5 +47,24 @@ public class Settings extends be.angelcorp.libs.util.gui.config.Settings {
 			e.printStackTrace();
 		}
 		// plottingLibrary.put(MPlot2.class, new Boolean(true));
+	}
+
+	@Override
+	public Collection<Module> getInjectorModules() {
+		LinkedList<Module> modules = new LinkedList<>();
+		modules.add(new Module() {
+			@Override
+			public void configure(Binder binder) {
+				binder.bind(Settings.class).toInstance(Settings.this);
+			}
+		});
+		modules.add(new Module() {
+			@Override
+			public void configure(Binder binder) {
+				Class<? extends IPlot2> plotter = plottingLibrary.getSelected().get(0);
+				binder.bind(IPlot2.class).to(plotter);
+			}
+		});
+		return modules;
 	}
 }

@@ -24,12 +24,16 @@ import be.angelcorp.libs.math.plot.IPlot2;
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException;
 import be.angelcorp.libs.util.gui.config.Config;
 
+import com.google.inject.Injector;
+
 public abstract class Services {
 
 	private static final Logger	logger	= LoggerFactory.getLogger(Services.class);
 
 	private static Settings getSettings() {
-		return Config.findSetting(Settings.class);
+		Injector injector = Config.getInjector();
+		Settings settings = injector.getInstance(Settings.class);
+		return settings;
 	}
 
 	public static File newFile(String relativePath) {
@@ -47,12 +51,10 @@ public abstract class Services {
 	}
 
 	public static IPlot2 newPlot() {
-		Class<? extends IPlot2> plotType = getSettings().plottingLibrary.getSelected().get(0);
-		try {
-			logger.debug("Creating new plot of type: {}", plotType);
-			return plotType.newInstance();
-		} catch (Exception e) {
-			throw new GenericRuntimeException(e, "Could not make a new plot of type %s", plotType);
-		}
+		Injector injector = Config.getInjector();
+		logger.debug("Creating new plot");
+		IPlot2 plot = injector.getInstance(IPlot2.class);
+		logger.debug("Created plot: {}", plot);
+		return plot;
 	}
 }
