@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest_examples.quickstart;
+package be.angelcorp.libs.celest_examples.examples.quickstart;
 
 import be.angelcorp.libs.celest.body.BiPropellant;
 import be.angelcorp.libs.celest.body.CelestialBody;

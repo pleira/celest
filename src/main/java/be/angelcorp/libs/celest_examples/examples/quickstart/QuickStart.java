@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest_examples.quickstart;
+package be.angelcorp.libs.celest_examples.examples.quickstart;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -35,8 +35,8 @@ import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.CompositeTrajectory;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.celest.trajectory.KeplerTrajectory;
-import be.angelcorp.libs.celest_examples.base.CelestExample;
-import be.angelcorp.libs.celest_examples.base.Services;
+import be.angelcorp.libs.celest_examples.gui.CelestExample;
+import be.angelcorp.libs.celest_examples.gui.Services;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.io.CsvWriter;
 import be.angelcorp.libs.util.physics.Time;
