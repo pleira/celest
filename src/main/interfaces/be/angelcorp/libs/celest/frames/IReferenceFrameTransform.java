@@ -31,7 +31,7 @@ import be.angelcorp.libs.math.rotation.IRotation;
  * @param <F1>
  *            Transform to this {@link IReferenceFrame}.
  */
-public interface IReferenceFrameTransform<F0 extends IReferenceFrame<F0>, F1 extends IReferenceFrame<F1>> {
+public interface IReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends IReferenceFrame> {
 
 	/**
 	 * Apply another {@link IReferenceFrameTransform} on top of this transform, so that the resulting
@@ -42,7 +42,7 @@ public interface IReferenceFrameTransform<F0 extends IReferenceFrame<F0>, F1 ext
 	 *            {@link IReferenceFrameTransform} to add to this frame.
 	 * @return A {@link IReferenceFrameTransform} from {@link F0} to {@link F2}.
 	 */
-	public abstract <F2 extends IReferenceFrame<F2>> IReferenceFrameTransform<F0, F2>
+	public abstract <F2 extends IReferenceFrame> IReferenceFrameTransform<F0, F2>
 			add(IReferenceFrameTransform<F1, F2> other);
 
 	/**
@@ -72,7 +72,7 @@ public interface IReferenceFrameTransform<F0 extends IReferenceFrame<F0>, F1 ext
 	 * @return A new {@link IOrientationState} which is equivalent to given {@link IOrientationState},
 	 *         but in the new {@link IReferenceFrame}.
 	 */
-	public abstract IPositionStateDerivative transform(IOrientationState orientationState);
+	public abstract IOrientationState transform(IOrientationState orientationState);
 
 	/**
 	 * Transform a {@link IPositionState} into a new {@link IReferenceFrame}.
@@ -87,30 +87,35 @@ public interface IReferenceFrameTransform<F0 extends IReferenceFrame<F0>, F1 ext
 	/**
 	 * Transform a {@link IPositionStateDerivative} into a new {@link IReferenceFrame}.
 	 * 
+	 * @param positionState
+	 *            The position in frame F0.
 	 * @param positionStateDerivative
-	 *            Position derivatives to transform.
+	 *            Position derivatives in frame F0 to transform.
 	 * @return A new {@link IPositionStateDerivative} which is equivalent to given
 	 *         {@link IPositionStateDerivative}, but in the new {@link IReferenceFrame}.
 	 */
-	public abstract IPositionStateDerivative transform(IPositionStateDerivative positionStateDerivative);
+	public abstract IPositionStateDerivative transform(IPositionState positionState,
+			IPositionStateDerivative positionStateDerivative);
 
 	/**
 	 * Transform only the acceleration of a body into a new {@link IReferenceFrame}.
 	 * 
-	 * <pre>
-	 * acceleration = { a<sub>x</sub>, a<sub>y</sub>, a<sub>z</sub> }
-	 * </pre>
+	 * \begin{array}{rll}
+	 * position = & \{ x, y, z \} & [m] \\
+	 * velocity = & \{ \dot{x}, \dot{y}, \dot{z} \} & [m/s] \\
+	 * acceleration = & \{ \ddot{x}, \ddot{y}, \ddot{z} \} & [m/s^2]
+	 * \end{array}
 	 * 
-	 * <p>
-	 * <b>Unit: [m/s&#178;]</b>
-	 * </p>
-	 * 
+	 * @param position
+	 *            Position before transform (in frame F0).
+	 * @param velocity
+	 *            Velocity before transform (in frame F0).
 	 * @param acceleration
-	 *            Acceleration to transform.
+	 *            Acceleration before transform (in frame F0).
 	 * @returnA new acceleration vector which is equivalent to given provided vector, but in the new
-	 *          {@link IReferenceFrame}.
+	 *          {@link IReferenceFrame} (frame F1).
 	 */
-	public abstract Vector3D transformAcceleration(Vector3D acceleration);
+	public abstract Vector3D transformAcceleration(Vector3D position, Vector3D velocity, Vector3D acceleration);
 
 	/**
 	 * Transform only the orientation of a body into a new {@link IReferenceFrame}.
@@ -125,55 +130,49 @@ public interface IReferenceFrameTransform<F0 extends IReferenceFrame<F0>, F1 ext
 	/**
 	 * Transform only the orientation rate of a body into a new {@link IReferenceFrame}.
 	 * 
-	 * <pre>
-	 * orientationRate = { d&omega;<sub>x</sub>, d&omega;<sub>y</sub>, d&omega;<sub>z</sub> }
-	 * </pre>
+	 * \begin{array}{rll}
+	 * orientation = & \{ \omega_x, \omega_y, \omega_z \} & [rad] \\
+	 * orientationRate = & \{ \dot{\omega}_x, \dot{\omega}_y, \dot{\omega}_z \} & [rad/s]
+	 * \end{array}
 	 * 
-	 * <p>
-	 * <b>Unit: [rad]</b>
-	 * </p>
-	 * 
+	 * @param orientation
+	 *            Orientation in frame F0.
 	 * @param orientationRate
-	 *            Orientation rate to transform.
+	 *            Orientation rate in frame F0 to transform.
 	 * @returnA new orientation rate which is equivalent to given provided orientation rate, but in the
 	 *          new {@link IReferenceFrame}.
 	 */
-	public abstract Vector3D transformOrientationRate(Vector3D orientationRate);
+	public abstract Vector3D transformOrientationRate(IRotation orientation, Vector3D orientationRate);
 
 	/**
 	 * Transform only the position of a body into a new {@link IReferenceFrame}.
 	 * 
-	 * <pre>
-	 * position= { x, y, z }
-	 * </pre>
-	 * 
-	 * <p>
-	 * <b>Unit: [m]</b>
-	 * </p>
+	 * \begin{array}{rll}
+	 * position = & \{ x, y, z \} & [m] \\
+	 * \end{array}
 	 * 
 	 * @param position
-	 *            Position to transform.
+	 *            Position before transform (in frame F0).
 	 * @returnA new position vector which is equivalent to given provided vector, but in the new
-	 *          {@link IReferenceFrame}.
+	 *          {@link IReferenceFrame} (frame F1).
 	 */
 	public abstract Vector3D transformPosition(Vector3D position);
 
 	/**
 	 * Transform only the velocity of a body into a new {@link IReferenceFrame}.
 	 * 
-	 * <pre>
-	 * velocity = { v<sub>x</sub>, v<sub>y</sub>, v<sub>z</sub> }
-	 * </pre>
+	 * \begin{array}{rll}
+	 * position = & \{ x, y, z \} & [m] \\
+	 * velocity = & \{ \dot{x}, \dot{y}, \dot{z} \} & [m/s]
+	 * \end{array}
 	 * 
-	 * <p>
-	 * <b>Unit: [m/s]</b>
-	 * </p>
-	 * 
+	 * @param position
+	 *            Position before transform (in frame F0).
 	 * @param velocity
-	 *            Velocity to transform.
+	 *            Velocity before transform (in frame F0).
 	 * @returnA new velocity vector which is equivalent to given provided vector, but in the new
-	 *          {@link IReferenceFrame}.
+	 *          {@link IReferenceFrame} (frame F1).
 	 */
-	public abstract Vector3D transformVelocity(Vector3D velocity);
+	public abstract Vector3D transformVelocity(Vector3D position, Vector3D velocity);
 
 }

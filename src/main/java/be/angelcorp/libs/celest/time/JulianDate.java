@@ -77,12 +77,24 @@ public class JulianDate implements IJulianDate {
 	private final ITimeStandard	timeStandard;
 
 	/**
-	 * Create a Julian Date from a given {@link Date}
+	 * Create a Julian Date from a given {@link Date}.
 	 * 
 	 * @param date
-	 *            Date to convert to a Julian Date (UTC time)
+	 *            Date to convert to a Julian Date (UTC time).
 	 */
 	public JulianDate(Date date) {
+		this(date, UTC.get());
+	}
+
+	/**
+	 * Create a Julian Date from a given {@link Date}.
+	 * 
+	 * @param date
+	 *            Date to convert to a Julian Date.
+	 * @param timeStandard
+	 *            Time standard that the epoch is given in.
+	 */
+	public JulianDate(Date date, ITimeStandard timeStandard) {
 		Calendar cal = new GregorianCalendar();
 		cal.clear();
 		cal.setTime(date);
@@ -90,7 +102,7 @@ public class JulianDate implements IJulianDate {
 		this.date = TimeUtils.jday(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
 				cal.get(Calendar.DATE), cal.get(Calendar.HOUR_OF_DAY),
 				cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
-		this.timeStandard = UTC.get();
+		this.timeStandard = timeStandard;
 	}
 
 	/**
@@ -142,6 +154,49 @@ public class JulianDate implements IJulianDate {
 	 */
 	public JulianDate(double date, ITimeStandard timeStandard) {
 		this.date = date;
+		this.timeStandard = timeStandard;
+	}
+
+	/**
+	 * Create a Julian date from a specified calendar date.
+	 * 
+	 * @param year
+	 *            Year of the epoch.
+	 * @param month
+	 *            Month of the epoch.
+	 * @param day
+	 *            Day of the epoch.
+	 * @param hour
+	 *            Hour of the epoch.
+	 * @param minute
+	 *            Minutes of the epoch.
+	 * @param seconds
+	 *            Seconds of the epoch.
+	 */
+	public JulianDate(int year, int month, int day, int hour, int minute, double seconds) {
+		this(year, month, day, hour, minute, seconds, UTC.get());
+	}
+
+	/**
+	 * Create a Julian date from a specified calendar date.
+	 * 
+	 * @param year
+	 *            Year of the epoch.
+	 * @param month
+	 *            Month of the epoch.
+	 * @param day
+	 *            Day of the epoch.
+	 * @param hour
+	 *            Hour of the epoch.
+	 * @param minute
+	 *            Minutes of the epoch.
+	 * @param seconds
+	 *            Seconds of the epoch.
+	 * @param timeStandard
+	 *            Time standard that the epoch is given in.
+	 */
+	public JulianDate(int year, int month, int day, int hour, int minute, double seconds, ITimeStandard timeStandard) {
+		this.date = TimeUtils.jday(year, month, day, hour, minute, seconds);
 		this.timeStandard = timeStandard;
 	}
 

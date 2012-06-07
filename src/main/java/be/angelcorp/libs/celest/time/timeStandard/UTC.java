@@ -89,7 +89,12 @@ public class UTC implements ITimeStandard {
 	/** Singleton UTC instance */
 	private static UTC											instance	= new UTC();
 
-	/** Get singleton UTC instance */
+	/**
+	 * Get singleton UTC instance
+	 * 
+	 * @deprecated To be replaced with an injection based system.
+	 */
+	@Deprecated
 	public static UTC get() {
 		return instance;
 	}

@@ -15,7 +15,6 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-
 /**
  * A {@link IReferenceFrame} is the logic capable of producing a specific reference frame at specified
  * epochs.
@@ -31,6 +30,6 @@ package be.angelcorp.libs.celest.frames;
  * @param <F>
  *            Implementing frame class.
  */
-public interface IReferenceFrame<F extends IReferenceFrame<F>> {
+public interface IReferenceFrame {
 
 }
