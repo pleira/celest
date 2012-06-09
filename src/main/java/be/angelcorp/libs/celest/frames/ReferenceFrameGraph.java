@@ -21,10 +21,13 @@ import java.util.Set;
 
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 
 /**
  * Implementation of the {@link IReferenceFrameGraph}. This is the graph that contains all the reference
@@ -54,6 +57,9 @@ public class ReferenceFrameGraph implements IReferenceFrameGraph {
 	/** This is the JGraphT that actually describes the {@link IReferenceFrame}'s and there connections */
 	private final WeightedGraph<IReferenceFrame, IReferenceFrameTransformFactory<?, ?>>	graph;
 
+	private static final Logger															logger	= LoggerFactory
+																										.getLogger(ReferenceFrameGraph.class);
+
 	/**
 	 * Create a new empty {@link IReferenceFrameGraph} using a specified JGraphT instance as graph
 	 * back-end.
@@ -63,6 +69,33 @@ public class ReferenceFrameGraph implements IReferenceFrameGraph {
 	 */
 	public ReferenceFrameGraph(WeightedGraph<IReferenceFrame, IReferenceFrameTransformFactory<?, ?>> graph) {
 		this.graph = graph;
+	}
+
+	/***
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void attachFrame(IReferenceFrame frame) {
+		graph.addVertex(frame);
+	}
+
+	/***
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <F1 extends IReferenceFrame, F2 extends IReferenceFrame> void attachTransform(F1 frame1, F2 frame2,
+			IReferenceFrameTransformFactory<F1, F2> transform) {
+		if (!graph.containsVertex(frame1)) {
+			logger.debug("Tried to add transform between frame {} and {}, but frame {} does not exist in the graph",
+					new Object[] { frame1, frame2, frame1 });
+			return;
+		}
+		if (!graph.containsVertex(frame2)) {
+			logger.debug("Tried to add transform between frame {} and {}, but frame {} does not exist in the graph",
+					new Object[] { frame1, frame2, frame2 });
+			return;
+		}
+		graph.addEdge(frame1, frame2, transform);
 	}
 
 	/**
@@ -127,8 +160,102 @@ public class ReferenceFrameGraph implements IReferenceFrameGraph {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public WeightedGraph<IReferenceFrame, IReferenceFrameTransformFactory<?, ?>> getGraph() {
+	public IReferenceFrame findReferenceFrame(Predicate<IReferenceFrame> frame_predicate) {
+		IReferenceFrame frame = null;
+		for (IReferenceFrame iReferenceFrame : graph.vertexSet()) {
+			if (frame_predicate.apply(iReferenceFrame)) {
+				frame = iReferenceFrame;
+				break;
+			}
+		}
+		return frame;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<IReferenceFrameTransformFactory<?, ?>> findReferenceFrameTransforms(final IReferenceFrame frame) {
+		return new Iterator<IReferenceFrameTransformFactory<?, ?>>() {
+
+			/** Flag indicating that no more elements can be retrieved */
+			private boolean											hasNext;
+			/** The next element returned by {@link Iterator#next()} */
+			private IReferenceFrameTransformFactory<?, ?>			next;
+			/** Iterator to iterator over the remaining transforms possibly connected to the given frame */
+			final Iterator<IReferenceFrameTransformFactory<?, ?>>	transforms	= graph.edgeSet().iterator();
+
+			{
+				// Upon construction, retrieve the next element
+				retrieveNext();
+			}
+
+			@Override
+			public boolean hasNext() {
+				return hasNext;
+			}
+
+			@Override
+			public IReferenceFrameTransformFactory<?, ?> next() {
+				IReferenceFrameTransformFactory<?, ?> tmp = next;
+				retrieveNext();
+				return tmp;
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+
+			private void retrieveNext() {
+				do {
+					if (transforms.hasNext()) {
+						IReferenceFrameTransformFactory<?, ?> transform = transforms.next();
+						if (graph.getEdgeSource(transform) == frame || graph.getEdgeTarget(transform) == frame) {
+							next = transform;
+							break;
+						}
+					} else {
+						hasNext = false;
+						break;
+					}
+				} while (true);
+			}
+		};
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<IReferenceFrameTransformFactory<?, ?>> findReferenceFrameTransforms(
+			Predicate<IReferenceFrame> frame_predicate) {
+		// Locate the frame matching the predicate
+		IReferenceFrame frame = findReferenceFrame(frame_predicate);
+
+		// If no frame was found, return an empty iterator
+		if (frame == null)
+			return Iterators.emptyIterator();
+
+		// Else return all the connected IReferenceFrameTransformFactories
+		return findReferenceFrameTransforms(frame);
+	}
+
+	/**
+	 * Get the reference to the JGraphT back-end of this {@link IReferenceFrameGraph}.
+	 * 
+	 * @return JGraphT instance of this reference frame.
+	 */
+	public WeightedGraph<IReferenceFrame, IReferenceFrameTransformFactory<?, ?>> getJGraphT() {
 		return graph;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<IReferenceFrame> getReferenceFrames() {
+		return graph.vertexSet().iterator();
 	}
 
 	/**

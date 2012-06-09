@@ -15,28 +15,98 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-import org.jgrapht.WeightedGraph;
+import java.util.Iterator;
 
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 import com.google.common.base.Predicate;
 
 /**
- * Abstract description of what the framegraph should be capable of. This is mainly a front-end for the
- * JgraphT back-end that does all the work. It defines several convenience methods for finding
- * transformations between different frames in the internal graph structure.
+ * Abstract description a collection of interlinked frames.
+ * <p>
+ * The {@link IReferenceFrameGraph} is used to find transforms between any reference frame that was
+ * registered to it. This way, uses do not need to know all the individual transforms required to
+ * transform between any of the frames, even if they require multiple complex transformations.
+ * </p>
+ * <p>
+ * There are two flavors to get a {@link IReferenceFrameTransformFactory} or
+ * {@link IReferenceFrameTransform}. The first is when the actual source/destination frame instance is
+ * known, the other is using a {@link Predicate} to identify the specific frames.
+ * </p>
+ * <p>
+ * Note: The first frame to match either the origin/destination {@link Predicate} is used.
+ * </p>
  * 
  * @author Simon Billemont
  */
 public interface IReferenceFrameGraph {
 
 	/**
-	 * Get a JGrapgT graph, that describes, and is directly linked to the framegraph. All methods that
-	 * modify the returned graph, must also modify this frame graph structure.
+	 * Attach a new frame instance to this frame graph. If the frame already exists, no duplicate of the
+	 * frame is attached (the same instance can only be attached once).
 	 * 
-	 * @return A JGraphT graph description of this internal graph structure.
+	 * @param frame
+	 *            Frame to attach to this graph.
 	 */
-	public abstract WeightedGraph<IReferenceFrame, IReferenceFrameTransformFactory<?, ?>> getGraph();
+	public abstract void attachFrame(IReferenceFrame frame);
+
+	/**
+	 * Attach a transform between two existing {@link IReferenceFrame}'s in this graph.
+	 * <p>
+	 * If either frame does not exist in the frame graph, no action is performed.<br/>
+	 * If the same transform instance was already connected to the graph, its origin/destination frame
+	 * will be replaced by the passed frames.
+	 * </p>
+	 * 
+	 * @param frame1
+	 *            Origin reference frame of the transformation.
+	 * @param frame2
+	 *            Destination reference frame of the transformation.
+	 * @param transform
+	 *            Transformation factory to to produce transforms between the origin and destination
+	 *            frame.
+	 */
+	public abstract <F1 extends IReferenceFrame, F2 extends IReferenceFrame> void attachTransform(
+			F1 frame1, F2 frame2, IReferenceFrameTransformFactory<F1, F2> transform);
+
+	/**
+	 * Find the first frame from all the connected {@link IReferenceFrame}'s that match a specified
+	 * {@link Predicate}. If none of the frames match, null is returned.
+	 * 
+	 * @param frame_predicate
+	 *            {@link Predicate} to identify a specific frame.
+	 * @return The first frame to match the given predicate or else null.
+	 */
+	public abstract IReferenceFrame findReferenceFrame(Predicate<IReferenceFrame> frame_predicate);
+
+	/**
+	 * Search for all the {@link IReferenceFrameTransformFactory}'s connected to the provided frame
+	 * instance. If the frame was not attached to this graph, then an empty iterator is returned.
+	 * 
+	 * @param frame
+	 *            Find all factories to connected to this frame instance.
+	 * @return Iterator over all connected factories.
+	 */
+	public abstract Iterator<IReferenceFrameTransformFactory<?, ?>> findReferenceFrameTransforms(IReferenceFrame frame);
+
+	/**
+	 * Searches for the first frame to match the given predicate. After this, an iterator over all the
+	 * {@link IReferenceFrameTransformFactory}'s connected to the found frame are returned. If the frame
+	 * was not found in this graph, then an empty iterator is returned.
+	 * 
+	 * @param frame_predicate
+	 *            Find all factories to connected to the first matching frame with this predicate.
+	 * @return Iterator over all connected factories.
+	 */
+	public abstract Iterator<IReferenceFrameTransformFactory<?, ?>> findReferenceFrameTransforms(
+			Predicate<IReferenceFrame> frame_predicate);
+
+	/**
+	 * Returns an iterator that iterates over all the registered {@link IReferenceFrame}'s.
+	 * 
+	 * @return Iterator for all the frames in this graph.
+	 */
+	public abstract Iterator<IReferenceFrame> getReferenceFrames();
 
 	/**
 	 * Find a transformation between two {@link IReferenceFrame}'s. The source and destination
