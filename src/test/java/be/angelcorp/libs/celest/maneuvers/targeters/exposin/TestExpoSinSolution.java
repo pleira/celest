@@ -30,7 +30,7 @@ public class TestExpoSinSolution extends CelestTest {
 	/**
 	 * <p>
 	 * Source of the data:<br/>
-	 * <b>Tatiana Paulino, "Analytical representations of low-thrust trajectories", Master’s Thesis,
+	 * <b>Tatiana Paulino, "Analytical representations of low-thrust trajectories", Master's Thesis,
 	 * Delft University of Technology, 2008.</b><br/>
 	 * Table 9.1 & 9.2
 	 * </p>
@@ -77,7 +77,7 @@ public class TestExpoSinSolution extends CelestTest {
 	/**
 	 * <p>
 	 * Source of the data:<br/>
-	 * <b>Tatiana Paulino, "Analytical representations of low-thrust trajectories", Master’s Thesis,
+	 * <b>Tatiana Paulino, "Analytical representations of low-thrust trajectories", Master's Thesis,
 	 * Delft University of Technology, 2008.</b><br/>
 	 * Table 9.1 & 9.2
 	 * </p>
@@ -124,7 +124,7 @@ public class TestExpoSinSolution extends CelestTest {
 	/**
 	 * <p>
 	 * Source of the data:<br/>
-	 * <b>Tatiana Paulino, "Analytical representations of low-thrust trajectories", Master’s Thesis,
+	 * <b>Tatiana Paulino, "Analytical representations of low-thrust trajectories", Master's Thesis,
 	 * Delft University of Technology, 2008.</b><br/>
 	 * Table 9.1 & 9.2
 	 * </p>
