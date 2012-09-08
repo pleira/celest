@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import java.util.List;
 
+import be.angelcorp.libs.math.linear.Vector3D$;
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
@@ -85,7 +86,7 @@ public class ForceModelCore implements IStateEquation<ICartesianElements, ICarte
 
 	@Override
 	public ICartesianDerivative calculateDerivatives(IJulianDate t, ICartesianElements y) {
-		Vector3D a = Vector3D.ZERO;
+		Vector3D a = Vector3D$.MODULE$.ZERO();
 		for (ObjectForce f : getForcesList()) {
 			Vector3D dA = f.toAcceleration();
 			a = a.add(dA);

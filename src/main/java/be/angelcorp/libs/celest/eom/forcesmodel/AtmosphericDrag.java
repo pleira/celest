@@ -155,9 +155,9 @@ abstract public class AtmosphericDrag extends ObjectForce {
 	 */
 	@Override
 	public Vector3D toAcceleration() {
-		Vector3D r = getObject().getState().toCartesianElements().getR().subtract(
+		Vector3D r = getObject().getState().toCartesianElements().getR().$minus(
 							getPlanet().getState().toCartesianElements().getR());
-		Vector3D v = getObject().getState().toCartesianElements().getV().subtract(
+		Vector3D v = getObject().getState().toCartesianElements().getV().$minus(
 							getPlanet().getState().toCartesianElements().getV());
 
 		// compute the atmospheric density
@@ -165,8 +165,8 @@ abstract public class AtmosphericDrag extends ObjectForce {
 
 		// compute the relative speed
 		Vector3D vAtm = atmosphere.computeV(r); // [m/s]
-		Vector3D vr = v.subtract(vAtm);
-		double vrmag = vr.getNorm();
+		Vector3D vr = v.$minus(vAtm);
+		double vrmag = vr.norm();
 
 		// form -1/2 (Cd*A/m) rho
 		double beta = cd * area / getObject().getTotalMass(); // [m^2/kg]

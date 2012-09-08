@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.state.positionState;
 
 import static java.lang.Math.PI;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.util.Precision;
@@ -25,7 +26,6 @@ import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.math.MathUtils2;
 import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3DMath;
 
 /**
  * Documentation: {@link ISphericalElements}
@@ -211,16 +211,14 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 		// Orbital Mechanics with Numerit: Astrodynamic Coordinates
 		final Vector3D R = elements.getR();
 		final Vector3D V = elements.getV();
-		setRadius(R.getNorm());
-		setVelocity(V.getNorm());
-		setRightAscension(Math.atan2(R.getY(),
-				R.getX()));
-		setDeclination(Math.atan2(R.getZ(),
-				Math.sqrt(Math.pow(R.getX(), 2) + Math.pow(R.getY(), 2))));
-		setFlightPathAngle(Math.PI / 2 - Vector3DMath.angle(R, V)); // TODO: Quadrant corrections ?
-		setFlightPathAzimuth(Math.atan2(r * (R.getX() * V.getY() - R.getY() * V.getX()),
-				R.getY() * (R.getY() * V.getZ() - R.getZ() * V.getY())
-						- R.getX() * (R.getZ() * V.getX() - R.getX() * V.getZ())));
+		setRadius(R.norm());
+		setVelocity(V.norm());
+		setRightAscension(R.azimuth());
+		setDeclination(Math.atan2(R.z(), Math.sqrt(Math.pow(R.x(), 2) + Math.pow(R.y(), 2))));
+		setFlightPathAngle(Math.PI / 2 - R.angle(V)); // TODO: Quadrant corrections ?
+		setFlightPathAzimuth(Math.atan2(r * (R.x() * V.y() - R.y() * V.x()),
+				R.y() * (R.y() * V.z() - R.z() * V.y())
+				    - R.x() * (R.z() * V.x() - R.x() * V.z())));
 		setCenterbody(centerBody);
 	}
 
@@ -422,11 +420,11 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 		double cosG = Math.cos(getFlightPathAngle());
 		double sinG = Math.sin(getFlightPathAngle());
 
-		Vector3D R = new Vector3D(
+		Vector3D R = new ImmutableVector3D(
 				r * cosD * cosAl,
 				r * cosD * sinAl,
 				r * sinD);
-		Vector3D V = new Vector3D(
+		Vector3D V = new ImmutableVector3D(
 				v * (cosAl * (-cosA * cosG * sinD + sinG * cosD) - sinA * cosG * sinAl),
 				v * (sinAl * (-cosA * cosG * sinD + sinG * cosD) + sinA * cosG * cosAl),
 				v * (cosA * cosG * cosD + sinG * cosD));

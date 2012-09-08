@@ -16,6 +16,8 @@
 package be.angelcorp.libs.celest.stateVector;
 
 import static java.lang.Math.PI;
+
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import junit.framework.AssertionFailedError;
 
 import org.apache.commons.math3.linear.ArrayRealVector;
@@ -58,8 +60,8 @@ public class TestSphericalElements extends TestStateVector<SphericalElements> {
 		/* Classical geo orbit */
 		double rGEO = Math.pow(earth.getMu() / Math.pow((2. * PI) / (3600. * 24.), 2), 1. / 3.);
 		ICartesianElements c = new CartesianElements(
-				new Vector3D(4.22444282180791e+007, 0.00000000000000e+000, 0.00000000000000e+000),
-				new Vector3D(0.00000000000000e+000, 3.07173798871147e+003, 0.00000000000000e+000));
+				new ImmutableVector3D(4.22444282180791e+007, 0.00000000000000e+000, 0.00000000000000e+000),
+				new ImmutableVector3D(0.00000000000000e+000, 3.07173798871147e+003, 0.00000000000000e+000));
 		SphericalElements s_expected = new SphericalElements(rGEO, 0, 0, 3.0717379887E3, 0, Math.PI / 2, earth);
 		SphericalElements s_actual = doConvertAs(c, earth);
 		equalStateVector(s_expected, s_actual);

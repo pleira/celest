@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.time;
 
 import javax.annotation.concurrent.Immutable;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -117,7 +118,7 @@ public class HourMinSec implements IHourMinSec {
 	 * @return A vector containing <hour, min, sec>
 	 */
 	public Vector3D getTime() {
-		return new Vector3D(hour, minute, second);
+		return new ImmutableVector3D(hour, minute, second);
 	}
 
 	/**

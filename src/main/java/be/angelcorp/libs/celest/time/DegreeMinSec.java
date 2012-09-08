@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.time;
 
 import javax.annotation.concurrent.Immutable;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -106,7 +107,7 @@ public class DegreeMinSec implements IDegreeMinSec {
 	 * @return A vector containing <hour, min, sec>
 	 */
 	public Vector3D getTime() {
-		return new Vector3D(degree, minute, second);
+		return new ImmutableVector3D(degree, minute, second);
 	}
 
 	/**

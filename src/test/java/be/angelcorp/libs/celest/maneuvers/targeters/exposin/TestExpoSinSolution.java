@@ -22,7 +22,6 @@ import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
-import be.angelcorp.libs.math.linear.Vector3DMath;
 import be.angelcorp.libs.util.physics.Time;
 
 public class TestExpoSinSolution extends CelestTest {
@@ -66,9 +65,9 @@ public class TestExpoSinSolution extends CelestTest {
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		// Equal R
-		CelestTest.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
-		assertEquals(r1, c1.getR().getNorm(), R_tol);
-		assertEquals(r2, c2.getR().getNorm(), R_tol);
+		CelestTest.assertEqualsAngle(dTheta, c1.getR().angle(c2.getR()), 1e-3);
+		assertEquals(r1, c1.getR().norm(), R_tol);
+		assertEquals(r2, c2.getR().norm(), R_tol);
 		// Equal V
 		// assertEquals(V1, c1.getV().getNorm(), V_tol);
 		// assertEquals(V2, c2.getV().getNorm(), V_tol);
@@ -113,9 +112,9 @@ public class TestExpoSinSolution extends CelestTest {
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		// Equal R
-		CelestTest.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
-		assertEquals(r1, c1.getR().getNorm(), R_tol);
-		assertEquals(r2, c2.getR().getNorm(), R_tol);
+		CelestTest.assertEqualsAngle(dTheta, c1.getR().angle(c2.getR()), 1e-3);
+		assertEquals(r1, c1.getR().norm(), R_tol);
+		assertEquals(r2, c2.getR().norm(), R_tol);
 		// Equal V
 		// assertEquals(V1, c1.getV().getNorm(), V_tol);
 		// assertEquals(V2, c2.getV().getNorm(), V_tol);
@@ -160,9 +159,9 @@ public class TestExpoSinSolution extends CelestTest {
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
 		// Equal R
-		CelestTest.assertEqualsAngle(dTheta, Vector3DMath.angle(c1.getR(), c2.getR()), 1e-3);
-		assertEquals(r1, c1.getR().getNorm(), R_tol);
-		assertEquals(r2, c2.getR().getNorm(), R_tol);
+		CelestTest.assertEqualsAngle(dTheta, c1.getR().angle(c2.getR()), 1e-3);
+		assertEquals(r1, c1.getR().norm(), R_tol);
+		assertEquals(r2, c2.getR().norm(), R_tol);
 		// Equal V
 		// assertEquals(V1, c1.getV().getNorm(), V_tol);
 		// assertEquals(V2, c2.getV().getNorm(), V_tol);

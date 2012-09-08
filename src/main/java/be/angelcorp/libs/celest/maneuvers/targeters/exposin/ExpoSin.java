@@ -124,8 +124,8 @@ public class ExpoSin extends TPBVP {
 	public ExpoSinSolutionSet getSolutionSet() {
 		Vector3D r1vec = this.r1.toCartesianElements().getR();
 		Vector3D r2vec = this.r2.toCartesianElements().getR();
-		double r1 = r1vec.getNorm();
-		double r2 = r2vec.getNorm();
+		double r1 = r1vec.norm();
+		double r2 = r2vec.norm();
 
 		double psi = acos(r1vec.dot(r2vec) / (r1 * r2));
 		double theta = psi + 2 * PI * N;

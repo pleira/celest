@@ -23,7 +23,9 @@ import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
@@ -52,16 +54,16 @@ public class TestExpoSin extends CelestTest {
 		IJulianDate t2 = JulianDate.getJ2000().add(dt, Time.second);
 
 		ICartesianElements s1 = new CartesianElements(
-				new Vector3D(r1, 0, 0), Vector3D.ZERO);
+				new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO());
 		ICartesianElements s2 = new CartesianElements(
-				new Vector3D(dTheta, 0).multiply(r2), Vector3D.ZERO);
+				Vector3D$.MODULE$.apply(dTheta, 0).multiply(r2), Vector3D$.MODULE$.ZERO());
 
 		ExpoSin exposin = new ExpoSin(s1, s2, t1, t2);
 		exposin.assumeK2(k2);
 
 		// Results as computed by the Matlab routine:
-		Vector3D ml_V1 = new Vector3D(-2.951216831366131e+002, +3.310652568212942e+004, 0);
-		Vector3D ml_V2 = new Vector3D(-2.572543389259841e+004, -2.886383731363452e+003, 0);
+		Vector3D ml_V1 = new ImmutableVector3D(-2.951216831366131e+002, +3.310652568212942e+004, 0);
+		Vector3D ml_V2 = new ImmutableVector3D(-2.572543389259841e+004, -2.886383731363452e+003, 0);
 		double ml_k0 = 2.272595936284008e+011;
 		double ml_k1 = -4.065864323385938e-001;
 		double ml_k2 = 7.013000000000000e-001;
@@ -88,18 +90,22 @@ public class TestExpoSin extends CelestTest {
 
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
-		assertEquals(r1, c1.getR().getNorm(), 1e-16);
-		assertEquals(r2, c2.getR().getNorm(), 1);
-		assertEquals(ml_V2, c2.getV(), 1E-1);
-		assertEquals(ml_V1, c1.getV(), 1E-1);
+		assertEquals(r1, c1.getR().norm(), 1e-16);
+		assertEquals(r2, c2.getR().norm(), 1);
+		assertEquals(ml_V2.x(), c2.getV().x(), 1E-1);
+		assertEquals(ml_V2.y(), c2.getV().y(), 1E-1);
+		assertEquals(ml_V2.z(), c2.getV().z(), 1E-1);
+		assertEquals(ml_V1.x(), c1.getV().x(), 1E-1);
+		assertEquals(ml_V1.y(), c1.getV().y(), 1E-1);
+		assertEquals(ml_V1.z(), c1.getV().z(), 1E-1);
 	}
 
 	public void testN3() throws Exception {
 		double k2 = 1. / 12.;
 		double dt = Time.convert(1E-3, Time.day);
 		int N = 3;
-		ICartesianElements r1 = new CartesianElements(new Vector3D(2, 0, 0), Vector3D.ZERO);
-		ICartesianElements r2 = new CartesianElements(new Vector3D(0.2, -1, 0), Vector3D.ZERO);
+		ICartesianElements r1 = new CartesianElements(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO());
+		ICartesianElements r2 = new CartesianElements(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO());
 
 		IJulianDate t1 = JulianDate.getJ2000();
 		IJulianDate t2 = JulianDate.getJ2000().add(dt, Time.second);
@@ -112,8 +118,8 @@ public class TestExpoSin extends CelestTest {
 		exposin.assumeK2(k2);
 
 		// Results as computed by the Matlab routine:
-		Vector3D ml_V1 = new Vector3D(+4.279665287258510e+001, +5.461017978436156e+001, 0);
-		Vector3D ml_V2 = new Vector3D(-8.557155856649688e+001, -4.647847748181721e+001, 0);
+		Vector3D ml_V1 = new ImmutableVector3D(+4.279665287258510e+001, +5.461017978436156e+001, 0);
+		Vector3D ml_V2 = new ImmutableVector3D(-8.557155856649688e+001, -4.647847748181721e+001, 0);
 		double ml_k0 = 2.494219696832175e-004;
 		double ml_k1 = 1.300955416481242e+001;
 		double ml_k2 = 8.333333333333333e-002;
@@ -140,9 +146,13 @@ public class TestExpoSin extends CelestTest {
 
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
-		assertEquals(r1.getR().getNorm(), c1.getR().getNorm(), 1e-14);
-		assertEquals(r2.getR().getNorm(), c2.getR().getNorm(), 1);
-		assertEquals(ml_V2, c2.getV(), 1E-1);
-		assertEquals(ml_V1, c1.getV(), 1E-1);
+        assertEquals(r1.getR().norm(), c1.getR().norm(), 1e-15);
+        assertEquals(r2.getR().norm(), c2.getR().norm(), 1);
+        assertEquals(ml_V2.x(), c2.getV().x(), 1E-1);
+        assertEquals(ml_V2.y(), c2.getV().y(), 1E-1);
+        assertEquals(ml_V2.z(), c2.getV().z(), 1E-1);
+        assertEquals(ml_V1.x(), c1.getV().x(), 1E-1);
+        assertEquals(ml_V1.y(), c1.getV().y(), 1E-1);
+        assertEquals(ml_V1.z(), c1.getV().z(), 1E-1);
 	}
 }

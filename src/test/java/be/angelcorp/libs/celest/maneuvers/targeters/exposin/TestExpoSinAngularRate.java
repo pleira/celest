@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -67,8 +68,8 @@ public class TestExpoSinAngularRate extends CelestTest {
 		double phi = 2.5;
 		double dTheta = 5;
 		double mu = 1;
-		Vector3D r1 = new Vector3D(1.412862648939526, 0., 0.);
-		Vector3D r2 = new Vector3D(0.468315202078896, -1.58314656828111, 0.);
+		Vector3D r1 = new ImmutableVector3D(1.412862648939526, 0., 0.);
+		Vector3D r2 = new ImmutableVector3D(0.468315202078896, -1.58314656828111, 0.);
 
 		ExpoSinAngularRate angularRate = new ExpoSinAngularRate(new ExponentialSinusoid(k0, k1, k2, q0, phi), mu);
 

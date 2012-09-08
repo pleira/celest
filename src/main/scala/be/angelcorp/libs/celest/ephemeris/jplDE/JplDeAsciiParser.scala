@@ -18,14 +18,17 @@ package be.angelcorp.libs.celest.ephemeris.jplDE
 
 import org.parboiled.scala._
 import org.parboiled.errors._
-
 import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.util.physics.Time
+import org.slf4j.LoggerFactory
+import be.angelcorp.libs.celest.time.timeStandard.TimeStandards
 
 /**
  * A parser using the parboiled library to parse an ascii JPL DE ephemeris file to a [[JplDeNode]]
  */
 class JplDeAsciiParser extends Parser {
+
+    private val logger = LoggerFactory.getLogger(getClass());
 
     def Ephemeris = rule {
         (Size ~
@@ -46,13 +49,14 @@ class JplDeAsciiParser extends Parser {
     }
     def Group103 = rule {
         (str("GROUP") ~ WhiteSpace ~ str("1030") ~ WhiteSpace ~ nTimes(3, Float ~ WhiteSpace) ~ WhiteSpace) ~~>
-            (l => JplDeHeaderGroup103(new JulianDate(l(0)), new JulianDate(l(1)), l(2)))
+            (l => JplDeHeaderGroup103(new JulianDate(l(0), TimeStandards.TDB), new JulianDate(l(1), TimeStandards.TDB), l(2)))
     }
     def Group104 = rule {
         (Group1040 ~ Group1041) ~~>
             { (size0, keys, size1, values) =>
                 if (keys.size != values.size)
-                    throw new ParsingException("The size of keys in group 1040 do not match the size of values in group 1041")
+                    throw new ParsingException("The size of keys in group 1040 )" + keys.size +
+                        ") do not match the size of values in group 1041 (" + values.size + ")")
                 JplDeHeaderGroup104(keys zip values toMap)
             }
     }
@@ -70,7 +74,12 @@ class JplDeAsciiParser extends Parser {
     }
     def Group107 = rule {
         (str("GROUP") ~ WhiteSpace ~ str("1070") ~ WhiteSpace ~ zeroOrMore(nTimes(2, Integer ~ WhiteSpace) ~ oneOrMore(Float ~ WhiteSpace))) ~~>
-            (l => l.map(meta => JplDeDataRecond(meta._1(0), meta._1(1), meta._2)))
+            (l => l.map(meta => JplDeDataRecond(
+                meta._1(0),
+                meta._1(1),
+                new JulianDate(meta._2(0), TimeStandards.TDB),
+                new JulianDate(meta._2(1), TimeStandards.TDB),
+                meta._2.slice(2, meta._2.size))))
     }
 
     def Line = rule { (zeroOrMore(!(anyOf("\r\n")) ~ ANY) ~ (str("\r\n") | "\r" | "\n" | EOI)) ~> (s => s) }

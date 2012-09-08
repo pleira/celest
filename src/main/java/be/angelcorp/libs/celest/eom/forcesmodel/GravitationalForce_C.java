@@ -80,7 +80,7 @@ public class GravitationalForce_C extends ObjectForce implements Cartesian {
 	public Vector3D toAcceleration() {
 		Vector3D rCenter = getGravitationBody().getState().toCartesianElements().getR();
 		Vector3D rSatellite = getObject().getState().toCartesianElements().getR();
-		Vector3D g = gravitationBody.getGravitationalPotential().evaluate(rSatellite.subtract(rCenter));
+		Vector3D g = gravitationBody.getGravitationalPotential().evaluate(rSatellite.$minus(rCenter));
 		return g;
 	}
 

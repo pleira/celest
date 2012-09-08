@@ -55,11 +55,13 @@ public class JulianDate implements IJulianDate {
 	/** The starting epoch of the TAI timeline (same as TAI/TT/TCG/TCB). */
 	public static final JulianDate	TAI_EPOCH	= new JulianDate(2443144.5, TimeStandards.TAI);
 	/** The starting epoch of the TT timeline (same as TAI/TT/TCG/TCB). */
-	public static final JulianDate	TT_EPOCH	= TAI_EPOCH.getJulianDate(TimeStandards.TT);
+	public static final JulianDate	TT_EPOCH	= TAI_EPOCH;
 	/** The starting epoch of the TCG timeline (same as TAI/TT/TCG/TCB). */
-	public static final JulianDate	TCG_EPOCH	= TAI_EPOCH.getJulianDate(TimeStandards.TCG);
+	public static final JulianDate	TCG_EPOCH	= TAI_EPOCH;
 	/** The starting epoch of the TCB timeline (same as TAI/TT/TCG/TCB). */
 	public static final JulianDate	TCB_EPOCH	= TAI_EPOCH;
+	/** The starting epoch of the TDB timeline. */
+	public static final JulianDate	TDB_EPOCH	= TAI_EPOCH.add(-65.5, Time.microsecond);
 
 	/**
 	 * The J2000 epoch in JulianDate form.
@@ -250,13 +252,13 @@ public class JulianDate implements IJulianDate {
 		if (this.timeStandard.equals(timeStandard))
 			return this;
 
-		/* First convert this to TAI form */
-		double offset = this.timeStandard.offsetToTAI(this);
-		JulianDate this_tai = new JulianDate(getJD(), TimeStandards.TAI).add(offset, Time.second);
+		/* First convert this to TT form */
+		double offset = this.timeStandard.offsetToTT(this);
+		JulianDate this_tt = new JulianDate(getJD(), TimeStandards.TT).add(offset, Time.second);
 
-		/* Then convert the TAI jd form to the requested type */
-		offset = timeStandard.offsetFromTAI(this_tai);
-		JulianDate jd_new = new JulianDate(this_tai.getJD(), timeStandard).add(offset, Time.second);
+		/* Then convert the TT jd form to the requested type */
+		offset = timeStandard.offsetFromTT(this_tt);
+		JulianDate jd_new = new JulianDate(this_tt.getJD(), timeStandard).add(offset, Time.second);
 
 		return jd_new;
 	}

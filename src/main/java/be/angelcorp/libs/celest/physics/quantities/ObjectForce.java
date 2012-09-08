@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.physics.quantities;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
 
 /**
  * A generic force that is linked to a specific body. It contains a force on the object and an offset to
@@ -43,7 +44,7 @@ public class ObjectForce extends Force {
 	 *            Object where the force acts on
 	 */
 	public ObjectForce(CelestialBody object) {
-		this(object, Vector3D.ZERO);
+		this(object, Vector3D$.MODULE$.ZERO());
 	}
 
 	/**

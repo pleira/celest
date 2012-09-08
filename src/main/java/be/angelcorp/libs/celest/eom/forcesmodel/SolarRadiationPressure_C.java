@@ -146,13 +146,13 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 	@Override
 	public Vector3D toAcceleration() {
 		// Relative position vector of spacecraft w.r.t. Sun (from the sun to s/c)
-		Vector3D d = getObject().getState().toCartesianElements().getR().subtract(
+		Vector3D d = getObject().getState().toCartesianElements().getR().$minus(
 						getStar().getState().toCartesianElements().getR());
 
-		double dnorm = d.getNorm();
+		double dnorm = d.norm();
 		double dcube = dnorm * dnorm * dnorm;
 
-		double Ls = getSpectrum().totalFlux() / d.getNormSq(); // [W]
+		double Ls = getSpectrum().totalFlux() / d.normSq(); // [W]
 
 		double factor = CR * (area / getObject().getTotalMass()) *
 							Ls / (4 * Math.PI * Constants.SPEED_LIGHT * dcube);

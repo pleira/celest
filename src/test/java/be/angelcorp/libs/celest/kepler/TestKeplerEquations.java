@@ -15,6 +15,7 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import org.apache.commons.math3.linear.ArrayRealVector;
 
 import be.angelcorp.libs.celest.constants.EarthConstants;
@@ -80,8 +81,8 @@ public class TestKeplerEquations extends CelestTest {
 		// cartesian2kepler(CartesianElements, CelestialBody)
 		// cartesian2kepler(CartesianElements, double)
 		ICartesianElements c = new CartesianElements(
-				new Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
-				new Vector3D(1099.2953996, 3455.105924, 4355.0978095));
+				new ImmutableVector3D(10157768.1264, -6475997.0091, 2421205.9518),
+				new ImmutableVector3D(1099.2953996, 3455.105924, 4355.0978095));
 		IKeplerElements k = KeplerEquations.cartesian2kepler(c, EarthConstants.mu);
 		double[] expected = new double[] {
 				1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560 };
@@ -94,8 +95,8 @@ public class TestKeplerEquations extends CelestTest {
 	public void testStaticCartesian2kepler2D() {
 		// cartesian2kepler2D(CartesianElements, CelestialBody)
 		ICartesianElements c = new CartesianElements(
-				new Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
-				new Vector3D(1099.2953996, 3455.105924, 4355.0978095));
+				new ImmutableVector3D(10157768.1264, -6475997.0091, 2421205.9518),
+				new ImmutableVector3D(1099.2953996, 3455.105924, 4355.0978095));
 		IKeplerElements k = KeplerEquations.cartesian2kepler2D(c, EarthConstants.bodyCenter);
 		assertEquals(1.216495E7, k.getSemiMajorAxis(), 1E4);
 		assertEquals(0.01404, k.getEccentricity(), 1E-5);
@@ -136,8 +137,8 @@ public class TestKeplerEquations extends CelestTest {
 				1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560, EarthConstants.mu);
 		// Values from keplerCOE from Matlab Orbital_Library by Richard Rieber
 		ICartesianElements c_true = new CartesianElements(
-				new Vector3D(1.092882447232868e+007, -5.619415989750504e+006, -1.715953308630781e+005),
-				new Vector3D(1.466941526515634e+003, +3.108913288555892e+003, -4.504368922790057e+003));
+				new ImmutableVector3D(1.092882447232868e+007, -5.619415989750504e+006, -1.715953308630781e+005),
+				new ImmutableVector3D(1.466941526515634e+003, +3.108913288555892e+003, -4.504368922790057e+003));
 
 		assertTrue(c_true.equals(c, 1e-12));
 	}

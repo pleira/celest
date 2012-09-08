@@ -16,18 +16,18 @@
 package be.angelcorp.libs.celest.physics.quantities;
 
 import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3DMath;
+import be.angelcorp.libs.math.linear.Vector3D$;
 
 public class Torque implements Cloneable {
 
 	private Vector3D	torque;
 
 	public Torque() {
-		this(Vector3D.ZERO);
+		this(Vector3D$.MODULE$.ZERO());
 	}
 
 	public Torque(Force f, Vector3D arm) {
-		setTorque(Vector3DMath.cross(arm, f.getForce()));
+		setTorque(arm.cross(f.getForce()));
 	}
 
 	public Torque(Torque torque2) {
@@ -39,7 +39,7 @@ public class Torque implements Cloneable {
 	}
 
 	public Torque(Vector3D force, Vector3D arm) {
-		setTorque(Vector3DMath.cross(arm, force));
+		setTorque(arm.cross(force));
 	}
 
 	public void add(Torque torque2) {

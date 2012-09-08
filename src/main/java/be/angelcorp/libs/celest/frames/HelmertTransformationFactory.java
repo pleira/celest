@@ -16,7 +16,9 @@
 package be.angelcorp.libs.celest.frames;
 
 import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.math.rotation.AxisAngle;
 import be.angelcorp.libs.util.physics.Angle;
 import be.angelcorp.libs.util.physics.Length;
@@ -97,8 +99,8 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 			double Tx, double Ty, double Tz, double S, double Rx, double Ry, double Rz,
 			double dTx, double dTy, double dTz, double dS, double dRx, double dRy, double dRz) {
 		return fromIERSunits(epoch,
-				new Vector3D(Tx, Ty, Tz), S, new Vector3D(Rx, Ry, Rz),
-				new Vector3D(dTx, dTy, dTz), dS, new Vector3D(dRx, dRy, dRz));
+				new ImmutableVector3D(Tx, Ty, Tz), S, new ImmutableVector3D(Rx, Ry, Rz),
+				new ImmutableVector3D(dTx, dTy, dTz), dS, new ImmutableVector3D(dRx, dRy, dRz));
 	}
 
 	/**
@@ -219,8 +221,8 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 			double Tx, double Ty, double Tz, double S, double Rx, double Ry, double Rz,
 			double dTx, double dTy, double dTz, double dS, double dRx, double dRy, double dRz) {
 		this(epoch,
-				new Vector3D(Tx, Ty, Tz), S, new Vector3D(Rx, Ry, Rz),
-				new Vector3D(dTx, dTy, dTz), dS, new Vector3D(dRx, dRy, dRz));
+				new ImmutableVector3D(Tx, Ty, Tz), S, new ImmutableVector3D(Rx, Ry, Rz),
+				new ImmutableVector3D(dTx, dTy, dTz), dS, new ImmutableVector3D(dRx, dRy, dRz));
 	}
 
 	/**
@@ -266,10 +268,10 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 		Vector3D R = R0.add(dR0.multiply(dt));
 		double s = s0 + ds0 * dt;
 
-		AxisAngle rotation = new AxisAngle(R.normalize(), R.getNorm());
+		AxisAngle rotation = new AxisAngle(R.normalize(), R.norm());
 
 		TransformationParameters params = new TransformationParameters(epoch,
-				T, dT0, Vector3D.ZERO, rotation, dR0, Vector3D.ZERO);
+				T, dT0, Vector3D$.MODULE$.ZERO(), rotation, dR0, Vector3D$.MODULE$.ZERO());
 		return params;
 	}
 

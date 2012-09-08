@@ -20,29 +20,29 @@ import be.angelcorp.libs.celest.time.IJulianDate;
 public interface ITimeStandard {
 
 	/**
-	 * Returns the number of seconds to add to {@link TimeStandards#TAI} to get this
-	 * {@link TimeStandards}, so;
+	 * Returns the number of seconds to add to TT to get this timeStandard, so;
 	 * 
 	 * <pre>
-	 * T<sub>this</sub>  = T<sub>TAI</sub>  + this.offsetFromTAI(JD<sub>TAI</sub>)
-	 * JD<sub>this</sub> = JD<sub>TAI</sub> + Time.convert(this.offsetFromTAI(JD<sub>TAI</sub>), Time.second, Time.day)
+     * offsetFromTT(jd_tt) = this - TT
+	 * T<sub>this</sub>  = T<sub>TT</sub>  + this.offsetFromTT(JD<sub>TAI</sub>)
+	 * JD<sub>this</sub> = JD<sub>TT</sub> + Time.convert(this.offsetFromTT(JD<sub>TT</sub>), Time.second, Time.day)
 	 * </pre>
 	 * 
 	 * @return The number of seconds between this {@link TimeStandards} and {@link TimeStandards#TAI}.
 	 */
-	public abstract double offsetFromTAI(IJulianDate JD_tai);
+	public abstract double offsetFromTT(IJulianDate JD_tt);
 
 	/**
-	 * Returns the number of seconds to add to this {@link TimeStandards} to get
-	 * {@link TimeStandards#TAI}, so;
+	 * Returns the number of seconds to add to this {@link TimeStandards} to get TT, so;
 	 * 
 	 * <pre>
-	 * T<sub>TAI</sub>  = T<sub>this</sub>  + this.offsetToTAI(JD<sub>this</sub>)
-	 * JD<sub>TAI</sub> = JD<sub>this</sub> + Time.convert(this.offsetToTAI(JD<sub>this</sub>), Time.second, Time.day)
+     * offsetToTT(jd_this) = TT - this
+	 * T<sub>TT</sub>  = T<sub>this</sub>  + this.offsetToTT(JD<sub>this</sub>)
+	 * JD<sub>TT</sub> = JD<sub>this</sub> + Time.convert(this.offsetToTT(JD<sub>this</sub>), Time.second, Time.day)
 	 * </pre>
 	 * 
 	 * @return The number of seconds between this {@link TimeStandards} and {@link TimeStandards#TAI}.
 	 */
-	public abstract double offsetToTAI(IJulianDate JD_this);
+	public abstract double offsetToTT(IJulianDate JD_this);
 
 }

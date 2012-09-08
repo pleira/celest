@@ -18,6 +18,7 @@ package be.angelcorp.libs.celest.potential;
 import java.util.Arrays;
 import java.util.List;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.google.common.collect.Lists;
@@ -61,7 +62,7 @@ public class CumulativePotential implements ICumulativePotential {
 	 */
 	@Override
 	public Vector3D evaluate(Vector3D point) {
-		Vector3D sum = new Vector3D(0, 0, 0);
+		Vector3D sum = new ImmutableVector3D(0, 0, 0);
 		for (IGravitationalPotential pot : potentials) {
 			sum = sum.add(pot.evaluate(point));
 		}

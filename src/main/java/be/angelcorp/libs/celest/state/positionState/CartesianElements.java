@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -73,7 +75,7 @@ public class CartesianElements extends PositionState implements ICartesianElemen
 	 * </p>
 	 */
 	public CartesianElements() {
-		this(Vector3D.ZERO, Vector3D.ZERO);
+		this( Vector3D$.MODULE$.ZERO() , Vector3D$.MODULE$.ZERO() );
 	}
 
 	/**
@@ -92,8 +94,8 @@ public class CartesianElements extends PositionState implements ICartesianElemen
 		if (d.length != 6)
 			throw new ArrayIndexOutOfBoundsException(String.format(
 					"Array must be length 6 [rx, ry, rz, vx, vy, vz], only %d elements given", d.length));
-		this.R = new Vector3D(d[0], d[1], d[2]);
-		this.V = new Vector3D(d[3], d[4], d[5]);
+		this.R = new ImmutableVector3D(d[0], d[1], d[2]);
+		this.V = new ImmutableVector3D(d[3], d[4], d[5]);
 	}
 
 	/**
@@ -133,7 +135,7 @@ public class CartesianElements extends PositionState implements ICartesianElemen
 	 */
 	@Override
 	public boolean equals(ICartesianElements state2, double eps) {
-		return R.equals(state2.getR(), R.getNorm() * eps) && V.equals(state2.getV(), V.getNorm() * eps);
+		return R.equals(state2.getR(), R.norm() * eps) && V.equals(state2.getV(), V.norm() * eps);
 	}
 
 	/**
@@ -182,8 +184,8 @@ public class CartesianElements extends PositionState implements ICartesianElemen
 	@Override
 	public RealVector toVector() {
 		return new ArrayRealVector(new double[] {
-				R.getX(), R.getY(), R.getZ(),
-				V.getX(), V.getY(), V.getZ() });
+				R.x(), R.y(), R.z(),
+				V.x(), V.y(), V.z() });
 	}
 
 }

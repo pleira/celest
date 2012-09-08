@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.time.timeStandard;
 
 import javax.annotation.concurrent.Immutable;
+import javax.inject.Singleton;
 
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
@@ -35,6 +36,7 @@ import be.angelcorp.libs.util.physics.Time;
  * 
  */
 @Immutable
+@Singleton
 public class TCG implements ITimeStandard {
 
 	/**
@@ -45,34 +47,38 @@ public class TCG implements ITimeStandard {
 	private static final double	L_g			= 6.969290134E-10;
 
 	/** TCG singleton instance */
+    @Deprecated
 	private static TCG			instance	= new TCG();
 
 	/** Get the TCG singleton instance */
-	public static TCG get() {
+    @Deprecated
+    public static TCG get() {
 		return instance;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public double offsetFromTAI(IJulianDate JD_tai) {
+	public double offsetFromTT(IJulianDate JD_tt) {
 		// Equation (28)
-		double seconds_offset_tai_tt = TimeStandards.TT.offsetFromTAI(JD_tai);
-		double seconds_since_TAI_epoch = JD_tai.relativeTo(JulianDate.TAI_EPOCH, Time.second);
-		double TCG = L_g * seconds_since_TAI_epoch + seconds_offset_tai_tt;
-
+		double seconds_since_TT_epoch = JD_tt.relativeTo(JulianDate.TT_EPOCH, Time.second);
+		double TCG = L_g * seconds_since_TT_epoch;
+     System.err.println("epochDelta=" +(seconds_since_TT_epoch - Math.round(seconds_since_TT_epoch)));
+     System.err.println("TCG="+TCG);
 		return TCG;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public double offsetToTAI(IJulianDate JD_tcg) {
+	public double offsetToTT(IJulianDate JD_tcg) {
 		// Epoch doesn't matter, its constant
-		double seconds_offset_tt_tai = TimeStandards.TT.offsetToTAI(JulianDate.TAI_EPOCH);
 		double seconds_since_TCG_epoch = JD_tcg.relativeTo(JulianDate.TCG_EPOCH, Time.second);
-		double offset_TT = -L_g * seconds_since_TCG_epoch;
-		double offset_TAI = offset_TT + seconds_offset_tt_tai;
+        double offset_TT = -L_g * seconds_since_TCG_epoch;
 
-		return offset_TAI;
+
+    System.err.println("epochDelta=" + ( seconds_since_TCG_epoch - Math.round(seconds_since_TCG_epoch)));
+    System.err.println("offset_TT=" + ( offset_TT));
+
+        return offset_TT;
 	}
 
 }

@@ -87,6 +87,7 @@ public class UTC implements ITimeStandard {
 	}
 
 	/** Singleton UTC instance */
+    @Deprecated
 	private static UTC											instance	= new UTC();
 
 	/**
@@ -101,8 +102,10 @@ public class UTC implements ITimeStandard {
 
 	/** {@inheritDoc} */
 	@Override
-	public double offsetFromTAI(IJulianDate JD_tai) {
-		double jd = JD_tai.getJD();
+	public double offsetFromTT(IJulianDate JD_tt) {
+		double from_tt = TimeStandards.TAI.offsetFromTT(JD_tt);
+        double jd = JD_tt.add(from_tt, Time.second).getJD();
+        double jd2 = JD_tt.getJulianDate(TimeStandards.TAI).getJD();
 
 		Entry<Double, UnivariateFunction> entry = TAI_UTC.floorEntry(jd);
 		double offset = -entry.getValue().value(jd);
@@ -113,18 +116,18 @@ public class UTC implements ITimeStandard {
 			offset = -entry.getValue().value(jd);
 		}
 
-		return offset;
+		return offset + from_tt;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public double offsetToTAI(IJulianDate JD_utc) {
+	public double offsetToTT(IJulianDate JD_utc) {
 		double jd = JD_utc.getJD();
 
 		Entry<Double, UnivariateFunction> entry = TAI_UTC.floorEntry(jd);
 		double offset_TAI = entry.getValue().value(jd);
 
-		return offset_TAI;
+		return offset_TAI + TimeStandards.TAI.offsetToTT(JD_utc);
 	}
 
 }

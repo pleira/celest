@@ -16,7 +16,7 @@
 package be.angelcorp.libs.celest.physics.quantities;
 
 import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3DMath;
+import be.angelcorp.libs.math.linear.Vector3D$;
 
 public abstract class Force implements Comparable<Force>, Cloneable {
 
@@ -33,7 +33,7 @@ public abstract class Force implements Comparable<Force>, Cloneable {
 
 	@Override
 	public int compareTo(Force o) {
-		return Double.compare(getForce().getNormSq(), o.getForce().getNormSq());
+		return Double.compare(getForce().normSq(), o.getForce().normSq());
 	}
 
 	public Vector3D getForce() {
@@ -58,13 +58,13 @@ public abstract class Force implements Comparable<Force>, Cloneable {
 	}
 
 	public Torque toTorque() {
-		return toTorque(Vector3D.ZERO);
+		return toTorque(Vector3D$.MODULE$.ZERO());
 	}
 
 	public Torque toTorque(Vector3D newOrigin) {
 		Torque t = new Torque();
-		Vector3D dR = Vector3DMath.relative(getOffset(), newOrigin);
-		t.setTorque(Vector3DMath.cross(dR, getForce()));
+		Vector3D dR = getOffset().$minus(newOrigin);
+		t.setTorque(dR.cross(getForce()));
 		return t;
 	}
 }

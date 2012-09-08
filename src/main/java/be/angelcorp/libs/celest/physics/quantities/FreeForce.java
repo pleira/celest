@@ -16,17 +16,18 @@
 package be.angelcorp.libs.celest.physics.quantities;
 
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
 
 public class FreeForce extends Force {
 
 	private Vector3D	origin;
 
 	public FreeForce() {
-		this(Vector3D.ZERO, Vector3D.ZERO);
+		this(Vector3D$.MODULE$.ZERO(), Vector3D$.MODULE$.ZERO());
 	}
 
 	public FreeForce(Vector3D force) {
-		this(force, Vector3D.ZERO);
+		this(force, Vector3D$.MODULE$.ZERO());
 	}
 
 	public FreeForce(Vector3D force, Vector3D origin) {

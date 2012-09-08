@@ -18,6 +18,9 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 import static org.apache.commons.math3.util.FastMath.abs;
 import static org.apache.commons.math3.util.FastMath.cos;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
+import be.angelcorp.libs.math.rotation.RotationMatrix$;
 import org.apache.commons.math3.analysis.FunctionUtils;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.function.Inverse;
@@ -121,18 +124,18 @@ public class ExpoSinTrajectory implements ITrajectory {
 		double r_dot = theta_dot * (exposin.getQ0() + exposin.getK1() * exposin.getK2() * c) * r;
 
 		// Compose the radial vector
-		Vector3D R_norm = new Vector3D(Math.cos(theta), Math.sin(theta), 0);
+		Vector3D R_norm = new ImmutableVector3D(Math.cos(theta), Math.sin(theta), 0);
 		Vector3D R = R_norm.multiply(r);
 
 		// Compute the scale of the velocity components
 		double V_r = r_dot;
 		double V_theta = r * theta_dot;
-		Vector3D V_theta_norm = Vector3D.K.cross(R_norm);
+		Vector3D V_theta_norm = Vector3D$.MODULE$.K().cross(R_norm);
 
 		// TODO: make inherit this rotation from the ExpoSin input states
-		IRotation rotation = RotationMatrix.IDENTITY;
+		IRotation rotation = RotationMatrix$.MODULE$.IDENTITY();
 		// Compose the velocity vector from radial and tangential velocities
-		Vector3D V = rotation.applyTo(new Vector3D(V_r, R.normalize(), V_theta, V_theta_norm));
+		Vector3D V = rotation.applyTo(Vector3D$.MODULE$.apply(V_r, R.normalize(), V_theta, V_theta_norm));
 
 		// Convert to the position in cartesian elements (in plane coordinates)
 		return new CartesianElements(R, V);

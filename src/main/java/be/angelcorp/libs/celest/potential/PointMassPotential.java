@@ -47,7 +47,7 @@ public class PointMassPotential implements IPointMassPotential {
 	 */
 	@Override
 	public Vector3D evaluate(Vector3D point) {
-		return point.multiply(body.getMu() / Math.pow(point.getNorm(), 3)).negate();
+		return point.multiply(body.getMu() / Math.pow(point.norm(), 3)).negate();
 	}
 
 	/**

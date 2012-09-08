@@ -61,7 +61,7 @@ public class ImpulsiveShot {
 
 	public IPositionState kick(Vector3D dV, Propellant fuel) {
 		IPositionState stateNew = kick(body.getState(), dV);
-		fuel.consumeDV(body, dV.getNorm());
+		fuel.consumeDV(body, dV.norm());
 		body.setState(stateNew);
 		return stateNew;
 	}

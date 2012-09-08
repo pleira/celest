@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.ephemeris;
 
 import be.angelcorp.libs.celest.state.positionState.PositionState;
+import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 
 /**
@@ -35,7 +36,7 @@ public interface IEphemeris<S> {
 	 * 
 	 * @return The iterator that iterates over all ephemeris values &lsaquo;S&rsaquo;
 	 */
-	public Iterable<S> getEphemerisIterator();
+	// public Iterable<S> getEphemerisIterator();
 
 	/**
 	 * Get the ephemeris at a given date
@@ -44,6 +45,6 @@ public interface IEphemeris<S> {
 	 *            Epemeris juliandate to retrieve the emphemeris on
 	 * @return The ephemeris at the specified date (or as close as possible to)
 	 */
-	public S getEphemerisOn(JulianDate date);
+	public S getEphemerisOn(IJulianDate date);
 
 }

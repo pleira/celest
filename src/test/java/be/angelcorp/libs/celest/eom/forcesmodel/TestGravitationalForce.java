@@ -22,6 +22,7 @@ import be.angelcorp.libs.celest.kepler.KeplerCircular;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Length;
 
@@ -33,26 +34,28 @@ public class TestGravitationalForce extends CelestTest {
 		CelestialBody sat = new CelestialBody(
 				new KeplerElements(10E6, 0, 0, 0, 0, 0, earth), 5);
 		GravitationalForce_C g = new GravitationalForce_C(sat, earth);
-		assertEquals(19.93d, g.getForce().getNorm(), 1E-1);
-		assertEquals(3.986d, g.toAcceleration().getNorm(), 1E-2);
+		assertEquals(19.93d, g.getForce().norm(), 1E-1);
+		assertEquals(3.986d, g.toAcceleration().norm(), 1E-2);
 
 		/* Test the f/a in a simple earth system all components */
 		CelestialBody sat1 = new CelestialBody(new SphericalElements(10E6, Math.PI / 3, 0,
 				KeplerCircular.vc(10E6, earth.getMu()), 0, 0, earth), 5);
 		GravitationalForce_C g1 = new GravitationalForce_C(sat1, earth);
-		CelestTest.assertEquals(
-				new Vector3D(Math.cos(Math.PI / 3) * -19.93d, Math.sin(Math.PI / 3) * -19.93d, 0),
-				g1.getForce(), 1E-1);
-		CelestTest.assertEquals(
-				new Vector3D(Math.cos(Math.PI / 3) * -3.986d, Math.sin(Math.PI / 3) * -3.986d, 0),
-				g1.toAcceleration(), 1E-2);
+		CelestTest.assertTrue(
+				new ImmutableVector3D(Math.cos(Math.PI / 3) * -19.93d, Math.sin(Math.PI / 3) * -19.93d, 0).equals(
+                        g1.getForce(), 1E-1
+                ) );
+		CelestTest.assertTrue(
+				new ImmutableVector3D(Math.cos(Math.PI / 3) * -3.986d, Math.sin(Math.PI / 3) * -3.986d, 0).equals(
+				    g1.toAcceleration(), 1E-2
+                ) );
 
 		/* Test the f/a in a simple sun system (norm only) */
 		CelestialBody sun = SolarConstants.body;
 		CelestialBody sat2 = new CelestialBody(
 				new KeplerElements(Length.convert(1, Length.AU), 0, 0, 0, 0, 0, sun), 5);
 		GravitationalForce_C g2 = new GravitationalForce_C(sat2, sun);
-		assertEquals(0.02965d, g2.getForce().getNorm(), 1E-4);
-		assertEquals(0.005930d, g2.toAcceleration().getNorm(), 1E-5);
+		assertEquals(0.02965d, g2.getForce().norm(), 1E-4);
+		assertEquals(0.005930d, g2.toAcceleration().norm(), 1E-5);
 	}
 }

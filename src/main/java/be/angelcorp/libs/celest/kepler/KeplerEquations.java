@@ -15,6 +15,7 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
+import be.angelcorp.libs.math.linear.*;
 import org.apache.commons.math3.analysis.DifferentiableUnivariateFunction;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
@@ -23,9 +24,6 @@ import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
-import be.angelcorp.libs.math.linear.Matrix3D;
-import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3DMath;
 
 public abstract class KeplerEquations {
 
@@ -68,8 +66,8 @@ public abstract class KeplerEquations {
 	 * @return Argument of latitude [rad]
 	 */
 	public static double arguementOfLatitude(Vector3D nodalVector, Vector3D radius) {
-		double u = Math.acos(nodalVector.dot(radius) / (nodalVector.getNorm() * radius.getNorm()));
-		if (radius.getZ() < 0)// Checking for quadrant
+		double u = Math.acos(nodalVector.dot(radius) / (nodalVector.norm() * radius.norm()));
+		if (radius.z() < 0)// Checking for quadrant
 			u = 2 * Math.PI - u;
 		return u;
 	}
@@ -117,16 +115,15 @@ public abstract class KeplerEquations {
 		Vector3D V = state.getV();
 
 		Vector3D h = R.cross(V);// Specific angular momentum vector
-		Vector3D N = Vector3D.K.cross(h);
+		Vector3D N = Vector3D$.MODULE$.K().cross(h);
 
-		double rNorm = R.getNorm();
-		double vNorm2 = V.getNormSq();
-		double nNorm = N.getNorm();
+		double rNorm = R.norm();
+		double vNorm2 = V.normSq();
+		double nNorm = N.norm();
 
 		// Eccentricity vector
-		Vector3D e_vec = (R.multiply(vNorm2 - mhu / rNorm).subtract(
-				V.multiply(R.dot(V)))).multiply(1 / mhu);
-		double ecc = e_vec.getNorm(); // Magnitude of eccentricity vector
+		Vector3D e_vec = (R.multiply(vNorm2 - mhu / rNorm).$minus(V.multiply(R.dot(V)))).multiply(1 / mhu);
+		double ecc = e_vec.norm(); // Magnitude of eccentricity vector
 
 		double zeta = vNorm2 / 2 - mhu / rNorm; // Specific mechanical energy of orbit
 
@@ -136,18 +133,18 @@ public abstract class KeplerEquations {
 		else
 			a = Double.POSITIVE_INFINITY;
 
-		double inc = Math.acos(h.getZ() / h.getNorm()); // inclination of orbit
+		double inc = Math.acos(h.z() / h.norm()); // inclination of orbit
 
-		double Omega = Math.acos(N.getX() / nNorm); // Right ascension of ascending node
-		if (N.getY() < 0) // Checking for quadrant
+		double Omega = Math.acos(N.x() / nNorm); // Right ascension of ascending node
+		if (N.y() < 0) // Checking for quadrant
 			Omega = 2 * Math.PI - Omega;
 
 		double w = N.dot(e_vec) / (nNorm * ecc);
 		w = Math.acos(w); // Argument of perigee
-		if (e_vec.getZ() < 0) // Checking for quadrant
+		if (e_vec.z() < 0) // Checking for quadrant
 			w = 2 * Math.PI - w;
 
-		double nu = Vector3DMath.angle(e_vec, R); // True anomaly
+		double nu = e_vec.angle(R); // True anomaly
 		if (R.dot(V) < 0) // Checking for quadrant
 			nu = 2 * Math.PI - nu;
 
@@ -191,12 +188,11 @@ public abstract class KeplerEquations {
 		Vector3D V = state.getV();
 		double mhu = center.getMu();
 
-		double rNorm = R.getNorm();
-		double vNorm2 = V.getNormSq();
+		double rNorm = R.norm();
+		double vNorm2 = V.normSq();
 
-		Vector3D e_vec = (R.multiply(vNorm2 - mhu / rNorm).subtract(
-				V.multiply(R.dot(V)))).multiply(1 / mhu);
-		double ecc = e_vec.getNorm();
+		Vector3D e_vec = (R.multiply(vNorm2 - mhu / rNorm).$minus(V.multiply(R.dot(V)))).multiply(1 / mhu);
+		double ecc = e_vec.norm();
 
 		double a;
 		if ((1 - Math.abs(ecc)) > eccentricityTolarance) // Checking to see if orbit is parabolic
@@ -266,31 +262,28 @@ public abstract class KeplerEquations {
 	 * @return Gravity gradient matrix.
 	 */
 	public static Matrix3D gravityGradient(Vector3D R, double mu) {
-		double rmag = R.getNorm();
+		double rmag = R.norm();
 		double r2 = rmag * rmag;
 		double muor3 = mu / (r2 * rmag);
 		double jk = 3.0 * muor3 / (r2);
-		Matrix3D grad = new Matrix3D();
 
-		double xx = R.getX();
-		double yy = R.getY();
-		double zz = R.getZ();
+		double xx = R.x();
+		double yy = R.y();
+		double zz = R.z();
 
-		double[][] gg = grad.getDataRef();
+		double gg00 = jk * xx * xx - muor3;
+        double gg01 = jk * xx * yy;
+        double gg02 = jk * xx * zz;
 
-		gg[0][0] = jk * xx * xx - muor3;
-		gg[0][1] = jk * xx * yy;
-		gg[0][2] = jk * xx * zz;
+        double gg10 = gg01;
+        double gg11 = jk * yy * yy - muor3;
+        double gg12 = jk * yy * zz;
 
-		gg[1][0] = gg[0][1];
-		gg[1][1] = jk * yy * yy - muor3;
-		gg[1][2] = jk * yy * zz;
+        double gg20 = gg02;
+        double gg21 = gg12;
+		double gg22 = jk * zz * zz - muor3;
 
-		gg[2][0] = gg[0][2];
-		gg[2][1] = gg[1][2];
-		gg[2][2] = jk * zz * zz - muor3;
-
-		return grad;
+		return new ImmutableMatrix3D(gg00, gg01, gg02, gg10, gg11, gg12, gg20, gg21, gg22);
 	}
 
 	/**
@@ -329,12 +322,14 @@ public abstract class KeplerEquations {
 		double p = a * (1 - ecc * ecc);
 
 		// CREATING THE R VECTOR IN THE pqw COORDINATE FRAME
-		Vector3D R_pqw = new Vector3D(p * Math.cos(nu) / (1 + ecc * Math.cos(nu)),
+		Vector3D R_pqw = new ImmutableVector3D(
+                p * Math.cos(nu) / (1 + ecc * Math.cos(nu)),
 				p * Math.sin(nu) / (1 + ecc * Math.cos(nu)),
 				0);
 
 		// CREATING THE V VECTOR IN THE pqw COORDINATE FRAME
-		Vector3D V_pqw = new Vector3D(-Math.sqrt(mhu / p) * Math.sin(nu),
+		Vector3D V_pqw = new ImmutableVector3D(
+                -Math.sqrt(mhu / p) * Math.sin(nu),
 				Math.sqrt(mhu / p) * (ecc + Math.cos(nu)),
 				0);
 
@@ -350,7 +345,7 @@ public abstract class KeplerEquations {
 	 * @return g vector
 	 */
 	public static Vector3D localGravity(Vector3D r, double mu) {
-		double rmag = r.getNorm();
+		double rmag = r.norm();
 		double muor3 = mu / (rmag * rmag * rmag);
 
 		Vector3D g = r.multiply(-muor3);
@@ -384,8 +379,8 @@ public abstract class KeplerEquations {
 	 * @return The true longitude
 	 */
 	public static double trueLongitude(Vector3D radius) {
-		double lambda_true = Math.acos(radius.getX() / radius.getNorm());
-		if (radius.getY() < 0)// Checking for quadrant
+		double lambda_true = Math.acos(radius.x() / radius.norm());
+		if (radius.y() < 0)// Checking for quadrant
 			lambda_true = 2 * Math.PI - lambda_true;
 		return lambda_true;
 	}
@@ -428,8 +423,8 @@ public abstract class KeplerEquations {
 	 * @return True longitude of periapse [RAD]
 	 */
 	public static double trueLongitudeOfPeriapse(Vector3D eccentricityVector) {
-		double w_true = Math.acos(eccentricityVector.getX() / eccentricityVector.getNorm());
-		if (eccentricityVector.getY() < 0)// Checking for quadrant
+		double w_true = Math.acos(eccentricityVector.x() / eccentricityVector.norm());
+		if (eccentricityVector.y() < 0)// Checking for quadrant
 			w_true = 2 * Math.PI - w_true;
 		return w_true;
 	}
@@ -742,7 +737,7 @@ public abstract class KeplerEquations {
 		double ecc = k.getEccentricity();
 		double nu = k.getTrueAnomaly();
 		double p = k.getSemiMajorAxis() * (1 - ecc * ecc);
-		Vector3D R_pqw = new Vector3D(p * Math.cos(nu) / (1 + ecc * Math.cos(nu)),
+		Vector3D R_pqw = new ImmutableVector3D(p * Math.cos(nu) / (1 + ecc * Math.cos(nu)),
 				p * Math.sin(nu) / (1 + ecc * Math.cos(nu)),
 				0);
 		Vector3D R = CelestialRotate.PQW2ECI(
@@ -757,7 +752,7 @@ public abstract class KeplerEquations {
 		double raan = k.getRaan();
 		double w = k.getArgumentPeriapsis();
 		double i = k.getInclination();
-		Vector3D e_unit_vec = new Vector3D(
+		Vector3D e_unit_vec = new ImmutableVector3D(
 				Math.cos(raan) * Math.cos(w) - Math.cos(i) * Math.sin(raan) * Math.sin(w),
 				Math.sin(raan) * Math.cos(w) + Math.cos(i) * Math.cos(raan) * Math.sin(w),
 				Math.sin(i) * Math.sin(w));

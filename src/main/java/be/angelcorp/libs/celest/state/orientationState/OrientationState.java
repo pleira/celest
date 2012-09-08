@@ -95,9 +95,9 @@ public class OrientationState implements IOrientationState {
 		v.setEntry(1, q.getQ1());
 		v.setEntry(2, q.getQ2());
 		v.setEntry(3, q.getQ3());
-		v.setEntry(4, rotationRate.getX());
-		v.setEntry(5, rotationRate.getY());
-		v.setEntry(6, rotationRate.getZ());
+		v.setEntry(4, rotationRate.x());
+		v.setEntry(5, rotationRate.y());
+		v.setEntry(6, rotationRate.z());
 		return v;
 	}
 

@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.potential;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
 
 /**
  * 
@@ -56,10 +57,10 @@ public class ThinShellPotential extends PointMassPotential implements IThinShell
 	 */
 	@Override
 	public Vector3D evaluate(Vector3D point) {
-		if (point.getNormSq() < r2)
+		if (point.normSq() < r2)
 			/* Valid where R is outside the shell, R >= R2 */
 			/* U = Constants.GRAVITATIONAL_CONSTANT / r and is constant, so dU/dr = 0 */
-			return Vector3D.ZERO;
+			return Vector3D$.MODULE$.ZERO();
 		else
 			/* Valid where R is inside the shell, R <= R1 */
 			/* U = GM/r = spherically symmetric */

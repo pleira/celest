@@ -142,8 +142,8 @@ public class LambertUV extends TPBVP {
 	public LambertTrajectory getTrajectory() {
 		Vector3D r1 = CartesianElements.as(this.r1).getR();
 		Vector3D r2 = CartesianElements.as(this.r2).getR();
-		double r1norm = r1.getNorm();
-		double r2norm = r2.getNorm();
+		double r1norm = r1.norm();
+		double r2norm = r2.norm();
 
 		double cosDnu = r1.dot(r2) / (r1norm * r2norm);
 		double A = sqrt(r1norm * r2norm * (1d + cosDnu));

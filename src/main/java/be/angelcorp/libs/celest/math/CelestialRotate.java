@@ -15,8 +15,7 @@
  */
 package be.angelcorp.libs.celest.math;
 
-import be.angelcorp.libs.math.linear.Matrix3D;
-import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.*;
 
 /**
  * A set of common rotations that are performed in celestial mechanics
@@ -40,19 +39,17 @@ public abstract class CelestialRotate {
 		double ci = Math.cos(i);
 		double si = Math.sin(i);
 
-		Matrix3D m = new Matrix3D();
-		double[][] out = m.getDataRef();
-		out[0][0] = craan * cw - sraan * sw * ci;
-		out[0][1] = -craan * sw - sraan * cw * ci;
-		out[0][2] = sraan * si;
-		out[1][0] = sraan * cw + craan * sw * ci;
-		out[1][1] = -sraan * sw + craan * cw * ci;
-		out[1][2] = -craan * si;
-		out[2][0] = sw * si;
-		out[2][1] = cw * si;
-		out[2][2] = ci;
+		double m00 = craan * cw - sraan * sw * ci;
+        double m01 = -craan * sw - sraan * cw * ci;
+        double m02 = sraan * si;
+        double m10 = sraan * cw + craan * sw * ci;
+        double m11 = -sraan * sw + craan * cw * ci;
+        double m12 = -craan * si;
+        double m20 = sw * si;
+        double m21 = cw * si;
+        double m22 = ci;
 
-		return m;
+		return new ImmutableMatrix3D(m00, m01, m02, m10, m11, m12, m20, m21, m22);
 	}
 
 	/**
@@ -66,11 +63,7 @@ public abstract class CelestialRotate {
 		Vector3D what = h.normalize();
 		Vector3D s = what.cross(rhat);
 		Vector3D shat = s.normalize();
-		Matrix3D out = new Matrix3D();
 
-		out.setColumnVector(0, rhat);
-		out.setColumnVector(1, shat);
-		out.setColumnVector(2, what);
-		return out;
+        return Matrix3D$.MODULE$.columns(rhat, shat, what);
 	}
 }

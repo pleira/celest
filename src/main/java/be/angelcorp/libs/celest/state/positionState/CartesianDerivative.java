@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
+import be.angelcorp.libs.math.linear.ImmutableVector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -36,15 +38,15 @@ public class CartesianDerivative extends StateDerivativeVector implements ICarte
 	public Vector3D	A;
 
 	public CartesianDerivative() {
-		this(Vector3D.ZERO, Vector3D.ZERO);
+		this(Vector3D$.MODULE$.ZERO(), Vector3D$.MODULE$.ZERO());
 	}
 
 	public CartesianDerivative(double[] d) {
 		if (d.length != 6)
 			throw new ArrayIndexOutOfBoundsException(String.format(
 					"Array must be length 6 [vx, vy, vz, ax, ay, az], only %d elements given", d.length));
-		this.V = new Vector3D(d[0], d[1], d[2]);
-		this.A = new Vector3D(d[3], d[4], d[5]);
+		this.V = new ImmutableVector3D(d[0], d[1], d[2]);
+		this.A = new ImmutableVector3D(d[3], d[4], d[5]);
 	}
 
 	public CartesianDerivative(Vector3D V, Vector3D A) {
@@ -116,8 +118,8 @@ public class CartesianDerivative extends StateDerivativeVector implements ICarte
 	@Override
 	public RealVector toVector() {
 		return new ArrayRealVector(new double[] {
-				V.getX(), V.getY(), V.getZ(),
-				A.getX(), A.getY(), A.getZ() });
+				V.x(), V.y(), V.z(),
+				A.x(), A.y(), A.z() });
 	}
 
 }

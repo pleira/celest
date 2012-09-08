@@ -173,7 +173,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * @return Inertial velocity at R1 [m/s]
 	 */
 	public Vector3D getV1() {
-		return r2.subtract(r1.multiply(f)).divide(g);
+		return r2.$minus(r1.$times(f)).$div(g);
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * @return Inertial velocity at R2 [m/s]
 	 */
 	public Vector3D getV2() {
-		return r2.multiply(g_dot).subtract(r1).divide(g);
+		return r2.multiply(g_dot).$minus(r1).divide(g);
 	}
 
 	/**
