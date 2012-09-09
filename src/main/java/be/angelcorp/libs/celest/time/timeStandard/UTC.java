@@ -103,9 +103,9 @@ public class UTC implements ITimeStandard {
 	/** {@inheritDoc} */
 	@Override
 	public double offsetFromTT(IJulianDate JD_tt) {
-		double from_tt = TimeStandards.TAI.offsetFromTT(JD_tt);
+		double from_tt = TimeStandards.TAI().offsetFromTT(JD_tt);
         double jd = JD_tt.add(from_tt, Time.second).getJD();
-        double jd2 = JD_tt.getJulianDate(TimeStandards.TAI).getJD();
+        double jd2 = JD_tt.getJulianDate(TimeStandards.TAI()).getJD();
 
 		Entry<Double, UnivariateFunction> entry = TAI_UTC.floorEntry(jd);
 		double offset = -entry.getValue().value(jd);
@@ -127,7 +127,7 @@ public class UTC implements ITimeStandard {
 		Entry<Double, UnivariateFunction> entry = TAI_UTC.floorEntry(jd);
 		double offset_TAI = entry.getValue().value(jd);
 
-		return offset_TAI + TimeStandards.TAI.offsetToTT(JD_utc);
+		return offset_TAI + TimeStandards.TAI().offsetToTT(JD_utc);
 	}
 
 }

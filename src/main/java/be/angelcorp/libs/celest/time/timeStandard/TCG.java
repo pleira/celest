@@ -33,7 +33,6 @@ import be.angelcorp.libs.util.physics.Time;
  * </p>
  * 
  * @author Simon Billemont
- * 
  */
 @Immutable
 @Singleton
@@ -62,8 +61,6 @@ public class TCG implements ITimeStandard {
 		// Equation (28)
 		double seconds_since_TT_epoch = JD_tt.relativeTo(JulianDate.TT_EPOCH, Time.second);
 		double TCG = L_g * seconds_since_TT_epoch;
-     System.err.println("epochDelta=" +(seconds_since_TT_epoch - Math.round(seconds_since_TT_epoch)));
-     System.err.println("TCG="+TCG);
 		return TCG;
 	}
 
@@ -73,10 +70,6 @@ public class TCG implements ITimeStandard {
 		// Epoch doesn't matter, its constant
 		double seconds_since_TCG_epoch = JD_tcg.relativeTo(JulianDate.TCG_EPOCH, Time.second);
         double offset_TT = -L_g * seconds_since_TCG_epoch;
-
-
-    System.err.println("epochDelta=" + ( seconds_since_TCG_epoch - Math.round(seconds_since_TCG_epoch)));
-    System.err.println("offset_TT=" + ( offset_TT));
 
         return offset_TT;
 	}

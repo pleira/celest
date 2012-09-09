@@ -34,10 +34,10 @@ public class TestJulianDate extends CelestTest {
 		assertEquals(5 + Time.convert(dt, Time.second, Time.day), jd.getJD());
 
 		// Check of the value of ITimeStandard is correctly kept after adding
-		jd0 = new JulianDate(1., TimeStandards.TT);
+		jd0 = new JulianDate(1., TimeStandards.TT());
 		jd = jd0.add(1, Time.day_julian);
 		assertEquals(2, jd.getJD(), 1E-16);
-		assertEquals(TimeStandards.TT, jd.getTimeStandard());
+		assertEquals(TimeStandards.TT(), jd.getTimeStandard());
 	}
 
 	public void testITimeStandard() {
@@ -48,16 +48,16 @@ public class TestJulianDate extends CelestTest {
 		// Terrestrial Time: January 1 2000, 12:00:00 TT = 2451545.0 JD TT
 		// International Atomic Time: January 1, 2000, 11:59:27.816 TAI = 2451544.99962750 JD TAI
 		// Coordinated Universal Time: January 1, 2000, 11:58:55.816 UTC = 2451544.99925713 JD UTC
-		JulianDate jd_tt_j2000 = new JulianDate(2451545.0, TimeStandards.TT);
-		JulianDate jd_tai_j2000_true = new JulianDate(2451544.99962750, TimeStandards.TAI);
+		JulianDate jd_tt_j2000 = new JulianDate(2451545.0, TimeStandards.TT());
+		JulianDate jd_tai_j2000_true = new JulianDate(2451544.99962750, TimeStandards.TAI());
 		JulianDate jd_utc_j2000_true = new JulianDate(2451544.99925713, UTC.get());
-		assertEquals(TimeStandards.TT, jd_tt_j2000.getTimeStandard());
-		assertEquals(TimeStandards.TAI, jd_tai_j2000_true.getTimeStandard());
+		assertEquals(TimeStandards.TT(), jd_tt_j2000.getTimeStandard());
+		assertEquals(TimeStandards.TAI(), jd_tai_j2000_true.getTimeStandard());
 		assertEquals(UTC.get(), jd_utc_j2000_true.getTimeStandard());
 
-		IJulianDate jd_tai_j2000_actual = jd_tt_j2000.getJulianDate(TimeStandards.TAI);
+		IJulianDate jd_tai_j2000_actual = jd_tt_j2000.getJulianDate(TimeStandards.TAI());
 		IJulianDate jd_utc_j2000_actual = jd_tt_j2000.getJulianDate(UTC.get());
-		assertEquals(TimeStandards.TAI, jd_tai_j2000_actual.getTimeStandard());
+		assertEquals(TimeStandards.TAI(), jd_tai_j2000_actual.getTimeStandard());
 		assertEquals(UTC.get(), jd_utc_j2000_actual.getTimeStandard());
 
 		assertEquals(jd_tai_j2000_true.getJD(), jd_tai_j2000_actual.getJD(), 1E-8);

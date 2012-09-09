@@ -46,7 +46,7 @@ public class ITRF implements IReferenceFrame, ITRS {
 
 	@Deprecated
 	public static IJulianDate epoch(int year) {
-		return new JulianDate(year, 1, 1, 12, 0, 0, TimeStandards.TT);
+		return new JulianDate(year, 1, 1, 12, 0, 0, TimeStandards.TT());
 	}
 
 	/**

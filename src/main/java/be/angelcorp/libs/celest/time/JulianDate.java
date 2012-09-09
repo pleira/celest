@@ -50,10 +50,10 @@ import be.angelcorp.libs.util.physics.Time;
 public class JulianDate implements IJulianDate {
 
 	/** The J2000 epoch in JulianDate form. */
-	public static final JulianDate	J2000_EPOCH	= new JulianDate(2451545.0, TimeStandards.TT);
+	public static final JulianDate	J2000_EPOCH	= new JulianDate(2451545.0, TimeStandards.TT());
 
 	/** The starting epoch of the TAI timeline (same as TAI/TT/TCG/TCB). */
-	public static final JulianDate	TAI_EPOCH	= new JulianDate(2443144.5, TimeStandards.TAI);
+	public static final JulianDate	TAI_EPOCH	= new JulianDate(2443144.5, TimeStandards.TAI());
 	/** The starting epoch of the TT timeline (same as TAI/TT/TCG/TCB). */
 	public static final JulianDate	TT_EPOCH	= TAI_EPOCH;
 	/** The starting epoch of the TCG timeline (same as TAI/TT/TCG/TCB). */
@@ -254,7 +254,7 @@ public class JulianDate implements IJulianDate {
 
 		/* First convert this to TT form */
 		double offset = this.timeStandard.offsetToTT(this);
-		JulianDate this_tt = new JulianDate(getJD(), TimeStandards.TT).add(offset, Time.second);
+		JulianDate this_tt = new JulianDate(getJD(), TimeStandards.TT()).add(offset, Time.second);
 
 		/* Then convert the TT jd form to the requested type */
 		offset = timeStandard.offsetFromTT(this_tt);
