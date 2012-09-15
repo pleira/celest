@@ -88,6 +88,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -95,7 +96,6 @@
 						<configuration>
 							<sources>
 								<source>src/main/interfaces</source>
-								<source>src/main/scala</source>
 							</sources>
 						</configuration>
 					</execution>
