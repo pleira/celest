@@ -83,12 +83,12 @@ public class TestKeplerEquations extends CelestTest {
 		ICartesianElements c = new CartesianElements(
 				new ImmutableVector3D(10157768.1264, -6475997.0091, 2421205.9518),
 				new ImmutableVector3D(1099.2953996, 3455.105924, 4355.0978095));
-		IKeplerElements k = KeplerEquations.cartesian2kepler(c, EarthConstants.mu);
+		IKeplerElements k = package$.MODULE$.cartesian2kepler(c, EarthConstants.mu);
 		double[] expected = new double[] {
 				1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560 };
 		double[] tol = new ArrayRealVector(expected).mapMultiply(1E-3).toArray();
 		CelestTest.assertEquals(expected, k.toVector().toArray(), tol);
-		k = KeplerEquations.cartesian2kepler(c, EarthConstants.bodyCenter);
+		k = package$.MODULE$.cartesian2kepler(c, EarthConstants.bodyCenter);
 		CelestTest.assertEquals(expected, k.toVector().toArray(), tol);
 	}
 
@@ -97,7 +97,7 @@ public class TestKeplerEquations extends CelestTest {
 		ICartesianElements c = new CartesianElements(
 				new ImmutableVector3D(10157768.1264, -6475997.0091, 2421205.9518),
 				new ImmutableVector3D(1099.2953996, 3455.105924, 4355.0978095));
-		IKeplerElements k = KeplerEquations.cartesian2kepler2D(c, EarthConstants.bodyCenter);
+		IKeplerElements k = package$.MODULE$.cartesian2kepler2D(c, EarthConstants.bodyCenter);
 		assertEquals(1.216495E7, k.getSemiMajorAxis(), 1E4);
 		assertEquals(0.01404, k.getEccentricity(), 1E-5);
 		assertEquals(3.88056, k.getTrueAnomaly(), 1E-2);
@@ -105,17 +105,17 @@ public class TestKeplerEquations extends CelestTest {
 
 	public void testStaticEccentricity() {
 		// eccentricity(double, double)
-		assertEquals(0, KeplerEquations.eccentricity(1, 1), 1E-3);
+		assertEquals(0, package$.MODULE$.eccentricity(1, 1), 1E-3);
 		// Earth to mars orbit perihelion is the Earth's orbital radius, aphelion is the radius of Mars
 		double Rp = 1.495978E11;
 		double Ra = 2.27987047E11;
-		assertEquals(0.207606972, KeplerEquations.eccentricity(Rp, Ra), 1E-9);
+		assertEquals(0.207606972, package$.MODULE$.eccentricity(Rp, Ra), 1E-9);
 	}
 
 	public void testStaticFix2dOrbit() {
 		// fix2dOrbit(KeplerElements)
 		IKeplerElements k = new KeplerElements(0, 0, 0, Double.NaN, Double.NaN, 0);
-		KeplerEquations.fix2dOrbit(k);
+        k = package$.MODULE$.fix2dOrbit(k);
 		assertTrue(!Double.isNaN(k.getRaan()));
 		assertTrue(!Double.isNaN(k.getArgumentPeriapsis()));
 	}
@@ -123,7 +123,7 @@ public class TestKeplerEquations extends CelestTest {
 	public void testStaticFlightPathAngle() {
 		// flightPathAngle(double, double)
 		// http://www.wolframalpha.com/input/?i=mean+anomaly+5+radian+eccentricity+0.6
-		double gamma = MathUtils2.mod(KeplerEquations.flightPathAngle(0.6, -2.427), 2 * Math.PI);
+		double gamma = MathUtils2.mod(package$.MODULE$.flightPathAngle(0.6, -2.427), 2 * Math.PI);
 		assertEquals(5.6597, gamma, 1E-4);
 	}
 
@@ -133,7 +133,7 @@ public class TestKeplerEquations extends CelestTest {
 	public void testStaticKepler2Cartesian() {
 		// public static CartesianElements kepler2cartesian(double a, double ecc, double inc, double
 		// Omega, double w, double nu, double mu)
-		ICartesianElements c = KeplerEquations.kepler2cartesian(
+		ICartesianElements c = package$.MODULE$.kepler2cartesian(
 				1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560, EarthConstants.mu);
 		// Values from keplerCOE from Matlab Orbital_Library by Richard Rieber
 		ICartesianElements c_true = new CartesianElements(

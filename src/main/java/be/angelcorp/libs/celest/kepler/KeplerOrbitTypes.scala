@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.kepler;
+package be.angelcorp.libs.celest.kepler
 
-public enum KeplerOrbitTypes {
-
-	Circular, Elliptical, Parabolic, Hyperbolic;
-
-}
+sealed abstract class KeplerOrbitType()
+case class Circular()   extends  KeplerOrbitType
+case class Elliptical() extends  KeplerOrbitType
+case class Parabolic()  extends  KeplerOrbitType
+case class Hyperbolic() extends  KeplerOrbitType

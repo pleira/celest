@@ -15,11 +15,11 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
+import be.angelcorp.libs.celest.kepler.KeplerOrbitType;
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
-import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.celest.math.Keplerian;
 
 /**
@@ -95,7 +95,7 @@ public interface IKeplerElements extends Keplerian, IPositionState {
 	/**
 	 * Get the type of orbit we are in (circular, elliptical, parabolic or hyperbolic)
 	 */
-	public abstract KeplerOrbitTypes getOrbitType();
+	public abstract KeplerOrbitType getOrbitType();
 
 	/**
 	 * @see KeplerElements#raan

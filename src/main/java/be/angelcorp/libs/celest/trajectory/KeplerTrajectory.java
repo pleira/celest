@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.trajectory;
 
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
+import be.angelcorp.libs.celest.kepler.package$;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
@@ -52,7 +53,7 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	 */
 	@Override
 	public IKeplerElements evaluate(IJulianDate t) {
-		double n = KeplerEquations.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
+		double n = package$.MODULE$.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
 		double dt = t.relativeTo(epoch, Time.second); // Delta between epoch and now in [s]
 		double dM = n * dt;
 		double nu2 = k.getOrbitEqn().trueAnomalyFromMean(k.getOrbitEqn().meanAnomaly() + dM);

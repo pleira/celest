@@ -15,17 +15,12 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
+import be.angelcorp.libs.celest.kepler.*;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.util.Precision;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.kepler.KeplerCircular;
-import be.angelcorp.libs.celest.kepler.KeplerEllipse;
-import be.angelcorp.libs.celest.kepler.KeplerEquations;
-import be.angelcorp.libs.celest.kepler.KeplerHyperbola;
-import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
-import be.angelcorp.libs.celest.kepler.KeplerParabola;
 import be.angelcorp.libs.math.MathUtils2;
 
 /**
@@ -76,7 +71,7 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 			return new KeplerElements(a, e, i, omega, raan, trueA, center);
 		}
 		ICartesianElements c = state.toCartesianElements();
-		return KeplerEquations.cartesian2kepler(c, center);
+		return package$.MODULE$.cartesian2kepler(c, center);
 	}
 
 	/**
@@ -237,6 +232,25 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 				k.getCenterbody());
 	}
 
+    /**
+     * Create a new set of {@link KeplerElements}, identical to the given set of elements, except for the
+     * centerbody, which is provided by the user.
+     *
+     * @param k
+     *            Basis for all the constant Kepler elements.
+     * @param centerbody
+     *            New value for the center body.
+     */
+    public KeplerElements(IKeplerElements k, CelestialBody centerbody) {
+        this(k.getSemiMajorAxis(),
+                k.getEccentricity(),
+                k.getInclination(),
+                k.getArgumentPeriapsis(),
+                k.getRaan(),
+                k.getTrueAnomaly(),
+                centerbody);
+    }
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -250,7 +264,7 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 	 */
 	@Override
 	public boolean equals(IKeplerElements state2) {
-		return equals(state2, KeplerEquations.angleTolarance, 1e-12, KeplerEquations.eccentricityTolarance);
+		return equals(state2, KeplerEquations.angleTolarance(), 1e-12, KeplerEquations.eccentricityTolarance());
 	}
 
 	/**
@@ -276,7 +290,7 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 		// Due to special orbits, the specific elements might not be the same, but they can still
 		// represent the same orbit
 		if (isEquatorial()) {
-			if (getOrbitType() == KeplerOrbitTypes.Circular) {
+			if (Circular.class.isInstance( getOrbitType() ) ) {
 				// No raan / w defined, use true longitude instead
 				equal &= MathUtils2.equalsAngle(
 						getOrbitEqn().trueLongitude(), state2.getOrbitEqn().trueLongitude(), angle_eps);
@@ -287,7 +301,7 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 				equal &= MathUtils2.equalsAngle(omega, state2.getArgumentPeriapsis(), angle_eps);
 			}
 		} else {
-			if (getOrbitType() == KeplerOrbitTypes.Circular) {
+            if (Circular.class.isInstance( getOrbitType() ) ) {
 				// No w defined, use argument of latitude instead
 				equal &= MathUtils2.equalsAngle(getOrbitEqn().arguementOfLatitude(),
 						state2.getOrbitEqn().arguementOfLatitude(), angle_eps);
@@ -369,33 +383,31 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 	 */
 	@Override
 	public KeplerEquations getOrbitEqn() {
-		switch (getOrbitType()) {
-			case Circular:
-				return new KeplerCircular(this);
-			case Elliptical:
-				return new KeplerEllipse(this);
-			case Parabolic:
-				return new KeplerParabola(this);
-			case Hyperbolic:
-				return new KeplerHyperbola(this);
-		}
-		throw new UnsupportedOperationException();
+        KeplerOrbitType type = getOrbitType();
+        if (Circular.class.isInstance( type ) )
+            return new KeplerCircular(this);
+        else if (Elliptical.class.isInstance( type ) )
+            return new KeplerEllipse(this);
+        else if (Hyperbolic.class.isInstance( type ) )
+            return new KeplerHyperbola(this);
+        else // if (Parabolic.class.isInstance( type ) )
+            return new KeplerParabola(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public KeplerOrbitTypes getOrbitType() {
-		double tol = KeplerEquations.eccentricityTolarance;
+	public KeplerOrbitType getOrbitType() {
+		double tol = KeplerEquations.eccentricityTolarance();
 		if (e < tol) {
-			return KeplerOrbitTypes.Circular;
+			return new Circular();
 		} else if (e < 1 - tol) {
-			return KeplerOrbitTypes.Elliptical;
+			return new Elliptical();
 		} else if (e < 1 + tol) {
-			return KeplerOrbitTypes.Parabolic;
+			return new Parabolic();
 		} else {
-			return KeplerOrbitTypes.Hyperbolic;
+			return new Hyperbolic();
 		}
 	}
 
@@ -430,7 +442,7 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 	}
 
 	public boolean isEquatorial() {
-		return Math.abs(getInclination()) < KeplerEquations.angleTolarance;
+		return Math.abs(getInclination()) < KeplerEquations.angleTolarance();
 	}
 
 	/**

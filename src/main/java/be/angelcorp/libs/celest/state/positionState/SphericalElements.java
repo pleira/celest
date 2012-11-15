@@ -161,7 +161,7 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	 *            Velocity [m/S]
 	 * @param gamma
 	 *            Flight path angle [rad]
-	 * @param trueA
+	 * @param psi
 	 *            Flight path azimuth [rad]
 	 */
 	public SphericalElements(double r, double alpha, double delta, double v, double gamma,
@@ -183,7 +183,7 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	 *            Velocity [m/S]
 	 * @param gamma
 	 *            Flight path angle [rad]
-	 * @param trueA
+	 * @param psi
 	 *            Flight path azimuth [rad]
 	 * @param centerbody
 	 *            The body that is being orbited by these elements
@@ -257,7 +257,7 @@ public class SphericalElements extends PositionState implements ISphericalElemen
 	 */
 	@Override
 	public boolean equals(ISphericalElements state2) {
-		double angleTol = KeplerEquations.angleTolarance;
+		double angleTol = KeplerEquations.angleTolarance();
 		return Precision.equals(r, state2.getRadius(), r * 1E-10)
 				&& Precision.equals(v, state2.getVelocity(), v * 1E-10)
 				&& MathUtils2.equalsAngle(alpha, state2.getRightAscension(), angleTol)

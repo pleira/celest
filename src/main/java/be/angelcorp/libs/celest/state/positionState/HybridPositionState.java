@@ -15,11 +15,11 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
+import be.angelcorp.libs.celest.kepler.KeplerOrbitType;
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.kepler.KeplerEquations;
-import be.angelcorp.libs.celest.kepler.KeplerOrbitTypes;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 public class HybridPositionState extends PositionState implements ICartesianElements, IKeplerElements,
@@ -161,7 +161,7 @@ public class HybridPositionState extends PositionState implements ICartesianElem
 	}
 
 	@Override
-	public KeplerOrbitTypes getOrbitType() {
+	public KeplerOrbitType getOrbitType() {
 		return getKeplerian().getOrbitType();
 	}
 
