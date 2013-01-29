@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.frames.systems;
 
-import be.angelcorp.libs.celest.frames.ITRF;
+import be.angelcorp.libs.celest.frames.implementations.ITRF;
 
 /**
  * The International Terrestrial Reference System (ITRS) is a world spatial reference system co-rotating

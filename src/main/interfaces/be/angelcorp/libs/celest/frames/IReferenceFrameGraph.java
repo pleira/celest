@@ -161,8 +161,6 @@ public interface IReferenceFrameGraph {
 	 *            Predicate to find the origin reference frame.
 	 * @param to
 	 *            Predicate to find the destination reference frame.
-	 * @param epoch
-	 *            The epoch at which the {@link IReferenceFrameTransform} must be valid.
 	 * @return An {@link IReferenceFrameTransformFactory} capable of producing transformations between
 	 *         the first matched frame of the "from" and "to" predicates.
 	 * @throws ReferenceFrameTransformationException
@@ -184,8 +182,6 @@ public interface IReferenceFrameGraph {
 	 *            Origin reference frame.
 	 * @param to
 	 *            Destination reference frame.
-	 * @param epoch
-	 *            The epoch at which the {@link IReferenceFrameTransform} must be valid.
 	 * @return An {@link IReferenceFrameTransformFactory} capable of producing transformations between
 	 *         the two provided reference frames.
 	 * @throws ReferenceFrameTransformationException

@@ -51,6 +51,12 @@ public class JulianDate implements IJulianDate {
 
 	/** The J2000 epoch in JulianDate form. */
 	public static final JulianDate	J2000_EPOCH	= new JulianDate(2451545.0, TimeStandards.TT());
+    /** The J1950 epoch in JulianDate form. */
+    public static final JulianDate	J1950_EPOCH	= new JulianDate(2433282.5, TimeStandards.TT());
+    /** The J1900 epoch in JulianDate form. */
+    public static final JulianDate	J1900_EPOCH	= new JulianDate(2415020.0, TimeStandards.TT());
+    /** The B1950 epoch in JulianDate form. */
+    public static final JulianDate	B1950_EPOCH	= new JulianDate(2433282.42345905, TimeStandards.TT());
 
 	/** The starting epoch of the TAI timeline (same as TAI/TT/TCG/TCB). */
 	public static final JulianDate	TAI_EPOCH	= new JulianDate(2443144.5, TimeStandards.TAI());

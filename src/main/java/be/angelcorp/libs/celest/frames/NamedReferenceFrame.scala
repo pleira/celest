@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2012 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.frames;
+
+package be.angelcorp.libs.celest.frames
 
 /**
- * A {@link IReferenceFrame} is the logic capable of producing a specific reference frame at specified
- * epochs.
- * 
- * <p>
- * All {@link IReferenceFrame}'s are linked together using {@link IReferenceFrameTransform} and form a
- * graph. This graph is used to find {@link IReferenceFrameTransform} between two arbitrary
- * {@link IReferenceFrame}'s.
- * </p>
- * 
+ * Basic implementation of a IReferenceFrame, that can be identified solely by its name.
+ *
  * @author Simon Billemont
  */
-public interface IReferenceFrame {
-
-}
+case class NamedReferenceFrame(name: String) extends IReferenceFrame

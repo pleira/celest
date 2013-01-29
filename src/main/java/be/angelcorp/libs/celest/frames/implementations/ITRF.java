@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.frames;
+package be.angelcorp.libs.celest.frames.implementations;
 
+import be.angelcorp.libs.celest.frames.IReferenceFrame;
 import be.angelcorp.libs.celest.frames.systems.ECEF;
 import be.angelcorp.libs.celest.frames.systems.ITRS;
 import be.angelcorp.libs.celest.time.IJulianDate;

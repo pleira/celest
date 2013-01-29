@@ -11,6 +11,11 @@ import be.angelcorp.libs.util.physics.Time;
  * Barycentric Dynamical Time.
  *
  * <p>
+ * For most purposes, one may neglect the difference of less than 2 msec between Barycentric Dynamical
+ * Time (TDB) and Terrestrial Time (TT). (Fränz and Harper, <b>"Heliospheric Coordinate Systems"</b>)
+ * </p>
+ *
+ * <p>
  * Conversions based on:<br>
  * [1] D. Vallado et al. ,
  * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
