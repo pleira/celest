@@ -22,7 +22,6 @@ import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
-import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Angle;
 import be.angelcorp.libs.util.physics.Length;
 import be.angelcorp.libs.util.physics.Time;
@@ -30,13 +29,13 @@ import be.angelcorp.libs.util.physics.Time;
 public class TestEarthConstants extends CelestTest {
 
 	public void testOrbit() {
-		KeplerVariationTrajectory trajectory = EarthConstants.orbit;
+		KeplerVariationTrajectory trajectory = EarthConstants.orbit();
 
 		// Validation state based on JPL Horizons data Body: Earth (399)
 		// Frame: @Sun, ecliptic, J2000
 		// AU/days/Degree
 
-		NonSignuarElements state_actual_k = trajectory.evaluate(JulianDate.getJ2000());
+		NonSignuarElements state_actual_k = trajectory.evaluate(JulianDate.J2000_EPOCH);
 		CartesianElements state_actual_c = state_actual_k.toCartesianElements();
 		SphericalElements state_actual_s = new SphericalElements(state_actual_c, state_actual_k.getCenterbody());
 		CartesianElements state_true_c = new CartesianElements(
@@ -48,9 +47,9 @@ public class TestEarthConstants extends CelestTest {
 		// error see http://ssd.jpl.nasa.gov/?planet_pos
 		assertEquals(state_true_c.getR().norm(), state_actual_c.getR().norm(), 15e6); // R
 		assertEquals(state_true_s.getRightAscension(), state_actual_s.getRightAscension(),
-				Angle.convert(40, Angle.ARCSECOND)); // RA
+				Angle.convert(40, Angle.ArcSecond)); // RA
 		assertEquals(state_true_s.getDeclination(), state_actual_s.getDeclination(),
-				Angle.convert(15, Angle.ARCSECOND)); // DEC
+				Angle.convert(15, Angle.ArcSecond)); // DEC
 
 		state_actual_k = trajectory.evaluate(new JulianDate(2452000d));
 		state_actual_c = state_actual_k.toCartesianElements();
@@ -63,9 +62,9 @@ public class TestEarthConstants extends CelestTest {
 		state_true_s = new SphericalElements(state_true_c, state_actual_k.getCenterbody());
 		assertEquals(state_true_c.getR().norm(), state_actual_c.getR().norm(), 15e6); // R
 		assertEquals(state_true_s.getRightAscension(), state_actual_s.getRightAscension(),
-				Angle.convert(40, Angle.ARCMINUTE)); // RA TODO; why arcminute accuracy here ?
+				Angle.convert(40, Angle.ArcMinute)); // RA TODO; why arcminute accuracy here ?
 		assertEquals(state_true_s.getDeclination(), state_actual_s.getDeclination(),
-				Angle.convert(15, Angle.ARCSECOND)); // DEC
+				Angle.convert(15, Angle.ArcSecond)); // DEC
 
 	}
 }

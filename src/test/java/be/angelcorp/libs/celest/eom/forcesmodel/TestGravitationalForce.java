@@ -23,14 +23,13 @@ import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
-import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Length;
 
 public class TestGravitationalForce extends CelestTest {
 
 	public void testForce() throws Exception {
 		/* Test the f/a in a simple earth system (norm only) */
-		CelestialBody earth = EarthConstants.bodyCenter;
+		CelestialBody earth = EarthConstants.bodyCenter();
 		CelestialBody sat = new CelestialBody(
 				new KeplerElements(10E6, 0, 0, 0, 0, 0, earth), 5);
 		GravitationalForce_C g = new GravitationalForce_C(sat, earth);
@@ -51,7 +50,7 @@ public class TestGravitationalForce extends CelestTest {
                 ) );
 
 		/* Test the f/a in a simple sun system (norm only) */
-		CelestialBody sun = SolarConstants.body;
+		CelestialBody sun = SolarConstants.body();
 		CelestialBody sat2 = new CelestialBody(
 				new KeplerElements(Length.convert(1, Length.AU), 0, 0, 0, 0, 0, sun), 5);
 		GravitationalForce_C g2 = new GravitationalForce_C(sat2, sun);

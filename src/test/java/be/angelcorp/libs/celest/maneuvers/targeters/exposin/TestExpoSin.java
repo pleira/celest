@@ -50,8 +50,8 @@ public class TestExpoSin extends CelestTest {
 		double k2 = 0.7013;
 		double dt = Time.convert(130, Time.day);
 
-		IJulianDate t1 = JulianDate.getJ2000();
-		IJulianDate t2 = JulianDate.getJ2000().add(dt, Time.second);
+		IJulianDate t1 = JulianDate.J2000_EPOCH;
+		IJulianDate t2 = JulianDate.J2000_EPOCH.add(dt, Time.second);
 
 		ICartesianElements s1 = new CartesianElements(
 				new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO());
@@ -59,6 +59,7 @@ public class TestExpoSin extends CelestTest {
 				Vector3D$.MODULE$.apply(dTheta, 0).multiply(r2), Vector3D$.MODULE$.ZERO());
 
 		ExpoSin exposin = new ExpoSin(s1, s2, t1, t2);
+        exposin.setCenter(new CelestialBody(new CartesianElements(), 1.9891E30) );
 		exposin.assumeK2(k2);
 
 		// Results as computed by the Matlab routine:
@@ -107,8 +108,8 @@ public class TestExpoSin extends CelestTest {
 		ICartesianElements r1 = new CartesianElements(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO());
 		ICartesianElements r2 = new CartesianElements(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO());
 
-		IJulianDate t1 = JulianDate.getJ2000();
-		IJulianDate t2 = JulianDate.getJ2000().add(dt, Time.second);
+		IJulianDate t1 = JulianDate.J2000_EPOCH;
+		IJulianDate t2 = JulianDate.J2000_EPOCH.add(dt, Time.second);
 		CelestialBody center = new CelestialBody();
 		center.setMu(1E4);
 

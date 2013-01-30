@@ -39,7 +39,7 @@ public class TwoBody extends ForceModelCore {
 	 *            Satellite around the Earth
 	 */
 	public TwoBody(CelestialBody body) {
-		this(new TwoBodyCollection(EarthConstants.bodyCenter, body), body);
+		this(new TwoBodyCollection(EarthConstants.bodyCenter(), body), body);
 	}
 
 	/**

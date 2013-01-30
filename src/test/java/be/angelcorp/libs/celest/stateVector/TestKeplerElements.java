@@ -15,6 +15,7 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
+import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import junit.framework.AssertionFailedError;
 
@@ -22,22 +23,18 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.constants.Constants;
-import be.angelcorp.libs.celest.constants.EarthConstants;
-import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.state.positionState.ISphericalElements;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.state.positionState.SphericalElements;
-import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.util.physics.Angle;
+import static be.angelcorp.libs.util.physics.Angle.*;
 import be.angelcorp.libs.util.physics.Length;
 
 public class TestKeplerElements extends TestStateVector<KeplerElements> {
 
-	private static final CelestialBody	sun	= SolarConstants.body;
+	private static final CelestialBody	sun	= new CelestialBody(new CartesianElements(),  1.9891E30);
 
 	public TestKeplerElements() {
 		super(KeplerElements.class);
@@ -83,7 +80,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 		ICartesianElements c = new CartesianElements(
 				new ImmutableVector3D(-3.316179628957708e+10, +1.423339778393807e+11, +1.671050435305531e+10),
 				new ImmutableVector3D(-2.950283371376224e+04, -6.692107319756996e+03, -1.547093138889844e+03));
-		KeplerElements k_expected = EarthConstants.solarOrbit;
+		KeplerElements k_expected  = new KeplerElements(149.598261E9, 0.01671123, 0.124878, 1.99330267, 6.08665, 0, sun);
 		KeplerElements k_converted = doConvertAs(c, sun);
 		equalStateVector(k_expected, k_converted);
 		equalStateVector(c, k_expected.toCartesianElements(), 1e-8);
@@ -94,8 +91,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 				new ImmutableVector3D(-2.973349749923214e+10, -4.462450401495075e+10, -5.241039648539343e+09),
 				new ImmutableVector3D(+5.568161770637649e+04, -3.568999965732438e+04, -1.201301879893813e+04));
 		k_expected = new KeplerElements(Length.convert(2.167001873, Length.AU), 0.8338,
-				Angle.convert(11.74, Angle.DEG), Angle.convert(208.56, Angle.DEG),
-				Angle.convert(28.27, Angle.DEG), 0, SolarConstants.body);
+				Deg.convert(11.74), Deg.convert(208.56), Deg.convert(28.27), 0, sun);
 		k_converted = doConvertAs(c, sun);
 		equalStateVector(k_expected, k_converted, 1e-8);
 		equalStateVector(c, k_expected.toCartesianElements(), 1e-8);
@@ -106,8 +102,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 				new ImmutableVector3D(1.56873959425955e+011, 2.36432916810675e+010, 7.61843509822574e+010),
 				new ImmutableVector3D(-1.63473158034754e+004, 1.07405165918640e+004, -1.24696362548472e+004));
 		k_expected = new KeplerElements(Length.convert(0.9143, Length.AU), 0.8171,
-				Angle.convert(32.52, Angle.DEG), Angle.convert(281.56, Angle.DEG),
-				Angle.convert(237.44, Angle.DEG), -2.70863, SolarConstants.body);
+				Deg.convert(32.52), Deg.convert(281.56), Deg.convert(237.44), -2.70863 + 2 * Math.PI, sun);
 		k_converted = doConvertAs(c, sun);
 		equalStateVector(k_expected, k_converted);
 		equalStateVector(c, k_expected.toCartesianElements(), 1e-6);

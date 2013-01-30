@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import static org.apache.commons.math3.util.FastMath.PI;
+
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
@@ -52,7 +53,7 @@ public class TestExpoSinSolution extends CelestTest {
 		double tof_tol = Time.convert(2, Time.day);
 		// double fuel = 27.5688 or 27.1462
 
-		ExpoSinSolutionSet solutionset = new ExpoSinSolutionSet(r1, r2, k2, dTheta, SolarConstants.mu);
+		ExpoSinSolutionSet solutionset = new ExpoSinSolutionSet(r1, r2, k2, dTheta, SolarConstants.mu());
 
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
@@ -60,7 +61,7 @@ public class TestExpoSinSolution extends CelestTest {
 		IJulianDate t1 = JulianDate.getJ2000();
 		IJulianDate t2 = JulianDate.getJ2000().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
-		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body, t1);
+		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
@@ -99,7 +100,7 @@ public class TestExpoSinSolution extends CelestTest {
 		double tof_tol = Time.convert(0.5, Time.day);
 		// double fuel = 132.3082 or 124.1012
 
-		ExpoSinSolutionSet solutionset = new ExpoSinSolutionSet(r1, r2, k2, dTheta, SolarConstants.mu);
+		ExpoSinSolutionSet solutionset = new ExpoSinSolutionSet(r1, r2, k2, dTheta, SolarConstants.mu());
 
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
@@ -107,7 +108,7 @@ public class TestExpoSinSolution extends CelestTest {
 		IJulianDate t1 = JulianDate.getJ2000();
 		IJulianDate t2 = JulianDate.getJ2000().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
-		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body, t1);
+		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);
@@ -146,7 +147,7 @@ public class TestExpoSinSolution extends CelestTest {
 		double tof_tol = Time.convert(0.5, Time.day);
 		// double fuel = 183.4770 or 167.8474
 
-		ExpoSinSolutionSet solutionset = new ExpoSinSolutionSet(r1, r2, k2, dTheta, SolarConstants.mu);
+		ExpoSinSolutionSet solutionset = new ExpoSinSolutionSet(r1, r2, k2, dTheta, SolarConstants.mu());
 
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
@@ -154,7 +155,7 @@ public class TestExpoSinSolution extends CelestTest {
 		IJulianDate t1 = JulianDate.getJ2000();
 		IJulianDate t2 = JulianDate.getJ2000().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
-		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body, t1);
+		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
 		ICartesianElements c1 = trajectory.evaluate(t1);
 		ICartesianElements c2 = trajectory.evaluate(t2);

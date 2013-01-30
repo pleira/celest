@@ -24,18 +24,16 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.state.positionState.SphericalElements;
-import be.angelcorp.libs.math.linear.Vector3D;
 
 public class TestSphericalElements extends TestStateVector<SphericalElements> {
 
-	private static CelestialBody	earth	= EarthConstants.bodyCenter;
+	private static CelestialBody	earth	= new CelestialBody(new CartesianElements(), 5.9736E24);
 
 	public TestSphericalElements() {
 		super(SphericalElements.class);

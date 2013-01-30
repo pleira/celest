@@ -264,7 +264,7 @@ public class KeplerElements extends PositionState implements IKeplerElements {
 	 */
 	@Override
 	public boolean equals(IKeplerElements state2) {
-		return equals(state2, KeplerEquations.angleTolarance(), 1e-12, KeplerEquations.eccentricityTolarance());
+		return equals(state2, KeplerEquations.angleTolarance(), 1e-10, KeplerEquations.eccentricityTolarance());
 	}
 
 	/**

@@ -15,6 +15,7 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
+import be.angelcorp.libs.celest.constants.EarthConstants;
 import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.ode.AbstractIntegrator;
@@ -24,7 +25,6 @@ import org.apache.commons.math3.ode.sampling.StepHandler;
 import org.apache.commons.math3.ode.sampling.StepInterpolator;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.eom.TwoBody;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
@@ -99,7 +99,7 @@ public class TestOrbitPropagatorImpl extends CelestTest {
 		});
 
 		/* Leo orbit */
-		IKeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, EarthConstants.bodyCenter);
+		IKeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, EarthConstants.bodyCenter());
 		CartesianElements c = k.getOrbitEqn().kepler2cartesian();
 		/* Create the two body problem */
 		TwoBody tb = new TwoBody(new CelestialBody(c, 1));

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.constants;
+package be.angelcorp.libs.celest.constants
 
 /**
  * Various physical constants
@@ -23,9 +23,8 @@ package be.angelcorp.libs.celest.constants;
  * 
  * @author Simon Billemont, TUDelft, Faculty Aerospace Engineering (aodtorusan@gmail.com or
  *         s.billemont@student.tudelft.nl)
- * 
  */
-public abstract class Constants {
+object Constants {
 
 	/**
 	 * Universal gravitational constant
@@ -33,28 +32,31 @@ public abstract class Constants {
 	 * <b>Unit: [(m<sup>3</sup>)/(kg s<sup>2</sup>)]</b>
 	 * </p>
 	 */
-	public static final double	GRAVITATIONAL_CONSTANT	= 6.6742800E-11d;
+	val GRAVITATIONAL_CONSTANT	= 6.6742800E-11
+
 	/**
 	 * Speed of light in a vacuum
 	 * <p>
 	 * <b>Unit: [m/s]</b>
 	 * </p>
 	 */
-	public static final double	SPEED_LIGHT				= 299792458;
+	val SPEED_LIGHT = 299792458E0
+
 	/**
 	 * Planck's constant
 	 * <p>
 	 * <b>Unit: [J s]</b>
 	 * </p>
 	 */
-	public static final double	PLANCK					= 6.6260686E-34;
+	val PLANCK = 6.6260686E-34
+
 	/**
 	 * Reduced Planck's constant
 	 * <p>
 	 * <b>Unit: [J s]</b>
 	 * </p>
 	 */
-	public static final double	PLANCK_REDUCED			= 1.0545716E-34;
+	val PLANCK_REDUCED = 1.0545716E-34
 
 	/**
 	 * Magnetic constant (vacuum permeability)
@@ -62,14 +64,15 @@ public abstract class Constants {
 	 * <b>Unit: [N/A]</b>
 	 * </p>
 	 */
-	public static final double	PERMEABILITY			= 1.2566370E-6;
+	val PERMEABILITY = 1.2566370E-6
+
 	/**
 	 * Electric constant (vacuum permittivity)
 	 * <p>
 	 * <b>Unit: [F/m]</b>
 	 * </p>
 	 */
-	public static final double	PERMITTIVITY			= 8.8541878E-12;
+	val PERMITTIVITY = 8.8541878E-12
 
 	/**
 	 * Convert from mass to gravitational parameter
@@ -77,13 +80,10 @@ public abstract class Constants {
 	 * <b>Unit: [kg] to [m<sup>3</sup>/s<sup>2</sup>]</b>
 	 * </p>
 	 * 
-	 * @param mass
-	 *            Mass of a celestial object [kg]
+	 * @param mass Mass of a celestial object [kg]
 	 * @return Standard gravitational parameter [m<sup>3</sup>/s<sup>2</sup>]
 	 */
-	public static double mass2mu(double mass) {
-		return GRAVITATIONAL_CONSTANT * mass;
-	}
+	def mass2mu(mass: Double) = GRAVITATIONAL_CONSTANT * mass
 
 	/**
 	 * Convert from gravitational parameter to mass
@@ -91,12 +91,9 @@ public abstract class Constants {
 	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>] to [kg]</b>
 	 * </p>
 	 * 
-	 * @param mass
-	 *            Standard gravitational parameter [m<sup>3</sup>/s<sup>2</sup>]
+	 * @param mu Standard gravitational parameter [m<sup>3</sup>/s<sup>2</sup>]
 	 * @return Mass of a celestial object [kg]
 	 */
-	public static double mu2mass(double mu) {
-		return mu / GRAVITATIONAL_CONSTANT;
-	}
+	def mu2mass(mu: Double) = mu / GRAVITATIONAL_CONSTANT
 
 }

@@ -49,7 +49,7 @@ public class ExpoSin extends TPBVP {
 	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
 	 * </p>
 	 */
-	private CelestialBody		center		= SolarConstants.body;
+	private CelestialBody		center		= SolarConstants.body();
 	/**
 	 * Amount of rotations to perform around the center body in order to arrive at r2.
 	 * <p>

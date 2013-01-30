@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.body;
 
-import be.angelcorp.libs.celest.constants.Constants;
+import be.angelcorp.libs.celest.constants.Constants$;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.potential.IGravitationalPotential;
 import be.angelcorp.libs.celest.potential.PointMassPotential;
@@ -49,7 +49,7 @@ public class CelestialBody {
 	 * solar mass)
 	 */
 	public CelestialBody() {
-		this(new CartesianElements(), SolarConstants.mass);
+		this(new CartesianElements(), SolarConstants.mass());
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class CelestialBody {
 	 * @return Mu of the body
 	 */
 	public double getMu() {
-		final double mu = Constants.mass2mu(getTotalMass());
+		final double mu = Constants$.MODULE$.mass2mu(getTotalMass());
 		return mu;
 	}
 
@@ -153,7 +153,7 @@ public class CelestialBody {
 	 *            New value for the body standard gravitational parameter [m<sup>3</sup>/s<sup>2</sup>]
 	 */
 	public void setMu(double mu) {
-		this.dryMass = Constants.mu2mass(mu);
+		this.dryMass = Constants$.MODULE$.mu2mass(mu);
 	}
 
 	/**

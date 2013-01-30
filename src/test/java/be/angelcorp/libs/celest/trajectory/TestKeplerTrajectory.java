@@ -31,7 +31,7 @@ public class TestKeplerTrajectory extends CelestTest {
 	 * Check KeplerTrajectory using a geostationairy orbit, at specific hours, rotations should match
 	 */
 	public void testGeoStationairyOrbit() {
-		CelestialBody earth = EarthConstants.bodyCenter;
+		CelestialBody earth = EarthConstants.bodyCenter();
 		double a = Math.pow(earth.getMu() / Math.pow((2. * PI) / (3600. * 24.), 2), 1. / 3.);
 		IKeplerElements k = new KeplerElements(a, 0, 0, 0, 0, 0, earth);
 		KeplerTrajectory t = new KeplerTrajectory(k, JulianDate.getJ2000());
@@ -45,14 +45,14 @@ public class TestKeplerTrajectory extends CelestTest {
 
 		time = 6 * 3600; // 90�
 		k2_predict = new KeplerElements(a, 0, 0, 0, 0, PI / 2);
-		k2_true = t.evaluate(JulianDate.getJ2000().add(time, Time.second));
+		k2_true = t.evaluate(JulianDate.J2000_EPOCH.add(time, Time.second));
 		CelestTest.assertEquals(
 				String.format("At t=%f, the computed state %s is not equal to the predicted state %s",
 						time, k2_predict, k2_true), k2_predict.toVector(), k2_true.toVector(), 1E-12);
 
 		time = 12 * 3600; // 180�
 		k2_predict = new KeplerElements(a, 0, 0, 0, 0, PI);
-		k2_true = t.evaluate(JulianDate.getJ2000().add(time, Time.second));
+		k2_true = t.evaluate(JulianDate.J2000_EPOCH.add(time, Time.second));
 		k2_true.setTrueAnomaly(MathUtils2.mod(k2_true.getTrueAnomaly(), 2 * PI)); // its -pi otherwise
 		CelestTest.assertEquals(
 				String.format("At t=%f, the computed state %s is not equal to the predicted state %s",
@@ -60,7 +60,7 @@ public class TestKeplerTrajectory extends CelestTest {
 
 		time = 16 * 3600; // 240�
 		k2_predict = new KeplerElements(a, 0, 0, 0, 0, PI * 4. / 3.);
-		k2_true = t.evaluate(JulianDate.getJ2000().add(time, Time.second));
+		k2_true = t.evaluate(JulianDate.J2000_EPOCH.add(time, Time.second));
 		k2_true.setTrueAnomaly(MathUtils2.mod(k2_true.getTrueAnomaly(), 2 * PI)); // its -2/3 pi
 		assertTrue(String.format("At t=%f, the computed state %s is not equal to the predicted state %s",
 				time, k2_predict, k2_true), k2_predict.equals(k2_true, 1e-8));
@@ -71,7 +71,7 @@ public class TestKeplerTrajectory extends CelestTest {
 	 * Test a pseudo random 3d KeplerTrajectory
 	 */
 	public void testOrbit() {
-		CelestialBody earth = EarthConstants.bodyCenter;
+		CelestialBody earth = EarthConstants.bodyCenter();
 		// Some pseudo random start elements
 		KeplerElements k = new KeplerElements(1E8, 0.3, 1.1, 0.3, 0.9, 0.2, earth);
 		// Stats for these elements, result of getOrbitEqn is assumed to be correct
@@ -84,9 +84,9 @@ public class TestKeplerTrajectory extends CelestTest {
 		k2.setTrueAnomaly(k.getOrbitEqn().trueAnomalyFromMean(meanAnomaltyT0 + meanMotion * deltaT));
 
 		// Find the elements according to the trajectory
-		KeplerTrajectory trajectory = new KeplerTrajectory(k, JulianDate.getJ2000());
+		KeplerTrajectory trajectory = new KeplerTrajectory(k, JulianDate.J2000_EPOCH);
 		KeplerElements k3 =
-				(KeplerElements) trajectory.evaluate(JulianDate.getJ2000().add(deltaT, Time.second));
+				(KeplerElements) trajectory.evaluate(JulianDate.J2000_EPOCH.add(deltaT, Time.second));
 
 		// Check if they are equal
 		assertTrue(String.format("The true kepler state %s is not equal to the expected state %s", k2, k3),

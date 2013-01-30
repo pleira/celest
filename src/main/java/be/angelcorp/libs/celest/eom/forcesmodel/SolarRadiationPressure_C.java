@@ -155,7 +155,7 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 		double Ls = getSpectrum().totalFlux() / d.normSq(); // [W]
 
 		double factor = CR * (area / getObject().getTotalMass()) *
-							Ls / (4 * Math.PI * Constants.SPEED_LIGHT * dcube);
+							Ls / (4 * Math.PI * Constants.SPEED_LIGHT() * dcube);
 
 		return d.multiply(factor);
 	}

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.constants;
+package be.angelcorp.libs.celest.constants
 
-import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
+import be.angelcorp.libs.celest.body.CelestialBody
+import be.angelcorp.libs.celest.state.positionState.CartesianElements
 
 /**
  * Different constants specific to the sun. Has constants in the following categories:
@@ -29,47 +29,54 @@ import be.angelcorp.libs.celest.state.positionState.CartesianElements;
  * @author Simon Billemont, TUDelft, Faculty Aerospace Engineering (aodtorusan@gmail.com or
  *         s.billemont@student.tudelft.nl)
  */
-public abstract class SolarConstants {
+object SolarConstants {
 
 	/**
-	 * Mass of the sun
-	 * <p>
-	 * <b>Unit: [kg]</b>
-	 * </p>
-	 */
-	public static final double	mass				= 1.9891E30;
-	/**
-	 * Standard gravitational parameter of the sun
+	 * Standard gravitational parameter of the sun.
+	 *
+	 * Value from the JPL DE 421 ephemeris:  'The Planetary and Lunar Ephemeris DE 421'
+	 * 	by W. M. Folkner, J. G. Williams, D. H. Boggs
+	 * 	[online] ftp://ssd.jpl.nasa.gov/pub/eph/planets/ioms/de421.iom.v1.pdf
 	 * <p>
 	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
 	 * </p>
 	 */
-	public static final double	mu					= Constants.mass2mu(mass);
+	val mu = 132712440040.944000E9
+
 	/**
-	 * Mean density of the entire sun (average)
+	 * Mass of the sun.
+	 * <p>
+	 * <b>Unit: [kg]</b>
+	 * </p>
+	 */
+	val mass = Constants.mu2mass(mu)
+
+	/**
+	 * Mean density of the entire sun (average).
 	 * <p>
 	 * <b>Unit: [kg/m<sup>3</sup>]</b>
 	 * </p>
 	 */
-	public static final double	meanDensity			= 1.408E3;
+	val meanDensity = 1.408E3
 
 	/**
-	 * Mean solar radius
+	 * Mean solar radius.
 	 * <p>
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
-	public static final double	radiusMean			= 6.955E8;
+	val radiusMean = 6.955E8
+
 	/**
-	 * Radius of the sun at the equator (great circle)
+	 * Radius of the sun at the equator (great circle).
 	 * <p>
 	 * <b>Unit: [m]</b>
 	 * </p>
 	 */
-	public static final double	radiusEquatorial	= 4.379E9;
+	val radiusEquatorial = 4.379E9
 
 	/**
-	 * How the sun is "deformed" relative to a perfect sphere
+	 * How the sun is "deformed" relative to a perfect sphere.
 	 * <p>
 	 * flattening = (a - b) / (a) <br />
 	 * with:
@@ -82,24 +89,24 @@ public abstract class SolarConstants {
 	 * <b>Unit: [-]</b>
 	 * </p>
 	 */
-	public static final double	flattening			= 9E-6;
+	val flattening = 9E-6
+
 	/**
-	 * Suns total surface area
+	 * Suns total surface area.
 	 * <p>
 	 * <b>Unit: [m<sup>2</sup>]</b>
 	 * </p>
 	 */
-	public static final double	surfaceArea			= 6.0877E18;
+	val surfaceArea = 6.0877E18
+
 	/**
-	 * Suns total volume
+	 * Suns total volume.
 	 * <p>
 	 * <b>Unit: [m<sup>3</sup>]</b>
 	 * </p>
 	 */
-	public static final double	volume				= 1.412E27;
+	val volume = 1.412E27
 
-	/**
-	 * Celestial body representation of the sun
-	 */
-	public static CelestialBody	body				= new CelestialBody(new CartesianElements(), mass);
+	/** Celestial body representation of the sun. */
+	val body = new CelestialBody(new CartesianElements(), mass)
 }
