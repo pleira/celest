@@ -13,48 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.potential;
+package be.angelcorp.libs.celest.potential
 
-import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.celest.body.CelestialBody
+import be.angelcorp.libs.math.linear.Vector3D
+import scala.math._
 
 /**
  * Implementation of {@link IPointMassPotential}. Create an ideal gravitational potential of a point
  * mass, homogeneous sphere or body with a spherically symmetric mass distribution.
- * 
+ *
+ * @param body Body that creates the current potential, (uses its mass or mu).
+ *
  * @author Simon Billemont
  * @see IPointMassPotential
  */
-public class PointMassPotential implements IPointMassPotential {
+class PointMassPotential(val body: CelestialBody) extends IPointMassPotential {
 
-	/**
-	 * Body that creates the current potential, (uses its mass or mu)
-	 */
-	private CelestialBody	body;
+	/** @inheritdoc */
+	override def evaluate(point: Vector3D) = point.negate * ( body.getMu() / pow(point.norm, 3))
 
-	/**
-	 * Construct a potential based on a single celestial body
-	 * 
-	 * @param body
-	 *            Body generating the potential
-	 */
-	public PointMassPotential(CelestialBody body) {
-		this.body = body;
-	}
+	/** @inheritdoc */
+	override def getBody() = body
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Vector3D evaluate(Vector3D point) {
-		return point.multiply(body.getMu() / Math.pow(point.norm(), 3)).negate();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CelestialBody getBody() {
-		return body;
-	}
 }
