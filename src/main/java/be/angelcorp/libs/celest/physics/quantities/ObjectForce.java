@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.physics.quantities;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 
@@ -31,7 +31,7 @@ public class ObjectForce extends Force {
 	/**
 	 * Object where the force acts on
 	 */
-	private CelestialBody	object;
+	private ICelestialBody object;
 	/**
 	 * Offset with respect to its center of gravity
 	 */
@@ -43,7 +43,7 @@ public class ObjectForce extends Force {
 	 * @param object
 	 *            Object where the force acts on
 	 */
-	public ObjectForce(CelestialBody object) {
+	public ObjectForce(ICelestialBody object) {
 		this(object, Vector3D$.MODULE$.ZERO());
 	}
 
@@ -55,7 +55,7 @@ public class ObjectForce extends Force {
 	 * @param force
 	 *            Force vector
 	 */
-	public ObjectForce(CelestialBody object, Vector3D force) {
+	public ObjectForce(ICelestialBody object, Vector3D force) {
 		setObject(object);
 		setForce(force);
 	}
@@ -71,7 +71,7 @@ public class ObjectForce extends Force {
 	/**
 	 * @see ObjectForce#object
 	 */
-	public CelestialBody getObject() {
+	public ICelestialBody getObject() {
 		return object;
 	}
 
@@ -86,7 +86,7 @@ public class ObjectForce extends Force {
 	/**
 	 * @see ObjectForce#object
 	 */
-	public void setObject(CelestialBody object) {
+	public void setObject(ICelestialBody object) {
 		this.object = object;
 	}
 

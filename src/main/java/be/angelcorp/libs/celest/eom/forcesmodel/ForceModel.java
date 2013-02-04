@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.eom.forcesmodel;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.celest.physics.quantities.Torque;
 
@@ -36,7 +36,7 @@ public class ForceModel extends ForceModelCore {
 	 * @param body
 	 *            Bod where the forces act on
 	 */
-	public ForceModel(CelestialBody body, ObjectForce... forces) {
+	public ForceModel(ICelestialBody body, ObjectForce... forces) {
 		super(body);
 
 		for (ObjectForce f : forces)

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -17,10 +17,10 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import java.util.List;
 
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import org.apache.commons.math3.linear.RealVector;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.celest.physics.quantities.Torque;
 import be.angelcorp.libs.celest.state.IStateEquation;
@@ -45,7 +45,7 @@ public class ForceModelCore implements IStateEquation<ICartesianElements, ICarte
 	/**
 	 * Body where all the forces/torques act on
 	 */
-	private CelestialBody		body;
+	private ICelestialBody body;
 
 	/**
 	 * Forces acting on the specific body
@@ -62,7 +62,7 @@ public class ForceModelCore implements IStateEquation<ICartesianElements, ICarte
 	 * @param body
 	 *            Body where all the forces act on
 	 */
-	public ForceModelCore(CelestialBody body) {
+	public ForceModelCore(ICelestialBody body) {
 		this.body = body;
 	}
 
@@ -102,7 +102,7 @@ public class ForceModelCore implements IStateEquation<ICartesianElements, ICarte
 	/**
 	 * @see ForceModelCore#body
 	 */
-	public CelestialBody getBody() {
+	public ICelestialBody getBody() {
 		return body;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.body.bodyCollection;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 
 /**
  * This is a collection holding always just two bodies. There are some methods to allow for getting the
@@ -28,12 +28,12 @@ public interface ITwoBodyCollection extends IBodyCollection {
 	/**
 	 * Get the fist body in the collection (usually center body)
 	 */
-	public abstract CelestialBody getBody1();
+	public abstract ICelestialBody getBody1();
 
 	/**
 	 * Get the second body in the collection (usually the satellites)
 	 */
-	public abstract CelestialBody getBody2();
+	public abstract ICelestialBody getBody2();
 
 	/**
 	 * Find the other body when one body is known. If the given body is not in the collection, the first
@@ -43,16 +43,16 @@ public interface ITwoBodyCollection extends IBodyCollection {
 	 *            One body in the twobody system
 	 * @return the other body
 	 */
-	public abstract CelestialBody other(CelestialBody body);
+	public abstract ICelestialBody other(ICelestialBody body);
 
 	/**
 	 * Set the first body (usually center body)
 	 */
-	public abstract void setBody1(CelestialBody body1);
+	public abstract void setBody1(ICelestialBody body1);
 
 	/**
 	 * Set the second body (usually satellite body)
 	 */
-	public abstract void setBody2(CelestialBody body2);
+	public abstract void setBody2(ICelestialBody body2);
 
 }

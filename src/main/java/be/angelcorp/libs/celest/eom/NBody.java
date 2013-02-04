@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.eom;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.body.bodyCollection.IBodyCollection;
 import be.angelcorp.libs.celest.eom.forcesmodel.ForceModelCore;
 import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce_C;
@@ -34,9 +34,9 @@ public class NBody extends ForceModelCore {
 	 * @param bodies
 	 *            All the bodies in the system
 	 */
-	public NBody(CelestialBody body, IBodyCollection bodies) {
+	public NBody(ICelestialBody body, IBodyCollection bodies) {
 		super(body);
-		for (CelestialBody body2 : bodies.getBodies()) {
+		for (ICelestialBody body2 : bodies.getBodies()) {
 			if (!body2.equals(body))
 				addForce(new GravitationalForce_C(body, body2));
 		}

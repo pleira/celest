@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 
 /**
  * Basic implementation of a {@link IBodyCollection} using a {@link HashSet}
@@ -27,7 +27,7 @@ import be.angelcorp.libs.celest.body.CelestialBody;
  * @author simon
  * 
  */
-public class BasicBodyCollection extends HashSet<CelestialBody> implements IBodyCollection {
+public class BasicBodyCollection extends HashSet<ICelestialBody> implements IBodyCollection {
 
 	/**
 	 * Create a body collection based on a Hashset (order is not preserved!) and the given bodies
@@ -35,7 +35,7 @@ public class BasicBodyCollection extends HashSet<CelestialBody> implements IBody
 	 * @param bodies
 	 *            Bodies to add the the set.
 	 */
-	public BasicBodyCollection(CelestialBody... bodies) {
+	public BasicBodyCollection(ICelestialBody... bodies) {
 		addAll(Arrays.asList(bodies));
 	}
 
@@ -43,7 +43,7 @@ public class BasicBodyCollection extends HashSet<CelestialBody> implements IBody
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<CelestialBody> getBodies() {
+	public Collection<ICelestialBody> getBodies() {
 		return this;
 	}
 

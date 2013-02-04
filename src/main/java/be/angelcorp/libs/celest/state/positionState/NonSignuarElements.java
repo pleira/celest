@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,6 +15,7 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.kepler.*;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
@@ -58,7 +59,7 @@ public class NonSignuarElements extends PositionState implements IKeplerElements
 	 * @param center
 	 *            Central body where the {@link NonSignuarElements} are formulated against
 	 */
-	public static NonSignuarElements as(IPositionState state, CelestialBody center) {
+	public static NonSignuarElements as(IPositionState state, ICelestialBody center) {
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
 

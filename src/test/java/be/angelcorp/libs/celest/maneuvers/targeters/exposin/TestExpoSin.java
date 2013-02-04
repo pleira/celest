@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -27,6 +27,7 @@ import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.util.physics.Time;
+import be.angelcorp.libs.celest.constants.Constants;
 
 /**
  * Validation of the Exposin angular rate equations
@@ -110,8 +111,7 @@ public class TestExpoSin extends CelestTest {
 
 		IJulianDate t1 = JulianDate.J2000_EPOCH;
 		IJulianDate t2 = JulianDate.J2000_EPOCH.add(dt, Time.second);
-		CelestialBody center = new CelestialBody();
-		center.setMu(1E4);
+		CelestialBody center = new CelestialBody(new CartesianElements(), Constants.mu2mass(1E4) );
 
 		ExpoSin exposin = new ExpoSin(r1, r2, t1, t2);
 		exposin.setCenter(center);

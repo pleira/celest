@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -44,8 +44,7 @@ public class TestLambertUV extends CelestTest {
 		// V1 = 27.4408 -14.0438 0.5468 (km/s)
 		// V2 = -24.5242 18.6776 -0.4856 (km/s)
 
-		CelestialBody center = new CelestialBody();
-		center.setTotalMass(Constants.mu2mass(1.32712428E20));
+		CelestialBody center = new CelestialBody(new CartesianElements(), Constants.mu2mass(1.32712428E20));
 
 		Vector3D r1 = new ImmutableVector3D(1.364377463519496E11, 6.129036612130551E10, 2.784835397959758E09);
 		Vector3D r2 = new ImmutableVector3D(3.730051396741382E09, -1.495513611895726E11, 0.);

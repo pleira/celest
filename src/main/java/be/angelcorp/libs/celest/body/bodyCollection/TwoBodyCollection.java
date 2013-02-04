@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.body.bodyCollection;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 
 /**
  * Implementation of {@link ITwoBodyCollection}, this is a collection holding always just two bodies.
@@ -32,11 +32,11 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	/**
 	 * First body in the collection (usually the center body)
 	 */
-	private CelestialBody	body1;
+	private ICelestialBody body1;
 	/**
 	 * Second body in the collection (usually the satellite body)
 	 */
-	private CelestialBody	body2;
+	private ICelestialBody body2;
 
 	/**
 	 * Create a collection of two known bodies
@@ -46,7 +46,7 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	 * @param body2
 	 *            The second body
 	 */
-	public TwoBodyCollection(CelestialBody body1, CelestialBody body2) {
+	public TwoBodyCollection(ICelestialBody body1, ICelestialBody body2) {
 		this.body1 = body1;
 		this.body2 = body2;
 	}
@@ -55,8 +55,8 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<CelestialBody> getBodies() {
-		LinkedList<CelestialBody> l = new LinkedList<CelestialBody>();
+	public Collection<ICelestialBody> getBodies() {
+		LinkedList<ICelestialBody> l = new LinkedList<ICelestialBody>();
 		l.add(body1);
 		l.add(body2);
 		return l;
@@ -66,7 +66,7 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CelestialBody getBody1() {
+	public ICelestialBody getBody1() {
 		return body1;
 	}
 
@@ -74,7 +74,7 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CelestialBody getBody2() {
+	public ICelestialBody getBody2() {
 		return body2;
 	}
 
@@ -82,7 +82,7 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CelestialBody other(CelestialBody body) {
+	public ICelestialBody other(ICelestialBody body) {
 		if (body == body1)
 			return body2;
 		else
@@ -93,7 +93,7 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setBody1(CelestialBody body1) {
+	public void setBody1(ICelestialBody body1) {
 		this.body1 = body1;
 	}
 
@@ -101,7 +101,7 @@ public class TwoBodyCollection implements ITwoBodyCollection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setBody2(CelestialBody body2) {
+	public void setBody2(ICelestialBody body2) {
 		this.body2 = body2;
 	}
 

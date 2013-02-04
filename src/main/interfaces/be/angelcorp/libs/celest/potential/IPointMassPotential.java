@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.potential;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -38,6 +38,6 @@ public interface IPointMassPotential extends IGravitationalPotential {
 	 * 
 	 * @return
 	 */
-	public abstract CelestialBody getBody();
+	public abstract ICelestialBody getBody();
 
 }

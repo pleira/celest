@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,6 +15,7 @@
  */
 package be.angelcorp.libs.celest.stateVector;
 
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import junit.framework.AssertionFailedError;
@@ -40,7 +41,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 		super(KeplerElements.class);
 	}
 
-	protected KeplerElements doConvertAs(IPositionState sourceState, CelestialBody body) {
+	protected KeplerElements doConvertAs(IPositionState sourceState, ICelestialBody body) {
 		try {
 			return (KeplerElements) KeplerElements.class.getDeclaredMethod("as", IPositionState.class,
 					CelestialBody.class)
@@ -127,8 +128,7 @@ public class TestKeplerElements extends TestStateVector<KeplerElements> {
 		// JDCT = 2455562.500000000 = A.D. 2011-Jan-01 00:00:00.0000 (CT)
 		// X =-1.947136151107762E+05 Y =-3.249790482942117E+05 Z =-1.934593293850985E+04 [km]
 		// VX= 8.680230862574665E-01 VY=-5.629777269508974E-01 VZ= 7.784227958608481E-02 [km/s]
-		CelestialBody jpl_earth = new CelestialBody();
-		jpl_earth.setTotalMass(Constants.mu2mass(398600.440E9));
+		CelestialBody jpl_earth = new CelestialBody(new CartesianElements(), Constants.mu2mass(398600.440E9));
 		KeplerElements kMoon = new KeplerElements(3.903213584163071E+08, 4.074916709908236e-002,
 				9.218093894982124E-2, 4.850831512485626E00,
 				4.757761494574442E00, 1.079822859502195E00, jpl_earth);

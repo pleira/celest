@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.eom;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.body.bodyCollection.ITwoBodyCollection;
 import be.angelcorp.libs.celest.body.bodyCollection.TwoBodyCollection;
 import be.angelcorp.libs.celest.constants.EarthConstants;
@@ -38,7 +38,7 @@ public class TwoBody extends ForceModelCore {
 	 * @param body
 	 *            Satellite around the Earth
 	 */
-	public TwoBody(CelestialBody body) {
+	public TwoBody(ICelestialBody body) {
 		this(new TwoBodyCollection(EarthConstants.bodyCenter(), body), body);
 	}
 
@@ -50,7 +50,7 @@ public class TwoBody extends ForceModelCore {
 	 * @param body
 	 *            The body for which to compute the {@link IStateDerivatives}
 	 */
-	public TwoBody(ITwoBodyCollection bodies, CelestialBody body) {
+	public TwoBody(ITwoBodyCollection bodies, ICelestialBody body) {
 		super(body);
 		addForce(new GravitationalForce_C(body, bodies.other(body)));
 	}

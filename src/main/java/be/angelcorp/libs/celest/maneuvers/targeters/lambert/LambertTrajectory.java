@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
@@ -115,7 +116,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * 
 	 * @return Central body of the transfer trajectory
 	 */
-	public CelestialBody getCenterBody() {
+	public ICelestialBody getCenterBody() {
 		return centerBody;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,9 +15,9 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import org.apache.commons.math3.linear.RealVector;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.math.Keplerian;
 
 /**
@@ -67,7 +67,7 @@ public interface IKeplerDerivative extends Keplerian, IPositionStateDerivative {
 	/**
 	 * @see KeplerElements#centerbody
 	 */
-	public abstract CelestialBody getCenterbody();
+	public abstract ICelestialBody getCenterbody();
 
 	/**
 	 * @see KeplerElements#e
@@ -102,7 +102,7 @@ public interface IKeplerDerivative extends Keplerian, IPositionStateDerivative {
 	/**
 	 * @see KeplerElements#centerbody
 	 */
-	public abstract void setCenterbody(CelestialBody centerbody);
+	public abstract void setCenterbody(ICelestialBody centerbody);
 
 	/**
 	 * @see KeplerElements#e

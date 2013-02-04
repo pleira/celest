@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -42,27 +42,23 @@ public class ImpulsiveShot {
 
 	public IPositionState kick(double dV) {
 		IPositionState stateNew = kick(body.getState(), dV);
-		body.setState(stateNew);
 		return stateNew;
 	}
 
 	public IPositionState kick(double dV, Propellant fuel) {
 		IPositionState stateNew = kick(body.getState(), dV);
 		fuel.consumeDV(body, dV);
-		body.setState(stateNew);
 		return stateNew;
 	}
 
 	public IPositionState kick(Vector3D dV) {
 		IPositionState stateNew = kick(body.getState(), dV);
-		body.setState(stateNew);
 		return stateNew;
 	}
 
 	public IPositionState kick(Vector3D dV, Propellant fuel) {
 		IPositionState stateNew = kick(body.getState(), dV);
 		fuel.consumeDV(body, dV.norm());
-		body.setState(stateNew);
 		return stateNew;
 	}
 

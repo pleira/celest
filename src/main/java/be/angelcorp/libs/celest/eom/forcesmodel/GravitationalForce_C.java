@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -33,7 +34,7 @@ public class GravitationalForce_C extends ObjectForce implements Cartesian {
 	/**
 	 * Body generating the gravitationalForce
 	 */
-	private CelestialBody	gravitationBody;
+	private ICelestialBody gravitationBody;
 
 	/**
 	 * Create a gravitational force acting on the satellite from the gravitationBody. This uses the
@@ -45,7 +46,7 @@ public class GravitationalForce_C extends ObjectForce implements Cartesian {
 	 * @param gravitationBody
 	 *            Body that is generating the gravitational force
 	 */
-	public GravitationalForce_C(CelestialBody satellite, CelestialBody gravitationBody) {
+	public GravitationalForce_C(ICelestialBody satellite, ICelestialBody gravitationBody) {
 		super(satellite);
 		this.gravitationBody = gravitationBody;
 	}
@@ -62,14 +63,14 @@ public class GravitationalForce_C extends ObjectForce implements Cartesian {
 	/**
 	 * @see GravitationalForce_C#gravitationBody
 	 */
-	public CelestialBody getGravitationBody() {
+	public ICelestialBody getGravitationBody() {
 		return gravitationBody;
 	}
 
 	/**
 	 * @see GravitationalForce_C#gravitationBody
 	 */
-	public void setGravitationBody(CelestialBody gravitationBody) {
+	public void setGravitationBody(ICelestialBody gravitationBody) {
 		this.gravitationBody = gravitationBody;
 	}
 

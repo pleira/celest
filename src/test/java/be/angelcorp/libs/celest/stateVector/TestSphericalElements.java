@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -17,6 +17,7 @@ package be.angelcorp.libs.celest.stateVector;
 
 import static java.lang.Math.PI;
 
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import junit.framework.AssertionFailedError;
 
@@ -39,7 +40,7 @@ public class TestSphericalElements extends TestStateVector<SphericalElements> {
 		super(SphericalElements.class);
 	}
 
-	protected SphericalElements doConvertAs(IPositionState sourceState, CelestialBody body) {
+	protected SphericalElements doConvertAs(IPositionState sourceState, ICelestialBody body) {
 		try {
 			return (SphericalElements) SphericalElements.class
 					.getDeclaredMethod("as", IPositionState.class, CelestialBody.class)

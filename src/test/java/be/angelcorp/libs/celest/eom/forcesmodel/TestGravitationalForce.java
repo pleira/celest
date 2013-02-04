@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -16,6 +16,7 @@
 package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.kepler.KeplerCircular;
@@ -30,14 +31,14 @@ public class TestGravitationalForce extends CelestTest {
 	public void testForce() throws Exception {
 		/* Test the f/a in a simple earth system (norm only) */
 		CelestialBody earth = EarthConstants.bodyCenter();
-		CelestialBody sat = new CelestialBody(
+		ICelestialBody sat = new CelestialBody(
 				new KeplerElements(10E6, 0, 0, 0, 0, 0, earth), 5);
 		GravitationalForce_C g = new GravitationalForce_C(sat, earth);
 		assertEquals(19.93d, g.getForce().norm(), 1E-1);
 		assertEquals(3.986d, g.toAcceleration().norm(), 1E-2);
 
 		/* Test the f/a in a simple earth system all components */
-		CelestialBody sat1 = new CelestialBody(new SphericalElements(10E6, Math.PI / 3, 0,
+		ICelestialBody sat1 = new CelestialBody(new SphericalElements(10E6, Math.PI / 3, 0,
 				KeplerCircular.vc(10E6, earth.getMu()), 0, 0, earth), 5);
 		GravitationalForce_C g1 = new GravitationalForce_C(sat1, earth);
 		CelestTest.assertTrue(
@@ -51,7 +52,7 @@ public class TestGravitationalForce extends CelestTest {
 
 		/* Test the f/a in a simple sun system (norm only) */
 		CelestialBody sun = SolarConstants.body();
-		CelestialBody sat2 = new CelestialBody(
+		ICelestialBody sat2 = new CelestialBody(
 				new KeplerElements(Length.convert(1, Length.AU), 0, 0, 0, 0, 0, sun), 5);
 		GravitationalForce_C g2 = new GravitationalForce_C(sat2, sun);
 		assertEquals(0.02965d, g2.getForce().norm(), 1E-4);

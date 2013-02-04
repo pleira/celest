@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.eom.forcesmodel;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.physics.atmosphere.IAtmosphere;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -59,7 +59,7 @@ abstract public class AtmosphericDrag extends ObjectForce {
 	/**
 	 * Planet with the atmosphere around it
 	 */
-	protected CelestialBody	planet;
+	protected ICelestialBody planet;
 	/**
 	 * Atmosphere creating the drag
 	 */
@@ -77,8 +77,8 @@ abstract public class AtmosphericDrag extends ObjectForce {
 	 * @param atmosphere
 	 *            The atmosphere creating the drag
 	 */
-	public AtmosphericDrag(CelestialBody satellite, double cd, double area,
-			CelestialBody planet, IAtmosphere atmosphere) {
+	public AtmosphericDrag(ICelestialBody satellite, double cd, double area,
+			ICelestialBody planet, IAtmosphere atmosphere) {
 		super(satellite);
 		this.cd = cd;
 		this.area = area;
@@ -118,7 +118,7 @@ abstract public class AtmosphericDrag extends ObjectForce {
 	/**
 	 * @see AtmosphericDrag#planet
 	 */
-	public CelestialBody getPlanet() {
+	public ICelestialBody getPlanet() {
 		return planet;
 	}
 
@@ -146,7 +146,7 @@ abstract public class AtmosphericDrag extends ObjectForce {
 	/**
 	 * @see AtmosphericDrag#planet
 	 */
-	public void setPlanet(CelestialBody planet) {
+	public void setPlanet(ICelestialBody planet) {
 		this.planet = planet;
 	}
 

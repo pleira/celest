@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -18,10 +18,10 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 import static org.apache.commons.math3.util.FastMath.PI;
 import static org.apache.commons.math3.util.FastMath.acos;
 
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
@@ -49,7 +49,7 @@ public class ExpoSin extends TPBVP {
 	 * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
 	 * </p>
 	 */
-	private CelestialBody		center		= SolarConstants.body();
+	private ICelestialBody center		= SolarConstants.body();
 	/**
 	 * Amount of rotations to perform around the center body in order to arrive at r2.
 	 * <p>
@@ -149,7 +149,7 @@ public class ExpoSin extends TPBVP {
 	/**
 	 * Set the center celesital body
 	 */
-	public void setCenter(CelestialBody center) {
+	public void setCenter(ICelestialBody center) {
 		this.center = center;
 	}
 

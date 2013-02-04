@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.eom.forcesmodel;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
+import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.physics.EM.IEMspectrum;
@@ -47,7 +47,7 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 	/**
 	 * Body that emits a flux that pushes on the spacecraft
 	 */
-	private CelestialBody	star;
+	private ICelestialBody star;
 	/**
 	 * Flux that the star emits
 	 */
@@ -67,8 +67,8 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 	 * @param emmition
 	 *            The emmision sprectum of the star {@link SolarRadiationPressure_C#spectrum}
 	 */
-	public SolarRadiationPressure_C(CelestialBody satellite, double area, double CR,
-			CelestialBody star, IEMspectrum emmition) {
+	public SolarRadiationPressure_C(ICelestialBody satellite, double area, double CR,
+			ICelestialBody star, IEMspectrum emmition) {
 		super(satellite);
 		this.area = area;
 		this.CR = CR;
@@ -108,7 +108,7 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 	/**
 	 * @see SolarRadiationPressure_C#star
 	 */
-	public CelestialBody getStar() {
+	public ICelestialBody getStar() {
 		return star;
 	}
 
@@ -136,7 +136,7 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 	/**
 	 * @see SolarRadiationPressure_C#star
 	 */
-	public void setStar(CelestialBody star) {
+	public void setStar(ICelestialBody star) {
 		this.star = star;
 	}
 
