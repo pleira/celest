@@ -45,14 +45,4 @@ public interface ITwoBodyCollection extends IBodyCollection {
 	 */
 	public abstract ICelestialBody other(ICelestialBody body);
 
-	/**
-	 * Set the first body (usually center body)
-	 */
-	public abstract void setBody1(ICelestialBody body1);
-
-	/**
-	 * Set the second body (usually satellite body)
-	 */
-	public abstract void setBody2(ICelestialBody body2);
-
 }
