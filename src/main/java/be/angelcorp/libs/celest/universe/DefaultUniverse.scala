@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateIntegrator;
 
-import be.angelcorp.libs.celest.state.IState;
-import be.angelcorp.libs.celest.state.IStateDerivative;
-import be.angelcorp.libs.celest.time.IJulianDate;
+package be.angelcorp.libs.celest.universe
 
-public interface IStateIntegrator<Y extends IState> {
+import be.angelcorp.libs.celest.time.timeStandard._
 
-	Y integrate(IJulianDate t0, IJulianDate t, Y y0);
+class DefaultUniverse extends Universe {
+
+  val TAI = new TAI()
+  val TT  = new TT()
+  lazy val TDT = TT
+  lazy val TCB = new TCB( J2000_EPOCH )
+  lazy val TCG = new TCG( TT_EPOCH    )
+  lazy val TDB = new TDB( TT_EPOCH    )
+  lazy val UTC = new UTC( TAI )
+
+  lazy val frames = throw new UnsupportedOperationException("Operation not yet implemented")
 
 }

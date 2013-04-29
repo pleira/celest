@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import org.junit.Test;
 
 import be.angelcorp.libs.celest.state.positionState.CartesianElements;
@@ -24,16 +26,18 @@ import be.angelcorp.libs.celest.unit.CelestTest;
 
 public class TestDiscreteTrajectory extends CelestTest {
 
+    public static Universe universe = new DefaultUniverse();
+
 	@Test(expected = ArithmeticException.class)
 	public void testInalidDiscreteTrajectory() {
 		DiscreteTrajectory trajectory = new DiscreteTrajectory();
 
 		// Add a state a t=0
 		PositionState s1 = new CartesianElements();
-		trajectory.addState(new JulianDate(0), s1);
+		trajectory.addState(new JulianDate(0, universe), s1);
 
 		try {
-			trajectory.evaluate(new JulianDate(-1)); // There is no state on or before -1 so exception
+			trajectory.evaluate(new JulianDate(-1, universe)); // There is no state on or before -1 so exception
 			fail("The should be not state at t=-1, because the first state is at t=0");
 		} catch (ArithmeticException success) {
 		}
@@ -47,15 +51,15 @@ public class TestDiscreteTrajectory extends CelestTest {
 		PositionState s1 = new CartesianElements();
 		PositionState s2 = new CartesianElements();
 		PositionState s3 = new CartesianElements();
-		trajectory.addState(new JulianDate(0), s1);
-		trajectory.addState(new JulianDate(10), s2);
-		trajectory.addState(new JulianDate(20), s3);
+		trajectory.addState(new JulianDate(0,  universe), s1);
+		trajectory.addState(new JulianDate(10, universe), s2);
+		trajectory.addState(new JulianDate(20, universe), s3);
 
-		assertEquals(s1, trajectory.evaluate(new JulianDate(0))); // Equal begin time as s1
-		assertEquals(s1, trajectory.evaluate(new JulianDate(5))); // In between s1 and s2
-		assertEquals(s2, trajectory.evaluate(new JulianDate(15))); // Same as above but s2
-		assertEquals(s3, trajectory.evaluate(new JulianDate(20))); // Same insertion time as s3
-		assertEquals(s3, trajectory.evaluate(new JulianDate(25))); // Time after the last insertion
+		assertEquals(s1, trajectory.evaluate(new JulianDate(0,  universe))); // Equal begin time as s1
+		assertEquals(s1, trajectory.evaluate(new JulianDate(5,  universe))); // In between s1 and s2
+		assertEquals(s2, trajectory.evaluate(new JulianDate(15, universe))); // Same as above but s2
+		assertEquals(s3, trajectory.evaluate(new JulianDate(20, universe))); // Same insertion time as s3
+		assertEquals(s3, trajectory.evaluate(new JulianDate(25, universe))); // Time after the last insertion
 	}
 
 }

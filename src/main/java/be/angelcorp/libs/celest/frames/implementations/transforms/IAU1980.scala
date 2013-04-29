@@ -20,8 +20,9 @@ import be.angelcorp.libs.celest.time.{JulianDate, IJulianDate}
 import be.angelcorp.libs.util.physics.{Time, Angle}
 import be.angelcorp.libs.math.MathUtils2._
 import math._
+import be.angelcorp.libs.celest.universe.Universe
 
-object IAU1980 {
+class IAU1980(implicit universe: Universe) {
 
 	/* Table of IAY 1980 arguments and coefficients */
 	/* Sin and cos [0.1 mas per Julian century] */
@@ -145,7 +146,7 @@ object IAU1980 {
 	def nutation(date: IJulianDate) = {
 		val ArcSeconds = Angle.convert(1,    Angle.ARCSECOND, Angle.RADIAN) // as => rad
 		val U2R   = Angle.convert(1E-4, Angle.ARCSECOND, Angle.RADIAN) // 0.1 mas => rad
-		val dt = date.relativeTo( JulianDate.J2000_EPOCH, Time.century_julian )
+		val dt = date.relativeTo( universe.J2000_EPOCH, Time.century_julian )
 
 		// Mean longitude of Moon minus mean longitude of Moon's perigee.
 		val el = mod(

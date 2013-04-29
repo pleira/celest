@@ -15,7 +15,10 @@
  */
 package be.angelcorp.libs.celest.kepler;
 
+import be.angelcorp.libs.celest.body.bodyCollection.TwoBodyCollection;
 import be.angelcorp.libs.celest.constants.EarthConstants;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.ode.AbstractIntegrator;
@@ -41,11 +44,12 @@ public class TestOrbitPropagatorImpl extends CelestTest {
 
 	public static final double	delta	= 1E-3; // 0.1%
 
+    public static Universe universe = new DefaultUniverse();
+    public static CelestialBody earth = universe.earthConstants().bodyCenter();
+
 	/**
 	 * Tests the propagation of geo satellite over one month. The end radius must be within 2m of the
 	 * start geo radius (0.6m should be achieved)
-	 * 
-	 * @throws FunctionEvaluationException
 	 */
 	public void testRK4integrationTestGeo() throws Exception {
 
@@ -53,14 +57,15 @@ public class TestOrbitPropagatorImpl extends CelestTest {
 		CartesianElements x0 = new CartesianElements(new double[] { 42164000, 0, 0, 0, 3074.6663, 0 });
 
 		/* Create the two body problem */
-		TwoBody tb = new TwoBody(new CelestialBody(x0, 1));
+        CelestialBody b = new CelestialBody(x0, 1);
+		TwoBody tb = new TwoBody( new TwoBodyCollection( b, earth ), b );
 
 		FirstOrderIntegrator integrator = new ClassicalRungeKuttaIntegrator(60.);
 		CommonsMathPropagator<ICartesianElements, ICartesianDerivative> propagator =
-				new CommonsMathPropagator<>(integrator, tb);
+				new CommonsMathPropagator<>(integrator, tb, universe);
 
 		ICartesianElements ans2 = propagator.integrate(
-				JulianDate.getJ2000(), JulianDate.getJ2000().add(1, Time.month), x0);
+                universe.J2000_EPOCH(), universe.J2000_EPOCH().add(1, Time.month), x0);
 		// System.out.println(x0.getSubVector(0, 3).getNorm());
 		// System.out.println(ans2.getSubVector(0, 3).getNorm());
 		// System.out.println(x0.getSubVector(0, 3).getNorm() - ans2.getSubVector(0, 3).getNorm());
@@ -74,7 +79,7 @@ public class TestOrbitPropagatorImpl extends CelestTest {
 		rk4.addStepHandler(new StepHandler() {
 			@Override
 			public void handleStep(StepInterpolator interpolator, boolean isLast) {
-				double t = interpolator.getCurrentTime() - JulianDate.getJ2000().getJD();
+				double t = interpolator.getCurrentTime() - universe.J2000_EPOCH().getJD();
 				double[] y = interpolator.getInterpolatedState();
 				if (Math.abs(t - 2) < delta) {
 					double[] step1True = new double[] { 6640305.22, 16251.75, 0, -18.08, 8125.86, 0 };
@@ -99,13 +104,14 @@ public class TestOrbitPropagatorImpl extends CelestTest {
 		});
 
 		/* Leo orbit */
-		IKeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, EarthConstants.bodyCenter());
+		IKeplerElements k = new KeplerElements(7378137, 0.1, 0, 0, 0, 0, earth);
 		CartesianElements c = k.getOrbitEqn().kepler2cartesian();
 		/* Create the two body problem */
-		TwoBody tb = new TwoBody(new CelestialBody(c, 1));
+        CelestialBody b = new CelestialBody(c, 1);
+		TwoBody tb = new TwoBody( new TwoBodyCollection(b, earth), b );
 
 		CommonsMathPropagator<ICartesianElements, ICartesianDerivative> integrator =
-				new CommonsMathPropagator<>(rk4, tb);
-		integrator.integrate(JulianDate.getJ2000(), JulianDate.getJ2000().add(4, Time.day), c);
+				new CommonsMathPropagator<>(rk4, tb, universe);
+		integrator.integrate(universe.J2000_EPOCH(), universe.J2000_EPOCH().add(4, Time.day), c);
 	}
 }

@@ -28,6 +28,7 @@ import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.constants.Constants._
 import be.angelcorp.libs.celest.CelestMatchers._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
+import be.angelcorp.libs.celest.universe.DefaultUniverse
 
 /**
  * All reference values computed with:
@@ -35,6 +36,8 @@ import be.angelcorp.libs.util.exceptions.GenericRuntimeException
  */
 @RunWith(classOf[JUnitRunner])
 class TestLambert2 extends FlatSpec with ShouldMatchers {
+
+  implicit val universe = new DefaultUniverse()
 
 	"The lambert targetter" should "solve the N=0 revolutions case" in {
 		val r1 = Vector3D(4949101.4221185260000000,859402.4430396953800000,-151535.8379946680200000)	//m
@@ -45,9 +48,9 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
 		val s0 = new CartesianElements(r1, Vector3D.ZERO)
 		val s1 = new CartesianElements(r2, Vector3D.ZERO)
-		val t0 = JulianDate.J2000_EPOCH
-		val te = t0.add(tf, day_julian)
-		val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
+    val t0 = universe.J2000_EPOCH
+    val te = t0.add(tf, day_julian)
+    val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 
 		val v1_prograde_true =  Vector3D(10096.6831628413530000,4333.9040463802048000,-764.1842151784204600)	//m/s
 		val v2_prograde_true = Vector3D(-8110.7563755037318000,-6018.4641067406237000,1061.2176044438429000)	//m/s
@@ -84,7 +87,7 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
 		val s0 = new CartesianElements(r1, Vector3D.ZERO)
 		val s1 = new CartesianElements(r2, Vector3D.ZERO)
-		val t0 = JulianDate.J2000_EPOCH
+		val t0 = universe.J2000_EPOCH
 		val te = t0.add(tf, day_julian)
 		val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 
@@ -127,7 +130,7 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
 		val s0 = new CartesianElements(r1, Vector3D.ZERO)
 		val s1 = new CartesianElements(r2, Vector3D.ZERO)
-		val t0 = JulianDate.J2000_EPOCH
+		val t0 = universe.J2000_EPOCH
 		val te = t0.add(tf, day_julian)
 		val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 
@@ -171,7 +174,7 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
 			val s0 = new CartesianElements(r1, Vector3D.ZERO)
 			val s1 = new CartesianElements(r2, Vector3D.ZERO)
-			val t0 = JulianDate.J2000_EPOCH
+			val t0 = universe.J2000_EPOCH
 			val te = t0.add(tf, day_julian)
 			val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 

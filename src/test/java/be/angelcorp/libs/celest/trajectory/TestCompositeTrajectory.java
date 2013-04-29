@@ -15,6 +15,8 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import org.junit.Test;
@@ -27,6 +29,8 @@ import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.util.physics.Time;
 
 public class TestCompositeTrajectory extends CelestTest {
+
+    public static Universe universe = new DefaultUniverse();
 
 	/**
 	 * test state that can return a given constant in the tovector form
@@ -97,25 +101,25 @@ public class TestCompositeTrajectory extends CelestTest {
 		ITrajectory t1 = new TestTrajectory(100);
 		ITrajectory t2 = new TestTrajectory(200);
 		ITrajectory t3 = new TestTrajectory(300);
-		trajectory.addTrajectory(t1, new JulianDate(0));
-		trajectory.addTrajectory(t2, new JulianDate(10));
-		trajectory.addTrajectory(t3, new JulianDate(20));
+		trajectory.addTrajectory(t1, new JulianDate(0, universe));
+		trajectory.addTrajectory(t2, new JulianDate(10, universe));
+		trajectory.addTrajectory(t3, new JulianDate(20, universe));
 
 		// Equal begin time as t1
 		CelestTest.assertEquals(new double[] { 100 },
-				trajectory.evaluate(new JulianDate(0)).toVector().toArray(), 1E-16);
+				trajectory.evaluate(new JulianDate(0, universe)).toVector().toArray(), 1E-16);
 		// In between t1 and t2, t1 should be used
 		CelestTest.assertEquals(new double[] { 105 },
-				trajectory.evaluate(new JulianDate(5)).toVector().toArray(), 1E-16);
+				trajectory.evaluate(new JulianDate(5, universe)).toVector().toArray(), 1E-16);
 		// Same as above but s2
 		CelestTest.assertEquals(new double[] { 215 },
-				trajectory.evaluate(new JulianDate(15)).toVector().toArray(), 1E-16);
+				trajectory.evaluate(new JulianDate(15, universe)).toVector().toArray(), 1E-16);
 		// Same insertion time as s3
 		CelestTest.assertEquals(new double[] { 320 },
-				trajectory.evaluate(new JulianDate(20)).toVector().toArray(), 1E-16);
+				trajectory.evaluate(new JulianDate(20, universe)).toVector().toArray(), 1E-16);
 		// Time after the last insertion
 		CelestTest.assertEquals(new double[] { 325 },
-				trajectory.evaluate(new JulianDate(25)).toVector().toArray(), 1E-16);
+				trajectory.evaluate(new JulianDate(25, universe)).toVector().toArray(), 1E-16);
 	}
 
 	@Test(expected = ArithmeticException.class)
@@ -124,10 +128,10 @@ public class TestCompositeTrajectory extends CelestTest {
 
 		// Add a state a t=0
 		ITrajectory t1 = new TestTrajectory(0);
-		trajectory.addTrajectory(t1, new JulianDate(0));
+		trajectory.addTrajectory(t1, new JulianDate(0, universe));
 
 		try {
-			trajectory.evaluate(new JulianDate(-1)); // There is no state on or before -1 so exception
+			trajectory.evaluate(new JulianDate(-1, universe)); // There is no state on or before -1 so exception
 			fail("The should be not state at t=-1, because the first state is at t=0");
 		} catch (ArithmeticException success) {
 		}

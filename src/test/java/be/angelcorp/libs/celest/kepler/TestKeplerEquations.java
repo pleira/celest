@@ -17,7 +17,6 @@ package be.angelcorp.libs.celest.kepler;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.constants.Constants;
-import be.angelcorp.libs.celest.constants.EarthConstants$;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import org.apache.commons.math3.linear.ArrayRealVector;
 

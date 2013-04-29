@@ -21,6 +21,8 @@ import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.util.physics.Angle;
 import be.angelcorp.libs.util.physics.Length;
@@ -28,14 +30,16 @@ import be.angelcorp.libs.util.physics.Time;
 
 public class TestEarthConstants extends CelestTest {
 
+    public static Universe universe = new DefaultUniverse();
+
 	public void testOrbit() {
-		KeplerVariationTrajectory trajectory = EarthConstants.orbit();
+		KeplerVariationTrajectory trajectory = universe.earthConstants().orbit();
 
 		// Validation state based on JPL Horizons data Body: Earth (399)
 		// Frame: @Sun, ecliptic, J2000
 		// AU/days/Degree
 
-		NonSignuarElements state_actual_k = trajectory.evaluate(JulianDate.J2000_EPOCH);
+		NonSignuarElements state_actual_k = trajectory.evaluate(universe.J2000_EPOCH());
 		CartesianElements state_actual_c = state_actual_k.toCartesianElements();
 		SphericalElements state_actual_s = new SphericalElements(state_actual_c, state_actual_k.getCenterbody());
 		CartesianElements state_true_c = new CartesianElements(
@@ -51,7 +55,7 @@ public class TestEarthConstants extends CelestTest {
 		assertEquals(state_true_s.getDeclination(), state_actual_s.getDeclination(),
 				Angle.convert(15, Angle.ArcSecond)); // DEC
 
-		state_actual_k = trajectory.evaluate(new JulianDate(2452000d));
+		state_actual_k = trajectory.evaluate(new JulianDate(2452000d, universe));
 		state_actual_c = state_actual_k.toCartesianElements();
 		state_actual_s = new SphericalElements(state_actual_c, state_actual_k.getCenterbody());
 		state_true_c = new CartesianElements(

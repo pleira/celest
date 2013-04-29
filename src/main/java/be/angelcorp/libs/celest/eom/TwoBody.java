@@ -30,18 +30,6 @@ import be.angelcorp.libs.celest.eom.forcesmodel.GravitationalForce_C;
  * 
  */
 public class TwoBody extends ForceModelCore {
-
-	/**
-	 * {@link TwoBody} problem for a simple Earth system (where the given body is a satellite around the
-	 * earth)
-	 * 
-	 * @param body
-	 *            Satellite around the Earth
-	 */
-	public TwoBody(ICelestialBody body) {
-		this(new TwoBodyCollection(EarthConstants.bodyCenter(), body), body);
-	}
-
 	/**
 	 * {@link TwoBody} problem for a body in a given two body system
 	 * 

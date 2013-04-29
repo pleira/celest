@@ -16,6 +16,8 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
 import be.angelcorp.libs.celest.constants.Constants;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import org.junit.Ignore;
@@ -33,6 +35,8 @@ import be.angelcorp.libs.util.physics.Time;
 @Ignore
 public class TestLambertUV extends CelestTest {
 
+    public static Universe universe = new DefaultUniverse();
+
 	public void testRossettaLeg1() {
 		// Rosetta Earth (launch) - Earth (swingby1)
 		// data from NASA horizons, results generated using GTOP lambert targetter
@@ -49,8 +53,8 @@ public class TestLambertUV extends CelestTest {
 		Vector3D r1 = new ImmutableVector3D(1.364377463519496E11, 6.129036612130551E10, 2.784835397959758E09);
 		Vector3D r2 = new ImmutableVector3D(3.730051396741382E09, -1.495513611895726E11, 0.);
 
-		IJulianDate departure = JulianDate.J2000_EPOCH;
-		IJulianDate arrival = JulianDate.J2000_EPOCH.add(300, Time.day);
+		IJulianDate departure = universe.J2000_EPOCH();
+		IJulianDate arrival   = universe.J2000_EPOCH().add(300, Time.day);
 		LambertUV lambert = new LambertUV(
 				new CartesianElements(r1, Vector3D$.MODULE$.ZERO()),
 				new CartesianElements(r2, Vector3D$.MODULE$.ZERO()),

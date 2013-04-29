@@ -22,10 +22,14 @@ import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.util.physics.Time;
 
 public class TestExpoSinSolution extends CelestTest {
+
+    public static Universe universe = new DefaultUniverse();
 
 	/**
 	 * <p>
@@ -58,8 +62,8 @@ public class TestExpoSinSolution extends CelestTest {
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
 
-		IJulianDate t1 = JulianDate.getJ2000();
-		IJulianDate t2 = JulianDate.getJ2000().add(calculated_tof, Time.second);
+		IJulianDate t1 = universe.J2000_EPOCH();
+		IJulianDate t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
@@ -105,8 +109,8 @@ public class TestExpoSinSolution extends CelestTest {
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
 
-		IJulianDate t1 = JulianDate.getJ2000();
-		IJulianDate t2 = JulianDate.getJ2000().add(calculated_tof, Time.second);
+		IJulianDate t1 = universe.J2000_EPOCH();
+		IJulianDate t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
@@ -152,8 +156,8 @@ public class TestExpoSinSolution extends CelestTest {
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
 
-		IJulianDate t1 = JulianDate.getJ2000();
-		IJulianDate t2 = JulianDate.getJ2000().add(calculated_tof, Time.second);
+		IJulianDate t1 = universe.J2000_EPOCH();
+		IJulianDate t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 

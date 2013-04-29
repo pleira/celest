@@ -23,6 +23,7 @@ import be.angelcorp.libs.celest.time.{JulianDate, IJulianDate}
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.util.physics.{Angle, Time}
 import org.jgrapht.graph.DefaultDirectedWeightedGraph
+import be.angelcorp.libs.celest.universe.Universe
 
 /**
  * Defines transfromations over the following reference frames;
@@ -52,7 +53,7 @@ import org.jgrapht.graph.DefaultDirectedWeightedGraph
  * References:
  *  [1]: M.Fränz, D. Harper, "Heliospheric Coordinate Systems", Corrected Version of Planetary&Space Science, 50, 217ff.(2002), 12 March 2002
  */
-object HeliosphericCoordinateSystems {
+class HeliosphericCoordinateSystems(implicit universe: Universe) {
 
 	/**
 	 * ZXZ rotation matrix to use in a coordinate transformation
@@ -79,21 +80,21 @@ object HeliosphericCoordinateSystems {
 	 * @param date Date to calculate the epoch day number from.
 	 * @return Epoch day nr (fractional days since J2000)
 	 */
-	def d0(date: IJulianDate) = date.relativeTo( JulianDate.J2000_EPOCH, Time.day_julian )
+	def d0(date: IJulianDate) = date.relativeTo( universe.J2000_EPOCH, Time.day_julian )
 
 	/**
 	 * Number of julian centuries since the J2000 epoch.
 	 * @param date Epoch.
 	 * @return Julian centuries since J2000.
 	 */
-	def T0(date: IJulianDate) = date.relativeTo( JulianDate.J2000_EPOCH, Time.century_julian )
+	def T0(date: IJulianDate) = date.relativeTo( universe.J2000_EPOCH, Time.century_julian )
 
 	/**
 	 * Number of julian years since the J2000 epoch.
 	 * @param date Epoch.
 	 * @return Julian years since J2000.
 	 */
-	def y0(date: IJulianDate) = date.relativeTo( JulianDate.J2000_EPOCH, Time.year_julian )
+	def y0(date: IJulianDate) = date.relativeTo( universe.J2000_EPOCH, Time.year_julian )
 
 	/**
 	 * Angle between the Earth equatorial plane and the ecliptic (the Earth orbital plane) at the J2000 epoch [rad]
@@ -278,7 +279,7 @@ object HeliosphericCoordinateSystems {
 	 * @return Transformation factory to transform from HAE_J2000 to HAE_D
 	 */
 	def transform_HAE_J2000_To_HAE_D = transformFactory( date => {
-		val (inc, ascNode, ang) = ecliptic( JulianDate.J2000_EPOCH, date )
+		val (inc, ascNode, ang) = ecliptic( universe.J2000_EPOCH, date )
 		// See P(HAE_J2000, HAE_D), equation 9 of [1]
 		transform(ascNode, inc, -ang - ascNode)
 	} )

@@ -125,7 +125,7 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 			IJulianDate epoch, Vector3D T, double S, Vector3D R, Vector3D dT, double dS, Vector3D dR) {
 		double mm2m = Length.MILLIMETER.getScaleFactor();
 		double y2s = Time.year_julian.getScaleFactor();
-		double mas2rad = 1E-3 * Angle.ARCSECOND.getScaleFactor();// mas = milliarcsecond
+		double mas2rad = Angle.ArcSecond.convert( 1E-3 );// mas = milliarcsecond
 
 		T = T.multiply(mm2m);
 		dT = dT.multiply(mm2m / y2s);

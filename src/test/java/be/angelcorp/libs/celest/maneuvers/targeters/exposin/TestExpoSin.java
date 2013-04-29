@@ -22,6 +22,8 @@ import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -44,6 +46,8 @@ import be.angelcorp.libs.celest.constants.Constants;
  */
 public class TestExpoSin extends CelestTest {
 
+    public static Universe universe = new DefaultUniverse();
+
 	public void testN0() throws Exception {
 		double r1 = 151366683.169E3;
 		double r2 = 206953872.627E3;
@@ -51,8 +55,8 @@ public class TestExpoSin extends CelestTest {
 		double k2 = 0.7013;
 		double dt = Time.convert(130, Time.day);
 
-		IJulianDate t1 = JulianDate.J2000_EPOCH;
-		IJulianDate t2 = JulianDate.J2000_EPOCH.add(dt, Time.second);
+		IJulianDate t1 = universe.J2000_EPOCH();
+		IJulianDate t2 = universe.J2000_EPOCH().add(dt, Time.second);
 
 		ICartesianElements s1 = new CartesianElements(
 				new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO());
@@ -109,8 +113,8 @@ public class TestExpoSin extends CelestTest {
 		ICartesianElements r1 = new CartesianElements(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO());
 		ICartesianElements r2 = new CartesianElements(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO());
 
-		IJulianDate t1 = JulianDate.J2000_EPOCH;
-		IJulianDate t2 = JulianDate.J2000_EPOCH.add(dt, Time.second);
+		IJulianDate t1 = universe.J2000_EPOCH();
+		IJulianDate t2 = universe.J2000_EPOCH().add(dt, Time.second);
 		CelestialBody center = new CelestialBody(new CartesianElements(), Constants.mu2mass(1E4) );
 
 		ExpoSin exposin = new ExpoSin(r1, r2, t1, t2);

@@ -23,6 +23,7 @@ import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory
 import be.angelcorp.libs.celest.time.JulianDate
+import be.angelcorp.libs.celest.universe.Universe
 
 /**
  * Different constants specific to the earth. Has constants in the following categories:
@@ -35,7 +36,7 @@ import be.angelcorp.libs.celest.time.JulianDate
  * @author Simon Billemont, TUDelft, Faculty Aerospace Engineering (aodtorusan@gmail.com or
  *         s.billemont@student.tudelft.nl)
  */
-object EarthConstants {
+class EarthConstants(implicit  universe: Universe) {
 
 	/**
 	 * Standard gravitational parameter of the earth
@@ -237,6 +238,6 @@ object EarthConstants {
 		val dL0 = Deg.convert(35999.3728565) / centuryToS
 		val keplerVariation = new NonSingularDerivative(da0, de0, di0, dw_bar0, dW0, dL0)
 
-		new KeplerVariationTrajectory(JulianDate.J2000_EPOCH, keplerAtJ2000, keplerVariation)
+		new KeplerVariationTrajectory(universe.J2000_EPOCH, keplerAtJ2000, keplerVariation)
 	}
 }

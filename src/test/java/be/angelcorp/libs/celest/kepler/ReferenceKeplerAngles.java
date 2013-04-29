@@ -31,7 +31,7 @@ import be.angelcorp.libs.util.physics.Angle;
 
 abstract public class ReferenceKeplerAngles {
 
-	private static double						degree	= Angle.DEGREE.getScaleFactor();
+	private static double						degree	= Angle.Degree.getScaleFactor();
 
 	public static final List<ArrayRealVector>	circularAngles;
 	static {

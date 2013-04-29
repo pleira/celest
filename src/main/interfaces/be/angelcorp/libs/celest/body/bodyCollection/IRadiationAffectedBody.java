@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ * Copyright (C) 2013 Simon Billemont <simon@angelcorp.be>
  *
  * Licensed under the Non-Profit Open Software License version 3.0
  * (the "License"); you may not use this file except in compliance
@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.stateIntegrator;
 
-import be.angelcorp.libs.celest.state.IState;
-import be.angelcorp.libs.celest.state.IStateDerivative;
-import be.angelcorp.libs.celest.time.IJulianDate;
+package be.angelcorp.libs.celest.body.bodyCollection;
 
-public interface IStateIntegrator<Y extends IState> {
+import be.angelcorp.libs.celest.body.IShapedBody;
 
-	Y integrate(IJulianDate t0, IJulianDate t, Y y0);
+/**
+ * A body that can experience drag forces.
+ */
+public interface IRadiationAffectedBody extends IShapedBody {
+
+    /**
+     * Satellite coefficient of reflectivity [0, 2].
+     *
+     * <b>Unit: [-]</b>
+     *
+     * @return The body reflectivity coefficient [-]
+     */
+    double getReflectionCoefficient();
 
 }

@@ -21,9 +21,13 @@ import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.time.TimeUtils;
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.util.physics.Time;
 
 public class TestTimeStandards extends CelestTest {
+
+    public static Universe universe = new DefaultUniverse();
 
 	private double getSecondsInDay(IJulianDate date) {
 		return Time.convert(
@@ -42,7 +46,7 @@ public class TestTimeStandards extends CelestTest {
 		// April 6, 2004, 7:51:28.386009 UTC = JD 2453101.827411875
 		// dut1 -0.439962 s dat 32 s
 
-		JulianDate date = new JulianDate(2453101.827411875104167, new UTC());
+		JulianDate date = new JulianDate(2453101.827411875104167, universe.UTC(), universe);
 
 		// Seconds in the current day for:
 		double ut1 = 28287.9460470000;
@@ -54,10 +58,10 @@ public class TestTimeStandards extends CelestTest {
 		double tcb = 28365.9109901113;
 
 		assertEquals(utc, getSecondsInDay(date), 1E-5);
-		assertEquals(tai, getSecondsInDay(date.getJulianDate(TimeStandards.TAI())), 2E-5);
-		assertEquals(tt, getSecondsInDay(date.getJulianDate(TimeStandards.TT())), 2E-5);
-		assertEquals(tcg, getSecondsInDay(date.getJulianDate(TimeStandards.TCG())), 3E-5);
-		assertEquals(tdb, getSecondsInDay(date.getJulianDate(TimeStandards.TDB())), 1E-5);
+		assertEquals(tai, getSecondsInDay(date.getJulianDate(universe.TAI())), 2E-5);
+		assertEquals(tt,  getSecondsInDay(date.getJulianDate(universe.TT())),  2E-5);
+		assertEquals(tcg, getSecondsInDay(date.getJulianDate(universe.TCG())), 3E-5);
+		assertEquals(tdb, getSecondsInDay(date.getJulianDate(universe.TDB())), 1E-5);
 		// TODO: not implemented yet
 		// assertEquals(ut1, getSecondsInDay(date.getJulianDate(TimeStandards.UT1)), 1E-5);
 		// assertEquals(tcb, getSecondsInDay(date.getJulianDate(TimeStandards.TCB)), 1E-5);
@@ -80,13 +84,13 @@ public class TestTimeStandards extends CelestTest {
 		double tcb = new HourMinSec(16, 44, 17.5255).getDayFraction();
 		double tcg = new HourMinSec(16, 44, 04.7836).getDayFraction();
 
-		JulianDate jd_tai = new JulianDate(jd_base + tai, TimeStandards.TAI());
+        IJulianDate jd_tai = new JulianDate(jd_base + tai, universe.TAI(), universe);
 		// JulianDate jd_ut1 = jd_tai.getJulianDate(TimeStandards.UT1); //TODO: implement UT1
-		JulianDate jd_utc = jd_tai.getJulianDate(new UTC());
-		JulianDate jd_tt = jd_tai.getJulianDate(TimeStandards.TT());
-		JulianDate jd_tdb = jd_tai.getJulianDate(TimeStandards.TDB());
+		IJulianDate jd_utc = jd_tai.getJulianDate(universe.UTC());
+        IJulianDate jd_tt = jd_tai.getJulianDate(universe.TT());
+        IJulianDate jd_tdb = jd_tai.getJulianDate(universe.TDB());
 		// JulianDate jd_tcb = jd_tai.getJulianDate(TimeStandards.TCB);//TODO: implement TCB
-		JulianDate jd_tcg = jd_tai.getJulianDate(new TCG());
+        IJulianDate jd_tcg = jd_tai.getJulianDate(universe.TCG());
 
 		double accuracy = Time.convert(0.0001, Time.second, Time.day_julian);
 		// assertEquals(jd_base + ut1, jd_ut1.getJD(), accuracy);//TODO: implement UT1
@@ -100,26 +104,26 @@ public class TestTimeStandards extends CelestTest {
 
 	public void testFromToTAI() throws Exception {
 		// Some random date: 2012 May 5 15:56:12.1
-		JulianDate date = new JulianDate(2456053.164029);
+		JulianDate date = new JulianDate(2456053.164029, universe);
 
-		double TAItoTT = TimeStandards.TAI().offsetToTT(date);
-		double TAIfromTT = TimeStandards.TAI().offsetFromTT(date);
+		double TAItoTT = universe.TAI().offsetToTT(date);
+		double TAIfromTT = universe.TAI().offsetFromTT(date);
 		assertEquals(0, TAItoTT + TAIfromTT, 1E-16);
 
-		double TTtoTT = TimeStandards.TT().offsetToTT(date);
-		double TTfromTT = TimeStandards.TT().offsetFromTT(date);
+		double TTtoTT = universe.TT().offsetToTT(date);
+		double TTfromTT = universe.TT().offsetFromTT(date);
 		assertEquals(0, TTtoTT + TTfromTT, 1E-16);
 
-		double UTCtoTT = UTC.get().offsetToTT(date);
-		double UTCfromTT = UTC.get().offsetFromTT(date);
+		double UTCtoTT = universe.UTC().offsetToTT(date);
+		double UTCfromTT = universe.UTC().offsetFromTT(date);
 		assertEquals(0, UTCtoTT + UTCfromTT, 1E-16);
 
-		double TCGtoTT = TCG.get().offsetToTT(date);
-		double TCGfromTT = TCG.get().offsetFromTT(date);
+		double TCGtoTT = universe.TCG().offsetToTT(date);
+		double TCGfromTT = universe.TCG().offsetFromTT(date);
 		assertEquals(0, TCGtoTT + TCGfromTT, 1E-16);
 
-		double TDBtoTT = TimeStandards.TDB().offsetToTT(date);
-		double TDBfromTT = TimeStandards.TDB().offsetFromTT(date);
+		double TDBtoTT = universe.TDB().offsetToTT(date);
+		double TDBfromTT = universe.TDB().offsetFromTT(date);
 		assertEquals(0, TDBtoTT + TDBfromTT, 1E-16);
 	}
 
@@ -129,12 +133,11 @@ public class TestTimeStandards extends CelestTest {
 		// from 2012 July 1, 0h UTC, until further notice : UTC-TAI = - 35s
 
 		// Just after (0.5s later) switch epoch in UTC-TAI=-35
-		JulianDate jd_tt_1 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), TimeStandards.TT()).add(35.5+32.184, Time.second);
+		JulianDate jd_tt_1 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), universe.TT(), universe).add(35.5+32.184, Time.second);
 		// Just before (-0.5s) switch epoch in UTC-TAI=-34
-		JulianDate jd_tt_2 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), TimeStandards.TT()).add(34.5+32.184, Time.second);
+		JulianDate jd_tt_2 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), universe.TT(), universe).add(34.5+32.184, Time.second);
 
-		UTC utc = new UTC();
-		assertEquals(-35-32.184, utc.offsetFromTT(jd_tt_1), 1E-16);
-		assertEquals(-34-32.184, utc.offsetFromTT(jd_tt_2), 1E-16);
+		assertEquals(-35-32.184, universe.UTC().offsetFromTT(jd_tt_1), 1E-16);
+		assertEquals(-34-32.184, universe.UTC().offsetFromTT(jd_tt_2), 1E-16);
 	}
 }

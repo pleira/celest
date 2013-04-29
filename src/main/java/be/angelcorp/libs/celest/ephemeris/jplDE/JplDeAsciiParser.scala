@@ -19,14 +19,13 @@ package be.angelcorp.libs.celest.ephemeris.jplDE
 import org.parboiled.scala._
 import org.parboiled.errors._
 import be.angelcorp.libs.celest.time.JulianDate
-import be.angelcorp.libs.util.physics.Time
 import org.slf4j.LoggerFactory
-import be.angelcorp.libs.celest.time.timeStandard.TimeStandards
+import be.angelcorp.libs.celest.universe.Universe
 
 /**
  * A parser using the parboiled library to parse an ascii JPL DE ephemeris file to a [[JplDeNode]]
  */
-class JplDeAsciiParser extends Parser {
+class JplDeAsciiParser(implicit universe: Universe) extends Parser {
 
 	private val logger = LoggerFactory.getLogger(getClass());
 
@@ -50,7 +49,7 @@ class JplDeAsciiParser extends Parser {
 
 	def Group103 = rule {
 		(str("GROUP") ~ WhiteSpace ~ str("1030") ~ WhiteSpace ~ nTimes(3, Float ~ WhiteSpace) ~ WhiteSpace) ~~>
-			(l => JplDeHeaderGroup103(new JulianDate(l(0), TimeStandards.TDB), new JulianDate(l(1), TimeStandards.TDB), l(2)))
+			(l => JplDeHeaderGroup103(new JulianDate(l(0), universe.TDB), new JulianDate(l(1), universe.TDB), l(2)))
 	}
 
 	def Group104 = rule {
@@ -85,8 +84,8 @@ class JplDeAsciiParser extends Parser {
 			(l => l.map(meta => JplDeDataRecond(
 				meta._1(0),
 				meta._1(1),
-				new JulianDate(meta._2(0), TimeStandards.TDB),
-				new JulianDate(meta._2(1), TimeStandards.TDB),
+				new JulianDate(meta._2(0), universe.TDB),
+				new JulianDate(meta._2(1), universe.TDB),
 				meta._2.slice(2, meta._2.size))))
 	}
 

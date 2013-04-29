@@ -23,14 +23,18 @@ import be.angelcorp.libs.celest.kepler.KeplerCircular;
 import be.angelcorp.libs.celest.state.positionState.KeplerElements;
 import be.angelcorp.libs.celest.state.positionState.SphericalElements;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.util.physics.Length;
 
 public class TestGravitationalForce extends CelestTest {
 
+    public static Universe universe = new DefaultUniverse();
+
 	public void testForce() throws Exception {
 		/* Test the f/a in a simple earth system (norm only) */
-		CelestialBody earth = EarthConstants.bodyCenter();
+		CelestialBody earth = universe.earthConstants().bodyCenter();
 		ICelestialBody sat = new CelestialBody(
 				new KeplerElements(10E6, 0, 0, 0, 0, 0, earth), 5);
 		GravitationalForce_C g = new GravitationalForce_C(sat, earth);

@@ -19,25 +19,28 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards;
-import be.angelcorp.libs.celest.time.timeStandard.TimeStandards;
 import be.angelcorp.libs.celest.time.timeStandard.UTC;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import be.angelcorp.libs.celest.universe.DefaultUniverse;
+import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.util.physics.Time;
 
 public class TestJulianDate extends CelestTest {
 
+    public static Universe universe = new DefaultUniverse();
+
 	public void testAdd() {
 		// Check if the numerical value of JD gets correctly added
-		JulianDate jd0 = new JulianDate(5);
+		JulianDate jd0 = new JulianDate(5, universe);
 		double dt = 325;// [s]
 		JulianDate jd = jd0.add(dt, Time.second);
 		assertEquals(5 + Time.convert(dt, Time.second, Time.day), jd.getJD());
 
 		// Check of the value of ITimeStandard is correctly kept after adding
-		jd0 = new JulianDate(1., TimeStandards.TT());
+		jd0 = new JulianDate(1., universe.TT(), universe);
 		jd = jd0.add(1, Time.day_julian);
 		assertEquals(2, jd.getJD(), 1E-16);
-		assertEquals(TimeStandards.TT(), jd.getTimeStandard());
+		assertEquals(universe.TT(), jd.getTimeStandard());
 	}
 
 	public void testITimeStandard() {
@@ -48,17 +51,17 @@ public class TestJulianDate extends CelestTest {
 		// Terrestrial Time: January 1 2000, 12:00:00 TT = 2451545.0 JD TT
 		// International Atomic Time: January 1, 2000, 11:59:27.816 TAI = 2451544.99962750 JD TAI
 		// Coordinated Universal Time: January 1, 2000, 11:58:55.816 UTC = 2451544.99925713 JD UTC
-		JulianDate jd_tt_j2000 = new JulianDate(2451545.0, TimeStandards.TT());
-		JulianDate jd_tai_j2000_true = new JulianDate(2451544.99962750, TimeStandards.TAI());
-		JulianDate jd_utc_j2000_true = new JulianDate(2451544.99925713, UTC.get());
-		assertEquals(TimeStandards.TT(), jd_tt_j2000.getTimeStandard());
-		assertEquals(TimeStandards.TAI(), jd_tai_j2000_true.getTimeStandard());
-		assertEquals(UTC.get(), jd_utc_j2000_true.getTimeStandard());
+		JulianDate jd_tt_j2000 = new JulianDate(2451545.0, universe.TT(), universe);
+		JulianDate jd_tai_j2000_true = new JulianDate(2451544.99962750, universe.TAI(), universe);
+		JulianDate jd_utc_j2000_true = new JulianDate(2451544.99925713, universe.UTC(), universe);
+		assertEquals(universe.TT(),  jd_tt_j2000.getTimeStandard());
+		assertEquals(universe.TAI(), jd_tai_j2000_true.getTimeStandard());
+		assertEquals(universe.UTC(), jd_utc_j2000_true.getTimeStandard());
 
-		IJulianDate jd_tai_j2000_actual = jd_tt_j2000.getJulianDate(TimeStandards.TAI());
-		IJulianDate jd_utc_j2000_actual = jd_tt_j2000.getJulianDate(UTC.get());
-		assertEquals(TimeStandards.TAI(), jd_tai_j2000_actual.getTimeStandard());
-		assertEquals(UTC.get(), jd_utc_j2000_actual.getTimeStandard());
+		IJulianDate jd_tai_j2000_actual = jd_tt_j2000.getJulianDate(universe.TAI());
+		IJulianDate jd_utc_j2000_actual = jd_tt_j2000.getJulianDate(universe.UTC());
+		assertEquals(universe.TAI(), jd_tai_j2000_actual.getTimeStandard());
+		assertEquals(universe.UTC(), jd_utc_j2000_actual.getTimeStandard());
 
 		assertEquals(jd_tai_j2000_true.getJD(), jd_tai_j2000_actual.getJD(), 1E-8);
 		assertEquals(jd_utc_j2000_true.getJD(), jd_utc_j2000_actual.getJD(), 1E-8);
@@ -70,14 +73,14 @@ public class TestJulianDate extends CelestTest {
 		// fprintf('%.10f\n', juliandate(2004,10,10,12,21,18))
 		// 2453289.0147916665
 		GregorianCalendar cal = new GregorianCalendar(2004, 10, 10, 12, 21, 18);
-		JulianDate jd = new JulianDate(2453289.0147916665);
-		JulianDate jd2 = new JulianDate(cal.getTime());
-		JulianDate jd3 = new JulianDate(2453289.0147916665, DateStandards.JULIAN_DATE);
-		JulianDate jd4 = new JulianDate(53288.5147916665, DateStandards.MODIFIED_JULIAN_DAY);
+		JulianDate jd  = new JulianDate(2453289.0147916665, universe);
+		JulianDate jd2 = new JulianDate(cal.getTime(), universe.UTC(), universe);
+		JulianDate jd3 = new JulianDate(2453289.0147916665, DateStandards.JULIAN_DATE, universe);
+		JulianDate jd4 = new JulianDate(53288.5147916665, DateStandards.MODIFIED_JULIAN_DAY, universe);
 
 		/* Check jd get */
 		/* Less then half a second off ? */
-		assertEquals(2453289.0147916665, jd.getJD(), 1. / (24 * 3600 * 1000));
+		assertEquals(2453289.0147916665, jd.getJD(),  1. / (24 * 3600 * 1000));
 		assertEquals(2453289.0147916665, jd2.getJD(), 1. / (24 * 3600 * 1000));
 		assertEquals(2453289.0147916665, jd3.getJD(), 1. / (24 * 3600 * 1000));
 		assertEquals(2453289.0147916665, jd4.getJD(), 1. / (24 * 3600 * 1000));
@@ -106,8 +109,8 @@ public class TestJulianDate extends CelestTest {
 	}
 
 	public void testRelative() {
-		JulianDate epoch1 = new JulianDate(0);
-		JulianDate epoch2 = new JulianDate(5.22);
+		JulianDate epoch1 = new JulianDate(0, universe);
+		JulianDate epoch2 = new JulianDate(5.22, universe);
 
 		assertEquals(5.22, epoch2.relativeTo(epoch1));
 		assertEquals(Time.convert(5.22, Time.day), epoch2.relativeTo(epoch1, Time.second));
