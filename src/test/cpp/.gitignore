@@ -1,0 +1,13 @@
+ipch
+bin
+objs
+build
+CodeAnalyst
+
+*.vcxproj.user
+*.sdf
+*.suo
+*.obj
+*.o
+
+*XE Results*
