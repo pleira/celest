@@ -97,7 +97,7 @@ class DefaultUT1( utc: ITimeStandard,
 
     content match {
       case Some(content) =>
-        // Convert the downloaded data to the format used by [[UT1Containter]]
+        // Convert the downloaded data to the format used by [[UT1Container]]
         val data = content.getLines().drop(14).map( line => {
           val entries = line.split("""\s+""")
           // yr mo day mjd x" y" ut1-utc ...
@@ -109,7 +109,7 @@ class DefaultUT1( utc: ITimeStandard,
           val range = ( data.head._1 - 0.5, data.last._1 + 0.5)
 
           // Create the container for the UT1-UTC data
-          val container = new UT1Containter( data.toMap )
+          val container = new UT1Container( data.toMap )
 
           // Save the container in memory
           containers.put( range, container )
@@ -154,7 +154,7 @@ class UT1DateOutOfBounds(cause: Throwable = null,
  * Interface to a map linking mjd date to UT1-UTC.
  * @param offsets Map that contains the <mjd date, UT1-UTC> data.
  */
-class UT1Containter(val offsets: util.TreeMap[Double, Double] = new util.TreeMap) extends UT1Provider {
+class UT1Container(val offsets: util.TreeMap[Double, Double] = new util.TreeMap) extends UT1Provider {
 
   def this(m: Map[Double, Double]) = {
     this()

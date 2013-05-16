@@ -35,19 +35,19 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
   }
 
   implicit val universe = new Universe(){
-    def TAI: ITimeStandard = throw new TestFailedException("Upsuppored mock operation", 0)
-    def TCB: ITimeStandard = throw new TestFailedException("Upsuppored mock operation", 0)
-    def TCG: ITimeStandard = throw new TestFailedException("Upsuppored mock operation", 0)
-    def TDB: ITimeStandard = throw new TestFailedException("Upsuppored mock operation", 0)
-    def TDT: ITimeStandard = throw new TestFailedException("Upsuppored mock operation", 0)
+    def TAI: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
+    def TCB: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
+    def TCG: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
+    def TDB: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
+    def TDT: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
     def TT:  ITimeStandard = new MockTime( 0  )
     def UTC: ITimeStandard = new MockTime( 35 )
-    def UT1: ITimeStandard = throw new TestFailedException("Upsuppored mock operation", 0)
-    def frames: IReferenceFrameGraph = throw new TestFailedException("Upsuppored mock operation", 0)
+    def UT1: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
+    def frames: IReferenceFrameGraph = throw new TestFailedException("Unsupported mock operation", 0)
   }
 
-  "The UT1Containter" should "select the correct UT1-UTC offset" in {
-    val container = new UT1Containter( Map( 0.0 -> 5.5, 1.0 -> 6.2, 2.0 -> 7.4, 3.0 -> 9.0 ) )
+  "The UT1Container" should "select the correct UT1-UTC offset" in {
+    val container = new UT1Container( Map( 0.0 -> 5.5, 1.0 -> 6.2, 2.0 -> 7.4, 3.0 -> 9.0 ) )
 
     expect( 6.2 ) { container.UT1_UTC( new JulianDate( 1.0, MJD ) ) }
 
@@ -69,7 +69,7 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
   }
 
   it should "select Transform from and to TAI symmetrically" in {
-    val container = new UT1Containter( Map( 0.0 -> 5.5, 1.0 -> 6.2, 2.0 -> 7.4, 3.0 -> 9.0, 4.0 -> 6.1, 5.0 -> 3.4, 6.0 -> 1.1, 7.0 -> -0.1, 8.0 -> -1.1, 9.0 -> -2.7 ) )
+    val container = new UT1Container( Map( 0.0 -> 5.5, 1.0 -> 6.2, 2.0 -> 7.4, 3.0 -> 9.0, 4.0 -> 6.1, 5.0 -> 3.4, 6.0 -> 1.1, 7.0 -> -0.1, 8.0 -> -1.1, 9.0 -> -2.7 ) )
     val ut1 = new DefaultUT1( universe.UTC, Map[(Double, Double), UT1Provider]( (0.0, 9.0) -> container ) )
 
     val base_date = new JulianDate( 2.0, MJD, ut1 )
