@@ -33,19 +33,19 @@ import java.util
  * @author Simon Billemont
  * 
  */
-class UTC(TAI: ITimeStandard) extends ITimeStandard {
+class DefaultUTC(TAI: ITimeStandard) extends ITimeStandard {
 
 	def offsetFromTT(JD_tt: IJulianDate) = {
 		val from_tt = TAI.offsetFromTT(JD_tt)
     val jd     = JD_tt.add(from_tt, Time.second).getJD
     val jd2    = JD_tt.getJulianDate(TAI).getJD
 
-		val entry  = UTC.TAI_UTC.floorEntry(jd)
+		val entry  = DefaultUTC.TAI_UTC.floorEntry(jd)
 		var offset = -entry.getValue()(jd)
 
 		// Check if the leap second pushes over a TAI - UTC bound
 		if (jd + Time.convert(offset, Time.second, Time.day_julian) < entry.getKey ) {
-			val entry = UTC.TAI_UTC.floorEntry(jd - 1)
+			val entry = DefaultUTC.TAI_UTC.floorEntry(jd - 1)
 			offset = -entry.getValue()(jd)
 		}
 		offset + from_tt
@@ -53,7 +53,7 @@ class UTC(TAI: ITimeStandard) extends ITimeStandard {
 
 	def offsetToTT(JD_utc: IJulianDate) = {
 		val jd = JD_utc.getJD
-		val entry = UTC.TAI_UTC.floorEntry(jd)
+		val entry = DefaultUTC.TAI_UTC.floorEntry(jd)
 		val offset_TAI = entry.getValue()(jd)
 
 		offset_TAI + TAI.offsetToTT(JD_utc)
@@ -61,7 +61,7 @@ class UTC(TAI: ITimeStandard) extends ITimeStandard {
 
 }
 
-object UTC {
+object DefaultUTC {
 
   /** Map with key=JD_TAI, value=TAI-UTC [sec] (the parameter is the exact query date in JD) */
   lazy val TAI_UTC = {

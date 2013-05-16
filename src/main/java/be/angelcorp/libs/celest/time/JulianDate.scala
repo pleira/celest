@@ -155,6 +155,9 @@ class JulianDate(val date: Double, timeStandard: ITimeStandard)(implicit univers
       new JulianDate(this_tt.getJD(), timeStandard).add(offset2, Time.second)
     }
 
+  override def getJulianDate(form: IDateStandard, timeStandard: ITimeStandard) =
+    getJulianDate(timeStandard).getJulianDate(form)
+
 	override def getTimeStandard = timeStandard
 
 	override def hashCode()= getJD.hashCode ^ timeStandard.hashCode

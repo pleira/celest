@@ -27,20 +27,22 @@ import be.angelcorp.libs.celest.constants.EarthConstants
  */
 trait Universe {
 
-  /** International Atomic Time */
+  /** International Atomic Time (TAI) */
   def TAI: ITimeStandard
-  /** Barycentric Coordinate Time */
+  /** Barycentric Coordinate Time (TCB) */
   def TCB: ITimeStandard
-  /** Geocentric Coordinate Time */
+  /** Geocentric Coordinate Time (TCG) */
   def TCG: ITimeStandard
-  /** Barycentric Dynamical Time */
+  /** Barycentric Dynamical Time (TDB) */
   def TDB: ITimeStandard
-  /** Terrestrial Dynamical Time (is now TT) */
+  /** Terrestrial Dynamical Time (TDT, is now TT) */
   def TDT: ITimeStandard
-  /** Terrestrial Time */
+  /** Terrestrial Time (TT) */
   def TT: ITimeStandard
-  /** Coordinated Universal Time */
+  /** Coordinated Universal Time (UTC) */
   def UTC: ITimeStandard
+  /** Universal Time (UT1) */
+  def UT1: ITimeStandard
 
   /** The J2000 epoch in JulianDate form. */
   lazy val J2000_EPOCH	= new JulianDate(2451545.0, TT)(this)

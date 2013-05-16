@@ -69,6 +69,13 @@ public interface IJulianDate extends Comparable<IJulianDate> {
 	 */
 	public abstract IJulianDate getJulianDate(ITimeStandard timeStandard);
 
+    /**
+     * Get the Julian date in an alternate {@link ITimeStandard} and {@link IDateStandard}.
+     *
+     * @return Julian date of the epoch, in an alternative {@link ITimeStandard} and in the given form.
+     */
+    public abstract double getJulianDate(IDateStandard form, ITimeStandard timeStandard);
+
 	/**
 	 * Get the {@link ITimeStandard} used within this Julian date.
 	 * 
