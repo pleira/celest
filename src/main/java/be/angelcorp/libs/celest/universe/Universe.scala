@@ -53,13 +53,13 @@ trait Universe {
   /** The B1950 epoch in JulianDate form. */
   lazy val B1950_EPOCH	= new JulianDate(2433282.42345905, TT)(this)
 
-  /** The starting epoch of the TAI timeline (same as TAI/TT/TCG/TCB). */
-  lazy val TAI_EPOCH	= new JulianDate(2443144.5, TAI)(this)
-  /** The starting epoch of the TT timeline (same as TAI/TT/TCG/TCB). */
+  /** The starting epoch of the TAI timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
+  lazy val TAI_EPOCH	= new JulianDate( 2443144.5003725, TT)(this)
+  /** The starting epoch of the TT timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   lazy val TT_EPOCH	= TAI_EPOCH
-  /** The starting epoch of the TCG timeline (same as TAI/TT/TCG/TCB). */
+  /** The starting epoch of the TCG timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   lazy val TCG_EPOCH	= TAI_EPOCH
-  /** The starting epoch of the TCB timeline (same as TAI/TT/TCG/TCB). */
+  /** The starting epoch of the TCB timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   lazy val TCB_EPOCH	= TAI_EPOCH
   /** The starting epoch of the TDB timeline. */
   lazy val TDB_EPOCH	= TAI_EPOCH.add(-65.5, Time.microsecond)

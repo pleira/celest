@@ -21,11 +21,31 @@ import java.lang.Math
 import scala.Math
 import be.angelcorp.libs.util.physics.Time
 
+/**
+ * <p>
+ * Conversions based on:<br>
+ * [1] D. Vallado et al. ,
+ * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
+ * AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006
+ * </p>
+ *
+ * @author Simon Billemont
+ */
 class TAI extends ITimeStandard {
 	override def offsetFromTT(jd_tt: IJulianDate) = -32.184
 	override def offsetToTT(jd_tai: IJulianDate) = 32.184
 }
 
+/**
+ * <p>
+ * Conversions based on:<br>
+ * [1] D. Vallado et al. ,
+ * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
+ * AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006
+ * </p>
+ *
+ * @author Simon Billemont
+ */
 class TT extends ITimeStandard {
 	override def offsetFromTT(jd_tt: IJulianDate) = 0
 	override def offsetToTT(jd_tt: IJulianDate) = 0
@@ -37,24 +57,26 @@ class TT extends ITimeStandard {
  * <p>
  * Conversions based on:<br>
  * [1] D. Vallado et al. ,
- * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
- * AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006
+ * D.A. Vallado, <b>"Fundamentals of Astrodynamics and Applications"</b>, 2007, ISBN: 978-0-387-71831-6, p199 equation 3-50.
  * </p>
  *
  * @author Simon Billemont
  */
-class TCB( j2000_epoch: IJulianDate) extends ITimeStandard {
-	val deg2rad = Pi / 180.0
+class TCB( tdb: ITimeStandard, tcb_epoch: IJulianDate) extends ITimeStandard {
+
+  val Lb   = +1.55051976772E-8
+  val TDB0 = -6.55E-5
+
 	override def offsetFromTT(jd_tt: IJulianDate) = {
-		// See [1] equation 32
-		val time_from_j2000_days = jd_tt.relativeTo( j2000_epoch )
-		def Mλ = (246.11 + 0.90255617 * time_from_j2000_days) * deg2rad
-		def M  = (357.53 + 0.98560028 * time_from_j2000_days) * deg2rad
-		0.001658 * sin(M) + 0.000021 * sin(Mλ)
-	}
+    // See [1] equation 3-50
+    val TCB_TDB = Lb * jd_tt.relativeTo(tcb_epoch, Time.second) + TDB0
+    val jd_tdb  = jd_tt.add( TCB_TDB, Time.second )
+    TCB_TDB + tdb.offsetFromTT( jd_tdb )
+  }
+
 	override def offsetToTT(jd_tcb: IJulianDate) = {
-		//TODO: Use rootfinder or analytical expression?
-		- offsetFromTT(jd_tcb)
+    //TODO: Appropriation, need a rootfinder or something similar
+    -offsetFromTT(jd_tcb)
 	}
 }
 
@@ -62,7 +84,7 @@ class TCB( j2000_epoch: IJulianDate) extends ITimeStandard {
  * Barycentric Dynamical Time.
  *
  * <p>
- * For most purposes, one may neglect the difference of less than 2 msec between Barycentric Dynamical
+ * For most purposes, one may neglect the difference of appoximatly 1.7 msec between Barycentric Dynamical
  * Time (TDB) and Terrestrial Time (TT). (Fränz and Harper, <b>"Heliospheric Coordinate Systems"</b>)
  * </p>
  *
@@ -78,9 +100,10 @@ class TCB( j2000_epoch: IJulianDate) extends ITimeStandard {
 class TDB( j2000_epoch: IJulianDate ) extends ITimeStandard {
 
   def offsetFromTT(JD_tt: IJulianDate) = {
-    val g     = 357.53 + 0.98560028 * JD_tt.relativeTo( j2000_epoch )
-    val g_rad = g * Pi / 180.0
-    0.001658 * sin(g_rad) + 0.000014 * sin(2 * g_rad)
+    val J2000_offset = JD_tt.relativeTo( j2000_epoch )
+    val M    = (357.53 + 0.98560028 * J2000_offset) * (Pi/180.0)
+    val ΔM_λ = (246.11 + 0.90255617 * J2000_offset) * (Pi/180.0)
+    0.001658 * sin(M) + 0.000014 * sin(ΔM_λ)
   }
 
   def offsetToTT(JD_tdb: IJulianDate) = -offsetFromTT(JD_tdb)

@@ -23,9 +23,9 @@ class DefaultUniverse extends Universe {
   val TAI = new TAI()
   val TT  = new TT()
   lazy val TDT = TT
-  lazy val TCB = new TCB( J2000_EPOCH )
-  lazy val TCG = new TCG( TT_EPOCH    )
-  lazy val TDB = new TDB( TT_EPOCH    )
+  lazy val TCB = new TCB( TDB, TT_EPOCH )
+  lazy val TCG = new TCG( TT_EPOCH )
+  lazy val TDB = new TDB( TT_EPOCH )
   lazy val UTC = new DefaultUTC( TAI )
   lazy val UT1 = new DefaultUT1( UTC )
 

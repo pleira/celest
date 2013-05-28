@@ -144,13 +144,13 @@ public abstract class TimeUtils {
 	 * 
 	 * @param year
 	 *            year e.g. 1900 .. 2100
-	 * @param mon
+	 * @param month
 	 *            month e.g. 1 .. 12
 	 * @param day
 	 *            day e.g. 1 .. 28,29,30,31
 	 * @param hr
 	 *            hour e.g. 0 .. 23
-	 * @param min
+	 * @param minute
 	 *            minute e.g. 0 .. 59
 	 * @param sec
 	 *            second e.g. 0.0 .. 59.999
@@ -260,7 +260,7 @@ public abstract class TimeUtils {
 	 *            day e.g. 1 .. 28,29,30,31
 	 * @param hr
 	 *            universal time hour e.g. 0 .. 23
-	 * @param min
+	 * @param minute
 	 *            universal time min e.g. 0 .. 59
 	 * @param sec
 	 *            universal time sec e.g. 0.0 .. 59.999
@@ -543,5 +543,24 @@ public abstract class TimeUtils {
 		double sec = (ut - hr * 100.0 - min) * 100.0;
 		return new int[] { hr, min, (int) round(sec) };
 	}
+
+    /**
+     * Separates the day-fraction from a julian day
+     * @param jd Julian date.
+     * @return Fraction in the current day, starting from midnight.
+     */
+    public static double dayFraction( double jd ) {
+        double fraction = (jd + 0.5 - floor( jd )) % 1.; // JD starts at midday so add 0.5 to align to midnight
+        return fraction;
+    }
+
+    /**
+     * Computes the number of seconds in the current day from a Julian date.
+     * @param jd Julian date.
+     * @return Seconds in the current day, starting from midnight.
+     */
+    public static double secondsInDay( double jd ) {
+        return dayFraction( jd ) * 86400.;
+    }
 
 }

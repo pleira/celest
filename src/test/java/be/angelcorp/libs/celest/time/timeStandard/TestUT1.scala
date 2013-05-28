@@ -29,21 +29,8 @@ import be.angelcorp.libs.celest.time.dateStandard.DateStandards._
 @RunWith(classOf[JUnitRunner])
 class TestUT1 extends FlatSpec with ShouldMatchers {
 
-  class MockTime(val offset: Double) extends ITimeStandard {
-    def offsetFromTT(JD_tt: IJulianDate) =  offset
-    def offsetToTT(JD_this: IJulianDate) = -offset
-  }
-
-  implicit val universe = new Universe(){
-    def TAI: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-    def TCB: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-    def TCG: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-    def TDB: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-    def TDT: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-    def TT:  ITimeStandard = new MockTime( 0  )
-    def UTC: ITimeStandard = new MockTime( 35 )
-    def UT1: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-    def frames: IReferenceFrameGraph = throw new TestFailedException("Unsupported mock operation", 0)
+  implicit val universe = new MockTimeUniverse {
+    override def UTC: ITimeStandard = new MockTime( 35 )
   }
 
   "The UT1Container" should "select the correct UT1-UTC offset" in {
@@ -68,7 +55,7 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
     expect(  0.4044970 ) { ut1.UT1_UTC( new JulianDate( 56160, MJD, universe.UTC ) ) } // 2012 / 8 / 21
   }
 
-  it should "select Transform from and to TAI symmetrically" in {
+  it should "select Transform symmetrically" in {
     val container = new UT1Container( Map( 0.0 -> 5.5, 1.0 -> 6.2, 2.0 -> 7.4, 3.0 -> 9.0, 4.0 -> 6.1, 5.0 -> 3.4, 6.0 -> 1.1, 7.0 -> -0.1, 8.0 -> -1.1, 9.0 -> -2.7 ) )
     val ut1 = new DefaultUT1( universe.UTC, Map[(Double, Double), UT1Provider]( (0.0, 9.0) -> container ) )
 
@@ -102,6 +89,24 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
     val date_ut1 = date_utc.getJulianDate( ut1 )
 
     ( ( date_ut1.getJD + 0.5 ) - date_ut1.getJulianDate( JULIAN_DAY_NUMBER )) * 86400 should be (86399.52600540 plusOrMinus 1E-4) // 1E-4 due to the doule accuracy in JulianDate
+  }
+
+  /**
+   * Conversion between various time standards, test date and results from:
+   * <p>
+   * D.A. Vallado, <b>"Fundamentals of Astrodynamics and Applications"</b>, 2007, ISBN:
+   * 978-0-387-71831-6, p201 example 3-7. Important: The book contains errata for this example!
+   * </p>
+   */
+  it should "conform to the 'Fundamentals of Astrodynamics and Applications' validation data" in {
+    // Reference epoch in the book are for April 6, 2004, 16:43:00.0000 UTC or 16:44:04.1840 TT (not May 14)
+    implicit val universe = new MockTimeUniverse()
+    val jd_tt  = new JulianDate( 2004, 4, 06, 16, 44, 04.1840, universe.TT )
+
+    val ut1 = new DefaultUT1( new MockTime( -64.184 /* UTC => TT offset at the test epoch */ ), // <= UTC
+                            Map( (0.0, Double.PositiveInfinity) -> // UT1-UTC offset
+                                new UT1Container( Map( 53140.0 -> -0.463326 )) ) )
+    ut1.offsetFromTT( jd_tt ) should be ( -64.647326 plusOrMinus 1E-6)
   }
 
 }
