@@ -135,13 +135,13 @@ public abstract class ReferenceFrameTransformFactory<F0 extends IReferenceFrame,
 	 * @author Simon Billemont
 	 */
 	public class TransformationParameters {
-		protected final IJulianDate	epoch;
-		protected final Vector3D	translation;
-		protected final Vector3D	velocity;
-		protected final Vector3D	acceleration;
-		protected final IRotation	rotation;
-		protected final Vector3D	rotationRate;
-		protected final Vector3D	rotationAcceleration;
+		public final IJulianDate	epoch;
+        public final Vector3D	translation;
+        public final Vector3D	velocity;
+        public final Vector3D	acceleration;
+        public final IRotation	rotation;
+        public final Vector3D	rotationRate;
+        public final Vector3D	rotationAcceleration;
 
 		public TransformationParameters(IJulianDate epoch,
 				Vector3D translation, Vector3D velocity, Vector3D acceleration,

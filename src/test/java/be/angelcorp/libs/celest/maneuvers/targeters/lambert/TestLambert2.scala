@@ -26,13 +26,13 @@ import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.constants.Constants._
-import be.angelcorp.libs.celest.CelestMatchers._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.libs.celest.universe.DefaultUniverse
+import be.angelcorp.libs.celest.unit.CelestTest._
 
 /**
  * All reference values computed with:
- * Robust solver for Lambert's orbital-boundary value problem [matlab package] by Rody Oldenhuis
+ * Robust solver for Lambert's orbital-boundary value problem [matlab data] by Rody Oldenhuis
  */
 @RunWith(classOf[JUnitRunner])
 class TestLambert2 extends FlatSpec with ShouldMatchers {
@@ -59,23 +59,23 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
 		val lambertProLeft = new Lambert2(s0, s1, t0, te, center, N, true, true)
 		val trajectoryProLeft = lambertProLeft.getTrajectory
-		assertVectorEqual(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_true, 2E-6)
-		assertVectorEqual(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_true, 2E-6)
+    assertEquals(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_true, 2E-6)
+    assertEquals(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_true, 2E-6)
 
 		val lambertProRight = new Lambert2(s0, s1, t0, te, center, N, true, false)
 		val trajectoryProRight = lambertProRight.getTrajectory
-		assertVectorEqual(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_true, 2E-6)
-		assertVectorEqual(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_true, 2E-6)
+    assertEquals(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_true, 2E-6)
+    assertEquals(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_true, 2E-6)
 
 		val lambertRetLeft = new Lambert2(s0, s1, t0, te, center, N, false, true)
 		val trajectoryRetLeft = lambertRetLeft.getTrajectory
-		assertVectorEqual(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_true, 2E-6)
-		assertVectorEqual(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_true, 2E-6)
 
 		val lambertRetRight = new Lambert2(s0, s1, t0, te, center, N, false, false)
 		val trajectoryRetRight = lambertRetRight.getTrajectory
-		assertVectorEqual(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_true, 2E-6)
-		assertVectorEqual(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_true, 2E-6)
 	}
 
 	"The lambert targetter" should "solve the N=1 revolutions case" in {
@@ -102,23 +102,23 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
 		val lambertProLeft = new Lambert2(s0, s1, t0, te, center, N, true, true)
 		val trajectoryProLeft = lambertProLeft.getTrajectory
-		assertVectorEqual(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_left, 3E-6)
-		assertVectorEqual(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_left, 3E-6)
+    assertEquals(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_left, 3E-6)
+    assertEquals(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_left, 3E-6)
 
 		val lambertProRight = new Lambert2(s0, s1, t0, te, center, N, true, false)
 		val trajectoryProRight = lambertProRight.getTrajectory
-		assertVectorEqual(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_right, 4E-6)
-		assertVectorEqual(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_right, 4E-6)
+    assertEquals(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_right, 4E-6)
+    assertEquals(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_right, 4E-6)
 
 		val lambertRetLeft = new Lambert2(s0, s1, t0, te, center, N, false, true)
 		val trajectoryRetLeft = lambertRetLeft.getTrajectory
-		assertVectorEqual(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_left, 3E-6)
-		assertVectorEqual(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_left, 3E-6)
+    assertEquals(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_left, 3E-6)
+    assertEquals(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_left, 3E-6)
 
 		val lambertRetRight = new Lambert2(s0, s1, t0, te, center, N, false, false)
 		val trajectoryRetRight = lambertRetRight.getTrajectory
-		assertVectorEqual(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_right, 4E-6)
-		assertVectorEqual(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_right, 4E-6)
+    assertEquals(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_right, 4E-6)
+    assertEquals(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_right, 4E-6)
 	}
 
 	"The lambert targetter" should "solve the N=4 revolutions case" in {
@@ -145,23 +145,23 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
 		val lambertProLeft = new Lambert2(s0, s1, t0, te, center, N, true, true)
 		val trajectoryProLeft = lambertProLeft.getTrajectory
-		assertVectorEqual(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_left, 2E-5)
-		assertVectorEqual(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_left, 2E-5)
+    assertEquals(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_left, 2E-5)
+    assertEquals(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_left, 2E-5)
 
 		val lambertProRight = new Lambert2(s0, s1, t0, te, center, N, true, false)
 		val trajectoryProRight = lambertProRight.getTrajectory
-		assertVectorEqual(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_right, 2E-5)
-		assertVectorEqual(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_right, 2E-5)
+    assertEquals(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_right, 2E-5)
+    assertEquals(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_right, 2E-5)
 
 		val lambertRetLeft = new Lambert2(s0, s1, t0, te, center, N, false, true)
 		val trajectoryRetLeft = lambertRetLeft.getTrajectory
-		assertVectorEqual(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_left, 3E-5)
-		assertVectorEqual(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_left, 3E-5)
+    assertEquals(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_left, 3E-5)
+    assertEquals(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_left, 3E-5)
 
 		val lambertRetRight = new Lambert2(s0, s1, t0, te, center, N, false, false)
 		val trajectoryRetRight = lambertRetRight.getTrajectory
-		assertVectorEqual(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_right, 2E-5)
-		assertVectorEqual(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_right, 3E-5)
+    assertEquals(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_right, 2E-5)
+    assertEquals(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_right, 3E-5)
 	}
 
 	"The lambert targetter" should " not solve the N=5 revolutions case" in {

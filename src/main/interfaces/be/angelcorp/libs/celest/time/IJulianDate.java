@@ -112,4 +112,11 @@ public interface IJulianDate extends Comparable<IJulianDate> {
 	 */
 	public abstract double relativeTo(IJulianDate epoch, Time timeformat);
 
+    /**
+     * Get the fraction of the current (gregorian) day where 0 is midnight, and 0.5 is midday.
+     *
+     * @return Fraction in the current day [-]
+     */
+    public abstract double fractionInDay();
+
 }

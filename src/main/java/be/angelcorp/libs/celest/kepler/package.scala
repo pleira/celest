@@ -27,7 +27,7 @@ package object kepler {
 
 	/**
 	 * Compute the argument of latitude. This is the angle between the nodal vector (n) and the radius
-	 * vector (r). This is often used for circular inclined orbits, when arguement of pericenter is
+	 * vector (r). This is often used for circular inclined orbits, when argument of pericenter is
 	 * undefined.
 	 *
 	 * <pre>
@@ -42,7 +42,7 @@ package object kepler {
 
 	/**
 	 * Compute the argument of latitude. This is the angle between the nodal vector (n) and the radius
-	 * vector (r). This is often used for circular inclined orbits, when arguement of pericenter is
+	 * vector (r). This is often used for circular inclined orbits, when argument of pericenter is
 	 * undefined.
 	 *
 	 * <pre>

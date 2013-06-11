@@ -15,15 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\time\validation.cpp">
+    <ClCompile Include="src\time\timestandards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\time\timestandards.cpp">
+    <ClCompile Include="src\validation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frames\IAU2000a.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\time\utilities.h">
+    <ClInclude Include="src\utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

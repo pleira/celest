@@ -81,7 +81,7 @@ public class ReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 	 */
 	private final TransformationParameters	parameters;
 
-	/**
+    /**
 	 * Create a new {@link IReferenceFrameTransform} using a given parent factory, capable of creating
 	 * new {@link ReferenceFrameTransform}'s like this one, but for various other epochs. Furthermore a
 	 * the epoch at which this class is guaranteed to be valid and finally, a set of transformation
@@ -99,6 +99,14 @@ public class ReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 		super(factory, epoch);
 		this.parameters = parameters;
 	}
+
+    /**
+     * Returns the internal parameters used to perform the transformation.
+     * @return Transformation parameters.
+     */
+    public TransformationParameters getParameters() {
+        return parameters;
+    }
 
 	/**
 	 * <b>Not implemented yet!</b>

@@ -15,6 +15,9 @@
  */
 package be.angelcorp.libs.celest.unit;
 
+import be.angelcorp.libs.math.linear.Matrix3D;
+import be.angelcorp.libs.math.rotation.AxisAngle;
+import be.angelcorp.libs.math.rotation.RotationMatrix;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -135,4 +138,8 @@ public abstract class CelestTest extends TestCase {
 	public static SummaryStatistics getStatistics(RealVector v1, RealVector v2) {
 		return getStatistics(v1.toArray(), v2.toArray());
 	}
+
+    public static double matrixError(Matrix3D m1, Matrix3D m2) {
+     return new AxisAngle( m2.transpose().cross(m1) ).getAngle();
+    }
 }

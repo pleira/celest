@@ -25,6 +25,7 @@ import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.celest.frames.IReferenceFrameGraph
 import org.scalatest.exceptions.TestFailedException
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards._
+import be.angelcorp.libs.celest.data.UT1Provider
 
 @RunWith(classOf[JUnitRunner])
 class TestUT1 extends FlatSpec with ShouldMatchers {

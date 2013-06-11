@@ -19,7 +19,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards;
-import be.angelcorp.libs.celest.time.timeStandard.UTC;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
@@ -115,4 +114,13 @@ public class TestJulianDate extends CelestTest {
 		assertEquals(5.22, epoch2.relativeTo(epoch1));
 		assertEquals(Time.convert(5.22, Time.day), epoch2.relativeTo(epoch1, Time.second));
 	}
+
+    public void testFractionInDay() {
+        JulianDate epoch1 = new JulianDate(5.81, universe);
+        JulianDate epoch2 = new JulianDate(5.22, universe);
+
+        assertEquals( 0.31, epoch1.fractionInDay(), 1E-15);
+        assertEquals( 0.72, epoch2.fractionInDay(), 1E-15);
+    }
+
 }

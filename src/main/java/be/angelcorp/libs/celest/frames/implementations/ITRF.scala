@@ -42,7 +42,7 @@ import be.angelcorp.libs.celest.universe.Universe
  *
  * @author Simon
  */
-class ITRF(val year: Int)(implicit universe: Universe) extends IReferenceFrame with ITRS {
+class ITRF(val year: Int = 2008)(implicit universe: Universe) extends IReferenceFrame with ITRS {
 
  	/**
 	 * Get the epoch of the {@link ITRS} realization.

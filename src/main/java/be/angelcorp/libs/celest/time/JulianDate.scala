@@ -171,4 +171,6 @@ class JulianDate(val date: Double, timeStandard: ITimeStandard)(implicit univers
 
 	override def toString = "%fJD".format( getJD )
 
+  def fractionInDay() = (getJD - 0.5) % 1.0
+
 }

@@ -28,18 +28,8 @@ import be.angelcorp.libs.util.physics.Time._
 import scala.Some
 import com.google.common.io.Files
 import java.nio.charset.Charset
+import be.angelcorp.libs.celest.data.UT1Provider
 
-trait UT1Provider {
-
-  /**
-   * Get the UT1 - UTC offset in seconds at the specific UTC epoch.
-   *
-   * @param jd_utc UTC epoch on which to get the UT1 - UTC difference
-   * @return Seconds between the UTC and UT11 timestandard (UT1 - UTC).
-   */
-  def UT1_UTC( jd_utc: IJulianDate ): Double
-
-}
 
 /**
  * @param utc The UTC reference time scale to use
