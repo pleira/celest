@@ -1,0 +1,3 @@
+[submodule "examples"]
+	path = examples
+	url = http://angelcorp.be/git/be.angelcorp.libs.celest-examples.git
