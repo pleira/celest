@@ -5,8 +5,7 @@ eclipse
 bin
 classes
 
-config.xml
-vfsDB.xml
+*.iml
 .settings
 .classpath
 .project
