@@ -20,7 +20,6 @@ import be.angelcorp.libs.celest.universe.Universe
 import java.util._
 import be.angelcorp.libs.celest.time.dateStandard.IDateStandard
 import be.angelcorp.libs.util.physics.Time
-import com.sun.org.apache.bcel.internal.generic.ClassObserver
 
 /**
  * Basic Julian Date, a time/date of a specific epoch. Internaly the representation is handled as a

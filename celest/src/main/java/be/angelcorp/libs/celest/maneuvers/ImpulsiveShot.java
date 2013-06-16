@@ -15,8 +15,8 @@
  */
 package be.angelcorp.libs.celest.maneuvers;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.body.Propellant;
+import be.angelcorp.libs.celest.body.ICelestialBody;
+import be.angelcorp.libs.celest.body.IPropellant;
 import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -34,9 +34,9 @@ public class ImpulsiveShot {
 		return state;
 	}
 
-	private CelestialBody	body;
+	private ICelestialBody	body;
 
-	public ImpulsiveShot(CelestialBody body) {
+	public ImpulsiveShot(ICelestialBody body) {
 		this.body = body;
 	}
 
@@ -45,9 +45,9 @@ public class ImpulsiveShot {
 		return stateNew;
 	}
 
-	public IPositionState kick(double dV, Propellant fuel) {
+	public IPositionState kick(double dV, IPropellant fuel) {
 		IPositionState stateNew = kick(body.getState(), dV);
-		fuel.consumeDV(body, dV);
+        fuel.consumeMass( dM( body, fuel, dV ) );
 		return stateNew;
 	}
 
@@ -56,10 +56,22 @@ public class ImpulsiveShot {
 		return stateNew;
 	}
 
-	public IPositionState kick(Vector3D dV, Propellant fuel) {
+	public IPositionState kick(Vector3D dV, IPropellant fuel) {
 		IPositionState stateNew = kick(body.getState(), dV);
-		fuel.consumeDV(body, dV.norm());
+		fuel.consumeMass( dM( body, fuel, dV.norm() ) );
 		return stateNew;
 	}
+
+    /**
+     * Compute the amount of propellant used in ideal conditions (no gravity losses, Tsiolkovsky)
+     *
+     * @param body Body that consumes DV.
+     * @param dV   DV achieve using this propellant.
+     */
+    public double dM(ICelestialBody body, IPropellant propellant, double dV) {
+        double m  = body.getTotalMass();
+        double dM = m - Math.exp(-dV / (propellant.isp() * 9.81)) * m;
+        return dM;
+    }
 
 }

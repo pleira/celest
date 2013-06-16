@@ -5,6 +5,7 @@ eclipse
 bin
 classes
 
+*.opensdf
 *.iml
 .settings
 .classpath
