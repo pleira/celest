@@ -17,28 +17,46 @@
 		<dependency>
 			<groupId>be.angelcorp.libs</groupId>
 			<artifactId>celest</artifactId>
-			<version>${version.libs.celest}</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.5</version>
-        </dependency>
-        <dependency>
-        	<groupId>com.miglayout</groupId>
-        	<artifactId>miglayout-swing</artifactId>
-        	<version>4.2</version>
-        </dependency>
-        
-        <dependency>
-	        <groupId>be.angelcorp.libs</groupId>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout-swing</artifactId>
+			<version>4.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>be.angelcorp.libs</groupId>
 			<artifactId>matlabConnect</artifactId>
-			<version>${version.libs.connect}</version>
+			<version>0.0.1-SNAPSHOT</version>
 			<optional>true</optional>
-        </dependency>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-compiler</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -49,17 +67,11 @@
 				<artifactId>maven-license-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId> 
+				<groupId>org.scala-tools</groupId>
+				<artifactId>maven-scala-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
-	
-	<repositories>
-		<repository>
-			<id>repo1.maven.org</id>
-			<url>http://repo1.maven.org/maven2/</url>
-		</repository>
-	</repositories>
+
 </project>
 
