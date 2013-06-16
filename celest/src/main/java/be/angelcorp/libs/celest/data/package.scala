@@ -21,8 +21,10 @@ import java.io.File
 import com.google.common.io.Files
 import java.nio.charset.Charset
 import java.net.URI
+import org.slf4j.LoggerFactory
 
 package object data {
+  val logger = LoggerFactory.getLogger( "data" )
 
   /**
    * Function to find the source of a file given a specific lookup id.
@@ -53,7 +55,7 @@ package object data {
         case _ =>
           try {
             // Try the download
-            val data = Source.fromURI( uri )
+            val data = Source.fromURL( uri.toURL )
             try {
               // Download success, try and save the file locally (as cache)
               Files.createParentDirs(file)
@@ -64,7 +66,9 @@ package object data {
             Some(data)
           } catch {
             // Download failed
-            case _: Throwable => None
+            case e: Throwable =>
+              logger.info("Failed to retrieve data file %s from the uri %s:".format(id, uri), e)
+              None
           }
       } )
     }
