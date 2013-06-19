@@ -228,6 +228,18 @@
 				<updatePolicy>never</updatePolicy>
 			</releases>
 		</pluginRepository>
+		<pluginRepository> <!-- For scalatest -->
+			<id>oss sonatype</id>
+			<url>https://oss.sonatype.org/content/groups/public</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</pluginRepository>
 	</pluginRepositories>
 
 	<profiles>
