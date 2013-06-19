@@ -27,7 +27,7 @@ class DefaultUniverse extends Universe {
   lazy val TCG = new TCG( TT_EPOCH )
   lazy val TDB = new TDB( TT_EPOCH )
   lazy val UTC = new DefaultUTC( TAI )
-  lazy val UT1 = new DefaultUT1( UTC )
+  lazy val UT1 = new DefaultUT1( UTC )(this)
 
   lazy val frames = throw new UnsupportedOperationException("Operation not yet implemented")
 

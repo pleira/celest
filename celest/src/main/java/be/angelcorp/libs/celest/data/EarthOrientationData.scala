@@ -28,6 +28,8 @@ import be.angelcorp.libs.util.physics.Angle._
 class EarthOrientationData( val data: util.TreeMap[Double, EarthOrientationDataEntry] )(implicit universe: Universe)
   extends UT1Provider with ExcessLengthOfDay {
 
+  def epochRange = if ( data.isEmpty ) ( Double.NaN, Double.NaN ) else (data.firstKey() - 0.5, data.lastKey() + 0.5)
+
   /**
    * Find the entry closest to the given epoch. If there is no data stored, or the closest entry is further away than
    * the maximum epoch separation, [[scala.None]] is returned.

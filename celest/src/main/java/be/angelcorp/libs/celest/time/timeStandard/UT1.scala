@@ -16,19 +16,18 @@
 
 package be.angelcorp.libs.celest.time.timeStandard
 
-import be.angelcorp.libs.celest.time.{JulianDate, IJulianDate}
-import scala.math._
 import java.util
-import be.angelcorp.libs.celest.time.dateStandard.DateStandards._
+import java.net.URI
+import java.io._
+import scala.math._
+import scala.Some
 import scala.collection.mutable
 import scala.collection.JavaConverters._
-import scala.io._
-import java.io._
+import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.dateStandard.DateStandards._
+import be.angelcorp.libs.celest.data._
 import be.angelcorp.libs.util.physics.Time._
-import scala.Some
-import com.google.common.io.Files
-import java.nio.charset.Charset
-import be.angelcorp.libs.celest.data.UT1Provider
+import be.angelcorp.libs.celest.universe.Universe
 
 
 /**
@@ -37,9 +36,9 @@ import be.angelcorp.libs.celest.data.UT1Provider
  */
 class DefaultUT1( utc: ITimeStandard,
                   val containers: mutable.Map[(Double, Double), UT1Provider] = mutable.Map()
-                    ) extends ITimeStandard with UT1Provider {
+                    )(implicit universe: Universe) extends ITimeStandard with UT1Provider {
 
-  def this( utc: ITimeStandard, immutableContainers: Map[(Double, Double), UT1Provider] ) =
+  def this( utc: ITimeStandard, immutableContainers: Map[(Double, Double), UT1Provider] )(implicit universe: Universe) =
     this( utc, collection.mutable.Map(immutableContainers.toSeq: _*)  )
 
   override def offsetFromTT(jd_tt: IJulianDate) = {
@@ -68,43 +67,12 @@ class DefaultUT1( utc: ITimeStandard,
     val file     = new File( filename )
     val url      = "ftp://hpiers.obspm.fr/iers/eop/eopc04/%s".format( filename )
 
-    val content = if ( file.exists() ) {
-      // Load the local cached file
-      Some( Source.fromFile( file ) )
-    } else  try {
-      // Download the relevant iers data file
-      val data = Source.fromURL(url)
-      // Save on disk for later
-      val fw = Files.newWriter(file, Charset.defaultCharset() )
-      fw.write( data.toArray )
-      fw.close()
-
-      Some(data)
-    } catch {
-      case e: IOException =>
-        throw new UT1DateOutOfBounds( e, "Could not download the IERS earth orientation data for the UT1-UTC data. (url: %s)".format(url)  )
+    getDataFile( "iers/eop/long-term/c04_08/iau2000/eopc04_08_IAU2000." + (year takeRight 2), List(URI.create(url)) ) match {
+      case Some( data ) =>
+        val container = EarthOrientationData( data )
+        containers.put( container.epochRange, container )
     }
 
-    content match {
-      case Some(content) =>
-        // Convert the downloaded data to the format used by [[UT1Container]]
-        val data = content.getLines().drop(14).map( line => {
-          val entries = line.split("""\s+""")
-          // yr mo day mjd x" y" ut1-utc ...
-          ( entries(3).toDouble, entries(6).toDouble )
-        } ).toList
-
-        if (data.nonEmpty) {
-          // Range in JD UTC handled by the just-downloaded file
-          val range = ( data.head._1 - 0.5, data.last._1 + 0.5)
-
-          // Create the container for the UT1-UTC data
-          val container = new UT1Container( data.toMap )
-
-          // Save the container in memory
-          containers.put( range, container )
-        }
-    }
   }
 
   override def UT1_UTC( jd_utc: IJulianDate ) = UT1_UTC(jd_utc, tryDownload = true)
