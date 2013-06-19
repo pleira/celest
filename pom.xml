@@ -11,7 +11,7 @@
 	<groupId>be.angelcorp.libs</groupId>
 	<artifactId>celest-examples</artifactId>
 	<name>celest examples</name>
-	<version>${version.libs.celest-examples}</version>
+	<version>0.0.1-SNAPSHOT</version>
 	
 	<dependencies>
 		<dependency>
