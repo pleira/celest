@@ -71,6 +71,7 @@ class DefaultUT1( utc: ITimeStandard,
       case Some( data ) =>
         val container = EarthOrientationData( data )
         containers.put( container.epochRange, container )
+      case None =>
     }
 
   }

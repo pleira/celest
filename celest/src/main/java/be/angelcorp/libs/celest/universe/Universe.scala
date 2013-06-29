@@ -67,8 +67,6 @@ trait Universe {
   /** Reference frame graph */
   def frames: IReferenceFrameGraph
 
-  lazy val earthConstants = new EarthConstants()(this)
-
   def epoch(year: Int) = new JulianDate(year, 1, 1, 12, 0, 0, TT)(this)
 
 }

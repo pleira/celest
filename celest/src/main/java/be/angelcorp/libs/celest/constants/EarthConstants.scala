@@ -22,7 +22,6 @@ import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory
-import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.celest.universe.Universe
 
 /**
@@ -36,7 +35,7 @@ import be.angelcorp.libs.celest.universe.Universe
  * @author Simon Billemont, TUDelft, Faculty Aerospace Engineering (aodtorusan@gmail.com or
  *         s.billemont@student.tudelft.nl)
  */
-class EarthConstants(implicit  universe: Universe) {
+object EarthConstants {
 
 	/**
 	 * Standard gravitational parameter of the earth
@@ -140,7 +139,7 @@ class EarthConstants(implicit  universe: Universe) {
 	 * <b>Unit: [m<sup>3</sup>]</b>
 	 * </p>
 	 */
-	val volume = (1.08321E9 * 10E12)
+	val volume = 1.08321E9 * 10E12
 
 	/**
 	 * Semi-major axis (a) of the orbit of the earth around the sun at the J2000 epoch.
@@ -214,7 +213,7 @@ class EarthConstants(implicit  universe: Universe) {
 	/** Celestial body representation of the earth in the center in the HAE_J2000 reference frame. */
 	val bodyCenter = new CelestialBody( new CartesianElements(), mass)
 
-	lazy val orbit = {
+	def orbit(implicit  universe: Universe) = {
 		// Values based on
 		// Simon, J., Bretagnon, P., Chapront, J., Chapront-Touzé, M., Francou, G., Laskar, J., 1994. Numerical expressions
 		// for precession formulas and mean elements for the moon and the planets. Astron. Astrophys. 282 (2), 663–683.
