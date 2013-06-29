@@ -78,6 +78,10 @@ public class CartesianElements extends PositionState implements ICartesianElemen
 		this( Vector3D$.MODULE$.ZERO() , Vector3D$.MODULE$.ZERO() );
 	}
 
+    public CartesianElements(double x, double y, double z, double vx, double vy, double vz ) {
+        this( new ImmutableVector3D(x,y,z), new ImmutableVector3D(vx,vy,vz) );
+    }
+
 	/**
 	 * Create from a 6 dimentional array.
 	 * <p>
