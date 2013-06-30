@@ -25,39 +25,39 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-compiler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.parboiled</groupId>
-            <artifactId>parboiled-scala</artifactId>
-            <version>1.0.2</version>
-        </dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-compiler</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.parboiled</groupId>
+			<artifactId>parboiled-scala</artifactId>
+			<version>1.0.2</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>net.sf.jgrapht</groupId>
-			<artifactId>jgrapht-core</artifactId>
-			<version>0.8.3-SNAPSHOT</version>
+			<artifactId>jgrapht</artifactId>
+			<version>0.8.3</version>
 		</dependency>
 
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_${scala.version}</artifactId>
-            <version>1.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.0.1</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.scalatest</groupId>
+			<artifactId>scalatest_${scala.version}</artifactId>
+			<version>1.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.1</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -78,10 +78,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
-            <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-            </plugin>
+			<plugin>
+				<groupId>org.scala-tools</groupId>
+				<artifactId>maven-scala-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>com.google.code.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
@@ -89,7 +89,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
+				<version>1.7</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -103,38 +103,38 @@
 				</executions>
 			</plugin>
 
-            <!-- disable surefire -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <version>2.7</version>
-              <configuration>
-                <skipTests>true</skipTests>
-              </configuration>
-            </plugin>
-            
+			<!-- disable surefire -->
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-surefire-plugin</artifactId>
+			  <version>2.7</version>
+			  <configuration>
+				<skipTests>true</skipTests>
+			  </configuration>
+			</plugin>
+			
 			<!-- enable scalatest -->
-            <plugin>
-              <groupId>org.scalatest</groupId>
-              <artifactId>maven-scalatest-plugin</artifactId>
-              <version>1.0-SNAPSHOT</version>
-              <configuration>
-                <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                <junitxml>.</junitxml>
-                <filereports>WDF TestSuite.txt</filereports>
-              </configuration>
-              <executions>
-                <execution>
-                  <id>test</id>
-                  <goals>
-                    <goal>test</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
+			<plugin>
+			  <groupId>org.scalatest</groupId>
+			  <artifactId>maven-scalatest-plugin</artifactId>
+			  <version>1.0-SNAPSHOT</version>
+			  <configuration>
+				<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+				<junitxml>.</junitxml>
+				<filereports>WDF TestSuite.txt</filereports>
+			  </configuration>
+			  <executions>
+				<execution>
+				  <id>test</id>
+				  <goals>
+					<goal>test</goal>
+				  </goals>
+				</execution>
+			  </executions>
+			</plugin>
 
-        </plugins>
-    </build>
+		</plugins>
+	</build>
 
 </project>
 

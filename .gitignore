@@ -4,6 +4,7 @@ eclipse
 .svn
 bin
 classes
+.idea
 
 *.opensdf
 *.iml
