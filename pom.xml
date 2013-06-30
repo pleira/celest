@@ -5,10 +5,9 @@
 	<parent>
 		<groupId>be.angelcorp.libs</groupId>
 		<artifactId>celestPool</artifactId>
-		<version>1.0</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>be.angelcorp.libs</groupId>
 	<artifactId>celest-examples</artifactId>
 	<name>celest examples</name>
 	<version>0.0.1-SNAPSHOT</version>
