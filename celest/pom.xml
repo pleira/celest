@@ -5,14 +5,13 @@
 	<parent>
 		<groupId>be.angelcorp.libs</groupId>
 		<artifactId>celestPool</artifactId>
-		<version>1.0</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>be.angelcorp.libs</groupId>
 	<artifactId>celest</artifactId>
 	<name>celest</name>
 	<version>0.0.1-SNAPSHOT</version>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>be.angelcorp.libs</groupId>
