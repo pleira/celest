@@ -60,7 +60,7 @@ import be.angelcorp.libs.util.physics.Time;
  * Work based on:
  * <p>
  * <ul>
- * <li> G�rard Petit, Brian Luzum, <b>"IERS Conventions (2010)"</b>, IERS Technical Note No. 36,
+ * <li> Gérard Petit, Brian Luzum, <b>"IERS Conventions (2010)"</b>, IERS Technical Note No. 36,
  * International Earth Rotation and Reference Systems Service (IERS), 2010, [online]
  * <a href="http://www.iers.org/TN36/">http://www.iers.org/TN36/</a></li>
  * </ul>
