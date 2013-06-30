@@ -27,6 +27,7 @@ import be.angelcorp.libs.celest.maneuvers.ImpulsiveShot
 import be.angelcorp.libs.util.io.CsvWriter
 import be.angelcorp.libs.celest.time.IJulianDate
 import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.libs.celest.constants.EarthConstants
 
 @CelestExample(
   name = "Quickstart example",
@@ -38,7 +39,7 @@ class QuickStart {
   implicit val universe = new DefaultUniverse
 
   /** Create the earth based of a generic template, with the earth having the state <0,0,0,0,0,0> (R,V) */
-	val earth	= universe.earthConstants.bodyCenter
+	val earth	= EarthConstants.bodyCenter
 
   // Time after the three kicks and an additional orbit
   var tf: IJulianDate = null
@@ -88,7 +89,7 @@ class QuickStart {
 
 	def getTrajectory = {
 		// Original orbit
-		var Rp = universe.earthConstants.radiusMean + 190E3
+		var Rp = EarthConstants.radiusMean + 190E3
     var Ra = 50000E3
     var k = new KeplerElements((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, earth)
 
@@ -109,7 +110,7 @@ class QuickStart {
 		/* Current speed in apogee */
 		val Va = sqrt( visViva(earth.getMu(), Ra, k.getSemiMajorAxis ))
 		/* Raise the perigee to this value after 3 kicks */
-		Rp = universe.earthConstants.radiusMean + 19000E3
+		Rp = EarthConstants.radiusMean + 19000E3
 		/* Total dV for the 3 kicks */
 		val dV = sqrt( visViva(earth.getMu(), Ra, (Ra + Rp) / 2)) - Va
 
