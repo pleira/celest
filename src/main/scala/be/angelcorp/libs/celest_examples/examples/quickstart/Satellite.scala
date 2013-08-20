@@ -18,9 +18,9 @@ package be.angelcorp.libs.celest_examples.examples.quickstart
 import be.angelcorp.libs.celest.body.BiPropellant
 import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.body.Propellant
-import be.angelcorp.libs.celest.state.positionState.IPositionState
+import be.angelcorp.libs.celest.state.Orbit
 
-class Satellite(s: IPositionState) extends CelestialBody(s, 0) {
+class Satellite(s: Orbit) extends CelestialBody(s, 0) {
 
 	/* Different propellants */
 	val hydrazine			= new Propellant(225, 1550)

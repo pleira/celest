@@ -38,7 +38,7 @@ object Main extends App {
 
   def discoverExamples() = {
 		val reflections = new Reflections(examplesPackage)
-		val raw_examples = reflections.getTypesAnnotatedWith(classOf[CelestExample], true).asScala
+		val raw_examples = reflections.getTypesAnnotatedWith( classOf[CelestExample], true).asScala
 
 		val examples = raw_examples.map( e => new Example(e) )
     examples.foreach( e => logger.debug("Found CelestExample class: {}", e) )

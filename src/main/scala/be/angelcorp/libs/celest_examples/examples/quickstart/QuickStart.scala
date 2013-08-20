@@ -19,7 +19,6 @@ import math._
 import org.slf4j.LoggerFactory
 import be.angelcorp.libs.celest_examples.gui.{Services, CelestExample}
 import be.angelcorp.libs.celest.universe.DefaultUniverse
-import be.angelcorp.libs.celest.state.positionState.KeplerElements
 import be.angelcorp.libs.celest.kepler._
 import be.angelcorp.libs.celest.trajectory.{KeplerTrajectory, CompositeTrajectory}
 import be.angelcorp.libs.util.physics.Time
@@ -28,6 +27,9 @@ import be.angelcorp.libs.util.io.CsvWriter
 import be.angelcorp.libs.celest.time.IJulianDate
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.celest.constants.EarthConstants
+import be.angelcorp.libs.celest.state.Keplerian
+import be.angelcorp.libs.celest.frames
+import be.angelcorp.libs.celest.frames.BodyCentered
 
 @CelestExample(
   name = "Quickstart example",
@@ -38,8 +40,10 @@ class QuickStart {
   /** Create the default universe (defines time standards and reference frames) */
   implicit val universe = new DefaultUniverse
 
-  /** Create the earth based of a generic template, with the earth having the state <0,0,0,0,0,0> (R,V) */
-	val earth	= EarthConstants.bodyCenter
+  /** Create the earth based frame of a generic template, with the earth having the state <0,0,0,0,0,0> (R,V) */
+	val earthFrame = new BodyCentered {
+    def centerBody = EarthConstants.bodyCenter
+  }
 
   // Time after the three kicks and an additional orbit
   var tf: IJulianDate = null
@@ -60,11 +64,11 @@ class QuickStart {
     val tFinal = tf.relativeTo(t0, Time.second)
     val states = for ( t <- 0.0 until tFinal by (tFinal / samples) ) yield {
       val time  = t0.add(t, Time.second)
-      val state = trajectory.evaluate(time).toCartesianElements
+      val state = trajectory.evaluate(time).toPosVel
 
       logger.debug("At jd={} the state is: {}", time, state)
-      writer.write(t, state.getR.getX, state.getR.getY, state.getR.getZ,
-                      state.getV.getX, state.getV.getY, state.getV.getZ)
+      writer.write(t, state.position.x, state.position.y, state.position.z,
+                      state.velocity.x, state.velocity.y, state.velocity.z)
       state
     }
 
@@ -76,10 +80,10 @@ class QuickStart {
       val index = entry._2
 
       val n = Vector3D.K
-      val r = state.getR
+      val r = state.position
       val projected = r - (n * (r dot n))
-      x(index) = projected.getX
-      y(index) = projected.getY
+      x(index) = projected.x
+      y(index) = projected.y
     } )
 
     Services.newPlot().addData(x, y).makeFrame()
@@ -91,7 +95,7 @@ class QuickStart {
 		// Original orbit
 		var Rp = EarthConstants.radiusMean + 190E3
     var Ra = 50000E3
-    var k = new KeplerElements((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, earth)
+    var k = new Keplerian((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, Some(earthFrame) )
 
 		// The satellite that will perform the specific maneuver
 		var satellite = new Satellite(k)
@@ -108,14 +112,14 @@ class QuickStart {
 		/* Add first kick to the satellite */
 		/* Compute dV for LAE (main engine) */
 		/* Current speed in apogee */
-		val Va = sqrt( visViva(earth.getMu(), Ra, k.getSemiMajorAxis ))
+		val Va = sqrt( visViva(earthFrame.centerBody.getMu(), Ra, k.semiMajorAxis ))
 		/* Raise the perigee to this value after 3 kicks */
 		Rp = EarthConstants.radiusMean + 19000E3
 		/* Total dV for the 3 kicks */
-		val dV = sqrt( visViva(earth.getMu(), Ra, (Ra + Rp) / 2)) - Va
+		val dV = sqrt( visViva(earthFrame.centerBody.getMu(), Ra, (Ra + Rp) / 2)) - Va
 
 		/* Time when we reach the kick location (after 1.5 periods */
-		var t = t0.add((3.0 / 2.0) * k.getOrbitEqn.period(), Time.second)
+		var t = t0.add((3.0 / 2.0) * k.quantities.period, Time.second)
 		satellite = new Satellite(trajectory.evaluate(t))
 
 		/* Make the LAE engine */
@@ -123,25 +127,25 @@ class QuickStart {
 		/* Add the first kick of the LAE */
 		var state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
 		/* Add the next leg to the trajectory */
-		k = cartesian2kepler(state.toCartesianElements, earth)
+		k = Keplerian(state)
 		trajectory.addTrajectory(new KeplerTrajectory(k, t), t)
 
 		/* Add kick 2 */
 		/* The time of the 2nd kick is the time of the first kick plus one orbit */
-		t = t.add(k.getOrbitEqn.period(), Time.second)
+		t = t.add(k.quantities.period, Time.second)
 		/* Same procedure */
 		state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
-		k = cartesian2kepler(state.toCartesianElements, earth)
+		k = Keplerian(state)
 		trajectory.addTrajectory(new KeplerTrajectory(k, t), t)
 
 		/* And the third kick */
-		t = t.add(k.getOrbitEqn.period(), Time.second)
+		t = t.add(k.quantities.period, Time.second)
 		state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
-		k = cartesian2kepler(state.toCartesianElements, earth)
+		k = Keplerian(state)
 		trajectory.addTrajectory(new KeplerTrajectory(k, t), t)
 
     // Time after the three kicks and an additional orbit
-		tf = t.add(k.getOrbitEqn.period(), Time.second)
+		tf = t.add(k.quantities.period, Time.second)
 
 		/* Return the composite trajectory */
 		trajectory
