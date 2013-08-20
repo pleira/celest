@@ -15,12 +15,11 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
-import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.body.ICelestialBody;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
-import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import scala.Some;
+import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.state.Keplerian;
+import be.angelcorp.libs.celest.state.Orbit;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.celest.trajectory.KeplerTrajectory;
@@ -59,9 +58,9 @@ public class LambertTrajectory implements ITrajectory {
 	 */
 	private final IJulianDate	arrivalEpoch;
 	/**
-	 * Central body. This is the center for the pure Keplerian motion.
+	 * Frame in which the motion takes place
 	 */
-	private final CelestialBody	centerBody;
+	private final BodyCentered frame;
 
 	/**
 	 * This is the trajectory that the satellite flies from r1 to r2
@@ -76,10 +75,12 @@ public class LambertTrajectory implements ITrajectory {
 	 *            The origin of the transfer orbit [m]
 	 * @param r2
 	 *            The destination of the transfer orbit [m]
-	 * @param centerbody
-	 *            Central body around which the motion takes place
-	 * @param dt
-	 *            Transfer time from r1 to r2 [s]
+	 * @param frame
+	 *            Frame in which the motion takes place
+	 * @param departureEpoch
+	 *            Epoch of departure
+     * @param arrivalEpoch
+     *            Epoch of arrival
 	 * @param f
 	 *            F function (of the F and G functions, NOT SERIES)
 	 * @param g
@@ -87,11 +88,11 @@ public class LambertTrajectory implements ITrajectory {
 	 * @param g_dot
 	 *            G dot function (of the F and G functions, NOT SERIES)
 	 */
-	public LambertTrajectory(Vector3D r1, Vector3D r2, CelestialBody centerbody, IJulianDate departureEpoch,
+	public LambertTrajectory(Vector3D r1, Vector3D r2, BodyCentered frame, IJulianDate departureEpoch,
 			IJulianDate arrivalEpoch, double f, double g, double g_dot) {
 		this.r1 = r1;
 		this.r2 = r2;
-		this.centerBody = centerbody;
+		this.frame = frame;
 		this.departureEpoch = departureEpoch;
 		this.arrivalEpoch = arrivalEpoch;
 		this.f = f;
@@ -107,17 +108,15 @@ public class LambertTrajectory implements ITrajectory {
 	 * </p>
 	 */
 	@Override
-	public IPositionState evaluate(IJulianDate t) {
+	public Orbit evaluate(IJulianDate t) {
 		return traj.evaluate(t);
 	}
 
 	/**
-	 * Get the central body of the Kepler motion
-	 * 
-	 * @return Central body of the transfer trajectory
+	 * Get the frame in which the motion takes place
 	 */
-	public ICelestialBody getCenterBody() {
-		return centerBody;
+	public BodyCentered getFrame() {
+		return frame;
 	}
 
 	/**
@@ -190,7 +189,7 @@ public class LambertTrajectory implements ITrajectory {
 	 * Create an unperturbed trajectory leading from point r1 to r2 around the given center body.
 	 */
 	private void mkTrajectory() {
-		IKeplerElements k = KeplerElements.as(new CartesianElements(r1.clone(), getV1()), centerBody);
+        Keplerian k = Keplerian.apply( new PosVel(r1.clone(), getV1(), new Some<BodyCentered>(frame)));
 		traj = new KeplerTrajectory(k, departureEpoch);
 	}
 }

@@ -15,8 +15,6 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
-
 /**
  * Evaluates the trajectory based on an initial Kepler state, and propagates this Kepler state using
  * classical Keplerian theory.

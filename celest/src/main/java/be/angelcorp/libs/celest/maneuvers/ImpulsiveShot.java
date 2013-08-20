@@ -17,21 +17,18 @@ package be.angelcorp.libs.celest.maneuvers;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.body.IPropellant;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.Orbit;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 public class ImpulsiveShot {
 
-	public static IPositionState kick(IPositionState startState, double dV) {
-		ICartesianElements state = startState.toCartesianElements();
-		return kick(state, state.getV().normalize().multiply(dV));
+	public static PosVel kick(PosVel state, double dV) {
+       	return kick(state, state.velocity().normalize().multiply(dV));
 	}
 
-	public static IPositionState kick(IPositionState startState, Vector3D dV) {
-		ICartesianElements state = startState.toCartesianElements();
-		state.setV(state.getV().add(dV));
-		return state;
+	public static PosVel kick(PosVel state, Vector3D dV) {
+        return new PosVel( state.position(), state.velocity().$plus( dV ), state.frame() );
 	}
 
 	private ICelestialBody	body;
@@ -40,24 +37,24 @@ public class ImpulsiveShot {
 		this.body = body;
 	}
 
-	public IPositionState kick(double dV) {
-		IPositionState stateNew = kick(body.getState(), dV);
+	public PosVel kick(double dV) {
+        PosVel stateNew = kick(body.getState().toPosVel(), dV);
 		return stateNew;
 	}
 
-	public IPositionState kick(double dV, IPropellant fuel) {
-		IPositionState stateNew = kick(body.getState(), dV);
+	public PosVel kick(double dV, IPropellant fuel) {
+        PosVel stateNew = kick(body.getState().toPosVel(), dV);
         fuel.consumeMass( dM( body, fuel, dV ) );
 		return stateNew;
 	}
 
-	public IPositionState kick(Vector3D dV) {
-		IPositionState stateNew = kick(body.getState(), dV);
+	public PosVel kick(Vector3D dV) {
+        PosVel stateNew = kick(body.getState().toPosVel(), dV);
 		return stateNew;
 	}
 
-	public IPositionState kick(Vector3D dV, IPropellant fuel) {
-		IPositionState stateNew = kick(body.getState(), dV);
+	public PosVel kick(Vector3D dV, IPropellant fuel) {
+        PosVel stateNew = kick(body.getState().toPosVel(), dV);
 		fuel.consumeMass( dM( body, fuel, dV.norm() ) );
 		return stateNew;
 	}

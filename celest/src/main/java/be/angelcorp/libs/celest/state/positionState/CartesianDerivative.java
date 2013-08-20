@@ -41,6 +41,10 @@ public class CartesianDerivative extends StateDerivativeVector implements ICarte
 		this(Vector3D$.MODULE$.ZERO(), Vector3D$.MODULE$.ZERO());
 	}
 
+    public CartesianDerivative(double vx, double vy, double vz, double ax, double ay, double az ) {
+        this( new ImmutableVector3D(vx,vy,vz), new ImmutableVector3D(ax,ay,az) );
+    }
+
 	public CartesianDerivative(double[] d) {
 		if (d.length != 6)
 			throw new ArrayIndexOutOfBoundsException(String.format(

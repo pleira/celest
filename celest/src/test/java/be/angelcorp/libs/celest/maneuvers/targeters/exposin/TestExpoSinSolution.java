@@ -18,9 +18,8 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 import static org.apache.commons.math3.util.FastMath.PI;
 
 import be.angelcorp.libs.celest.constants.SolarConstants;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.IJulianDate;
-import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
@@ -67,12 +66,12 @@ public class TestExpoSinSolution extends CelestTest {
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
-		ICartesianElements c1 = trajectory.evaluate(t1);
-		ICartesianElements c2 = trajectory.evaluate(t2);
+		PosVel c1 = trajectory.evaluate(t1);
+        PosVel c2 = trajectory.evaluate(t2);
 		// Equal R
-		CelestTest.assertEqualsAngle(dTheta, c1.getR().angle(c2.getR()), 1e-3);
-		assertEquals(r1, c1.getR().norm(), R_tol);
-		assertEquals(r2, c2.getR().norm(), R_tol);
+		CelestTest.assertEqualsAngle(dTheta, c1.position().angle(c2.position()), 1e-3);
+		assertEquals(r1, c1.position().norm(), R_tol);
+		assertEquals(r2, c2.position().norm(), R_tol);
 		// Equal V
 		// assertEquals(V1, c1.getV().getNorm(), V_tol);
 		// assertEquals(V2, c2.getV().getNorm(), V_tol);
@@ -114,12 +113,12 @@ public class TestExpoSinSolution extends CelestTest {
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
-		ICartesianElements c1 = trajectory.evaluate(t1);
-		ICartesianElements c2 = trajectory.evaluate(t2);
+        PosVel c1 = trajectory.evaluate(t1);
+        PosVel c2 = trajectory.evaluate(t2);
 		// Equal R
-		CelestTest.assertEqualsAngle(dTheta, c1.getR().angle(c2.getR()), 1e-3);
-		assertEquals(r1, c1.getR().norm(), R_tol);
-		assertEquals(r2, c2.getR().norm(), R_tol);
+		CelestTest.assertEqualsAngle(dTheta, c1.position().angle(c2.position()), 1e-3);
+		assertEquals(r1, c1.position().norm(), R_tol);
+		assertEquals(r2, c2.position().norm(), R_tol);
 		// Equal V
 		// assertEquals(V1, c1.getV().getNorm(), V_tol);
 		// assertEquals(V2, c2.getV().getNorm(), V_tol);
@@ -161,12 +160,12 @@ public class TestExpoSinSolution extends CelestTest {
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
-		ICartesianElements c1 = trajectory.evaluate(t1);
-		ICartesianElements c2 = trajectory.evaluate(t2);
+		PosVel c1 = trajectory.evaluate(t1);
+        PosVel c2 = trajectory.evaluate(t2);
 		// Equal R
-		CelestTest.assertEqualsAngle(dTheta, c1.getR().angle(c2.getR()), 1e-3);
-		assertEquals(r1, c1.getR().norm(), R_tol);
-		assertEquals(r2, c2.getR().norm(), R_tol);
+		CelestTest.assertEqualsAngle(dTheta, c1.position().angle(c2.position()), 1e-3);
+		assertEquals(r1, c1.position().norm(), R_tol);
+		assertEquals(r2, c2.position().norm(), R_tol);
 		// Equal V
 		// assertEquals(V1, c1.getV().getNorm(), V_tol);
 		// assertEquals(V2, c2.getV().getNorm(), V_tol);

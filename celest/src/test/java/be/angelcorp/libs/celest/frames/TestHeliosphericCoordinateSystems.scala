@@ -21,10 +21,10 @@ import junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.celest.state.positionState.CartesianElements
 import org.junit.runner.RunWith
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.celest.frames.implementations.HeliosphericCoordinateSystems
+import be.angelcorp.libs.celest.state.PosVel
 
 @RunWith(classOf[JUnitRunner])
 class TestHeliosphericCoordinateSystems extends FlatSpec with ShouldMatchers {
@@ -57,42 +57,42 @@ class TestHeliosphericCoordinateSystems extends FlatSpec with ShouldMatchers {
 
 	"GEI_J2000" should "transform to GEI_D_MEAN" in {
 		val pos_calc = transforms.transform_GEI_J2000_To_GEI_D_MEAN.getTransform( referenceEpoch ).transform(
-			new CartesianElements( referenceDistances.get( transforms.GEI_J2000() ).get * Re, Vector3D.ZERO )
+			new PosVel( referenceDistances.get( transforms.GEI_J2000() ).get * Re, Vector3D.ZERO )
 		)
 		val pos_true = referenceDistances.get( transforms.GEI_D_MEAN() ).get
-		assert( pos_true.equals(pos_calc.getR / Re, 5E-3) )
+		assert( pos_true.equals(pos_calc.position / Re, 5E-3) )
 	}
 
 	"GEI_D_MEAN" should "transform to GEI_D_TRUE" in {
 		val pos_calc = transforms.transform_GEI_D_MEAN_To_GEI_D_TRUE.getTransform( referenceEpoch ).transform(
-			new CartesianElements( referenceDistances.get( transforms.GEI_D_MEAN() ).get * Re, Vector3D.ZERO )
+			new PosVel( referenceDistances.get( transforms.GEI_D_MEAN() ).get * Re, Vector3D.ZERO )
 		)
 		val pos_true = referenceDistances.get( transforms.GEI_D_TRUE() ).get
-		assert( pos_true.equals(pos_calc.getR / Re, 1E-3 * Re) )
+		assert( pos_true.equals(pos_calc.position / Re, 1E-3 * Re) )
 	}
 
 	"GEI_J2000" should "transform to HAE_J2000" in {
 		val pos_calc = transforms.transform_GEI_J2000_To_HAE_J2000.getTransform( referenceEpoch ).transform(
-			new CartesianElements( referenceDistances.get( transforms.GEI_J2000() ).get * Re, Vector3D.ZERO )
+			new PosVel( referenceDistances.get( transforms.GEI_J2000() ).get * Re, Vector3D.ZERO )
 		)
 		val pos_true = referenceDistances.get( transforms.HAE_J2000() ).get
-		assert( pos_true.equals(pos_calc.getR / Re, 1E-6 * Re) )
+		assert( pos_true.equals(pos_calc.position / Re, 1E-6 * Re) )
 	}
 
 	"HAE_J2000" should "transform to HAE_D" in {
 		val pos_calc = transforms.transform_HAE_J2000_To_HAE_D.getTransform( referenceEpoch ).transform(
-			new CartesianElements( referenceDistances.get( transforms.HAE_J2000() ).get * Re, Vector3D.ZERO )
+			new PosVel( referenceDistances.get( transforms.HAE_J2000() ).get * Re, Vector3D.ZERO )
 		)
 		val pos_true = referenceDistances.get( transforms.HAE_D() ).get
-		assert( pos_true.equals(pos_calc.getR / Re, 1E-3 * Re) )
+		assert( pos_true.equals(pos_calc.position / Re, 1E-3 * Re) )
 	}
 
 	"GEI_D_MEAN" should "transform to HAE_D" in {
 		val pos_calc = transforms.transform_GEI_D_MEAN_To_HAE_D.getTransform( referenceEpoch ).transform(
-			new CartesianElements( referenceDistances.get( transforms.GEI_D_MEAN() ).get * Re, Vector3D.ZERO )
+			new PosVel( referenceDistances.get( transforms.GEI_D_MEAN() ).get * Re, Vector3D.ZERO )
 		)
 		val pos_true = referenceDistances.get( transforms.HAE_D() ).get
-		assert( pos_true.equals(pos_calc.getR / Re, 1E-3 * Re) )
+		assert( pos_true.equals(pos_calc.position / Re, 1E-3 * Re) )
 	}
 
 }

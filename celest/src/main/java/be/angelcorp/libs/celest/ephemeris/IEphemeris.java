@@ -15,14 +15,13 @@
  */
 package be.angelcorp.libs.celest.ephemeris;
 
-import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 
 /**
  * {@link IEphemeris} is an interface that allows this object to retrieve a specific ephemeris type at a
  * given {@link JulianDate} or iterate over possible ephemeris values. What it retrieves can be any
- * object, such as a {@link PositionState} or values such as range/range-rate/name/....
+ * object, such as a {@link be.angelcorp.libs.celest.state.Orbit} or values such as range/range-rate/name/....
  * 
  * @author Simon Billemont
  * 

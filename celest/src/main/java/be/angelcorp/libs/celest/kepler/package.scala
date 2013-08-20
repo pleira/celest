@@ -16,12 +16,10 @@
 
 package be.angelcorp.libs.celest
 
-import be.angelcorp.libs.math.linear.{Matrix3D, Vector3D}
-import body.CelestialBody
-import math.CelestialRotate
 import scala.math._
-import state.positionState
-import state.positionState._
+import math.CelestialRotate
+import be.angelcorp.libs.math.linear.{Matrix3D, Vector3D}
+import be.angelcorp.libs.celest.state.PosVel
 
 package object kepler {
 
@@ -72,29 +70,12 @@ package object kepler {
 	 * @param state Current Cartesian state of the object relative to the center of the orbited object
 	 *              (Radius vector from the center of the center object to the rotating satellite (inertial
 	 *              coordinates)
-	 * @param body Center body begin orbited
-	 * @return
+	 * @param µ Standard gravitational parameter of the central body [m^3/s^2]
+	 * @return (a, e, i, ω, Ω, ν)
 	 */
-	def cartesian2kepler(state: ICartesianElements, body: CelestialBody): KeplerElements =
-		new KeplerElements(kepler.cartesian2kepler(state, body.getMu), body)
-
-	/**
-	 * Kepler orbital elements ECI Position orbit conversion
-	 * <p>
-	 * This function converts ECI Cartesian coordinates (R & V) to Kepler orbital elements (a, e, i, O,
-	 * w, nu). This function is derived from algorithm 9 on pg. 120 of David A. Vallado's Fundamentals of
-	 * Astrodynamics and Applications (2nd Edition)
-	 * </p>
-	 *
-	 * @param state Current Cartesian state of the object relative to the center of the orbited object
-	 *              (Radius vector from the center of the center object to the rotating satellite (inertial
-	 *              coordinates)
-	 * @param µ Gravitational constant of body being orbited
-	 * @return
-	 */
-	def cartesian2kepler(state: ICartesianElements, µ: Double) = {
-		val R = state.getR
-		val V = state.getV
+	def cartesian2kepler(state: PosVel, µ: Double) = {
+		val R = state.position
+		val V = state.velocity
 
 		val h = R !* V// Specific angular momentum vector
 		val N = Vector3D.K !* h
@@ -104,12 +85,12 @@ package object kepler {
 		val nNorm  = N.norm
 
 		// Eccentricity vector
-		val e_vec = ( (R * (vNorm2 - µ / rNorm)) - (V * R.dot(V)) ) / µ
+		val e_vec = ( R * (vNorm2 - µ / rNorm) - V * R.dot(V) ) / µ
 		val ecc = e_vec.norm // Magnitude of eccentricity vector
 
 		val zeta = vNorm2 / 2 - µ / rNorm; // Specific mechanical energy of orbit
 
-		val a = if ((1 - abs(ecc)) > KeplerEquations.eccentricityTolarance) // Checking to see if orbit is parabolic
+		val a = if ( 1 - abs(ecc) > KeplerEquations.eccentricityTolarance) // Checking to see if orbit is parabolic
 			-µ / (2 * zeta); // Semi-major axis
 		else
 			Double.PositiveInfinity
@@ -128,28 +109,7 @@ package object kepler {
 		if (R.dot(V) < 0) // Checking for quadrant
 			nu = 2 * Pi - nu
 
-		// // /////////// Special Cases \\\\\\\\\\\\
-		// // Elliptical Equatorial
-		// double w_true = Math.acos(e_vec.getX() / ecc); // True longitude of periapse
-		// if (e_vec.getY() < 0)// Checking for quadrant
-		// w_true = 2 * pi - w_true;
-		//
-		// // Circular Inclined
-		// double u_true = Math.acos(N.dot(R) / (nNorm * rNorm)); // Argument of
-		// // Latitude
-		// if (R.getZ() < 0)// Checking for quadrant
-		// u_true = 2 * pi - u_true;
-		//
-		// // Circular Equatorial
-		// double lambda_true = Math.acos(R.getX() / rNorm); // True Longitude
-		// if (R.getY() < 0)// Checking for quadrant
-		// lambda_true = 2 * pi - lambda_true;
-		//
-		// return new ExtendedKeplerStateVector(
-		// lambda_true, ecc, inc, w, Omega, nu, w_true, u_true, lambda_true);
-
-		val k = new KeplerElements(a, ecc, inc, w, Omega, nu)
-		fix2dOrbit(k)
+		(a, ecc, inc, w, Omega, nu)
 	}
 
 	/**
@@ -157,22 +117,21 @@ package object kepler {
 	 * is more optimal if only the true anomaly and eccentricity are needed.
 	 *
 	 * @param state State of the satellite
-	 * @param center Center body
-	 * @return Subset of kepler elements
+	 * @param μ Standard gravitational parameter of the central body [m^3/s^2]
+	 * @return Subset of kepler elements (a, e, ν)
 	 */
-	def cartesian2kepler2D(state: ICartesianElements, center: CelestialBody) = {
-		val R = state.getR
-		val V = state.getV
-		val µ = center.getMu
+	def cartesian2kepler2D(state: PosVel, μ: Double) = {
+		val R = state.position
+		val V = state.velocity
 
 		val rNorm = R.norm
 		val vNorm2 = V.normSq
 
-		val e_vec = ( (R * (vNorm2 - µ / rNorm)) - ( V * R.dot(V)) ) / µ
+		val e_vec = ( (R * (vNorm2 - μ/ rNorm)) - ( V * R.dot(V)) ) / μ
 		val ecc = e_vec.norm
 
-		val a = if ((1 - abs(ecc)) > KeplerEquations.eccentricityTolarance) // Checking to see if orbit is parabolic
-			(µ * rNorm) / (2 * µ - rNorm * vNorm2)
+		val a = if ((1.0 - abs(ecc)) > KeplerEquations.eccentricityTolarance) // Checking to see if orbit is parabolic
+			(μ * rNorm) / (2 * μ - rNorm * vNorm2)
 		else
 			Double.PositiveInfinity
 
@@ -180,7 +139,7 @@ package object kepler {
 		if (R.dot(V) < 0) // Checking for quadrant
 			nu = 2 * Pi - nu
 
-		new KeplerElements(a, ecc, Double.NaN, Double.NaN, Double.NaN, nu)
+		(a, ecc, nu)
 	}
 
 	/**
@@ -191,21 +150,6 @@ package object kepler {
 	 * @return eccentricty
 	 */
 	def eccentricity(rp: Double, ra: Double) = (ra - rp) / (ra + rp)
-
-	/**
-	 * Fixes Argument of pericenter and Right ascension of ascending node (NaN to 0)
-	 *
-	 * @param k Kepler elements to fix
-	 */
-	def fix2dOrbit(k: IKeplerElements) =
-		new KeplerElements(
-			k.getSemiMajorAxis,
-			k.getEccentricity,
-			k.getInclination,
-			(if (k.getArgumentPeriapsis.isNaN) 0 else k.getArgumentPeriapsis),
-			(if (k.getRaan.isNaN) 0 else k.getRaan),
-			k.getTrueAnomaly
-		)
 
 	/**
 	 * Compute the flight path angle &gamma; of the instantanius velocity vector. (Angle between the
@@ -233,7 +177,7 @@ package object kepler {
 		val rmag = R.norm
 		val r2 = rmag * rmag
 		val muor3 = µ / (r2 * rmag)
-		val jk = 3.0 * muor3 / (r2)
+		val jk = 3.0 * muor3 / r2
 
 		val xx = R.x
 		val yy = R.y
@@ -296,7 +240,7 @@ package object kepler {
 		// ROTATING THE pqw VECOTRS INTO THE ECI FRAME (ijk)
 		val R = CelestialRotate.PQW2ECI(w, Omega, inc) !* R_pqw
 		val V = CelestialRotate.PQW2ECI(w, Omega, inc) !* V_pqw
-		new CartesianElements(R, V)
+		(R, V)
 	}
 
 	/**
@@ -401,10 +345,47 @@ package object kepler {
 	 * V<sup>2</sup> = &mu; (2/r - 1/a)
 	 * </p>
 	 *
-	 * @param µ Standard gravitational parmeter [m^3/s^2]
+	 * @param µ Standard gravitational parameter [m^3/s^2]
 	 * @param r Radius [m]
 	 * @param a Semi-major axis [m]
 	 * @return Current velocity squared [m/s]
 	 */
 	def visViva(µ: Double, r: Double, a: Double) = µ * (2 / r - 1 / a)
+
+  def anomalyFromMean(MA: Double, ecc: Double) = ecc match {
+    case e if e <  1 => KeplerEllipse.eccentricAnomalyFromMean(MA, e)
+    case e if e == 1 => KeplerParabola.anomalyFromMean(MA)
+    case e if e >  1 => KeplerHyperbola.hyperbolicAnomalyFromMean(MA, e)
+  }
+
+  def anomalyFromTrue(nu: Double, ecc: Double) = ecc match {
+    case e if e <  1 => KeplerEllipse.eccentricAnomalyFromTrue(nu, e)
+    case e if e == 1 => KeplerParabola.anomalyFromTrue(nu)
+    case e if e >  1 => KeplerHyperbola.hyperbolicAnomalyFromTrue(nu, e)
+  }
+
+  def trueAnomalyFromAnomaly(ebh: Double, ecc: Double) = ecc match {
+    case e if e <  1 => KeplerEllipse.trueAnomalyFromEccentric(ebh, e)
+    case e if e == 1 => KeplerParabola.trueAnomalyFromAnomaly(ebh)
+    case e if e >  1 => KeplerHyperbola.trueAnomalyFromAnomaly(ebh, e)
+  }
+
+  def trueAnomalyFromMean(M: Double, ecc: Double) = ecc match {
+    case e if e <  1 => KeplerEllipse.trueAnomalyFromMean(M, e)
+    case e if e == 1 => KeplerParabola.trueAnomalyFromMean(M)
+    case e if e >  1 => KeplerHyperbola.trueAnomalyFromMean(M, e)
+  }
+
+  def meanAnomalyFromTrue(nu: Double, ecc: Double) = ecc match {
+    case e if e <  1 => KeplerEllipse.meanAnomalyFromTrue(nu, e)
+    case e if e == 1 => KeplerParabola.meanAnomalyFromTrue(nu)
+    case e if e >  1 => KeplerHyperbola.meanAnomalyFromTrue(nu, e)
+  }
+
+  def meanAnomalyFromAnomaly(ebh: Double, ecc: Double) = ecc match {
+    case e if e <  1 => KeplerEllipse.meanAnomalyFromEccentric(ebh, e)
+    case e if e == 1 => KeplerParabola.meanAnomalyFromAnomaly(ebh)
+    case e if e >  1 => KeplerHyperbola.meanAnomalyFromAnomaly(ebh, e)
+  }
+
 }

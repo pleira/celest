@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters;
 
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.util.physics.Time;
@@ -51,14 +51,14 @@ public abstract class TPBVP {
 	 * <b>If converted to Cartesian coordinates; unit: [m]</b>
 	 * </p>
 	 */
-	protected IPositionState	r1;
+	protected PosVel	r1;
 	/**
 	 * Targeted end position
 	 * <p>
 	 * <b>If converted to Cartesian coordinates; unit: [m]</b>
 	 * </p>
 	 */
-	protected IPositionState	r2;
+	protected PosVel	r2;
 
 	/**
 	 * Construct a TPBVP problem with known, start/end points and the travel time between r1 and r2.
@@ -72,7 +72,7 @@ public abstract class TPBVP {
 	 * @param arrival
 	 *            Epoch of arrival (epoch at r2)
 	 */
-	public TPBVP(IPositionState r1, IPositionState r2, IJulianDate departure, IJulianDate arrival) {
+	public TPBVP(PosVel r1, PosVel r2, IJulianDate departure, IJulianDate arrival) {
 		this.r1 = r1;
 		this.r2 = r2;
 		this.departureEpoch = departure;
@@ -92,7 +92,6 @@ public abstract class TPBVP {
 	 * Find the optimal trajectory according to this targeted between r1->r2 for the given travel time.
 	 * 
 	 * @return An optimal trajectory
-	 * @throws MathException
 	 */
 	public abstract ITrajectory getTrajectory();
 

@@ -18,7 +18,6 @@ package be.angelcorp.libs.celest.state;
 import org.apache.commons.math3.linear.RealVector;
 
 import be.angelcorp.libs.celest.state.orientationState.IOrientationState;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 
 /**
  * 
@@ -51,6 +50,6 @@ public interface IStateVector extends IState {
 	/**
 	 * Get the position substate.
 	 */
-	public abstract IPositionState getPosition();
+	public abstract Orbit getPosition();
 
 }

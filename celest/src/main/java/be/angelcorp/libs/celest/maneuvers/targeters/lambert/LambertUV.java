@@ -15,15 +15,9 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.abs;
-import static java.lang.Math.cos;
-import static java.lang.Math.cosh;
-import static java.lang.Math.pow;
-import static java.lang.Math.sin;
-import static java.lang.Math.sinh;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
+import be.angelcorp.libs.celest.state.PosVel;
 import org.apache.commons.math3.analysis.FunctionUtils;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.function.Add;
@@ -33,8 +27,6 @@ import org.apache.commons.math3.util.Precision;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -128,7 +120,7 @@ public class LambertUV extends TPBVP {
 	 * @param shortWay
 	 *            Use short arc transfer (transfer solution over the smallest angle between R1 and R2)
 	 */
-	public LambertUV(IPositionState r1, IPositionState r2, CelestialBody centerbody, IJulianDate departure,
+	public LambertUV(PosVel r1, PosVel r2, CelestialBody centerbody, IJulianDate departure,
 			IJulianDate arrival, boolean shortWay) {
 		super(r1, r2, departure, arrival);
 		this.centerbody = centerbody;
@@ -140,8 +132,8 @@ public class LambertUV extends TPBVP {
 	 */
 	@Override
 	public LambertTrajectory getTrajectory() {
-		Vector3D r1 = CartesianElements.as(this.r1).getR();
-		Vector3D r2 = CartesianElements.as(this.r2).getR();
+		Vector3D r1 = this.r1.position();
+		Vector3D r2 = this.r2.position();
 		double r1norm = r1.norm();
 		double r2norm = r2.norm();
 
@@ -170,6 +162,6 @@ public class LambertUV extends TPBVP {
 		// Vector3D v1 = r2.subtract(r1.multiply(f)).divide(g);
 		// Vector3D v2 = r2.multiply(g_dot).subtract(r1).divide(g);
 
-		return new LambertTrajectory(r1, r2, centerbody, departureEpoch, arrivalEpoch, f, g, g_dot);
+		return new LambertTrajectory(r1, r2, this.r1.frame().get(), departureEpoch, arrivalEpoch, f, g, g_dot);
 	}
 }

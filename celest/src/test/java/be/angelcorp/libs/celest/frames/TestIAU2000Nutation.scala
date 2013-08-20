@@ -16,7 +16,6 @@
 
 package be.angelcorp.libs.celest.frames
 
-import math._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
@@ -24,10 +23,8 @@ import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.celest.frames.implementations.transforms._
-import be.angelcorp.libs.math.linear.{Matrix3D, Vector3D}
-import be.angelcorp.libs.celest.state.positionState.CartesianElements
+import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.libs.math.rotation.{RotationMatrix, AxisAngle}
 import be.angelcorp.libs.celest.unit.CelestTest
 
 @RunWith(classOf[JUnitRunner])

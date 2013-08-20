@@ -15,29 +15,20 @@
  */
 package be.angelcorp.libs.celest.kepler
 
-import math._
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.state.Keplerian
 
-class KeplerCircular(k: Keplerian) extends KeplerEllipse(k) {
+@RunWith(classOf[JUnitRunner])
+class TestKeplerian extends FlatSpec with ShouldMatchers {
 
-	override def arealVel = sqrt(μ * k.semiMajorAxis) / 2
-
-	override def semiLatusRectum = k.semiMajorAxis
-
-	override def apocenter       = k.semiMajorAxis
-
-	override def pericenter      = k.semiMajorAxis
-
-	override def totEnergyPerMass = -μ / (2 * k.semiMajorAxis)
-
-	override def visViva(r: Double) = μ / r
-
-  lazy val circularVelocity = sqrt(μ / k.semiMajorAxis)
-
-}
-
-object KeplerCircular {
-
-	def circularVelocity(r: Double, µ: Double) = sqrt(µ / r)
+  "KeplerElements" should "return the correct equations type" in {
+		assert( new Keplerian(1E3,   0, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerCircular]  )
+    assert( new Keplerian(1E3, 0.5, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerEllipse]   )
+    assert( new Keplerian(1E3,   1, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerParabola]  )
+    assert( new Keplerian(1E3,   2, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerHyperbola] )
+	}
 
 }

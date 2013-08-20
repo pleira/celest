@@ -16,45 +16,32 @@
 package be.angelcorp.libs.celest.kepler
 
 import math._
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements
-import org.apache.commons.math3.analysis.{UnivariateFunction, DifferentiableUnivariateFunction}
 import org.apache.commons.math3.util.FastMath
+import be.angelcorp.libs.celest.state.Keplerian
 
-class KeplerHyperbola(k: IKeplerElements) extends KeplerEquations(k) {
+class KeplerHyperbola(k: Keplerian) extends KeplerEquations(k) {
 
-	override def anomalyFromMeanAnomaly(M: Double) = KeplerHyperbola.hyperbolicAnomalyFromMean(M, k.getEccentricity)
-	override def anomalyFromTrueAnomaly(nu: Double) = KeplerHyperbola.anomalyFromTrueAnomaly(nu, k.getEccentricity)
+  lazy val anomaly = KeplerHyperbola.hyperbolicAnomalyFromMean(k.meanAnomaly, k.eccentricity)
 
-	override def arealVel(µ: Double, a: Double, e: Double) = sqrt(a * µ * (1 - e * e)) / 2
+	lazy val arealVel = sqrt(semiLatusRectum * μ) / 2
 
-	override def getApocenter() = Double.PositiveInfinity
-	override def getPericenter() = k.getSemiMajorAxis * (1 - k.getEccentricity)
+  lazy val apocenter  = Double.PositiveInfinity
 
-	override def getFundamentalEquation(e: Double, M: Double) =
-		new DifferentiableUnivariateFunction() {
-			override def derivative() =
-				new UnivariateFunction() {
-					override def value(H: Double) = e * cosh(H) - 1
-				}
-			override def value(H: Double) = e * sinh(H) - H - M
-		}
+  lazy val pericenter = k.semiMajorAxis * (1 - k.e)
 
-	override def meanAnomalyFromAnomaly(H: Double) = KeplerHyperbola.meanAnomalyFromAnomaly(H, k.getEccentricity)
-	override def meanAnomalyFromTrue(nu: Double) = meanAnomalyFromAnomaly( anomalyFromTrueAnomaly(nu) )
+  lazy val period = Double.PositiveInfinity
 
-	override def period(n: Double) = Double.PositiveInfinity
+  lazy val semiLatusRectum = k.semiMajorAxis * (1 - k.eccentricity * k.eccentricity)
 
-	override def semiLatusRectum() = k.getSemiMajorAxis * (1 - k.getEccentricity * k.getEccentricity)
+  lazy val totEnergyPerMass = μ / (2 * k.semiMajorAxis)
 
-	override def totEnergyPerMass(mu: Double, a: Double) = mu / (2 * a)
-
-	override def trueAnomalyFromAnomaly(H: Double) = KeplerHyperbola.trueAnomalyFromAnomaly(H, k.getEccentricity)
+  lazy val trueAnomaly = KeplerHyperbola.trueAnomalyFromAnomaly(anomaly, k.eccentricity)
 
 }
 
 object KeplerHyperbola {
 
-	def anomalyFromTrueAnomaly(nu: Double, e: Double) = {
+	def hyperbolicAnomalyFromTrue(nu: Double, e: Double) = {
 		// acos(-1 / e) == half defection angle
 		if (abs(nu) < acos(-1 / e)) {
 			val sine = (sin(nu) * sqrt(e * e - 1.0)) / (1.0 + e * cos(nu))
@@ -66,9 +53,9 @@ object KeplerHyperbola {
 
 	def hyperbolicAnomalyFromMean(M: Double, e: Double) = {
 		/* Generate an initial guess */
-		var H=
+		var H0 =
 			if (e < 1.6) {
-				if (M > Pi)
+				if ( ((M < 0.0 ) && (M > -Pi)) || M > Pi )
 					M - e
 				else
 					M + e
@@ -80,16 +67,20 @@ object KeplerHyperbola {
 			}
 
 		/* Iterate until H is accurate enough */
-		var H0 = 0.0
+		var H = H0 + (M - e * sinh(H0) + H0) / (e * cosh(H0) - 1)
 		do {
 			H0 = H
 			H = H + (M - e * sinh(H) + H) / (e * cosh(H) - 1)
-		} while (abs(H - H0) < KeplerEquations.anomalyIterationTol)
+		} while (abs(H - H0) > KeplerEquations.anomalyIterationTol)
 		H
 	}
 
 	def meanAnomalyFromAnomaly(H: Double, e: Double) = e * sinh(H) - H
 
-	def trueAnomalyFromAnomaly(H: Double, e: Double) = atan2(sqrt(e * e - 1) * sinh(H), e - cosh(H))
+  def meanAnomalyFromTrue(nu: Double, e: Double) = meanAnomalyFromAnomaly( hyperbolicAnomalyFromTrue(nu, e), e )
+
+  def trueAnomalyFromAnomaly(H: Double, e: Double) = atan2(sqrt(e * e - 1) * sinh(H), e - cosh(H))
+
+  def trueAnomalyFromMean(M: Double, e: Double) = trueAnomalyFromAnomaly( hyperbolicAnomalyFromMean(M, e), e )
 
 }

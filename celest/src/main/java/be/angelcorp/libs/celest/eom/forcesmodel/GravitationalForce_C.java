@@ -17,7 +17,6 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.body.ICelestialBody;
-import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -29,7 +28,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author simon
  * 
  */
-public class GravitationalForce_C extends ObjectForce implements Cartesian {
+public class GravitationalForce_C extends ObjectForce {
 
 	/**
 	 * Body generating the gravitationalForce
@@ -79,8 +78,8 @@ public class GravitationalForce_C extends ObjectForce implements Cartesian {
 	 */
 	@Override
 	public Vector3D toAcceleration() {
-		Vector3D rCenter = getGravitationBody().getState().toCartesianElements().getR();
-		Vector3D rSatellite = getObject().getState().toCartesianElements().getR();
+		Vector3D rCenter = getGravitationBody().getState().toPosVel().position();
+		Vector3D rSatellite = getObject().getState().toPosVel().position();
 		Vector3D g = gravitationBody.getGravitationalPotential().evaluate(rSatellite.$minus(rCenter));
 		return g;
 	}

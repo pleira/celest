@@ -18,8 +18,6 @@ package be.angelcorp.libs.celest.state.positionState;
 import be.angelcorp.libs.celest.body.ICelestialBody;
 import org.apache.commons.math3.linear.RealVector;
 
-import be.angelcorp.libs.celest.math.Keplerian;
-
 /**
  * Holds the state variation using the variation of the classical Keplerian elements:
  * 
@@ -31,7 +29,7 @@ import be.angelcorp.libs.celest.math.Keplerian;
  * @author Simon Billemont
  * 
  */
-public interface IKeplerDerivative extends Keplerian, IPositionStateDerivative {
+public interface IKeplerDerivative extends IPositionStateDerivative {
 
 	/**
 	 * Tests if two sets of kepler derivartives hold the same variables (tests for equal

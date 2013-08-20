@@ -18,11 +18,13 @@ package be.angelcorp.libs.celest.constants
 import Constants._
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.celest.state.positionState._
-import be.angelcorp.libs.celest.body.CelestialBody
+import be.angelcorp.libs.celest.body.{ICelestialBody, CelestialBody}
 import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory
 import be.angelcorp.libs.celest.universe.Universe
+import be.angelcorp.libs.celest.state.{NonSingular, PosVel, Keplerian}
+import be.angelcorp.libs.celest.frames
 
 /**
  * Different constants specific to the earth. Has constants in the following categories:
@@ -201,24 +203,21 @@ object EarthConstants {
 	val mean_anomaly = 100.46435 * (Deg to Rad)
 
 	/** Kepler state vector of the earth, around the sun at the J2000 epoch */
-	lazy val solarOrbit = {
-		val k = new KeplerElements(semiMajorAxis, eccentricity, inclination, argPerigee, raan, 0, SolarConstants.body)
-		val true_anomaly = k.getOrbitEqn.trueAnomalyFromMean( mean_anomaly )
-		new KeplerElements(k, true_anomaly)
-	}
+	lazy val solarOrbit =
+		new Keplerian(semiMajorAxis, eccentricity, inclination, argPerigee, raan, mean_anomaly, None) // TODO: set correct frame
 
 	/** Celestial body representation of the earth around the sun at the J2000 epoch. */
 	val body = new CelestialBody(solarOrbit, mass)
 
 	/** Celestial body representation of the earth in the center in the HAE_J2000 reference frame. */
-	val bodyCenter = new CelestialBody( new CartesianElements(), mass)
+	val bodyCenter = new CelestialBody( PosVel(), mass)
 
 	def orbit(implicit  universe: Universe) = {
 		// Values based on
 		// Simon, J., Bretagnon, P., Chapront, J., Chapront-Touzé, M., Francou, G., Laskar, J., 1994. Numerical expressions
 		// for precession formulas and mean elements for the moon and the planets. Astron. Astrophys. 282 (2), 663–683.
 
-		val jpl_sun = new CelestialBody( new CartesianElements(), mu2mass(1.32712440018E20))
+		val jpl_sun = new CelestialBody( PosVel(), mu2mass(1.32712440018E20))
 
 		val a0 = AU.convert(1.0000010)
 		val e0 = 0.0167086
@@ -226,7 +225,10 @@ object EarthConstants {
 		val w_bar0 = Deg.convert(102.9373481)
 		val W0 = Deg.convert(174.8731758)
 		val L0 = Deg.convert(100.4664568)
-		val keplerAtJ2000 = new NonSignuarElements(a0, e0, i0, w_bar0, W0, L0, jpl_sun)
+		val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, Some(new frames.BodyCentered{
+      //TODO: Use an actual frame
+      def centerBody = jpl_sun
+    }))
 
 		val centuryToS = year.convert(100)
 		val da0 = 0.0                        / centuryToS

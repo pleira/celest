@@ -21,6 +21,7 @@ import be.angelcorp.libs.celest.state.positionState._
 import be.angelcorp.libs.math.linear.{Matrix3D, Vector3D}
 import be.angelcorp.libs.math.rotation.{RotationMatrix, IRotation}
 import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.state.{Orbit, PosVel}
 
 trait ConstantRotationTransformFactory[ F0 <: IReferenceFrame, F1 <: IReferenceFrame ]
   extends BasicReferenceFrameTransformFactory[F0, F1] {
@@ -69,12 +70,12 @@ class ConstantRotationTransform[ F0 <: IReferenceFrame, F1 <: IReferenceFrame, T
   def transform(orientationState: IOrientationState) =
     new OrientationState( orientationState.getRotation.applyTo(M), M !* orientationState.getRotationRate)
 
-  def transform(positionState: IPositionState) = {
-    val pv = positionState.toCartesianElements
-    new CartesianElements( M !* pv.getR, M !* pv.getV )
+  def transform(positionState: Orbit) = {
+    val pv = positionState.toPosVel
+    new PosVel( M !* pv.position, M !* pv.velocity )
   }
 
-  def transform(positionState: IPositionState, positionStateDerivative: IPositionStateDerivative) = {
+  def transform(positionState: Orbit, positionStateDerivative: IPositionStateDerivative) = {
     val va = positionStateDerivative.toCartesianDerivative
     new CartesianDerivative( M !* va.getV, M !* va.getA )
   }

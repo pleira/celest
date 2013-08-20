@@ -27,6 +27,7 @@ import org.apache.commons.math3.util.FastMath
 import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import com.google.common.base.Preconditions._
+import be.angelcorp.libs.celest.state.PosVel
 
 /**
  * This function solves the high-thrust Lambert problem. It does this using an algorithm developed by
@@ -52,14 +53,14 @@ import com.google.common.base.Preconditions._
  * @param prograde True if the transfer motion is prograde around the center body [default].
  * @param leftBranch  True returns the left branch solution [default].
  */
-class Lambert2(r1: IPositionState, 					r2: IPositionState,
+class Lambert2(r1: PosVel, 					        r2: PosVel,
 							 departure: IJulianDate, 			arrival: IJulianDate,
 							 val center: CelestialBody, 	val N: Double=0,
 							 val prograde: Boolean=true, 	val leftBranch: Boolean=true) extends TPBVP( r1, r2, departure, arrival ) {
 
 	val longWay = {
-		val r1 = this.r1.toCartesianElements.getR
-		val r2 = this.r1.toCartesianElements.getR
+		val r1 = this.r1.position
+		val r2 = this.r1.position
 		val progradeIsLong = ( r1.x * r2.y - r2.x * r1.y < 0.0 )
     if ( prograde ) progradeIsLong else !progradeIsLong
 	}
@@ -70,8 +71,8 @@ class Lambert2(r1: IPositionState, 					r2: IPositionState,
 	}
 
 	override lazy val getTrajectory = {
-		val origin      = this.r1.toCartesianElements.getR
-		val destination = this.r2.toCartesianElements.getR
+		val origin      = this.r1.position
+		val destination = this.r2.position
 
 		// Undimentionalize all units;
 		val r1     = origin.norm
@@ -223,8 +224,8 @@ class Lambert2(r1: IPositionState, 					r2: IPositionState,
 			val V1 = (r1vec * Vr1 + crsprd1 * Vt1) * V
 			val V2 = (r2n   * Vr2 + crsprd2 * Vt2) * V
 
-			new LambertTrajectory2( new CartesianElements(origin, V1),
-															new CartesianElements(destination, V2),
+			new LambertTrajectory2( new PosVel(origin, V1, this.r1.frame),
+															new PosVel(destination, V2, this.r1.frame),
 															departure, arrival, center )
 		}
 	}

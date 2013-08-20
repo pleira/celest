@@ -18,8 +18,6 @@ package be.angelcorp.libs.celest.constants
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import be.angelcorp.libs.celest.state.positionState.CartesianElements
-import be.angelcorp.libs.celest.state.positionState.SphericalElements
 import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.math.linear.ImmutableVector3D
@@ -28,6 +26,7 @@ import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.util.physics.Time._
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
+import be.angelcorp.libs.celest.state.{PosVel, Spherical}
 
 @RunWith(classOf[JUnitRunner])
 class TestEarthConstants  extends FlatSpec with ShouldMatchers  {
@@ -42,38 +41,40 @@ class TestEarthConstants  extends FlatSpec with ShouldMatchers  {
     // AU/days/Degree
 
     val state_actual_k = trajectory.evaluate(universe.J2000_EPOCH)
-    val state_actual_c = state_actual_k.toCartesianElements
-    val state_actual_s = new SphericalElements(state_actual_c, state_actual_k.getCenterbody)
+    val state_actual_c = state_actual_k.toPosVel
+    val state_actual_s = Spherical(state_actual_c)
 
-    val state_true_c = new CartesianElements(
+    val state_true_c = new PosVel(
       new ImmutableVector3D(-1.771351029694605E-01, 9.672416861070041E-01, -4.092421117973204E-06) *  AU.getScaleFactor,
-      new ImmutableVector3D(-1.720762505701730E-02, -3.158782207802509E-03, 1.050630211603302E-07) * (AU.getScaleFactor / day_julian.getScaleFactor)
+      new ImmutableVector3D(-1.720762505701730E-02, -3.158782207802509E-03, 1.050630211603302E-07) * (AU.getScaleFactor / day_julian.getScaleFactor),
+      state_actual_k.frame
     )
-    val state_true_s = new SphericalElements(state_true_c, state_actual_k.getCenterbody)
+    val state_true_s = Spherical(state_true_c)
 
     // error see http://ssd.jpl.nasa.gov/?planet_pos
-    state_actual_c.getR.norm         should be ( state_true_c.getR.norm         plusOrMinus 15E6 )                  // R
-    state_actual_s.getRightAscension should be ( state_true_s.getRightAscension plusOrMinus ArcSecond.convert(40) ) // RA
-    state_actual_s.getDeclination    should be ( state_true_s.getDeclination    plusOrMinus ArcSecond.convert(15) ) // DEC
+    state_actual_c.position.norm  should be ( state_true_c.position.norm  plusOrMinus 15E6 )                  // R
+    state_actual_s.rightAscension should be ( state_true_s.rightAscension plusOrMinus ArcSecond.convert(40) ) // RA
+    state_actual_s.declination    should be ( state_true_s.declination    plusOrMinus ArcSecond.convert(15) ) // DEC
   }
 
   it should "define the correct heliocentric kepler orbit at the 2452000jd epoch" in {
     val trajectory = EarthConstants.orbit
 
     val state_actual_k = trajectory.evaluate(new JulianDate(2452000d))
-    val state_actual_c = state_actual_k.toCartesianElements
-    val state_actual_s = new SphericalElements(state_actual_c, state_actual_k.getCenterbody)
+    val state_actual_c = state_actual_k.toPosVel
+    val state_actual_s = Spherical(state_actual_c)
 
-    val state_true_c = new CartesianElements(
+    val state_true_c = new PosVel(
       new ImmutableVector3D(-9.813457035727633E-01, -1.876731681458192E-01, 1.832964606032273E-06) *  AU.getScaleFactor,
-      new ImmutableVector3D(2.958686601622319E-03, -1.696218721190317E-02, -5.609085586954323E-07) * (AU.getScaleFactor / day.getScaleFactor)
+      new ImmutableVector3D(2.958686601622319E-03, -1.696218721190317E-02, -5.609085586954323E-07) * (AU.getScaleFactor / day.getScaleFactor),
+      state_actual_k.frame
     )
-    val state_true_s = new SphericalElements(state_true_c, state_actual_k.getCenterbody)
+    val state_true_s = Spherical(state_true_c)
 
     // error see http://ssd.jpl.nasa.gov/?planet_pos
-    state_actual_c.getR.norm         should be ( state_true_c.getR.norm         plusOrMinus 15E6 )                  // R
+    state_actual_c.position.norm  should be ( state_true_c.position.norm  plusOrMinus 15E6 )                  // R
     // TODO; why arcminute accuracy here ?
-    state_actual_s.getRightAscension should be ( state_true_s.getRightAscension plusOrMinus ArcMinute.convert(40) ) // RA
-    state_actual_s.getDeclination    should be ( state_true_s.getDeclination    plusOrMinus ArcSecond.convert(15) ) // DEC
+    state_actual_s.rightAscension should be ( state_true_s.rightAscension plusOrMinus ArcMinute.convert(40) ) // RA
+    state_actual_s.declination    should be ( state_true_s.declination    plusOrMinus ArcSecond.convert(15) ) // DEC
   }
 }

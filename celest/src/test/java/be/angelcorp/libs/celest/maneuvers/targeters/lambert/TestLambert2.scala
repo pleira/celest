@@ -21,14 +21,14 @@ import junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.celest.state.positionState.CartesianElements
-import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.util.physics.Time._
-import be.angelcorp.libs.celest.body.CelestialBody
+import be.angelcorp.libs.celest.body.{ICelestialBody, CelestialBody}
 import be.angelcorp.libs.celest.constants.Constants._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.celest.unit.CelestTest._
+import be.angelcorp.libs.celest.state.PosVel
+import be.angelcorp.libs.celest.frames
 
 /**
  * All reference values computed with:
@@ -46,36 +46,39 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 		val N = 0
 		val mu = 3986004418E5// m^3/s^2
 
-		val s0 = new CartesianElements(r1, Vector3D.ZERO)
-		val s1 = new CartesianElements(r2, Vector3D.ZERO)
+    val centerFrame = new frames.BodyCentered {
+      def centerBody = new CelestialBody(PosVel.apply(), mu2mass(mu))
+    }
+
+		val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
+		val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
     val t0 = universe.J2000_EPOCH
     val te = t0.add(tf, day_julian)
-    val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 
-		val v1_prograde_true =  Vector3D(10096.6831628413530000,4333.9040463802048000,-764.1842151784204600)	//m/s
-		val v2_prograde_true = Vector3D(-8110.7563755037318000,-6018.4641067406237000,1061.2176044438429000)	//m/s
-		val v1_retrograde_true =  Vector3D(1315.7261324536535000,-10735.1341404250650000,1892.8937904815141000)//m/s
-		val v2_retrograde_true = Vector3D(5601.4255704605439000,-8298.3753483701657000,1463.2274699636678000)//m/s
+		val v1_prograde_true   = Vector3D(10096.6831628413530000, 4333.9040463802048000, -764.1842151784204600)	// m/s
+		val v2_prograde_true   = Vector3D(-8110.7563755037318000,-6018.4641067406237000, 1061.2176044438429000)	// m/s
+		val v1_retrograde_true = Vector3D( 1315.7261324536535000,-10735.1341404250650000,1892.8937904815141000) // m/s
+		val v2_retrograde_true = Vector3D( 5601.4255704605439000,-8298.3753483701657000, 1463.2274699636678000) // m/s
 
-		val lambertProLeft = new Lambert2(s0, s1, t0, te, center, N, true, true)
+		val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true)
 		val trajectoryProLeft = lambertProLeft.getTrajectory
-    assertEquals(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_true, 2E-6)
-    assertEquals(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_true, 2E-6)
+    assertEquals(trajectoryProLeft.origin.toPosVel.velocity, 				v1_prograde_true, 2E-6)
+    assertEquals(trajectoryProLeft.destination.toPosVel.velocity, 	v2_prograde_true, 2E-6)
 
-		val lambertProRight = new Lambert2(s0, s1, t0, te, center, N, true, false)
+		val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, false)
 		val trajectoryProRight = lambertProRight.getTrajectory
-    assertEquals(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_true, 2E-6)
-    assertEquals(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_true, 2E-6)
+    assertEquals(trajectoryProRight.origin.toPosVel.velocity, 			v1_prograde_true, 2E-6)
+    assertEquals(trajectoryProRight.destination.toPosVel.velocity, 	v2_prograde_true, 2E-6)
 
-		val lambertRetLeft = new Lambert2(s0, s1, t0, te, center, N, false, true)
+		val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, true)
 		val trajectoryRetLeft = lambertRetLeft.getTrajectory
-    assertEquals(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_true, 2E-6)
-    assertEquals(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetLeft.origin.toPosVel.velocity, 				v1_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetLeft.destination.toPosVel.velocity,		v2_retrograde_true, 2E-6)
 
-		val lambertRetRight = new Lambert2(s0, s1, t0, te, center, N, false, false)
+		val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, false)
 		val trajectoryRetRight = lambertRetRight.getTrajectory
-    assertEquals(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_true, 2E-6)
-    assertEquals(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetRight.origin.toPosVel.velocity, 			v1_retrograde_true, 2E-6)
+    assertEquals(trajectoryRetRight.destination.toPosVel.velocity, 	v2_retrograde_true, 2E-6)
 	}
 
 	"The lambert targetter" should "solve the N=1 revolutions case" in {
@@ -85,11 +88,14 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 		val N = 1
 		val mu = 3986004418E5// m^3/s^2
 
-		val s0 = new CartesianElements(r1, Vector3D.ZERO)
-		val s1 = new CartesianElements(r2, Vector3D.ZERO)
+    val centerFrame = new frames.BodyCentered {
+      def centerBody = new CelestialBody(PosVel.apply(), mu2mass(mu))
+    }
+
+		val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
+		val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
 		val t0 = universe.J2000_EPOCH
 		val te = t0.add(tf, day_julian)
-		val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 
 		val v1_prograde_left 	= 	Vector3D(-1265.9264854521123000,10660.0671819508730000,-1879.6574603427921000)//m/s
 		val v2_prograde_left 	= 	Vector3D(-5584.6019382811455000,8204.5589196619712000,-1446.6851023487011000)//m/s
@@ -100,25 +106,25 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 		val v1_retrograde_right = Vector3D(629.8861440442892700,-9747.3484276097843000,1718.7205181538370000)//m/s
 		val v2_retrograde_right = Vector3D(5396.8566431760819000,-7036.9490066396938000,1240.8039717402089000)//m/s
 
-		val lambertProLeft = new Lambert2(s0, s1, t0, te, center, N, true, true)
+		val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true)
 		val trajectoryProLeft = lambertProLeft.getTrajectory
-    assertEquals(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_left, 3E-6)
-    assertEquals(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_left, 3E-6)
+    assertEquals(trajectoryProLeft.origin.toPosVel.velocity, 				v1_prograde_left, 3E-6)
+    assertEquals(trajectoryProLeft.destination.toPosVel.velocity, 	v2_prograde_left, 3E-6)
 
-		val lambertProRight = new Lambert2(s0, s1, t0, te, center, N, true, false)
+		val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, false)
 		val trajectoryProRight = lambertProRight.getTrajectory
-    assertEquals(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_right, 4E-6)
-    assertEquals(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_right, 4E-6)
+    assertEquals(trajectoryProRight.origin.toPosVel.velocity, 			v1_prograde_right, 4E-6)
+    assertEquals(trajectoryProRight.destination.toPosVel.velocity, 	v2_prograde_right, 4E-6)
 
-		val lambertRetLeft = new Lambert2(s0, s1, t0, te, center, N, false, true)
+		val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, true)
 		val trajectoryRetLeft = lambertRetLeft.getTrajectory
-    assertEquals(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_left, 3E-6)
-    assertEquals(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_left, 3E-6)
+    assertEquals(trajectoryRetLeft.origin.toPosVel.velocity, 				v1_retrograde_left, 3E-6)
+    assertEquals(trajectoryRetLeft.destination.toPosVel.velocity,		v2_retrograde_left, 3E-6)
 
-		val lambertRetRight = new Lambert2(s0, s1, t0, te, center, N, false, false)
+		val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, false)
 		val trajectoryRetRight = lambertRetRight.getTrajectory
-    assertEquals(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_right, 4E-6)
-    assertEquals(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_right, 4E-6)
+    assertEquals(trajectoryRetRight.origin.toPosVel.velocity, 			v1_retrograde_right, 4E-6)
+    assertEquals(trajectoryRetRight.destination.toPosVel.velocity, 	v2_retrograde_right, 4E-6)
 	}
 
 	"The lambert targetter" should "solve the N=4 revolutions case" in {
@@ -128,11 +134,14 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 		val N = 4
 		val mu = 3986004418E5// m^3/s^2
 
-		val s0 = new CartesianElements(r1, Vector3D.ZERO)
-		val s1 = new CartesianElements(r2, Vector3D.ZERO)
+    val centerFrame = new frames.BodyCentered {
+      def centerBody = new CelestialBody(PosVel.apply(), mu2mass(mu))
+    }
+
+		val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
+		val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
 		val t0 = universe.J2000_EPOCH
 		val te = t0.add(tf, day_julian)
-		val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 
 		val v1_prograde_left 	= 	Vector3D(1618.0817850488665000,7225.3760295109969000,-1274.0287397669906000)//m/s
 		val v2_prograde_left 	= 	Vector3D(-5148.0510872930554000,3378.2948229580488000,-595.6845260752310200)//m/s
@@ -143,25 +152,25 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 		val v1_retrograde_right =	Vector3D(-2546.0418701126791000,-6488.7220023867440000,1144.1367593374396000)//m/s
 		val v2_retrograde_right =	Vector3D(5224.7179917529947000,-2070.4309653571795000,365.0728408867440200)//m/s
 
-		val lambertProLeft = new Lambert2(s0, s1, t0, te, center, N, true, true)
+		val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true)
 		val trajectoryProLeft = lambertProLeft.getTrajectory
-    assertEquals(trajectoryProLeft.origin.toCartesianElements.getV, 				v1_prograde_left, 2E-5)
-    assertEquals(trajectoryProLeft.destination.toCartesianElements.getV, 	v2_prograde_left, 2E-5)
+    assertEquals(trajectoryProLeft.origin.toPosVel.velocity, 				v1_prograde_left, 2E-5)
+    assertEquals(trajectoryProLeft.destination.toPosVel.velocity, 	v2_prograde_left, 2E-5)
 
-		val lambertProRight = new Lambert2(s0, s1, t0, te, center, N, true, false)
+		val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, false)
 		val trajectoryProRight = lambertProRight.getTrajectory
-    assertEquals(trajectoryProRight.origin.toCartesianElements.getV, 			v1_prograde_right, 2E-5)
-    assertEquals(trajectoryProRight.destination.toCartesianElements.getV, 	v2_prograde_right, 2E-5)
+    assertEquals(trajectoryProRight.origin.toPosVel.velocity, 			v1_prograde_right, 2E-5)
+    assertEquals(trajectoryProRight.destination.toPosVel.velocity, 	v2_prograde_right, 2E-5)
 
-		val lambertRetLeft = new Lambert2(s0, s1, t0, te, center, N, false, true)
+		val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, true)
 		val trajectoryRetLeft = lambertRetLeft.getTrajectory
-    assertEquals(trajectoryRetLeft.origin.toCartesianElements.getV, 				v1_retrograde_left, 3E-5)
-    assertEquals(trajectoryRetLeft.destination.toCartesianElements.getV,		v2_retrograde_left, 3E-5)
+    assertEquals(trajectoryRetLeft.origin.toPosVel.velocity, 				v1_retrograde_left, 3E-5)
+    assertEquals(trajectoryRetLeft.destination.toPosVel.velocity,		v2_retrograde_left, 3E-5)
 
-		val lambertRetRight = new Lambert2(s0, s1, t0, te, center, N, false, false)
+		val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, false)
 		val trajectoryRetRight = lambertRetRight.getTrajectory
-    assertEquals(trajectoryRetRight.origin.toCartesianElements.getV, 			v1_retrograde_right, 2E-5)
-    assertEquals(trajectoryRetRight.destination.toCartesianElements.getV, 	v2_retrograde_right, 3E-5)
+    assertEquals(trajectoryRetRight.origin.toPosVel.velocity, 			v1_retrograde_right, 2E-5)
+    assertEquals(trajectoryRetRight.destination.toPosVel.velocity, 	v2_retrograde_right, 3E-5)
 	}
 
 	"The lambert targetter" should " not solve the N=5 revolutions case" in {
@@ -172,13 +181,16 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 			val N = 5
 			val mu = 3986004418E5// m^3/s^2
 
-			val s0 = new CartesianElements(r1, Vector3D.ZERO)
-			val s1 = new CartesianElements(r2, Vector3D.ZERO)
+      val centerFrame = new frames.BodyCentered {
+        def centerBody = new CelestialBody(PosVel.apply(), mu2mass(mu))
+      }
+
+			val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
+			val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
 			val t0 = universe.J2000_EPOCH
 			val te = t0.add(tf, day_julian)
-			val center = new CelestialBody(new CartesianElements(), mu2mass(mu))
 
-			new Lambert2(s0, s1, t0, te, center, N, true, true).getTrajectory
+			new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true).getTrajectory
 			fail("The case of N=5 should not be solvable")
 		} catch {
 			case e: GenericRuntimeException =>

@@ -24,6 +24,6 @@ import be.angelcorp.libs.math.functions.MultivariateVectorFunction;
  * @see MultivariateVectorFunction
  * 
  */
-public interface CartesianMultivariateVectorFunction extends MultivariateVectorFunction, Cartesian {
+public interface CartesianMultivariateVectorFunction extends MultivariateVectorFunction {
 
 }

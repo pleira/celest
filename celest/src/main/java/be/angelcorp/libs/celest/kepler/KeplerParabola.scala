@@ -16,68 +16,67 @@
 package be.angelcorp.libs.celest.kepler;
 
 import math._
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements
 import org.apache.commons.math3.analysis.{UnivariateFunction, DifferentiableUnivariateFunction}
 import org.apache.commons.math3.analysis.solvers.NewtonSolver
 import be.angelcorp.libs.math.MathUtils2
+import be.angelcorp.libs.celest.state.Keplerian
 
-class KeplerParabola(k: IKeplerElements) extends KeplerEquations(k) {
+class KeplerParabola(k: Keplerian) extends KeplerEquations(k) {
 
-	override def anomalyFromMeanAnomaly(M: Double) = {
-		val f = new DifferentiableUnivariateFunction() {
-			override def derivative() =
-				new UnivariateFunction() {
-					override def value(B: Double) = 1 + 1 * B * B
-				}
+  lazy val anomaly = KeplerParabola.anomalyFromMean( k.meanAnomaly )
 
-			override def value(B: Double) = B + pow(B, 3) / 3.0 - M
-		}
+  lazy val arealVel = throw new UnsupportedOperationException()
 
-		val solver = new NewtonSolver()
-		solver.solve(50, f, M)
-	}
+  override lazy val flightPathAngle = trueAnomaly / 2
 
-	override def anomalyFromTrueAnomaly(trueA: Double) = {
-		var nu = MathUtils2.mod(trueA, 2 * Pi)
+  def apocenter = Double.PositiveInfinity
 
-		if (nu > Pi)
-			nu = nu - 2 * Pi
+  lazy val pericenter = semiLatusRectum / 2
 
-		tan(nu / 2)
-	}
+  def period = Double.PositiveInfinity
 
-	override def arealVel(µ: Double, a: Double, e: Double) = throw new UnsupportedOperationException()
+  def semiLatusRectum = k.semiMajorAxis// TODO: better solution ?
 
-	override def flightPathAngle() = k.getTrueAnomaly/ 2
+  def totEnergyPerMass = 0
 
-	override def getApocenter() = Double.PositiveInfinity
+	override def visViva(r: Double) = 2 * μ / r
 
-	override def getFundamentalEquation(e: Double, M: Double) = throw new UnsupportedOperationException()
-
-	override def getPericenter() = semiLatusRectum() / 2
-
-	override def meanAnomalyFromAnomaly(anomaly: Double) = anomaly + (anomaly * anomaly * anomaly) / 3.0
-
-	override def meanAnomalyFromTrue(nu: Double) = meanAnomalyFromAnomaly(anomaly())
-
-	override def period(n: Double) = Double.PositiveInfinity
-
-	override def semiLatusRectum() = k.getSemiMajorAxis// TODO: better solution ?
-
-	override def totEnergyPerMass(µ: Double, a: Double) = 0
-
-	override def trueAnomalyFromAnomaly(B: Double) = {
-		val p = semiLatusRectum()
-		val r = KeplerParabola.radius(p, B)
-		atan2(p * B, (p - r))
-	}
-
-	override def visViva(r: Double) = 2 * k.getCenterbody.getMu / r
-
+  def trueAnomaly: Double = KeplerParabola.trueAnomalyFromAnomaly( anomaly )
 }
 
 object KeplerParabola {
 
 	def radius(p: Double, B: Double) = (p / 2) * (1 + B * B)
+
+  def anomalyFromMean(M: Double) = {
+    val f = new DifferentiableUnivariateFunction() {
+      override def derivative() =
+        new UnivariateFunction() {
+          override def value(B: Double) = 1 + 1 * B * B
+        }
+
+      override def value(B: Double) = B + pow(B, 3) / 3.0 - M
+    }
+    if (!(M.isNaN || M.isInfinite )) {
+      val solver = new NewtonSolver()
+      solver.solve(50, f, M)
+    } else M
+  }
+
+  def anomalyFromTrue(trueA: Double) = {
+    val nu = MathUtils2.mod(trueA, 2 * Pi)
+    if (nu > Pi)
+      tan( nu - 2 * Pi )
+    else
+      tan( nu / 2 )
+  }
+
+  def meanAnomalyFromAnomaly(anomaly: Double) = anomaly + (anomaly * anomaly * anomaly) / 3.0
+
+  def meanAnomalyFromTrue(nu: Double) = meanAnomalyFromAnomaly( anomalyFromTrue(nu) )
+
+  def trueAnomalyFromAnomaly(B: Double) = 2.0  * atan(B)
+
+  def trueAnomalyFromMean(M: Double) = trueAnomalyFromAnomaly(anomalyFromMean(M))
 
 }

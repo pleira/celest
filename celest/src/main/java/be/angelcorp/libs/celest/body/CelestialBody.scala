@@ -18,8 +18,7 @@ package be.angelcorp.libs.celest.body
 import be.angelcorp.libs.celest.constants.{Constants, SolarConstants}
 import be.angelcorp.libs.celest.potential.IGravitationalPotential
 import be.angelcorp.libs.celest.potential.PointMassPotential
-import be.angelcorp.libs.celest.state.positionState.CartesianElements
-import be.angelcorp.libs.celest.state.positionState.IPositionState
+import be.angelcorp.libs.celest.state.{Orbit, PosVel}
 
 /**
  * Representation of a celestial body (eg planet/sun/satellite). It is a wrapper for a state vector and
@@ -31,7 +30,7 @@ import be.angelcorp.libs.celest.state.positionState.IPositionState
  *
  * @author simon
  */
-class CelestialBody(val state: 	IPositionState,
+class CelestialBody(val state: 	Orbit,
 										val mass: 	Double,
 										gravityPotentialFactory: CelestialBody => IGravitationalPotential) extends ICelestialBody {
 
@@ -42,7 +41,7 @@ class CelestialBody(val state: 	IPositionState,
 	 * Generic body with coordinates with R: <0, 0, 0> and V: <0, 0, 0> and with mass of our sun (one
 	 * solar mass).
 	 */
-	def this() = this(new CartesianElements, SolarConstants.mass, new PointMassPotential(_))
+	def this() = this( PosVel(), SolarConstants.mass, new PointMassPotential(_))
 
 	/**
 	 * Create a generic body with given statevector (location/speed) and mass
@@ -50,11 +49,11 @@ class CelestialBody(val state: 	IPositionState,
 	 * @param state State of the body.
 	 * @param mass Mass of the body [kg].
 	 */
-	def this(state: IPositionState, mass: Double) = this(state, mass, new PointMassPotential(_))
+	def this(state: Orbit, mass: Double) = this(state, mass, new PointMassPotential(_))
 
 	override def getGravitationalPotential: IGravitationalPotential = gravitationalPotential
 	override def getMu: Double = Constants.mass2mu(mass)
-	override def getState: IPositionState = state
+	override def getState: Orbit = state
 	override def getTotalMass: Double = mass
 
 }

@@ -23,12 +23,13 @@ import org.scalatest.matchers.ShouldMatchers
 
 import be.angelcorp.libs.celest.constants.Constants._
 import be.angelcorp.libs.celest.kepler
-import be.angelcorp.libs.celest.state.positionState.{KeplerElements, CartesianElements}
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.celest.unit.CelestTest._
-import be.angelcorp.libs.celest.body.CelestialBody
+import be.angelcorp.libs.celest.body.{ICelestialBody, CelestialBody}
 import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.libs.celest.unit.CelestTest
+import be.angelcorp.libs.celest.state.PosVel
+import be.angelcorp.libs.celest.frames
 
 
 @RunWith(classOf[JUnitRunner])
@@ -38,32 +39,28 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
 	 * Non-Static function tests
 	 ************************************/
 
-  "KeplerEquations" should "evaluate the elliptical/parabolic/hyperbolic anomaly correctly from e/nu" in {
+  "KeplerEquations" should "evaluate the elliptical/parabolic/hyperbolic anomaly correctly from e/M" in {
 		// Delegates calls, several samples:
 		// Test based on validated samples in ReferenceKeplerAngles class
     ReferenceKeplerAngles.all.foreach( { sample =>
       val k       = ReferenceKeplerAngles.createKeplerElements(sample)
-      val anomaly = k.getOrbitEqn.anomaly
+      val anomaly = k.anomaly
 
-      expect(true, "True anomaly not correct for entry %s, computed %f".format(sample, anomaly))(
+      expect(true, "Anomaly not correct for entry %s, computed %f".format(sample, anomaly))(
         ReferenceKeplerAngles.checkEqualAnomaly(sample, anomaly)
       )
     } )
 	}
 
-	it should "evaluate the elliptical/parabolic/hyperbolic mean anomay correctly from e/nu" in {
+	it should "evaluate the true anomay correctly from e/M" in {
 		// Delegates calls, several samples:
 		// Test based on validated samples in ReferenceKeplerAngles class
     ReferenceKeplerAngles.all.foreach( { sample =>
       val k       = ReferenceKeplerAngles.createKeplerElements(sample)
-      val anomaly = k.getOrbitEqn.meanAnomaly
-
-      val a = if ( !ReferenceKeplerAngles.checkEqualMeanAnomaly(sample, anomaly) )
-        k.getOrbitEqn.meanAnomaly
-    else 0
+      val anomaly = k.trueAnomaly
 
       expect(true, "Mean anomaly not correct for entry %s, computed %f".format(sample, anomaly))(
-        ReferenceKeplerAngles.checkEqualMeanAnomaly(sample, anomaly)
+        ReferenceKeplerAngles.checkEqualTrueAnomaly(sample, anomaly)
       )
     } )
 	}
@@ -79,30 +76,37 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
 	//}
 
 	it should "compute the correct cartesian to kepler conversion" in {
-		val c = new CartesianElements(
+		val frame = new frames.BodyCentered{
+      val centerBody = new CelestialBody(PosVel(), 5.9736E24)
+    }
+    val c = new PosVel(
 				Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
-				Vector3D(1099.2953996,   3455.105924,  4355.0978095))
+				Vector3D(1099.2953996,   3455.105924,  4355.0978095),
+        Some(frame)
+    )
 
-    val k = kepler.cartesian2kepler(c, mass2mu(5.9736E24) )
+    val k = kepler.cartesian2kepler(c, frame.centerBody.getMu )
 		val expected = Array[Double](1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560)
     val tol      = expected.map( _ * 1E-3 )
 
-		assertEquals(expected, k.toVector.toArray, tol)
-
-    val k2 = kepler.cartesian2kepler(c, new CelestialBody(new CartesianElements(), 5.9736E24) )
-		assertEquals(expected, k.toVector.toArray, tol)
+    assertEquals(expected, Array[Double](k._1, k._2, k._3, k._4, k._5, k._6), tol)
 	}
 
   it should "compute the correct cartesian to kepler (2d) conversion" in {
-		val c = new CartesianElements(
+    val frame = new frames.BodyCentered{
+      val centerBody = new CelestialBody(PosVel(), 5.9736E24)
+    }
+		val c = new PosVel(
 				Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
-				Vector3D(1099.2953996,   3455.105924,  4355.0978095))
+				Vector3D(1099.2953996,   3455.105924,  4355.0978095),
+        Some(frame)
+    )
 
-		val k = kepler.cartesian2kepler2D(c, new CelestialBody(new CartesianElements(), 5.9736E24))
+		val k = kepler.cartesian2kepler2D(c, frame.centerBody.getMu)
 
-    k.getSemiMajorAxis should be (1.216495E7 plusOrMinus 1E4 )
-		k.getEccentricity  should be (0.01404    plusOrMinus 1E-5)
-		k.getTrueAnomaly   should be (3.88056    plusOrMinus 1E-2)
+    k._1 should be (1.216495E7 plusOrMinus 1E4 )
+		k._2 should be (0.01404    plusOrMinus 1E-5)
+		k._3 should be (3.88056    plusOrMinus 1E-2)
 	}
 
   it should "compute the correct eccentricity from Ra and Rp" in {
@@ -115,15 +119,6 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
     kepler.eccentricity(Rp, Ra) should be (0.207606972 plusOrMinus 1E-9)
 	}
 
-
-  it should "correclty correct NaN's in the orbit plane with fix2dOrbit" in {
-    val k  = new KeplerElements(0, 0, 0, Double.NaN, Double.NaN, 0)
-    val k2 = kepler.fix2dOrbit(k)
-
-    assert( !k2.getRaan.isNaN )
-    assert( !k2.getArgumentPeriapsis.isNaN )
-	}
-
   it should "compute the correct flight path angle" in {
 		// http://www.wolframalpha.com/input/?i=mean+anomaly+5+radian+eccentricity+0.6
 		val gamma = mod(kepler.flightPathAngle(0.6, -2.427), 2 * Pi)
@@ -133,14 +128,13 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
   it should "compute the kepler elements for cartesian elements" in {
     // Values from keplerCOE from Matlab Orbital_Library by Richard Rieber
 		val c = kepler.kepler2cartesian( 1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560, mass2mu(5.9736E24))
-		val c_true = new CartesianElements(
+		val c_true = new PosVel(
 				Vector3D(1.092882447232868e+007, -5.619415989750504e+006, -1.715953308630781e+005),
 				Vector3D(1.466941526515634e+003, +3.108913288555892e+003, -4.504368922790057e+003)
     )
 
-    CelestTest.assertEquals( c.toVector.toArray,
-                             c_true.toVector.toArray,
-                             c_true.toVector.toArray.map( v => abs( v * 1E-12 ) ) )
+    CelestTest.assertEquals( c._1.toArray, c_true.position.toArray, c_true.position.toArray.map( v => abs( v * 1E-12 ) ) )
+    CelestTest.assertEquals( c._2.toArray, c_true.velocity.toArray, c_true.velocity.toArray.map( v => abs( v * 1E-12 ) ) )
 	}
 
 }

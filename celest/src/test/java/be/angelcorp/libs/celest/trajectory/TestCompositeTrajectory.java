@@ -15,18 +15,20 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
+import be.angelcorp.libs.celest.frames.IReferenceFrame;
+import be.angelcorp.libs.celest.state.Orbit;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import org.junit.Test;
 
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.util.physics.Time;
+import scala.Option;
 
 public class TestCompositeTrajectory extends CelestTest {
 
@@ -37,41 +39,23 @@ public class TestCompositeTrajectory extends CelestTest {
 	 * 
 	 * @author simon
 	 */
-	public class TestState implements IPositionState {
+	public class TestState implements Orbit {
 		private final IJulianDate	constant;
 
 		public TestState(IJulianDate t) {
 			constant = t;
 		}
 
-		@Override
-		public TestState clone() {
-			throw new UnsupportedOperationException("Not implemented yet");
-		}
+        @Override
+        public Option<IReferenceFrame> frame() {
+            throw new UnsupportedOperationException();
+        }
 
-		@Override
-		public boolean equals(IPositionState obj) {
-			if (TestState.class.isAssignableFrom(obj.getClass()))
-				return ((TestState) obj).constant == constant;
-			return false;
-		}
-
-		@Override
-		public boolean equals(IPositionState obj, double eps) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public ICartesianElements toCartesianElements() {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public RealVector toVector() {
-			return new ArrayRealVector(new double[] { constant.getJD() });
-		}
-
-	}
+        @Override
+        public PosVel toPosVel() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
 	/**
 	 * Test trajectory that returns the time at which it is evalutated
@@ -87,7 +71,7 @@ public class TestCompositeTrajectory extends CelestTest {
 		}
 
 		@Override
-		public IPositionState evaluate(IJulianDate t) {
+		public Orbit evaluate(IJulianDate t) {
 			return new TestState(t.add(id, Time.day));
 		}
 
@@ -106,20 +90,15 @@ public class TestCompositeTrajectory extends CelestTest {
 		trajectory.addTrajectory(t3, new JulianDate(20, universe));
 
 		// Equal begin time as t1
-		CelestTest.assertEquals(new double[] { 100 },
-				trajectory.evaluate(new JulianDate(0, universe)).toVector().toArray(), 1E-16);
+		assertEquals(((TestState)trajectory.evaluate(new JulianDate(0, universe))).constant.getJD(), 100, 1E-16);
 		// In between t1 and t2, t1 should be used
-		CelestTest.assertEquals(new double[] { 105 },
-				trajectory.evaluate(new JulianDate(5, universe)).toVector().toArray(), 1E-16);
+        assertEquals(((TestState)trajectory.evaluate(new JulianDate(5, universe))).constant.getJD(), 105, 1E-16);
 		// Same as above but s2
-		CelestTest.assertEquals(new double[] { 215 },
-				trajectory.evaluate(new JulianDate(15, universe)).toVector().toArray(), 1E-16);
-		// Same insertion time as s3
-		CelestTest.assertEquals(new double[] { 320 },
-				trajectory.evaluate(new JulianDate(20, universe)).toVector().toArray(), 1E-16);
-		// Time after the last insertion
-		CelestTest.assertEquals(new double[] { 325 },
-				trajectory.evaluate(new JulianDate(25, universe)).toVector().toArray(), 1E-16);
+        assertEquals(((TestState)trajectory.evaluate(new JulianDate(15, universe))).constant.getJD(), 215, 1E-16);
+        // Same insertion time as s3
+        assertEquals(((TestState)trajectory.evaluate(new JulianDate(20, universe))).constant.getJD(), 320, 1E-16);
+        // Time after the last insertion
+        assertEquals(((TestState)trajectory.evaluate(new JulianDate(25, universe))).constant.getJD(), 325, 1E-16);
 	}
 
 	@Test(expected = ArithmeticException.class)

@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.trajectory;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 import com.google.common.collect.Maps;
@@ -50,7 +50,7 @@ public class CompositeTrajectory implements ICompositeTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IPositionState evaluate(IJulianDate t) {
+	public Orbit evaluate(IJulianDate t) {
 		Entry<IJulianDate, ITrajectory> entry = trajectories.floorEntry(t);
 		if (entry == null)
 			throw new ArithmeticException("No trajectory found for julian date " + t.getJD());

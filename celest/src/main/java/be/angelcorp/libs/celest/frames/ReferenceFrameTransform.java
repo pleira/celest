@@ -16,12 +16,11 @@
 package be.angelcorp.libs.celest.frames;
 
 import be.angelcorp.libs.celest.frames.ReferenceFrameTransformFactory.TransformationParameters;
+import be.angelcorp.libs.celest.state.Orbit;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.state.orientationState.IOrientationState;
 import be.angelcorp.libs.celest.state.positionState.CartesianDerivative;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -122,16 +121,17 @@ public class ReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CartesianElements transform(IPositionState positionState) {
-		ICartesianElements cartesianElements = positionState.toCartesianElements();
+	public PosVel transform(Orbit positionState) {
+        PosVel cartesianElements = positionState.toPosVel();
 
-		Vector3D p_f0 = cartesianElements.getR();
-		Vector3D v_f0 = cartesianElements.getV();
+		Vector3D p_f0 = cartesianElements.position();
+		Vector3D v_f0 = cartesianElements.velocity();
 
 		Vector3D p_f1 = transformPosition(p_f0);
 		Vector3D v_f1 = transformVelocity(p_f0, v_f0);
 
-		CartesianElements state_f1 = new CartesianElements(p_f1, v_f1);
+        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+        PosVel state_f1 = new PosVel(p_f1, v_f1, none);
 		return state_f1;
 	}
 
@@ -139,12 +139,12 @@ public class ReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CartesianDerivative transform(IPositionState positionState,
+	public CartesianDerivative transform(Orbit positionState,
 			IPositionStateDerivative positionStateDerivative) {
-		ICartesianElements cartesianElements = positionState.toCartesianElements();
+        PosVel cartesianElements = positionState.toPosVel();
 		ICartesianDerivative cartesianDerivative = positionStateDerivative.toCartesianDerivative();
 
-		Vector3D p_f0 = cartesianElements.getR();
+		Vector3D p_f0 = cartesianElements.position();
 		Vector3D v_f0 = cartesianDerivative.getV();
 		Vector3D a_f0 = cartesianDerivative.getA();
 

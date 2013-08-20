@@ -24,6 +24,6 @@ import be.angelcorp.libs.math.functions.MultivariateVectorFunction;
  * @see MultivariateVectorFunction
  * 
  */
-public interface KeplerianMultivariateVectorFunction extends MultivariateVectorFunction, Keplerian {
+public interface KeplerianMultivariateVectorFunction extends MultivariateVectorFunction {
 
 }

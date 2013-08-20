@@ -17,10 +17,9 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import static org.apache.commons.math3.util.FastMath.PI;
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
+import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.IJulianDate;
-import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
@@ -58,13 +57,14 @@ public class TestExpoSin extends CelestTest {
 		IJulianDate t1 = universe.J2000_EPOCH();
 		IJulianDate t2 = universe.J2000_EPOCH().add(dt, Time.second);
 
-		ICartesianElements s1 = new CartesianElements(
-				new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO());
-		ICartesianElements s2 = new CartesianElements(
-				Vector3D$.MODULE$.apply(dTheta, 0).multiply(r2), Vector3D$.MODULE$.ZERO());
+        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+		PosVel s1 = new PosVel(
+				new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO(), none);
+        PosVel s2 = new PosVel(
+				Vector3D$.MODULE$.apply(dTheta, 0).multiply(r2), Vector3D$.MODULE$.ZERO(), none);
 
 		ExpoSin exposin = new ExpoSin(s1, s2, t1, t2);
-        exposin.setCenter(new CelestialBody(new CartesianElements(), 1.9891E30) );
+        exposin.setCenter(new CelestialBody(PosVel.apply(), 1.9891E30) );
 		exposin.assumeK2(k2);
 
 		// Results as computed by the Matlab routine:
@@ -94,28 +94,29 @@ public class TestExpoSin extends CelestTest {
 		assertEquals(0, shape.getQ0(), 1E-16);
 		assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-8);
 
-		ICartesianElements c1 = trajectory.evaluate(t1);
-		ICartesianElements c2 = trajectory.evaluate(t2);
-		assertEquals(r1, c1.getR().norm(), 1e-16);
-		assertEquals(r2, c2.getR().norm(), 1);
-		assertEquals(ml_V2.x(), c2.getV().x(), 1E-1);
-		assertEquals(ml_V2.y(), c2.getV().y(), 1E-1);
-		assertEquals(ml_V2.z(), c2.getV().z(), 1E-1);
-		assertEquals(ml_V1.x(), c1.getV().x(), 1E-1);
-		assertEquals(ml_V1.y(), c1.getV().y(), 1E-1);
-		assertEquals(ml_V1.z(), c1.getV().z(), 1E-1);
+        PosVel c1 = trajectory.evaluate(t1);
+		PosVel c2 = trajectory.evaluate(t2);
+		assertEquals(r1, c1.position().norm(), 1e-16);
+		assertEquals(r2, c2.position().norm(), 1);
+		assertEquals(ml_V2.x(), c2.velocity().x(), 1E-1);
+		assertEquals(ml_V2.y(), c2.velocity().y(), 1E-1);
+		assertEquals(ml_V2.z(), c2.velocity().z(), 1E-1);
+		assertEquals(ml_V1.x(), c1.velocity().x(), 1E-1);
+		assertEquals(ml_V1.y(), c1.velocity().y(), 1E-1);
+		assertEquals(ml_V1.z(), c1.velocity().z(), 1E-1);
 	}
 
 	public void testN3() throws Exception {
 		double k2 = 1. / 12.;
 		double dt = Time.convert(1E-3, Time.day);
 		int N = 3;
-		ICartesianElements r1 = new CartesianElements(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO());
-		ICartesianElements r2 = new CartesianElements(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO());
+        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+		PosVel r1 = new PosVel(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO(), none);
+        PosVel r2 = new PosVel(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO(), none);
 
 		IJulianDate t1 = universe.J2000_EPOCH();
 		IJulianDate t2 = universe.J2000_EPOCH().add(dt, Time.second);
-		CelestialBody center = new CelestialBody(new CartesianElements(), Constants.mu2mass(1E4) );
+		CelestialBody center = new CelestialBody(PosVel.apply(), Constants.mu2mass(1E4) );
 
 		ExpoSin exposin = new ExpoSin(r1, r2, t1, t2);
 		exposin.setCenter(center);
@@ -149,15 +150,15 @@ public class TestExpoSin extends CelestTest {
 		assertEquals(0, shape.getQ0(), 1E-16);
 		assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-2);
 
-		ICartesianElements c1 = trajectory.evaluate(t1);
-		ICartesianElements c2 = trajectory.evaluate(t2);
-        assertEquals(r1.getR().norm(), c1.getR().norm(), 1e-15);
-        assertEquals(r2.getR().norm(), c2.getR().norm(), 1);
-        assertEquals(ml_V2.x(), c2.getV().x(), 1E-1);
-        assertEquals(ml_V2.y(), c2.getV().y(), 1E-1);
-        assertEquals(ml_V2.z(), c2.getV().z(), 1E-1);
-        assertEquals(ml_V1.x(), c1.getV().x(), 1E-1);
-        assertEquals(ml_V1.y(), c1.getV().y(), 1E-1);
-        assertEquals(ml_V1.z(), c1.getV().z(), 1E-1);
+		PosVel c1 = trajectory.evaluate(t1);
+        PosVel c2 = trajectory.evaluate(t2);
+        assertEquals(r1.position().norm(), c1.position().norm(), 1e-15);
+        assertEquals(r2.position().norm(), c2.position().norm(), 1);
+        assertEquals(ml_V2.x(), c2.velocity().x(), 1E-1);
+        assertEquals(ml_V2.y(), c2.velocity().y(), 1E-1);
+        assertEquals(ml_V2.z(), c2.velocity().z(), 1E-1);
+        assertEquals(ml_V1.x(), c1.velocity().x(), 1E-1);
+        assertEquals(ml_V1.y(), c1.velocity().y(), 1E-1);
+        assertEquals(ml_V1.z(), c1.velocity().z(), 1E-1);
 	}
 }

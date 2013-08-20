@@ -15,14 +15,12 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
-import org.junit.Test;
-
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.state.positionState.PositionState;
 import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
+import org.junit.Test;
 
 public class TestDiscreteTrajectory extends CelestTest {
 
@@ -33,7 +31,7 @@ public class TestDiscreteTrajectory extends CelestTest {
 		DiscreteTrajectory trajectory = new DiscreteTrajectory();
 
 		// Add a state a t=0
-		PositionState s1 = new CartesianElements();
+		PosVel s1 = PosVel.apply();
 		trajectory.addState(new JulianDate(0, universe), s1);
 
 		try {
@@ -48,9 +46,9 @@ public class TestDiscreteTrajectory extends CelestTest {
 		DiscreteTrajectory trajectory = new DiscreteTrajectory();
 
 		// Add various states at various times
-		PositionState s1 = new CartesianElements();
-		PositionState s2 = new CartesianElements();
-		PositionState s3 = new CartesianElements();
+        PosVel s1 = PosVel.apply();
+        PosVel s2 = PosVel.apply();
+        PosVel s3 = PosVel.apply();
 		trajectory.addState(new JulianDate(0,  universe), s1);
 		trajectory.addState(new JulianDate(10, universe), s2);
 		trajectory.addState(new JulianDate(20, universe), s3);

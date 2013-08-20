@@ -15,8 +15,8 @@
  */
 package be.angelcorp.libs.celest.frames;
 
+import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.state.orientationState.IOrientationState;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
@@ -82,7 +82,7 @@ public interface IReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends
 	 * @return A new {@link IPositionState} which is equivalent to given {@link IPositionState}, but in
 	 *         the new {@link IReferenceFrame}.
 	 */
-	public abstract IPositionState transform(IPositionState positionState);
+	public abstract Orbit transform(Orbit positionState);
 
 	/**
 	 * Transform a {@link IPositionStateDerivative} into a new {@link IReferenceFrame}.
@@ -94,7 +94,7 @@ public interface IReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends
 	 * @return A new {@link IPositionStateDerivative} which is equivalent to given
 	 *         {@link IPositionStateDerivative}, but in the new {@link IReferenceFrame}.
 	 */
-	public abstract IPositionStateDerivative transform(IPositionState positionState,
+	public abstract IPositionStateDerivative transform(Orbit positionState,
 			IPositionStateDerivative positionStateDerivative);
 
 	/**

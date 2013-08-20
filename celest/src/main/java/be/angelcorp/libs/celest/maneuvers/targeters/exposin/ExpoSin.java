@@ -19,12 +19,12 @@ import static org.apache.commons.math3.util.FastMath.PI;
 import static org.apache.commons.math3.util.FastMath.acos;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
+import be.angelcorp.libs.celest.state.PosVel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -82,7 +82,7 @@ public class ExpoSin extends TPBVP {
 	 * @param arrival
 	 *            Epoch of arrival (epoch at r2) [jd]
 	 */
-	public ExpoSin(IPositionState r1, IPositionState r2, IJulianDate departure, IJulianDate arrival) {
+	public ExpoSin(PosVel r1, PosVel r2, IJulianDate departure, IJulianDate arrival) {
 		super(r1, r2, departure, arrival);
 	}
 
@@ -122,8 +122,8 @@ public class ExpoSin extends TPBVP {
 	 * @return All possible exposin solutions
 	 */
 	public ExpoSinSolutionSet getSolutionSet() {
-		Vector3D r1vec = this.r1.toCartesianElements().getR();
-		Vector3D r2vec = this.r2.toCartesianElements().getR();
+		Vector3D r1vec = this.r1.toPosVel().position();
+		Vector3D r2vec = this.r2.toPosVel().position();
 		double r1 = r1vec.norm();
 		double r2 = r2vec.norm();
 

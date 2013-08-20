@@ -15,11 +15,10 @@
  */
 package be.angelcorp.libs.celest.state.positionState;
 
-import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
- * Stores the state derivatives of an object state (usually {@link CartesianElements}). This is done
+ * Stores the state derivatives of an object state (usually {@link be.angelcorp.libs.celest.state.PosVel}). This is done
  * using Cartesian velocity V (&#7819;, &#7823;, &#380;) and its acceleration A (x&#776;, y&#776;,
  * z&#776;).
  * 
@@ -31,7 +30,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author Simon Billemont
  * 
  */
-public interface ICartesianDerivative extends Cartesian, IPositionStateDerivative {
+public interface ICartesianDerivative extends IPositionStateDerivative {
 
 	/**
 	 * Check if two {@link ICartesianDerivative} are exactly equal (two NaN elements are considered
@@ -64,14 +63,14 @@ public interface ICartesianDerivative extends Cartesian, IPositionStateDerivativ
 
 	/**
 	 * Get the acceleration vector (the derivative of the velocity vector of the
-	 * {@link ICartesianElements})
+	 * {@link be.angelcorp.libs.celest.state.PosVel})
 	 * 
 	 * @return The acceleration vector [m/s<sup>2</sup>]
 	 */
 	public abstract Vector3D getA();
 
 	/**
-	 * Get the velocity vector (the derivative of the position vector of the {@link ICartesianElements},
+	 * Get the velocity vector (the derivative of the position vector of the {@link be.angelcorp.libs.celest.state.PosVel},
 	 * equal to it velocity elements)
 	 * 
 	 * @return The velocity vector [m/s]
@@ -80,7 +79,7 @@ public interface ICartesianDerivative extends Cartesian, IPositionStateDerivativ
 
 	/**
 	 * Set the acceleration vector (the derivative of the velocity vector of the
-	 * {@link ICartesianElements})
+	 * {@link be.angelcorp.libs.celest.state.PosVel})
 	 * 
 	 * @param a
 	 *            The acceleration vector [m/s<sup>2</sup>]
@@ -88,7 +87,7 @@ public interface ICartesianDerivative extends Cartesian, IPositionStateDerivativ
 	public abstract void setA(Vector3D a);
 
 	/**
-	 * Set the velocity vector (the derivative of the position vector of the {@link ICartesianElements},
+	 * Set the velocity vector (the derivative of the position vector of the {@link be.angelcorp.libs.celest.state.PosVel},
 	 * equal to it velocity elements)
 	 * 
 	 * @param v

@@ -16,7 +16,7 @@
 package be.angelcorp.libs.celest.constants
 
 import be.angelcorp.libs.celest.body.CelestialBody
-import be.angelcorp.libs.celest.state.positionState.CartesianElements
+import be.angelcorp.libs.celest.state.PosVel
 
 /**
  * Different constants specific to the sun. Has constants in the following categories:
@@ -108,5 +108,5 @@ object SolarConstants {
 	val volume = 1.412E27
 
 	/** Celestial body representation of the sun. */
-	val body = new CelestialBody(new CartesianElements(), mass)
+	val body = new CelestialBody( PosVel(), mass)
 }

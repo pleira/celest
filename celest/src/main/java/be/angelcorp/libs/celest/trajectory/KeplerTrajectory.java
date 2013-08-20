@@ -15,10 +15,8 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import be.angelcorp.libs.celest.kepler.KeplerEquations;
 import be.angelcorp.libs.celest.kepler.package$;
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements;
-import be.angelcorp.libs.celest.state.positionState.KeplerElements;
+import be.angelcorp.libs.celest.state.Keplerian;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.util.physics.Time;
 
@@ -34,8 +32,8 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	/**
 	 * Initial Kepler elements that are propagated
 	 */
-	private final IKeplerElements	k;
-	private final IJulianDate		epoch;
+	private final Keplerian k;
+	private final IJulianDate epoch;
 
 	/**
 	 * Create a trajectory based on propagated classical (Kepler) elements.
@@ -43,7 +41,7 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	 * @param k
 	 *            Initial Kepler elements at time 0.
 	 */
-	public KeplerTrajectory(IKeplerElements k, IJulianDate epoch) {
+	public KeplerTrajectory(Keplerian k, IJulianDate epoch) {
 		this.k = k;
 		this.epoch = epoch;
 	}
@@ -52,13 +50,11 @@ public class KeplerTrajectory implements IKeplerTrajectory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IKeplerElements evaluate(IJulianDate t) {
-		double n = package$.MODULE$.meanMotion(k.getCenterbody().getMu(), k.getSemiMajorAxis());
+	public Keplerian evaluate(IJulianDate t) {
+        double n = k.quantities().meanMotion();
 		double dt = t.relativeTo(epoch, Time.second); // Delta between epoch and now in [s]
 		double dM = n * dt;
-		double nu2 = k.getOrbitEqn().trueAnomalyFromMean(k.getOrbitEqn().meanAnomaly() + dM);
-		IKeplerElements k2 = new KeplerElements(k, nu2);
-		return k2;
+		return new Keplerian(k.a(), k.e(), k.i(), k.ω(), k.Ω(), k.meanAnomaly() + dM, k.frame());
 	}
 
 }

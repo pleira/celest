@@ -17,7 +17,6 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.constants.Constants;
-import be.angelcorp.libs.celest.math.Cartesian;
 import be.angelcorp.libs.celest.physics.EM.IEMspectrum;
 import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -28,7 +27,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author simon
  * 
  */
-public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
+public class SolarRadiationPressure_C extends ObjectForce {
 
 	/**
 	 * Cross sectional (reflective) area
@@ -146,8 +145,8 @@ public class SolarRadiationPressure_C extends ObjectForce implements Cartesian {
 	@Override
 	public Vector3D toAcceleration() {
 		// Relative position vector of spacecraft w.r.t. Sun (from the sun to s/c)
-		Vector3D d = getObject().getState().toCartesianElements().getR().$minus(
-						getStar().getState().toCartesianElements().getR());
+		Vector3D d = getObject().getState().toPosVel().position().$minus(
+                getStar().getState().toPosVel().position());
 
 		double dnorm = d.norm();
 		double dcube = dnorm * dnorm * dnorm;

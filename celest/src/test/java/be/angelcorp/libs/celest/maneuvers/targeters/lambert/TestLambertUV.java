@@ -16,21 +16,18 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
 import be.angelcorp.libs.celest.constants.Constants;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
-import org.junit.Ignore;
-
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
-import be.angelcorp.libs.celest.time.JulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
+import org.junit.Ignore;
 
 @Ignore
 public class TestLambertUV extends CelestTest {
@@ -48,7 +45,7 @@ public class TestLambertUV extends CelestTest {
 		// V1 = 27.4408 -14.0438 0.5468 (km/s)
 		// V2 = -24.5242 18.6776 -0.4856 (km/s)
 
-		CelestialBody center = new CelestialBody(new CartesianElements(), Constants.mu2mass(1.32712428E20));
+		CelestialBody center = new CelestialBody(PosVel.apply(), Constants.mu2mass(1.32712428E20));
 
 		Vector3D r1 = new ImmutableVector3D(1.364377463519496E11, 6.129036612130551E10, 2.784835397959758E09);
 		Vector3D r2 = new ImmutableVector3D(3.730051396741382E09, -1.495513611895726E11, 0.);
@@ -56,8 +53,8 @@ public class TestLambertUV extends CelestTest {
 		IJulianDate departure = universe.J2000_EPOCH();
 		IJulianDate arrival   = universe.J2000_EPOCH().add(300, Time.day);
 		LambertUV lambert = new LambertUV(
-				new CartesianElements(r1, Vector3D$.MODULE$.ZERO()),
-				new CartesianElements(r2, Vector3D$.MODULE$.ZERO()),
+				new PosVel(r1, Vector3D$.MODULE$.ZERO(), null),
+				new PosVel(r2, Vector3D$.MODULE$.ZERO(), null),
 				center, departure, arrival, false);
 
 		ITrajectory trajectory = lambert.getTrajectory();
@@ -65,9 +62,9 @@ public class TestLambertUV extends CelestTest {
 		Vector3D v2Expected = new ImmutableVector3D(-2.452424882838209E04, 1.867758520103548E04, -4.856158493467824e+002);
 
 		// Check to 1 mm/s accuracy:
-		ICartesianElements state1 = trajectory.evaluate(departure).toCartesianElements();
-		assertTrue(state1.equals(new CartesianElements(r1, v1Expected), 1e-3));
-		ICartesianElements state2 = trajectory.evaluate(arrival).toCartesianElements();
-		assertTrue(state1.equals(new CartesianElements(r2, v2Expected), 1e-3));
+        PosVel state1 = trajectory.evaluate(departure).toPosVel();
+        assertEquals( new PosVel(r1, v1Expected, null), state1, 1E-3, 1E-3);
+        PosVel state2 = trajectory.evaluate(arrival).toPosVel();
+		assertEquals( new PosVel(r2, v2Expected, null), state2, 1E-3, 1E-3);
 	}
 }

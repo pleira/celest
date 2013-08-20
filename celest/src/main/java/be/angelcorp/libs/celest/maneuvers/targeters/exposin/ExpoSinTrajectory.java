@@ -19,6 +19,8 @@ import static org.apache.commons.math3.util.FastMath.abs;
 import static org.apache.commons.math3.util.FastMath.cos;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
+import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.math.rotation.RotationMatrix$;
@@ -30,8 +32,6 @@ import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
 import org.apache.commons.math3.analysis.solvers.RiddersSolver;
 
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
@@ -90,7 +90,7 @@ public class ExpoSinTrajectory implements ITrajectory {
 	 * &lt;r1, 0, 0&gt;, and moves around in the XY plane over time.
 	 */
 	@Override
-	public ICartesianElements evaluate(IJulianDate evalEpoch) {
+	public PosVel evaluate(IJulianDate evalEpoch) {
 		// Travel time from the start position [s]
 		final double t = evalEpoch.relativeTo(epoch, Time.second);
 
@@ -137,7 +137,8 @@ public class ExpoSinTrajectory implements ITrajectory {
 		Vector3D V = rotation.applyTo(Vector3D$.MODULE$.apply(V_r, R.normalize(), V_theta, V_theta_norm));
 
 		// Convert to the position in cartesian elements (in plane coordinates)
-		return new CartesianElements(R, V);
+		final scala.Option<BodyCentered> none = scala.Option.apply(null);
+        return new PosVel(R, V, none);
 	}
 
 	/**

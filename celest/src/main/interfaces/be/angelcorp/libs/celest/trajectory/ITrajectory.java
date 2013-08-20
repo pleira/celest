@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.trajectory;
 
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.time.IJulianDate;
 
 /**
@@ -32,9 +32,7 @@ public interface ITrajectory {
 	 * @param t
 	 *            Time of the epoch [jd, UT]
 	 * @return The state at the given epoch
-	 * @throws FunctionEvaluationException
-	 *             When the state cannot be computed
 	 */
-	public IPositionState evaluate(IJulianDate t);
+	public Orbit evaluate(IJulianDate t);
 
 }

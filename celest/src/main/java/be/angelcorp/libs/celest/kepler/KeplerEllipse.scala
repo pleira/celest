@@ -15,68 +15,43 @@
  */
 package be.angelcorp.libs.celest.kepler
 
-import be.angelcorp.libs.celest.state.positionState.IKeplerElements
 import scala.math._
 import org.apache.commons.math3.analysis.{UnivariateFunction, DifferentiableUnivariateFunction}
 import be.angelcorp.libs.math.MathUtils2
+import be.angelcorp.libs.celest.state.Keplerian
 
-class KeplerEllipse(k: IKeplerElements) extends KeplerEquations(k) {
+class KeplerEllipse(k: Keplerian) extends KeplerEquations(k) {
 
-	override def anomaly() = anomalyFromTrueAnomaly(k.getTrueAnomaly)
-	override def anomalyFromMeanAnomaly(M: Double)  = KeplerEllipse.eccentricAnomaly(M, k.getEccentricity)
-	override def anomalyFromTrueAnomaly(nu: Double) = KeplerEllipse.eccentricAnomalyFromTrue(nu, k.getEccentricity)
+  lazy val anomaly = KeplerEllipse.eccentricAnomalyFromMean(k.meanAnomaly, k.eccentricity)
 
-	override def arealVel(µ: Double, a: Double, e: Double) = sqrt(a * µ * (1 - e * e)) / 2
+	def arealVel = sqrt( k.a * μ * (1 - k.e * k.e)) / 2
 
-	/**
-	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
-	 * simple Newton-Raphson iteration
-	 * 
-	 * @return The eccentric anomaly
-	 */
-	def eccentricAnomaly() =
-		KeplerEllipse.eccentricAnomaly(meanAnomalyFromTrue(k.getTrueAnomaly), k.getEccentricity)
+	def apocenter  = k.semiMajorAxis * (1 + k.eccentricity)
 
-	override def getFundamentalEquation(e: Double, M: Double) =
-		new DifferentiableUnivariateFunction(){
-			override def derivative() = {
-				new UnivariateFunction() {
-					override def value(H: Double) =1 - e * cos(H)
-				}
-			}
-			override def value(E: Double) = E - e * sin(E) - M
-		}
+  def pericenter = k.semiMajorAxis * (1 - k.eccentricity)
 
-	override def getApocenter()  = k.getSemiMajorAxis * (1 + k.getEccentricity)
-	override def getPericenter() = k.getSemiMajorAxis * (1 - k.getEccentricity)
+	def period = 2 * Pi / meanMotion
 
-	override def meanAnomalyFromAnomaly(E: Double) = E - k.getEccentricity * sin(E)
-	override def meanAnomalyFromTrue(nu: Double)   = meanAnomalyFromAnomaly( anomalyFromTrueAnomaly(nu) )
+  def semiLatusRectum  = k.semiMajorAxis* (1 - k.eccentricity * k.eccentricity)
 
-	override def period(n: Double)  = 2 * Pi / n
+  def totEnergyPerMass = - μ / (2 * k.semiMajorAxis)
 
-	override def semiLatusRectum()  = k.getSemiMajorAxis * (1 - k.getEccentricity * k.getEccentricity)
-
-	override def totEnergyPerMass(µ: Double, a: Double) = -µ / (2 * a)
-
-	override def trueAnomalyFromAnomaly(E: Double) = {
-		val e = k.getEccentricity
-		atan2(sin(E) * sqrt(1 - e * e), cos(E) - e)
-	}
+  lazy val trueAnomaly =  KeplerEllipse.trueAnomalyFromEccentric( anomaly, k.eccentricity )
 
 }
 
 object KeplerEllipse {
 
 	/**
-	 * Solves for eccentric anomaly, E, from a given mean anomaly, M, and eccentricity, ecc. Performs a
-	 * simple Newton-Raphson iteration
+	 * Solves for eccentric anomaly (E), from a given mean anomaly (M), and eccentricity (e).
+   *
+   * This is done by solving Kepler's equation for ellipses using a basic Newton-Raphson iteration scheme.
 	 *
-	 * @param MA Mean anomaly
-	 * @param e Eccentricity
-	 * @return The eccentric anomaly
+	 * @param MA Mean anomaly [rad]
+	 * @param e Eccentricity [-]
+	 * @return The eccentric anomaly [rad]
 	 */
-	def eccentricAnomaly(MA: Double, e: Double) = {
+	def eccentricAnomalyFromMean(MA: Double, e: Double) = {
 		val M = MathUtils2.mod(MA, 2 * Pi)
 
 		var E = if ((M > -Pi && M < 0) || M > Pi) M - e else M + e
@@ -97,5 +72,41 @@ object KeplerEllipse {
 	 * @return Eccentric anomaly [rad]
 	 */
 	def eccentricAnomalyFromTrue(nu: Double, e: Double)  = atan2( sqrt(1 - e * e) * sin(nu), e + cos(nu))
+
+  /**
+   * Compute the true anomaly &nu; from the eccentric anomaly E;.
+   *
+   * @param E Eccentric anomaly [rad]
+   * @param e Eccentricity [-]
+   * @return True anomaly [rad]
+   */
+  def trueAnomalyFromEccentric(E: Double, e: Double) = atan2(sin(E) * sqrt(1 - e * e), cos(E) - e)
+
+  /**
+   * Compute the true anomaly &nu; from the mean anomaly M;.
+   *
+   * @param M Mean anomaly [rad]
+   * @param e Eccentricity [-]
+   * @return True anomaly [rad]
+   */
+  def trueAnomalyFromMean(M: Double, e: Double) = trueAnomalyFromEccentric( eccentricAnomalyFromMean(M, e) , e)
+
+  /**
+   * Compute the mean anomaly M from the true anomaly &nu;.
+   *
+   * @param nu True anomaly [rad]
+   * @param e Eccentricity [-]
+   * @return Mean anomaly [rad]
+   */
+  def meanAnomalyFromTrue(nu: Double, e: Double) = meanAnomalyFromEccentric( eccentricAnomalyFromTrue(nu, e), e )
+
+  /**
+   * Compute the mean anomaly M from the eccentric anomaly E.
+   *
+   * @param EA Eccentric anomaly [rad]
+   * @param e Eccentricity [-]
+   * @return Mean anomaly [rad]
+   */
+  def meanAnomalyFromEccentric(EA: Double, e: Double) = EA - e * sin( EA )
 
 }

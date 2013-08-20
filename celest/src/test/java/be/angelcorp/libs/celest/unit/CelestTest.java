@@ -15,6 +15,9 @@
  */
 package be.angelcorp.libs.celest.unit;
 
+import be.angelcorp.libs.celest.state.Keplerian;
+import be.angelcorp.libs.celest.state.PosVel;
+import be.angelcorp.libs.celest.state.Spherical;
 import be.angelcorp.libs.math.linear.Matrix3D;
 import be.angelcorp.libs.math.rotation.AxisAngle;
 import be.angelcorp.libs.math.rotation.RotationMatrix;
@@ -142,4 +145,47 @@ public abstract class CelestTest extends TestCase {
     public static double matrixError(Matrix3D m1, Matrix3D m2) {
      return new AxisAngle( m2.transpose().cross(m1) ).getAngle();
     }
+
+    public static void angleEquals( double expected, double actual, double tolerance ) {
+        double difference = Math.abs((expected - actual + Math.PI) % (2*Math.PI) - Math.PI);
+        assertTrue(
+            String.format("Angle not equal. Expected %.16f != %.16f actual, difference %e > tolerance %e", expected, actual, difference, tolerance),
+            difference < tolerance
+        );
+    }
+
+    public static void assertEquals( PosVel expected, PosVel actual, double positionError, double velocityError ) {
+        assertEquals( expected.position().norm(), actual.position().norm(), positionError );
+        assertEquals( expected.position().x(),    actual.position().x(),    positionError );
+        assertEquals( expected.position().y(),    actual.position().y(),    positionError );
+        assertEquals( expected.position().z(),    actual.position().z(),    positionError );
+
+        assertEquals( expected.velocity().norm(), actual.velocity().norm(), velocityError );
+        assertEquals( expected.velocity().x(),    actual.velocity().x(),    velocityError );
+        assertEquals( expected.velocity().y(),    actual.velocity().y(),    velocityError );
+        assertEquals( expected.velocity().z(),    actual.velocity().z(),    velocityError );
+    }
+
+    public static void assertEquals( Keplerian expected, Keplerian actual,
+                                     double deltaSemiMajorAxis, double deltaEccentricity,   double deltaInclination,
+                                     double deltaPericenter,    double deltaRightAscension, double deltaMeanAnomaly) {
+        assertEquals( expected.semiMajorAxis(),       actual.semiMajorAxis(),       deltaSemiMajorAxis  );
+        assertEquals( expected.eccentricity(),        actual.eccentricity(),        deltaEccentricity   );
+        angleEquals( expected.inclination(),         actual.inclination(),         deltaInclination    );
+        angleEquals( expected.argumentOfPeriapsis(), actual.argumentOfPeriapsis(), deltaPericenter     );
+        angleEquals( expected.rightAscension(),      actual.rightAscension(),      deltaRightAscension );
+        angleEquals( expected.meanAnomaly(),         actual.meanAnomaly(),         deltaMeanAnomaly    );
+    }
+
+    public static void assertEquals( Spherical expected, Spherical actual,
+                                     double deltaRadius,   double deltaRightAscension,  double deltaDeclination,
+                                     double deltaVelocity, double deltaFlightPathAngle, double deltaFlightPathAzimuth) {
+        assertEquals( expected.radius(),            actual.radius(),            deltaRadius            );
+        angleEquals( expected.rightAscension(),    actual.rightAscension(),    deltaRightAscension    );
+        angleEquals( expected.declination(),       actual.declination(),       deltaDeclination       );
+        assertEquals( expected.velocity(),          actual.velocity(),          deltaVelocity          );
+        angleEquals( expected.flightPathAngle(),   actual.flightPathAngle(),   deltaFlightPathAngle   );
+        angleEquals( expected.flightPathAzimuth(), actual.flightPathAzimuth(), deltaFlightPathAzimuth );
+    }
+
 }

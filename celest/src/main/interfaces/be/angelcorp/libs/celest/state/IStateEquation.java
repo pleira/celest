@@ -34,7 +34,7 @@ import be.angelcorp.libs.celest.time.IJulianDate;
  * @author Simon Billemont
  * 
  */
-public interface IStateEquation<Y extends IState, DY extends IStateDerivative> {
+public interface IStateEquation<Y, DY> {
 
 	/**
 	 * Compute the value of the state derivatives for a known {@link IState}:
@@ -45,8 +45,6 @@ public interface IStateEquation<Y extends IState, DY extends IStateDerivative> {
 	 * 
 	 * @param t
 	 *            Time of the {@link IState} evaluation,
-	 * @param x
-	 *            Independent state variables
 	 * @param y
 	 *            Dependent state variables
 	 * @return The derivatives of the dependent state variables

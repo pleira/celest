@@ -2,13 +2,12 @@ package be.angelcorp.libs.celest.ephemeris.jplDE
 
 import scala.math._
 import be.angelcorp.libs.celest.ephemeris.IEphemeris
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements
 import be.angelcorp.libs.celest.time.IJulianDate
 import be.angelcorp.libs.util.physics.Time
-import be.angelcorp.libs.celest.state.positionState.CartesianElements
 import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.libs.celest.state.PosVel
 
-class JplDeEphemeris(ephemeris: JplDe, body: String) extends IEphemeris[ICartesianElements] {
+class JplDeEphemeris(ephemeris: JplDe, body: String) extends IEphemeris[PosVel] {
 
 	private def chebyshevTSeries(maxDegree: Int)(t: Double): Array[Double] = {
 		val series = Array.ofDim[Double](maxDegree);
@@ -43,7 +42,7 @@ class JplDeEphemeris(ephemeris: JplDe, body: String) extends IEphemeris[ICartesi
 		series
 	}
 
-	def getEphemerisOn(date: IJulianDate): ICartesianElements = {
+	def getEphemerisOn(date: IJulianDate): PosVel = {
 
 		val record = getRecord(date);
 
@@ -69,7 +68,7 @@ class JplDeEphemeris(ephemeris: JplDe, body: String) extends IEphemeris[ICartesi
 			(position(component_coefficients, t), velocity(component_coefficients, t))
 		}).toList
 
-		new CartesianElements(Vector3D(PV(0)._1, PV(1)._1, PV(2)._1), Vector3D(PV(0)._2, PV(1)._2, PV(2)._2))
+		new PosVel( Vector3D(PV(0)._1, PV(1)._1, PV(2)._1), Vector3D(PV(0)._2, PV(1)._2, PV(2)._2))
 	}
 
 	var lastRecord: JplDeDataRecond = null;

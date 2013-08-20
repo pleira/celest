@@ -18,6 +18,8 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 import java.util.List;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
+import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -25,9 +27,7 @@ import be.angelcorp.libs.celest.physics.quantities.ObjectForce;
 import be.angelcorp.libs.celest.physics.quantities.Torque;
 import be.angelcorp.libs.celest.state.IStateEquation;
 import be.angelcorp.libs.celest.state.positionState.CartesianDerivative;
-import be.angelcorp.libs.celest.state.positionState.CartesianElements;
 import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
-import be.angelcorp.libs.celest.state.positionState.ICartesianElements;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -40,7 +40,7 @@ import com.google.common.collect.Lists;
  * @author simon
  * 
  */
-public class ForceModelCore implements IStateEquation<ICartesianElements, ICartesianDerivative> {
+public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivative> {
 
 	/**
 	 * Body where all the forces/torques act on
@@ -85,18 +85,19 @@ public class ForceModelCore implements IStateEquation<ICartesianElements, ICarte
 	}
 
 	@Override
-	public ICartesianDerivative calculateDerivatives(IJulianDate t, ICartesianElements y) {
+	public ICartesianDerivative calculateDerivatives(IJulianDate t, PosVel y) {
 		Vector3D a = Vector3D$.MODULE$.ZERO();
 		for (ObjectForce f : getForcesList()) {
 			Vector3D dA = f.toAcceleration();
 			a = a.add(dA);
 		}
-		return new CartesianDerivative(y.getV(), a);
+		return new CartesianDerivative(y.velocity(), a);
 	}
 
 	@Override
-	public ICartesianElements createState(RealVector y) {
-		return new CartesianElements(y.toArray());
+	public PosVel createState(RealVector y) {
+        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+		return PosVel.apply(y.getEntry(0),y.getEntry(1),y.getEntry(2),y.getEntry(3),y.getEntry(4),y.getEntry(5), none);
 	}
 
 	/**

@@ -15,8 +15,8 @@
  */
 package be.angelcorp.libs.celest.frames;
 
+import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.state.orientationState.IOrientationState;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
 import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -84,9 +84,9 @@ public class CompositeFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IPositionState transform(IPositionState positionState) {
-		IPositionState positionState_f1 = transform0.transform(positionState);
-		IPositionState positionState_f2 = transform1.transform(positionState_f1);
+	public Orbit transform(Orbit positionState) {
+		Orbit positionState_f1 = transform0.transform(positionState);
+        Orbit positionState_f2 = transform1.transform(positionState_f1);
 		return positionState_f2;
 	}
 
@@ -94,14 +94,11 @@ public class CompositeFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IPositionStateDerivative transform(IPositionState positionState,
+	public IPositionStateDerivative transform(Orbit positionState,
 			IPositionStateDerivative positionStateDerivative) {
-		IPositionState positionState_f1 = transform0.transform(positionState);
-		IPositionStateDerivative positionStateDerivative_f1 =
-				transform0.transform(positionState, positionStateDerivative);
-
-		IPositionStateDerivative positionStateDerivative_f2 =
-				transform1.transform(positionState_f1, positionStateDerivative_f1);
+        Orbit positionState_f1 = transform0.transform(positionState);
+		IPositionStateDerivative positionStateDerivative_f1 = transform0.transform(positionState, positionStateDerivative);
+		IPositionStateDerivative positionStateDerivative_f2 = transform1.transform(positionState_f1, positionStateDerivative_f1);
 
 		return positionStateDerivative_f2;
 	}

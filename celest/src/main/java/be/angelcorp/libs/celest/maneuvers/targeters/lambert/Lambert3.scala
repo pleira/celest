@@ -16,31 +16,31 @@
 
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert
 
-import be.angelcorp.libs.celest.state.positionState.{CartesianElements, IPositionState}
+import math._
 import be.angelcorp.libs.celest.time.IJulianDate
 import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP
-import math._
 import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
+import be.angelcorp.libs.celest.state.PosVel
 import com.google.common.base.Preconditions._
 
-class Lambert3(r1: IPositionState, 					r2: IPositionState,
+class Lambert3(r1: PosVel, 					        r2: PosVel,
 							 departure: IJulianDate, 			arrival: IJulianDate,
 							 val center: CelestialBody, 	val N: Double=0,
 							 val prograde: Boolean=true, 	val leftBranch: Boolean=true) extends TPBVP( r1, r2, departure, arrival ) {
 
 	val longWay = {
-		val r1 = this.r1.toCartesianElements.getR
-		val r2 = this.r1.toCartesianElements.getR
+		val r1 = this.r1.position
+		val r2 = this.r1.position
 		val progradeIsLong = ( r1.x * r2.y - r2.x * r1.y < 0.0 )
 		if ( prograde ) progradeIsLong else !progradeIsLong
 	}
 
 	override lazy val getTrajectory = {
-		val r1vec  = this.r1.toCartesianElements.getR
-		val r2vec  = this.r2.toCartesianElements.getR
+		val r1vec  = this.r1.position
+		val r2vec  = this.r2.position
 
 		// manipulate input
 		val tol     = 1E-12;                            // optimum for numerical noise v.s. actual precision
@@ -235,8 +235,8 @@ class Lambert3(r1: IPositionState, 					r2: IPositionState,
 		// also determine minimum/maximum distance
 		// val a = s/2/(1 - x*x); // semi-major axis
 
-		new LambertTrajectory2( new CartesianElements(r1vec, V1),
-			new CartesianElements(r2vec, V2),
+		new LambertTrajectory2( new PosVel(r1vec, V1),
+			new PosVel(r2vec, V2),
 			departure, arrival, center )
 	}
 

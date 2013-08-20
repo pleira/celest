@@ -23,8 +23,6 @@ import be.angelcorp.libs.celest.time.IJulianDate
 import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.celest.state.positionState.{IPositionStateDerivative, IPositionState}
-import be.angelcorp.libs.celest.state.orientationState.IOrientationState
 import be.angelcorp.libs.celest.data.ExcessLengthOfDay
 import be.angelcorp.libs.util.physics.Time._
 

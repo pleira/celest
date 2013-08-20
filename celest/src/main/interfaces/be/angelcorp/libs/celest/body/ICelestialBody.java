@@ -16,9 +16,8 @@
 
 package be.angelcorp.libs.celest.body;
 
-import be.angelcorp.libs.celest.ephemeris.IEphemeris;
 import be.angelcorp.libs.celest.potential.IGravitationalPotential;
-import be.angelcorp.libs.celest.state.positionState.IPositionState;
+import be.angelcorp.libs.celest.state.Orbit;
 
 /**
  * Representation of a celestial body (eg planet/sun/satellite).
@@ -44,7 +43,7 @@ public interface ICelestialBody {
      * Get the celestial body state vector (position/velocity)
      * @return Body state vector
      */
-    IPositionState getState();
+    Orbit getState();
 
     /**
      * Get the total mass of the celestial body.

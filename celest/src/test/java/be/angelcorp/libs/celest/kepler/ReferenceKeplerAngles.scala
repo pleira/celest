@@ -18,9 +18,9 @@ package be.angelcorp.libs.celest.kepler
 import scala.math._
 import org.apache.commons.math3.linear.ArrayRealVector
 import org.apache.commons.math3.util.Precision
-import be.angelcorp.libs.celest.state.positionState.KeplerElements
-import be.angelcorp.libs.math.functions.domain.AngularDomain
+import be.angelcorp.libs.celest.state.Keplerian
 import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.libs.math.MathUtils2.mod
 
 object ReferenceKeplerAngles {
 
@@ -28,7 +28,7 @@ object ReferenceKeplerAngles {
 
 	val circularAngles = List[ArrayRealVector](
 		// e, nu, M, E
-		// Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonnu'
+		// Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonnu', (with sincreased value for 'small')
     new ArrayRealVector(Array[Double]( 0.0, -3.1415926536, 3.1415926536, -3.1415926536 )),
     new ArrayRealVector(Array[Double]( 0.0, -2.3561944902, 3.9269908170, -2.3561944902 )),
     new ArrayRealVector(Array[Double]( 0.0, -1.5707963268, 4.7123889804, -1.5707963268 )),
@@ -42,7 +42,7 @@ object ReferenceKeplerAngles {
 
   val ellipticalAngles = List[ArrayRealVector](
 		// e, nu, M, E
-    // Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonnu'
+    // Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonnu', (with sincreased value for 'small')
     new ArrayRealVector(Array[Double]( 0.1, -3.1415926536, 3.1415926536, -3.1415926536 )),
     new ArrayRealVector(Array[Double]( 0.1, -2.3561944902, 4.0761607380, -2.2827342914 )),
     new ArrayRealVector(Array[Double]( 0.1, -1.5707963268, 4.9120551453, -1.4706289056 )),
@@ -128,7 +128,7 @@ object ReferenceKeplerAngles {
 
 	val parabolicAngles = List[ArrayRealVector](
 		// e, nu, M, B
-		// Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonnu'
+		// Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonnu', (with sincreased value for 'small')
 			new ArrayRealVector(Array[Double]( 1.0, -3.1415926536, Double.PositiveInfinity, Double.PositiveInfinity )),
 			new ArrayRealVector(Array[Double]( 1.0, -2.3561944902, -7.1045694997, -2.4142135624 )),
 			new ArrayRealVector(Array[Double]( 1.0, -1.5707963268, -1.3333333333, -1.0000000000 )),
@@ -142,97 +142,97 @@ object ReferenceKeplerAngles {
 
   val hyperbolicAngles = List[ArrayRealVector](
 		// e, nu, M, H
-    // Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonnu'
-    new ArrayRealVector(Array[Double]( 1.1, -3.1415926536, Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.1, -2.3561944902, -0.4327905309, -1.1714792614 )),
-    new ArrayRealVector(Array[Double]( 1.1, -1.5707963268, -0.0605150721, -0.4435682544 )),
-    new ArrayRealVector(Array[Double]( 1.1, -0.7853981634, -0.0192210672, -0.1812723729 )),
-    new ArrayRealVector(Array[Double]( 1.1,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.1,  0.7853981634,  0.0192210672, 0.1812723729 )),
-    new ArrayRealVector(Array[Double]( 1.1,  1.5707963268,  0.0605150721, 0.4435682544 )),
-    new ArrayRealVector(Array[Double]( 1.1,  2.3561944902,  0.4327905309, 1.1714792614 )),
-    new ArrayRealVector(Array[Double]( 1.1,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.2, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.2, -2.3561944902, -1.8673241467, -1.8485467854 )),
-    new ArrayRealVector(Array[Double]( 1.2, -1.5707963268, -0.1736274460, -0.6223625037 )),
-    new ArrayRealVector(Array[Double]( 1.2, -0.7853981634, -0.0533943151, -0.2510911184 )),
-    new ArrayRealVector(Array[Double]( 1.2,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.2,  0.7853981634,  0.0533943151, 0.2510911184 )),
-    new ArrayRealVector(Array[Double]( 1.2,  1.5707963268,  0.1736274460, 0.6223625037 )),
-    new ArrayRealVector(Array[Double]( 1.2,  2.3561944902,  1.8673241467, 1.8485467854 )),
-    new ArrayRealVector(Array[Double]( 1.2,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.3, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.3, -2.3561944902, -6.7727599434, -2.6819937631 )),
-    new ArrayRealVector(Array[Double]( 1.3, -1.5707963268, -0.3234281913, -0.7564329109 )),
-    new ArrayRealVector(Array[Double]( 1.3, -0.7853981634, -0.0963990804, -0.3014550594 )),
-    new ArrayRealVector(Array[Double]( 1.3,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.3,  0.7853981634,  0.0963990804, 0.3014550594 )),
-    new ArrayRealVector(Array[Double]( 1.3,  1.5707963268,  0.3234281913, 0.7564329109 )),
-    new ArrayRealVector(Array[Double]( 1.3,  2.3561944902,  6.7727599434, 2.6819937631 )),
-    new ArrayRealVector(Array[Double]( 1.3,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.4, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.4, -2.3561944902, -91.5810741071, -4.9263474634 )),
-    new ArrayRealVector(Array[Double]( 1.4, -1.5707963268, -0.5046995295, -0.8670147265 )),
-    new ArrayRealVector(Array[Double]( 1.4, -0.7853981634, -0.1459395291, -0.3414841243 )),
-    new ArrayRealVector(Array[Double]( 1.4,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.4,  0.7853981634,  0.1459395291, 0.3414841243 )),
-    new ArrayRealVector(Array[Double]( 1.4,  1.5707963268,  0.5046995295, 0.8670147265 )),
-    new ArrayRealVector(Array[Double]( 1.4,  2.3561944902,  91.5810741071, 4.9263474634 )),
-    new ArrayRealVector(Array[Double]( 1.4,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.5, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.5, -2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.5, -1.5707963268, -0.7146273330, -0.9624236501 )),
-    new ArrayRealVector(Array[Double]( 1.5, -0.7853981634, -0.2006619342, -0.3748109841 )),
-    new ArrayRealVector(Array[Double]( 1.5,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.5,  0.7853981634,  0.2006619342, 0.3748109841 )),
-    new ArrayRealVector(Array[Double]( 1.5,  1.5707963268,  0.7146273330, 0.9624236501 )),
-    new ArrayRealVector(Array[Double]( 1.5,  2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.5,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.6, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.6, -2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.6, -1.5707963268, -0.9514314445, -1.0469679150 )),
-    new ArrayRealVector(Array[Double]( 1.6, -0.7853981634, -0.2596477387, -0.4033442220 )),
-    new ArrayRealVector(Array[Double]( 1.6,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.6,  0.7853981634,  0.2596477387, 0.4033442220 )),
-    new ArrayRealVector(Array[Double]( 1.6,  1.5707963268,  0.9514314445, 1.0469679150 )),
-    new ArrayRealVector(Array[Double]( 1.6,  2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.6,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.7, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.7, -2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.7, -1.5707963268, -1.2138826218, -1.1232309826 )),
-    new ArrayRealVector(Array[Double]( 1.7, -0.7853981634, -0.3222254835, -0.4282412259 )),
-    new ArrayRealVector(Array[Double]( 1.7,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.7,  0.7853981634,  0.3222254835, 0.4282412259 )),
-    new ArrayRealVector(Array[Double]( 1.7,  1.5707963268,  1.2138826218, 1.1232309826 )),
-    new ArrayRealVector(Array[Double]( 1.7,  2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.7,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.8, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.8, -2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.8, -1.5707963268, -1.5010825875, -1.1929107310 )),
-    new ArrayRealVector(Array[Double]( 1.8, -0.7853981634, -0.3878808926, -0.4502691762 )),
-    new ArrayRealVector(Array[Double]( 1.8,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.8,  0.7853981634,  0.3878808926, 0.4502691762 )),
-    new ArrayRealVector(Array[Double]( 1.8,  1.5707963268,  1.5010825875, 1.1929107310 )),
-    new ArrayRealVector(Array[Double]( 1.8,  2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.8,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.9, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.9, -2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.9, -1.5707963268, -1.8123481135, -1.2571958266 )),
-    new ArrayRealVector(Array[Double]( 1.9, -0.7853981634, -0.4562072018, -0.4699684602 )),
-    new ArrayRealVector(Array[Double]( 1.9,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 1.9,  0.7853981634,  0.4562072018, 0.4699684602 )),
-    new ArrayRealVector(Array[Double]( 1.9,  1.5707963268,  1.8123481135, 1.2571958266 )),
-    new ArrayRealVector(Array[Double]( 1.9,  2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 1.9,  3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 2.0, -3.1415926536,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 2.0, -2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 2.0, -1.5707963268, -2.1471437182, -1.3169578969 )),
-    new ArrayRealVector(Array[Double]( 2.0, -0.7853981634, -0.5268749860, -0.4877368863 )),
-    new ArrayRealVector(Array[Double]( 2.0,  0.0000000000,  0.0000000000, 0.0000000000 )),
-    new ArrayRealVector(Array[Double]( 2.0,  0.7853981634,  0.5268749860, 0.4877368863 )),
-    new ArrayRealVector(Array[Double]( 2.0,  1.5707963268,  2.1471437182, 1.3169578969 )),
-    new ArrayRealVector(Array[Double]( 2.0,  2.3561944902,  Double.NaN, Double.NaN )),
-    new ArrayRealVector(Array[Double]( 2.0,  3.1415926536,  Double.NaN, Double.NaN ))
+    // Calculation using Fundamentals of Astrodynamics & applications matlab script: 'newtonm', (with sincreased value for 'small')
+    new ArrayRealVector(Array[Double]( 1.1, -2.620287384013, -3.141592653590, -2.302404556848 )),
+    new ArrayRealVector(Array[Double]( 1.1, -2.598357906819, -2.356194490192, -2.108984340120 )),
+    new ArrayRealVector(Array[Double]( 1.1, -2.559970342379, -1.570796326795, -1.853619303090 )),
+    new ArrayRealVector(Array[Double]( 1.1, -2.468816705341, -0.785398163397, -1.463234368718 )),
+    new ArrayRealVector(Array[Double]( 1.1, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.1, +2.468816705341, +0.785398163397, +1.463234368718 )),
+    new ArrayRealVector(Array[Double]( 1.1, +2.559970342379, +1.570796326795, +1.853619303090 )),
+    new ArrayRealVector(Array[Double]( 1.1, +2.598357906819, +2.356194490192, +2.108984340120 )),
+    new ArrayRealVector(Array[Double]( 1.1, +2.620287384013, +3.141592653590, +2.302404556848 )),
+    new ArrayRealVector(Array[Double]( 1.2, -2.420922895272, -3.141592653590, -2.198451416639 )),
+    new ArrayRealVector(Array[Double]( 1.2, -2.387879887842, -2.356194490192, -2.001126500588 )),
+    new ArrayRealVector(Array[Double]( 1.2, -2.329348382077, -1.570796326795, -1.739089097817 )),
+    new ArrayRealVector(Array[Double]( 1.2, -2.186929257038, -0.785398163397, -1.333813546809 )),
+    new ArrayRealVector(Array[Double]( 1.2, +0.000000000000, +0.000000000000, +0.000000000001 )),
+    new ArrayRealVector(Array[Double]( 1.2, +2.186929257038, +0.785398163397, +1.333813546809 )),
+    new ArrayRealVector(Array[Double]( 1.2, +2.329348382077, +1.570796326795, +1.739089097817 )),
+    new ArrayRealVector(Array[Double]( 1.2, +2.387879887842, +2.356194490192, +2.001126500588 )),
+    new ArrayRealVector(Array[Double]( 1.2, +2.420922895272, +3.141592653590, +2.198451416639 )),
+    new ArrayRealVector(Array[Double]( 1.3, -2.276660844617, -3.141592653590, -2.102998300211 )),
+    new ArrayRealVector(Array[Double]( 1.3, -2.233806171912, -2.356194490192, -1.902199334811 )),
+    new ArrayRealVector(Array[Double]( 1.3, -2.157189399550, -1.570796326795, -1.634336398043 )),
+    new ArrayRealVector(Array[Double]( 1.3, -1.967769209033, -0.785398163397, -1.216853991455 )),
+    new ArrayRealVector(Array[Double]( 1.3, -0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.3, +1.967769209033, +0.785398163397, +1.216853991455 )),
+    new ArrayRealVector(Array[Double]( 1.3, +2.157189399550, +1.570796326795, +1.634336398043 )),
+    new ArrayRealVector(Array[Double]( 1.3, +2.233806171912, +2.356194490192, +1.902199334811 )),
+    new ArrayRealVector(Array[Double]( 1.3, +2.276660844617, +3.141592653590, +2.102998300211 )),
+    new ArrayRealVector(Array[Double]( 1.4, -2.160844328471, -3.141592653590, -2.014863650658 )),
+    new ArrayRealVector(Array[Double]( 1.4, -2.108742046955, -2.356194490192, -1.811013318414 )),
+    new ArrayRealVector(Array[Double]( 1.4, -2.014976562916, -1.570796326795, -1.538196833103 )),
+    new ArrayRealVector(Array[Double]( 1.4, -1.781542165902, -0.785398163397, -1.111503178776 )),
+    new ArrayRealVector(Array[Double]( 1.4, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.4, +1.781542165902, +0.785398163397, +1.111503178776 )),
+    new ArrayRealVector(Array[Double]( 1.4, +2.014976562916, +1.570796326795, +1.538196833103 )),
+    new ArrayRealVector(Array[Double]( 1.4, +2.108742046955, +2.356194490192, +1.811013318414 )),
+    new ArrayRealVector(Array[Double]( 1.4, +2.160844328471, +3.141592653590, +2.014863650659 )),
+    new ArrayRealVector(Array[Double]( 1.5, -2.062916599555, -3.141592653590, -1.933109602011 )),
+    new ArrayRealVector(Array[Double]( 1.5, -2.001911309016, -2.356194490192, -1.726623720449 )),
+    new ArrayRealVector(Array[Double]( 1.5, -1.891692872568, -1.570796326795, -1.449742150875 )),
+    new ArrayRealVector(Array[Double]( 1.5, -1.617861458998, -0.785398163397, -1.016993449741 )),
+    new ArrayRealVector(Array[Double]( 1.5, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.5, +1.617861458998, +0.785398163397, +1.016993449741 )),
+    new ArrayRealVector(Array[Double]( 1.5, +1.891692872568, +1.570796326795, +1.449742150875 )),
+    new ArrayRealVector(Array[Double]( 1.5, +2.001911309016, +2.356194490192, +1.726623720449 )),
+    new ArrayRealVector(Array[Double]( 1.5, +2.062916599555, +3.141592653590, +1.933109602011 )),
+    new ArrayRealVector(Array[Double]( 1.6, -1.977410570312, -3.141592653590, -1.856978670348 )),
+    new ArrayRealVector(Array[Double]( 1.6, -1.907778240270, -2.356194490192, -1.648266018621 )),
+    new ArrayRealVector(Array[Double]( 1.6, -1.781812276135, -1.570796326795, -1.368212525929 )),
+    new ArrayRealVector(Array[Double]( 1.6, -1.472142509564, -0.785398163397, -0.932552173309 )),
+    new ArrayRealVector(Array[Double]( 1.6, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.6, +1.472142509564, +0.785398163397, +0.932552173309 )),
+    new ArrayRealVector(Array[Double]( 1.6, +1.781812276135, +1.570796326795, +1.368212525929 )),
+    new ArrayRealVector(Array[Double]( 1.6, +1.907778240270, +2.356194490192, +1.648266018621 )),
+    new ArrayRealVector(Array[Double]( 1.6, +1.977410570312, +3.141592653590, +1.856978670348 )),
+    new ArrayRealVector(Array[Double]( 1.7, -1.901080728229, -3.141592653590, -1.785849618069 )),
+    new ArrayRealVector(Array[Double]( 1.7, -1.823088504481, -2.356194490192, -1.575310882892 )),
+    new ArrayRealVector(Array[Double]( 1.7, -1.682178907972, -1.570796326795, -1.292969754471 )),
+    new ArrayRealVector(Array[Double]( 1.7, -1.341985410542, -0.785398163397, -0.857364481458 )),
+    new ArrayRealVector(Array[Double]( 1.7, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.7, +1.341985410542, +0.785398163397, +0.857364481458 )),
+    new ArrayRealVector(Array[Double]( 1.7, +1.682178907972, +1.570796326795, +1.292969754471 )),
+    new ArrayRealVector(Array[Double]( 1.7, +1.823088504481, +2.356194490192, +1.575310882892 )),
+    new ArrayRealVector(Array[Double]( 1.7, +1.901080728229, +3.141592653590, +1.785849618069 )),
+    new ArrayRealVector(Array[Double]( 1.8, -1.831832401525, -3.141592653590, -1.719205928406 )),
+    new ArrayRealVector(Array[Double]( 1.8, -1.745765387974, -2.356194490192, -1.507232075888 )),
+    new ArrayRealVector(Array[Double]( 1.8, -1.590840498544, -1.570796326795, -1.223464642108 )),
+    new ArrayRealVector(Array[Double]( 1.8, -1.225825286634, -0.785398163397, -0.790575942826 )),
+    new ArrayRealVector(Array[Double]( 1.8, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.8, +1.225825286634, +0.785398163397, +0.790575942826 )),
+    new ArrayRealVector(Array[Double]( 1.8, +1.590840498544, +1.570796326795, +1.223464642108 )),
+    new ArrayRealVector(Array[Double]( 1.8, +1.745765387974, +2.356194490192, +1.507232075888 )),
+    new ArrayRealVector(Array[Double]( 1.8, +1.831832401525, +3.141592653590, +1.719205928406 )),
+    new ArrayRealVector(Array[Double]( 1.9, -1.768235007995, -3.141592653590, -1.656612811525 )),
+    new ArrayRealVector(Array[Double]( 1.9, -1.674408070898, -2.356194490192, -1.443583131541 )),
+    new ArrayRealVector(Array[Double]( 1.9, -1.506515986718, -1.570796326795, -1.159214320622 )),
+    new ArrayRealVector(Array[Double]( 1.9, -1.122379769679, -0.785398163397, -0.731318142901 )),
+    new ArrayRealVector(Array[Double]( 1.9, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 1.9, +1.122379769679, +0.785398163397, +0.731318142901 )),
+    new ArrayRealVector(Array[Double]( 1.9, +1.506515986718, +1.570796326795, +1.159214320622 )),
+    new ArrayRealVector(Array[Double]( 1.9, +1.674408070898, +2.356194490192, +1.443583131541 )),
+    new ArrayRealVector(Array[Double]( 1.9, +1.768235007995, +3.141592653590, +1.656612811525 )),
+    new ArrayRealVector(Array[Double]( 2.0, -1.709270694164, -3.141592653590, -1.597700127280 )),
+    new ArrayRealVector(Array[Double]( 2.0, -1.608032374118, -2.356194490192, -1.383980151397 )),
+    new ArrayRealVector(Array[Double]( 2.0, -1.428319888970, -1.570796326795, -1.099786621163 )),
+    new ArrayRealVector(Array[Double]( 2.0, -1.030442880989, -0.785398163397, -0.678741138202 )),
+    new ArrayRealVector(Array[Double]( 2.0, +0.000000000000, +0.000000000000, +0.000000000000 )),
+    new ArrayRealVector(Array[Double]( 2.0, +1.030442880989, +0.785398163397, +0.678741138202 )),
+    new ArrayRealVector(Array[Double]( 2.0, +1.428319888970, +1.570796326795, +1.099786621163 )),
+    new ArrayRealVector(Array[Double]( 2.0, +1.608032374118, +2.356194490192, +1.383980151397 )),
+    new ArrayRealVector(Array[Double]( 2.0, +1.709270694164, +3.141592653590, +1.597700127280 ))
   )
 
 	val circularEllipticalAngels = circularAngles ::: ellipticalAngles
@@ -244,21 +244,20 @@ object ReferenceKeplerAngles {
 		} else if ( true_value.isInfinite ) {
 			// Accuracy breaks down as slight angles generate huge differences in anomaly
 			abs(computed_value) > 1E10
-		} else if ( abs(v.getEntry(0)) < 1) {
-			val dom = new AngularDomain(true_value, 1E-10, 1E-10)
-			dom.inBounds(computed_value)
+		} else if ( abs(true_value) < 10) {
+      abs(mod(computed_value - true_value + Pi, 2 * Pi) - Pi) < 1E-9
 		} else {
-			Precision.equals(true_value, computed_value, abs(true_value * 1E-8) )
+			Precision.equals(true_value, computed_value, abs(true_value * 1E-9) )
 		}
 	}
 
 	def checkEqualAnomaly(    v: ArrayRealVector, computedValue: Double) =
     checkEqual(v, v.getEntry(3), computedValue)
 
-  def checkEqualMeanAnomaly(v: ArrayRealVector, computedValue: Double) =
-    checkEqual(v, v.getEntry(2), computedValue)
+  def checkEqualTrueAnomaly(v: ArrayRealVector, computedValue: Double) =
+    checkEqual(v, v.getEntry(1), computedValue)
 
   def createKeplerElements(v: ArrayRealVector) =
-    new KeplerElements(Double.NaN, v.getEntry(0), Double.NaN, Double.NaN, Double.NaN, v.getEntry(1))
+    new Keplerian(Double.NaN, v.getEntry(0), Double.NaN, Double.NaN, Double.NaN, v.getEntry(2))
 
 }
