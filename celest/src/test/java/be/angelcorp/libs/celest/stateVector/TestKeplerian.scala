@@ -20,20 +20,17 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.frames
-import be.angelcorp.libs.celest.body.{ICelestialBody, CelestialBody}
+import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.state.{Spherical, TrueAnomaly, Keplerian, PosVel}
 import be.angelcorp.libs.celest.constants.Constants
 import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.celest.unit.CelestTest._
-import be.angelcorp.libs.celest.frames.BodyCentered
 
 @RunWith(classOf[JUnitRunner])
 class TestKeplerian extends FlatSpec with ShouldMatchers  {
 
-  val sunFrame	= new frames.BodyCentered{
-    def centerBody = new CelestialBody(PosVel(), Constants.mu2mass(132712440040.944000E9) )
-  }
+  val sunFrame	= frames.BodyCentered( new CelestialBody(PosVel(), Constants.mu2mass(132712440040.944000E9) ) )
 
   "Keplerian" should "convert the Cartesian elements from/to Keplerian for 2002 TZ300" in {
     /* (2002 TZ300) (TransNeptunian Object) see http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=2002%20TZ300 */
@@ -79,7 +76,7 @@ class TestKeplerian extends FlatSpec with ShouldMatchers  {
                       5.567204076586791E4,  -3.568386116822244E4,  -1.201095262393990E4,   Some(sunFrame))
 
     val k_true = new Keplerian(AU.convert(2.167001873), 0.8338, Deg.convert(11.74),
-      Deg.convert(208.56), Deg.convert(28.27), 0, Some(sunFrame));
+      Deg.convert(208.56), Deg.convert(28.27), 0, Some(sunFrame))
 
     assertEquals(k_true, Keplerian(pv), AU.convert(2.167 * 1E-10), 1E-15, 1E-16, 1E-15, 1E-15, 1E-16)
     assertEquals(pv, k_true.toPosVel, pv.position.norm * 1E-10, pv.velocity.norm * 1E-10)
@@ -103,9 +100,7 @@ class TestKeplerian extends FlatSpec with ShouldMatchers  {
 		// JDCT = 2455562.500000000 = A.D. 2011-Jan-01 00:00:00.0000 (CT)
 		// X =-1.947136151107762E+05 Y =-3.249790482942117E+05 Z =-1.934593293850985E+04 [km]
 		// VX= 8.680230862574665E-01 VY=-5.629777269508974E-01 VZ= 7.784227958608481E-02 [km/s]
-		val jplEarthFrame = new BodyCentered {
-      def centerBody = new CelestialBody(PosVel(), Constants.mu2mass(398600.440E9))
-    }
+		val jplEarthFrame = frames.BodyCentered( new CelestialBody(PosVel(), Constants.mu2mass(398600.440E9)) )
 
 		val kMoon = Keplerian(3.903213584163071E+08, 4.074916709908236e-002, 9.218093894982124E-2, 4.850831512485626E00,
 				4.757761494574442E00, TrueAnomaly(1.079822859502195E00), Some(jplEarthFrame))

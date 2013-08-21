@@ -19,6 +19,7 @@ import static java.lang.Math.PI;
 import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.constants.EarthConstants;
 import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.frames.BodyCentered$;
 import be.angelcorp.libs.celest.state.Keplerian;
 import be.angelcorp.libs.celest.state.TrueAnomaly;
 import be.angelcorp.libs.celest.unit.CelestTest;
@@ -36,12 +37,7 @@ public class TestKeplerTrajectory extends CelestTest {
 	 * Check KeplerTrajectory using a geostationairy orbit, at specific hours, rotations should match
 	 */
 	public void testGeoStationairyOrbit() {
-		BodyCentered earthFrame = new BodyCentered() {
-            @Override
-            public ICelestialBody centerBody() {
-                return EarthConstants.bodyCenter();
-            }
-        };
+		BodyCentered earthFrame =  BodyCentered$.MODULE$.apply(EarthConstants.bodyCenter());
 
 		double a = Math.pow(earthFrame.centerBody().getMu() / Math.pow((2. * PI) / (3600. * 24.), 2), 1. / 3.);
 		Keplerian k = new Keplerian(a, 0, 0, 0, 0, 0, new Some<BodyCentered>(earthFrame));

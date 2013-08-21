@@ -17,16 +17,13 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert
 
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP
-import be.angelcorp.libs.celest.state.positionState._
 import be.angelcorp.libs.celest.time.IJulianDate
 
 import math._
 import be.angelcorp.libs.util.physics.Time
-import be.angelcorp.libs.math.MathUtils2._
 import org.apache.commons.math3.util.FastMath
-import be.angelcorp.libs.celest.body.CelestialBody
+import be.angelcorp.libs.celest.body.ICelestialBody
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
-import com.google.common.base.Preconditions._
 import be.angelcorp.libs.celest.state.PosVel
 
 /**
@@ -55,7 +52,7 @@ import be.angelcorp.libs.celest.state.PosVel
  */
 class Lambert2(r1: PosVel, 					        r2: PosVel,
 							 departure: IJulianDate, 			arrival: IJulianDate,
-							 val center: CelestialBody, 	val N: Double=0,
+							 val center: ICelestialBody, 	val N: Double=0,
 							 val prograde: Boolean=true, 	val leftBranch: Boolean=true) extends TPBVP( r1, r2, departure, arrival ) {
 
 	val longWay = {

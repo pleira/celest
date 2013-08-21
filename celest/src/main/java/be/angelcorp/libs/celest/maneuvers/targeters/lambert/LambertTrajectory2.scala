@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters.lambert
 
 import be.angelcorp.libs.celest.trajectory.KeplerTrajectory
 import be.angelcorp.libs.celest.time.IJulianDate
-import be.angelcorp.libs.celest.body.CelestialBody
+import be.angelcorp.libs.celest.body.ICelestialBody
 import be.angelcorp.libs.celest.state.{Keplerian, PosVel}
 
 /**
@@ -35,4 +35,4 @@ class LambertTrajectory2(val origin: PosVel,
 												 val destination: PosVel,
 												 val departure: IJulianDate,
 												 val arrival: IJulianDate,
-												 val center: CelestialBody) extends KeplerTrajectory( Keplerian(origin), departure );
+												 val center: ICelestialBody) extends KeplerTrajectory( Keplerian(origin), departure );

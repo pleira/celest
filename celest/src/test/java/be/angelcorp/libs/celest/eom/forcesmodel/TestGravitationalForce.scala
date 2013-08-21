@@ -41,9 +41,7 @@ class TestGravitationalForce  extends FlatSpec with ShouldMatchers  {
 
   "GravitationalForce" should "generate the correct force / acceleration" in {
 		/* Test the f/a in a simple earth system (norm only) */
-		val earth = new frames.BodyCentered {
-      def centerBody: ICelestialBody = EarthConstants.bodyCenter
-    }
+		val earth = frames.BodyCentered( EarthConstants.bodyCenter )
 
     val sat = new CelestialBody( new Keplerian(10E6, 0, 0, 0, 0, 0, Some(earth)), 5)
     val g = new GravitationalForce_C(sat, earth.centerBody)

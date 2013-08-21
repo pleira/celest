@@ -31,9 +31,7 @@ import scala.Some
 @RunWith(classOf[JUnitRunner])
 class TestSphericalElements extends FlatSpec with ShouldMatchers {
 
-  val jplEarthFrame = new frames.BodyCentered {
-    def centerBody = new CelestialBody(PosVel(), Constants.mu2mass(398600.440E9))
-  }
+  val jplEarthFrame = frames.BodyCentered( new CelestialBody(PosVel(), Constants.mu2mass(398600.440E9)) )
 
   "Spherical" should "convert the Cartesian elements from/to Spherical for geostationairy orbits" in {
     /* Classical geo orbit */
