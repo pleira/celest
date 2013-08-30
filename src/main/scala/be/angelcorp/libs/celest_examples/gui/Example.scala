@@ -9,17 +9,17 @@ class Example( val clazz: Class[_] ) {
 
   override def toString = annotation.name()
 
-  def invoke {
+  def invoke() {
     logger.info("Invoking example: {}", clazz.getSimpleName)
     try {
       new Thread {
-        override def run {
+        override def run() {
           clazz.newInstance()
         }
-      }.start
+      }.start()
     } catch {
       case e: InstantiationException =>
-        logger.error("Could not construct example ({}), make shure a default constructor is available", clazz, e)
+        logger.error("Could not construct example ({}), make sure a default constructor is available", clazz, e)
       case e: IllegalAccessException =>
         logger.error("Could not access the default constructor of example: {}", clazz, e)
     }

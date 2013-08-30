@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest_examples.gui;
+package be.angelcorp.libs.celest_examples.gui
 
 import java.awt._
 import java.awt.event._
@@ -31,7 +31,7 @@ import be.angelcorp.libs.util.gui.config.confgGui.ConfigGui
 class SimpleGui(examples: Seq[Example]) extends JFrame {
 	val logger	= LoggerFactory.getLogger(classOf[SimpleGui])
 
-  // Inistialize frame
+  // Initialize frame
 	setTitle("Celest examples")
   setSize(600, 400)
   setLayout(new MigLayout("fill", "[fill]", "[]10[fill]10[]"))

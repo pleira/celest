@@ -40,7 +40,7 @@ public abstract class Services {
 		String output = getSettings().outputDir;
 		File outputDir = new File(output);
 		if (!outputDir.exists()) {
-			logger.info("Creating non existant output directory: {}", outputDir);
+			logger.info("Creating non existent output directory: {}", outputDir);
 			boolean success = outputDir.mkdirs();
 			if (!success)
 				throw new GenericRuntimeException("Could not create output directory: %s", outputDir);

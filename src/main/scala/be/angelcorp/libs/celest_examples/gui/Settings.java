@@ -29,19 +29,19 @@ import com.google.inject.Module;
 public class Settings extends be.angelcorp.libs.util.gui.config.Settings {
 
 	@ConfigField(name = "Plotting library", description = "")
-	public SelectableList<Class<? extends IPlot2>>	plottingLibrary;
+	final public SelectableList<Class<? extends IPlot2>>	plottingLibrary;
 	@ConfigField(name = "Output directory", description = "Location where any generated files are stored")
-	public String									outputDir	= ".";
+    final public String									    outputDir	= ".";
 
 	public Settings() {
 		setName("All settings");
 
 		plottingLibrary = new SelectableList<>((Class<Class<? extends IPlot2>>) IPlot2.class.getClass());
-		plottingLibrary.put(Plot2.class, new Boolean(true));
+		plottingLibrary.put(Plot2.class, true);
 		try {
 			Class<IPlot2> clazz = (Class<IPlot2>) getClass().getClassLoader().loadClass(
 					"be.angelcorp.libs.connect.matlabConnect.MPlot2");
-			plottingLibrary.put(clazz, new Boolean(false));
+			plottingLibrary.put(clazz, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

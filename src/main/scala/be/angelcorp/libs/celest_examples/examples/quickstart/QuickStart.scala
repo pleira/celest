@@ -64,7 +64,7 @@ class QuickStart {
     val tFinal = tf.relativeTo(t0, Time.second)
     val states = for ( t <- 0.0 until tFinal by (tFinal / samples) ) yield {
       val time  = t0.add(t, Time.second)
-      val state = trajectory.evaluate(time).toPosVel
+      val state = trajectory(time).toPosVel
 
       logger.debug("At jd={} the state is: {}", time, state)
       writer.write(t, state.position.x, state.position.y, state.position.z,
@@ -107,7 +107,7 @@ class QuickStart {
 		/* First leg of the trajectory, the orbit as it was injected by the atlas launcher */
 		/* Without any intervention, it would keep this orbit */
 		val t0 = universe.J2000_EPOCH
-		trajectory.addTrajectory(new KeplerTrajectory(k, t0), t0)
+		trajectory.trajectories.put(t0, new KeplerTrajectory(t0, k))
 
 		/* Add first kick to the satellite */
 		/* Compute dV for LAE (main engine) */
@@ -120,7 +120,7 @@ class QuickStart {
 
 		/* Time when we reach the kick location (after 1.5 periods */
 		var t = t0.add((3.0 / 2.0) * k.quantities.period, Time.second)
-		satellite = new Satellite(trajectory.evaluate(t))
+		satellite = new Satellite(trajectory(t))
 
 		/* Make the LAE engine */
 		val LAE = new ImpulsiveShot(satellite)
@@ -128,7 +128,7 @@ class QuickStart {
 		var state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
 		/* Add the next leg to the trajectory */
 		k = Keplerian(state)
-		trajectory.addTrajectory(new KeplerTrajectory(k, t), t)
+		trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
 
 		/* Add kick 2 */
 		/* The time of the 2nd kick is the time of the first kick plus one orbit */
@@ -136,13 +136,13 @@ class QuickStart {
 		/* Same procedure */
 		state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
 		k = Keplerian(state)
-		trajectory.addTrajectory(new KeplerTrajectory(k, t), t)
+		trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
 
 		/* And the third kick */
 		t = t.add(k.quantities.period, Time.second)
 		state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
 		k = Keplerian(state)
-		trajectory.addTrajectory(new KeplerTrajectory(k, t), t)
+		trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
 
     // Time after the three kicks and an additional orbit
 		tf = t.add(k.quantities.period, Time.second)
