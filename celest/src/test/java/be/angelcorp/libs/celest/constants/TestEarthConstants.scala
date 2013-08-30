@@ -40,7 +40,7 @@ class TestEarthConstants  extends FlatSpec with ShouldMatchers  {
     // Frame: @Sun, ecliptic, J2000
     // AU/days/Degree
 
-    val state_actual_k = trajectory.evaluate(universe.J2000_EPOCH)
+    val state_actual_k = trajectory(universe.J2000_EPOCH)
     val state_actual_c = state_actual_k.toPosVel
     val state_actual_s = Spherical(state_actual_c)
 
@@ -60,7 +60,7 @@ class TestEarthConstants  extends FlatSpec with ShouldMatchers  {
   it should "define the correct heliocentric kepler orbit at the 2452000jd epoch" in {
     val trajectory = EarthConstants.orbit
 
-    val state_actual_k = trajectory.evaluate(new JulianDate(2452000d))
+    val state_actual_k = trajectory(new JulianDate(2452000d))
     val state_actual_c = state_actual_k.toPosVel
     val state_actual_s = Spherical(state_actual_c)
 

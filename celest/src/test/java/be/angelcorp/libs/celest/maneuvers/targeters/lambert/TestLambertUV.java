@@ -17,13 +17,13 @@ package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
 import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.celest.state.PosVel;
+import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.time.IJulianDate;
-import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
@@ -57,14 +57,14 @@ public class TestLambertUV extends CelestTest {
 				new PosVel(r2, Vector3D$.MODULE$.ZERO(), null),
 				center, departure, arrival, false);
 
-		ITrajectory trajectory = lambert.getTrajectory();
+		Trajectory trajectory = lambert.getTrajectory();
 		Vector3D v1Expected = new ImmutableVector3D(2.744082030955964E04, -1.404383002109151E04, 5.468193199081889e+002);
 		Vector3D v2Expected = new ImmutableVector3D(-2.452424882838209E04, 1.867758520103548E04, -4.856158493467824e+002);
 
 		// Check to 1 mm/s accuracy:
-        PosVel state1 = trajectory.evaluate(departure).toPosVel();
+        PosVel state1 = trajectory.apply(departure).toPosVel();
         assertEquals( new PosVel(r1, v1Expected, null), state1, 1E-3, 1E-3);
-        PosVel state2 = trajectory.evaluate(arrival).toPosVel();
+        PosVel state2 = trajectory.apply(arrival).toPosVel();
 		assertEquals( new PosVel(r2, v2Expected, null), state2, 1E-3, 1E-3);
 	}
 }

@@ -21,6 +21,7 @@ import static org.apache.commons.math3.util.FastMath.cos;
 import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.PosVel;
+import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.math.rotation.RotationMatrix$;
@@ -33,19 +34,18 @@ import org.apache.commons.math3.analysis.solvers.RiddersSolver;
 
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.libs.celest.time.IJulianDate;
-import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
- * Creates an {@link ITrajectory} from a known {@link ExpoSin} solution to the {@link TPBVP}. This allows
- * you to perform all common {@link ITrajectory} operations of that {@link ExpoSin} solution.
+ * Creates an {@link be.angelcorp.libs.celest.trajectory.Trajectory} from a known {@link ExpoSin} solution to the {@link TPBVP}. This allows
+ * you to perform all common {@link be.angelcorp.libs.celest.trajectory.Trajectory} operations of that {@link ExpoSin} solution.
  * 
  * @author Simon Billemont
  */
-public class ExpoSinTrajectory implements ITrajectory {
+public class ExpoSinTrajectory implements Trajectory {
 
 	private ExponentialSinusoid	exposin;
 	private ICelestialBody center;
@@ -90,7 +90,7 @@ public class ExpoSinTrajectory implements ITrajectory {
 	 * &lt;r1, 0, 0&gt;, and moves around in the XY plane over time.
 	 */
 	@Override
-	public PosVel evaluate(IJulianDate evalEpoch) {
+	public PosVel apply(IJulianDate evalEpoch) {
 		// Travel time from the start position [s]
 		final double t = evalEpoch.relativeTo(epoch, Time.second);
 

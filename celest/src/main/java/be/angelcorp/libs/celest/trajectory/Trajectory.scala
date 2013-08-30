@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.trajectory;
+package be.angelcorp.libs.celest.trajectory
+
+import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.state.Orbit
 
 /**
- * Evaluates the trajectory based on an initial Kepler state, and propagates this Kepler state using
- * classical Keplerian theory.
+ * A trajectory is a function of time which results in a state for that given time. Evaluating a
+ * trajectory over time yields a the path that the satellite follows over the time interval.
  * 
  * @author Simon Billemont
- * @see IKeplerElements
  */
-public interface IKeplerTrajectory extends ITrajectory {
+trait Trajectory {
+
+	/**
+	 * Find the state of a body at a given time.
+	 * 
+	 * @param t Get the orbit at this epoch.
+	 * @return The state at the given epoch
+	 */
+	def apply(t: IJulianDate): Orbit
 
 }

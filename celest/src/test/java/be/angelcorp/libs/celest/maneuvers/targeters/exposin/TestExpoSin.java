@@ -94,8 +94,8 @@ public class TestExpoSin extends CelestTest {
 		assertEquals(0, shape.getQ0(), 1E-16);
 		assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-8);
 
-        PosVel c1 = trajectory.evaluate(t1);
-		PosVel c2 = trajectory.evaluate(t2);
+        PosVel c1 = trajectory.apply(t1);
+		PosVel c2 = trajectory.apply(t2);
 		assertEquals(r1, c1.position().norm(), 1e-16);
 		assertEquals(r2, c2.position().norm(), 1);
 		assertEquals(ml_V2.x(), c2.velocity().x(), 1E-1);
@@ -150,8 +150,8 @@ public class TestExpoSin extends CelestTest {
 		assertEquals(0, shape.getQ0(), 1E-16);
 		assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-2);
 
-		PosVel c1 = trajectory.evaluate(t1);
-        PosVel c2 = trajectory.evaluate(t2);
+		PosVel c1 = trajectory.apply(t1);
+        PosVel c2 = trajectory.apply(t2);
         assertEquals(r1.position().norm(), c1.position().norm(), 1e-15);
         assertEquals(r2.position().norm(), c2.position().norm(), 1);
         assertEquals(ml_V2.x(), c2.velocity().x(), 1E-1);

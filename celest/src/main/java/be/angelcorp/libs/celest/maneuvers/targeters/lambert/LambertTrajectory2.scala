@@ -35,4 +35,4 @@ class LambertTrajectory2(val origin: PosVel,
 												 val destination: PosVel,
 												 val departure: IJulianDate,
 												 val arrival: IJulianDate,
-												 val center: ICelestialBody) extends KeplerTrajectory( Keplerian(origin), departure );
+												 val center: ICelestialBody) extends KeplerTrajectory( departure, Keplerian(origin) );

@@ -13,35 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.trajectory;
+package be.angelcorp.libs.celest.trajectory
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.IJulianDate
 
 /**
- * A {@link ICompositeTrajectory} is a trajectory that is split in discrete trajectory segments.
+ * This is a trajectory that is split in discrete trajectory segments, effectively patches several trajectories together.
+ *
  * Trajectories are added with a starting time. When this trajectory is evaluated, the evaluation is
  * delegated to the sub-trajectory which starts closest to, but before the requested epoch.
- * 
+ *
+ * @param trajectories Sorted map that stores trajectories with there corresponding starting time.
+ *
  * @author Simon Billemont
  */
-public interface ICompositeTrajectory extends ITrajectory {
+class CompositeTrajectory( val trajectories: java.util.TreeMap[IJulianDate, Trajectory] ) extends Trajectory {
 
-	/**
-	 * Add a new trajectory segment with a given starting time.
-	 * 
-	 * @param t
-	 *            Trajectory segment
-	 * @param t0
-	 *            Time when the trajectory segment starts
-	 */
-	public abstract void addTrajectory(ITrajectory t, IJulianDate t0);
+  /**
+   * Construct an empty CompositeTrajectory
+   */
+  def this() = this( new java.util.TreeMap[IJulianDate, Trajectory]() )
 
-	/**
-	 * Removes a sub-trajectory segment this {@link CompositeTrajectory}.
-	 * 
-	 * @param trajectory
-	 *            Segment to remove
-	 */
-	public abstract void removeTrajectory(ITrajectory trajectory);
+  def apply( epoch: IJulianDate ) = {
+		val entry = trajectories.floorEntry(epoch)
+		if (entry == null)
+			throw new ArithmeticException("No trajectory found for julian date " + epoch)
+    else
+      entry.getValue()(epoch)
+	}
 
 }

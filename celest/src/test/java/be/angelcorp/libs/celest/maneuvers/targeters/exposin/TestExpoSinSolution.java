@@ -66,8 +66,8 @@ public class TestExpoSinSolution extends CelestTest {
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
-		PosVel c1 = trajectory.evaluate(t1);
-        PosVel c2 = trajectory.evaluate(t2);
+		PosVel c1 = trajectory.apply(t1);
+        PosVel c2 = trajectory.apply(t2);
 		// Equal R
 		CelestTest.assertEqualsAngle(dTheta, c1.position().angle(c2.position()), 1e-3);
 		assertEquals(r1, c1.position().norm(), R_tol);
@@ -113,8 +113,8 @@ public class TestExpoSinSolution extends CelestTest {
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
-        PosVel c1 = trajectory.evaluate(t1);
-        PosVel c2 = trajectory.evaluate(t2);
+        PosVel c1 = trajectory.apply(t1);
+        PosVel c2 = trajectory.apply(t2);
 		// Equal R
 		CelestTest.assertEqualsAngle(dTheta, c1.position().angle(c2.position()), 1e-3);
 		assertEquals(r1, c1.position().norm(), R_tol);
@@ -160,8 +160,8 @@ public class TestExpoSinSolution extends CelestTest {
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
-		PosVel c1 = trajectory.evaluate(t1);
-        PosVel c2 = trajectory.evaluate(t2);
+		PosVel c1 = trajectory.apply(t1);
+        PosVel c2 = trajectory.apply(t2);
 		// Equal R
 		CelestTest.assertEqualsAngle(dTheta, c1.position().angle(c2.position()), 1e-3);
 		assertEquals(r1, c1.position().norm(), R_tol);

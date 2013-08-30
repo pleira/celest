@@ -15,18 +15,18 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
+import be.angelcorp.libs.celest.trajectory.Trajectory;
 import scala.Some;
 import be.angelcorp.libs.celest.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.Keplerian;
 import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.IJulianDate;
-import be.angelcorp.libs.celest.trajectory.ITrajectory;
 import be.angelcorp.libs.celest.trajectory.KeplerTrajectory;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
 
-public class LambertTrajectory implements ITrajectory {
+public class LambertTrajectory implements Trajectory {
 
 	/**
 	 * Initial inertial position
@@ -108,8 +108,8 @@ public class LambertTrajectory implements ITrajectory {
 	 * </p>
 	 */
 	@Override
-	public Orbit evaluate(IJulianDate t) {
-		return traj.evaluate(t);
+	public Orbit apply(IJulianDate t) {
+		return traj.apply(t);
 	}
 
 	/**
@@ -190,6 +190,6 @@ public class LambertTrajectory implements ITrajectory {
 	 */
 	private void mkTrajectory() {
         Keplerian k = Keplerian.apply( new PosVel(r1.clone(), getV1(), new Some<BodyCentered>(frame)));
-		traj = new KeplerTrajectory(k, departureEpoch);
+		traj = new KeplerTrajectory(departureEpoch, k);
 	}
 }

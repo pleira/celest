@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters;
 
 import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.IJulianDate;
-import be.angelcorp.libs.celest.trajectory.ITrajectory;
+import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.util.physics.Time;
 
 /**
@@ -93,6 +93,6 @@ public abstract class TPBVP {
 	 * 
 	 * @return An optimal trajectory
 	 */
-	public abstract ITrajectory getTrajectory();
+	public abstract Trajectory getTrajectory();
 
 }
