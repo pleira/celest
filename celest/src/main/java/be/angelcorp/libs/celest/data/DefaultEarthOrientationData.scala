@@ -17,7 +17,7 @@
 package be.angelcorp.libs.celest.data
 
 import be.angelcorp.libs.celest.universe.Universe
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import java.util
 
 class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrientationData( new  util.TreeMap() ) {
@@ -33,11 +33,11 @@ class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrie
    * Loaded values are with respect to IAU 2006/2000A precession-nutation model and consistent with ITRF2008.
    * @param epoch Epoch that the datafile should contain.
    */
-  def loadMoreData( epoch: IJulianDate ) {
+  def loadMoreData( epoch: Epoch ) {
     // Load a IERS EOP 08 C04 (IAU2000A) - yearly file
 
     // Year data to retrieve
-    val year     = epoch.getDate.getYear.toString
+    val year     = epoch.date.getYear.toString
     val filename = "eopc04_IAU2000.%s".format( year takeRight 2  )
 
     getDataFile( "iers/eop/long-term/c04_08/iau2000/"+filename ) match {
@@ -49,7 +49,7 @@ class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrie
     }
   }
 
-  override def onFail(epoch: IJulianDate, Δt: Double) = {
+  override def onFail(epoch: Epoch, Δt: Double) = {
     loadMoreData(epoch)
     findEntry( epoch, Δt ) match {
       case Some(entry) => entry

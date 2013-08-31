@@ -2,7 +2,7 @@ package be.angelcorp.libs.celest.ephemeris.jplDE
 
 import scala.math._
 import be.angelcorp.libs.celest.ephemeris.IEphemeris
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.celest.state.PosVel
@@ -42,7 +42,7 @@ class JplDeEphemeris(ephemeris: JplDe, body: String) extends IEphemeris[PosVel] 
 		series
 	}
 
-	def getEphemerisOn(date: IJulianDate): PosVel = {
+	def getEphemerisOn(date: Epoch): PosVel = {
 
 		val record = getRecord(date);
 
@@ -73,7 +73,7 @@ class JplDeEphemeris(ephemeris: JplDe, body: String) extends IEphemeris[PosVel] 
 
 	var lastRecord: JplDeDataRecond = null;
 
-	def getRecord(date: IJulianDate): JplDeDataRecond = {
+	def getRecord(date: Epoch): JplDeDataRecond = {
 		if (lastRecord == null || date.compareTo(lastRecord.t0) < 0 || date.compareTo(lastRecord.tf) > 0) {
 			lastRecord = ephemeris.data.find(data => date.compareTo(data.t0) > 0 && date.compareTo(data.tf) < 0) match {
 				case Some(d) => d

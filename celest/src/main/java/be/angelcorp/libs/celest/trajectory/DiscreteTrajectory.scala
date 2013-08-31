@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.trajectory
 
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.state.Orbit
 
 /**
@@ -28,14 +28,14 @@ import be.angelcorp.libs.celest.state.Orbit
  *
  * @author Simon Billemont
  */
-class DiscreteTrajectory( val states: java.util.TreeMap[IJulianDate, Orbit] ) extends Trajectory {
+class DiscreteTrajectory( val states: java.util.TreeMap[Epoch, Orbit] ) extends Trajectory {
 
   /**
    * Construct an empty DiscreteTrajectory
    */
-  def this() = this( new java.util.TreeMap[IJulianDate, Orbit]() )
+  def this() = this( new java.util.TreeMap[Epoch, Orbit]() )
 
-  def apply( epoch: IJulianDate ) = {
+  def apply( epoch: Epoch ) = {
 		val entry = states.floorEntry(epoch)
 		if (entry == null)
 			throw new ArithmeticException("No state found before the the julian date " + epoch)

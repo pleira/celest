@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.frames;
 import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.state.orientationState.IOrientationState;
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
 
@@ -63,7 +63,7 @@ public class CompositeFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 	 * @param transform1
 	 *            Second transform to apply, F1 => F2.
 	 */
-	public CompositeFrameTransform(CompositeFrameTransformFactory<F0, F1, F2> factory, IJulianDate epoch,
+	public CompositeFrameTransform(CompositeFrameTransformFactory<F0, F1, F2> factory, Epoch epoch,
 			IReferenceFrameTransform<F0, F1> transform0, IReferenceFrameTransform<F1, F2> transform1) {
 		super(factory, epoch);
 		this.transform0 = transform0;

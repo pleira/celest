@@ -19,7 +19,7 @@ package be.angelcorp.libs.celest.frames.implementations
 import math._
 import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
 import be.angelcorp.libs.celest.frames._
-import be.angelcorp.libs.celest.time.{JulianDate, IJulianDate}
+import be.angelcorp.libs.celest.time.{JulianDate, Epoch}
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.util.physics.{Angle, Time}
 import org.jgrapht.graph.DefaultDirectedWeightedGraph
@@ -65,14 +65,14 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 */
 	def transform(omega: Double, theta: Double, phi: Double) = RotationMatrix.rotateZXZ( omega, theta, phi )
 
-	def transformFactory(transform: IJulianDate=>IRotation) = new ReferenceFrameTransformFactory[IReferenceFrame, IReferenceFrame] {
-		protected def calculateParameters(date: IJulianDate): TransformationParameters = {
+	def transformFactory(transform: Epoch=>IRotation) = new ReferenceFrameTransformFactory[IReferenceFrame, IReferenceFrame] {
+		protected def calculateParameters(date: Epoch): TransformationParameters = {
 			new TransformationParameters( date,
 				Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO,
 				transform(date), Vector3D.ZERO, Vector3D.ZERO
 			)
 		}
-		def getCost(epoch: IJulianDate) = 0
+		def getCost(epoch: Epoch) = 0
 	}
 
 	/**
@@ -80,21 +80,21 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 * @param date Date to calculate the epoch day number from.
 	 * @return Epoch day nr (fractional days since J2000)
 	 */
-	def d0(date: IJulianDate) = date.relativeTo( universe.J2000_EPOCH, Time.day_julian )
+	def d0(date: Epoch) = date.relativeTo( universe.J2000_EPOCH, Time.day_julian )
 
 	/**
 	 * Number of julian centuries since the J2000 epoch.
 	 * @param date Epoch.
 	 * @return Julian centuries since J2000.
 	 */
-	def T0(date: IJulianDate) = date.relativeTo( universe.J2000_EPOCH, Time.century_julian )
+	def T0(date: Epoch) = date.relativeTo( universe.J2000_EPOCH, Time.century_julian )
 
 	/**
 	 * Number of julian years since the J2000 epoch.
 	 * @param date Epoch.
 	 * @return Julian years since J2000.
 	 */
-	def y0(date: IJulianDate) = date.relativeTo( universe.J2000_EPOCH, Time.year_julian )
+	def y0(date: Epoch) = date.relativeTo( universe.J2000_EPOCH, Time.year_julian )
 
 	/**
 	 * Angle between the Earth equatorial plane and the ecliptic (the Earth orbital plane) at the J2000 epoch [rad]
@@ -118,7 +118,7 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 * @param date Epoch at which to calculate the mean obliquity.
 	 * @return The Earth obliquity, angle between the Earth equator and ecliptic, at the specified epoch [rad].
 	 */
-	def obliquityMean(date: IJulianDate) = {
+	def obliquityMean(date: Epoch) = {
 		val T0_ = T0(date)
 		//obliquityAtJ2000 + (T0_ * (-0.013004167 + T0_ * (-0.000000164 + 0.000000504 * T0_))) * (Pi / 180.0) // Degrees version
 		obliquityAtJ2000 + (-0.000226966 + (-2.86234E-9 + 8.79646E-9 * T0_) * T0_) * T0_ // Radians version
@@ -138,7 +138,7 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 * @param date Epoch at which to calculate the true obliquity.
 	 * @return The Earth obliquity, angle between the Earth equator and ecliptic, at the specified epoch [rad].
 	 */
-	def obliquityTrue(date: IJulianDate) = {
+	def obliquityTrue(date: Epoch) = {
 		val days = d0( date )
 		// Degrees version:
 		//val degree = Pi / 180
@@ -157,7 +157,7 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 * @param date Epoch to calculate the longitudinal nutation on.
 	 * @return The longitudinal nutation [rad]
 	 */
-	def longitudinalNutation(date: IJulianDate) = {
+	def longitudinalNutation(date: Epoch) = {
 		val days = d0( date )
 
 		// Degrees version:
@@ -183,7 +183,7 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 * @param date1 Final epoch.
 	 * @return Difference in inclination (πA), ascending node longitude (ΠA), and vernal equinoxes angular distance (pA)
 	 */
-	def ecliptic(date0: IJulianDate, date1: IJulianDate): (Double, Double, Double) = {
+	def ecliptic(date0: Epoch, date1: Epoch): (Double, Double, Double) = {
 		val T = T0(date0)
 		val t = date1.relativeTo(date0, Time.century_julian)
 		val arcSecToRad = Angle.ArcSecond to Angle.Rad
@@ -202,7 +202,7 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 * @param date Epoch.
 	 * @return Transformation angles to transform from the equator of epoch are to the equator of date.
 	 */
-	def equator(date: IJulianDate): (Double, Double, Double) = {
+	def equator(date: Epoch): (Double, Double, Double) = {
 		val T = T0(date)
 		val degree = Angle.Degree to Angle.Rad
 		(
@@ -233,7 +233,7 @@ class HeliosphericCoordinateSystems(implicit universe: Universe) {
 	 * longitude of the ascending node Ω_sun [rad].
 	 * The time dependence in Ω_sun takes approximate account of the ecliptic precession.
 	 */
-	def solarEclipticLongitude(date: IJulianDate) = Angle.Degree.convert( 75.76 + 1.397 * T0(date) )
+	def solarEclipticLongitude(date: Epoch) = Angle.Degree.convert( 75.76 + 1.397 * T0(date) )
 
 	val solarRotationTimeSidereal = Time.day.convert(25.38 )
 	val solarRotationTimeSynodic  = Time.day.convert(27.2753)

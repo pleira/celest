@@ -21,6 +21,7 @@ import static org.apache.commons.math3.util.FastMath.cos;
 import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.PosVel;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
@@ -33,7 +34,6 @@ import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
 import org.apache.commons.math3.analysis.solvers.RiddersSolver;
 
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
@@ -49,7 +49,7 @@ public class ExpoSinTrajectory implements Trajectory {
 
 	private ExponentialSinusoid	exposin;
 	private ICelestialBody center;
-	private IJulianDate			epoch;
+	private Epoch epoch;
 	private double				gamma;
 
 	/**
@@ -62,7 +62,7 @@ public class ExpoSinTrajectory implements Trajectory {
 	 * @param epoch
 	 *            Epoch at which the transfer starts
 	 */
-	public ExpoSinTrajectory(ExponentialSinusoid exposin, ICelestialBody center, IJulianDate epoch) {
+	public ExpoSinTrajectory(ExponentialSinusoid exposin, ICelestialBody center, Epoch epoch) {
 		this(exposin, Double.NaN, center, epoch);
 	}
 
@@ -78,7 +78,7 @@ public class ExpoSinTrajectory implements Trajectory {
 	 * @param epoch
 	 *            Epoch at which the transfer starts
 	 */
-	public ExpoSinTrajectory(ExponentialSinusoid exposin, double gamma, ICelestialBody center, IJulianDate epoch) {
+	public ExpoSinTrajectory(ExponentialSinusoid exposin, double gamma, ICelestialBody center, Epoch epoch) {
 		this.exposin = exposin;
 		this.gamma = gamma;
 		this.center = center;
@@ -90,7 +90,7 @@ public class ExpoSinTrajectory implements Trajectory {
 	 * &lt;r1, 0, 0&gt;, and moves around in the XY plane over time.
 	 */
 	@Override
-	public PosVel apply(IJulianDate evalEpoch) {
+	public PosVel apply(Epoch evalEpoch) {
 		// Travel time from the start position [s]
 		final double t = evalEpoch.relativeTo(epoch, Time.second);
 

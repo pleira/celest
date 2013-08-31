@@ -31,7 +31,7 @@ class TestTDB extends FlatSpec with ShouldMatchers {
     val tdb       = new TDB( universe.J2000_EPOCH )
     val base_date = new JulianDate( 2012, 04, 15, 12, 03, 06.24, tdb )
 
-    expect( base_date.getJD  ) { base_date.getJulianDate( universe.TT ).getJulianDate( tdb ).getJD }
+    expect( base_date.jd ) { base_date.inTimeStandard( universe.TT ).inTimeStandard( tdb ).jd }
   }
 
   /**
@@ -52,8 +52,8 @@ class TestTDB extends FlatSpec with ShouldMatchers {
     val tdb_seconds = 28352.5716651154
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tdb = date.getJulianDate( new TDB( universe.J2000_EPOCH ) )
-    secondsInDay( jd_tdb.getJD ) should be (tdb_seconds plusOrMinus 1E-4)
+    val jd_tdb = date.inTimeStandard( new TDB( universe.J2000_EPOCH ) )
+    secondsInDay( jd_tdb.jd ) should be (tdb_seconds plusOrMinus 1E-4)
   }
 
   /**

@@ -19,7 +19,7 @@ package be.angelcorp.libs.celest.frames.implementations.transforms
 import math._
 import be.angelcorp.libs.celest.frames._
 import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
 import be.angelcorp.libs.math.linear.Vector3D
@@ -47,9 +47,9 @@ object EarthRotation {
    * @param epoch A specific epoch.
    * @return The earth rotation angle [rad].
    */
-  def θ_ERA( epoch: IJulianDate )(implicit universe: Universe) = {
-    val epoch_ut1 = epoch.getJulianDate( universe.UT1 )
-    val t = epoch_ut1.getJD - 2451545.0
+  def θ_ERA( epoch: Epoch )(implicit universe: Universe) = {
+    val epoch_ut1 = epoch.inTimeStandard( universe.UT1 )
+    val t = epoch_ut1.jd - 2451545.0
 
     // Same as ( θ0 + dθdt * t ), but more accurate (see reference [2][3]):
     val revs = (epoch_ut1.fractionInDay + 0.5) + θ0 + (dθdt - 1.0) * t
@@ -101,7 +101,7 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
                                        - 0.00000087 * t * sin( fa_Ω ))
   }
 
-  def getCost(epoch: IJulianDate): Double = 100.0
+  def getCost(epoch: Epoch): Double = 100.0
 
   /**
    * Computes the rotation matrix and its first angular velocity due to the earth rotation (greenwich apparent sidereal time, GAST).
@@ -111,7 +111,7 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
    * @param epoch The respective epoch to compute earth rotation transformation at.
    * @return The earth rotation transformation matrix and angular velocity.
    */
-  def rotationAngle(epoch: IJulianDate) = {
+  def rotationAngle(epoch: Epoch) = {
     // Rotation rate [rad], see reference [1] eqn 11
     val ω = 7.292115146706979E-5 * ( 1 - lodProvider.lod(epoch) / 86400.0 )
 
@@ -125,8 +125,8 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
    * @param epoch The respective epoch to compute GMST angle at.
    * @return The Greenwich Mean Sidereal Time (GMST) angle [rad].
    */
-  def θ_GMST2000( epoch: IJulianDate ): Double =
-    θ_GMST2000( epoch, epoch.getJulianDate( universe.TT ).relativeTo( universe.J2000_EPOCH, century_julian ) )
+  def θ_GMST2000( epoch: Epoch ): Double =
+    θ_GMST2000( epoch, epoch.inTimeStandard( universe.TT ).relativeTo( universe.J2000_EPOCH, century_julian ) )
 
 
   /**
@@ -138,7 +138,7 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
    * @param t The julian centuries TT from the J2000.0 epoch of the given epoch.
    * @return The Greenwich Mean Sidereal Time (GMST) angle [rad].
    */
-  def θ_GMST2000( epoch: IJulianDate, t: Double ): Double = {
+  def θ_GMST2000( epoch: Epoch, t: Double ): Double = {
     val era = EarthRotation.θ_ERA( epoch )
     val temp = ArcSecond.convert(
       0.014506 + 4612.156534 * t + 1.3915817 * pow(t, 2) - 0.00000044 * pow(t, 3) - 0.000029956 * pow(t, 4) - 0.0000000368 * pow(t, 5)
@@ -152,15 +152,15 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
    * @param epoch The respective epoch to compute GAST angle at.
    * @return The Greenwich apparent sidereal time [rad].
    */
-  def θ_GAST2000( epoch: IJulianDate ) = {
+  def θ_GAST2000( epoch: Epoch ) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.getJulianDate( universe.TT ).relativeTo( universe.J2000_EPOCH, century_julian )
+    val t = epoch.inTimeStandard( universe.TT ).relativeTo( universe.J2000_EPOCH, century_julian )
 
     /** Greenwich apparent sidereal time (GAST) [rad], see reference [3] eqn 2.13*/
     θ_GMST2000(epoch, t) + equationOfEquinoxes( t )
   }
 
-  protected def calculateParameters(epoch: IJulianDate) = {
+  protected def calculateParameters(epoch: Epoch) = {
     val (r, ω) = rotationAngle(epoch)
     new TransformationParameters( epoch, Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO, r, ω, Vector3D.ZERO )
   }

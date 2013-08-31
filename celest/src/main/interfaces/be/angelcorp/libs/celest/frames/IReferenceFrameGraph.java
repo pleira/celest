@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.frames;
 
 import java.util.Iterator;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 import com.google.common.base.Predicate;
 
@@ -127,7 +127,7 @@ public interface IReferenceFrameGraph {
 	 *             existed between the two frames.
 	 */
 	public abstract IReferenceFrameTransform<?, ?> getTransform(Predicate<IReferenceFrame> from,
-			Predicate<IReferenceFrame> to, IJulianDate epoch) throws ReferenceFrameTransformationException;
+			Predicate<IReferenceFrame> to, Epoch epoch) throws ReferenceFrameTransformationException;
 
 	/**
 	 * Find a transformation between two known {@link IReferenceFrame}'s.
@@ -149,7 +149,7 @@ public interface IReferenceFrameGraph {
 	 *             When no possible transformation chain was found between the two frames.
 	 */
 	public abstract <T extends IReferenceFrame, V extends IReferenceFrame> IReferenceFrameTransform<T, V>
-			getTransform(T from, V to, IJulianDate epoch) throws ReferenceFrameTransformationException;
+			getTransform(T from, V to, Epoch epoch) throws ReferenceFrameTransformationException;
 
 	/**
 	 * Find a factory capable of generating transformations between two {@link IReferenceFrame}'s. The

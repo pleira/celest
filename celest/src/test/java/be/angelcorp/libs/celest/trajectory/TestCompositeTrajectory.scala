@@ -22,7 +22,7 @@ import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.celest.state.{PosVel, Orbit}
 import be.angelcorp.libs.celest.frames.IReferenceFrame
-import be.angelcorp.libs.celest.time.{JulianDate, IJulianDate}
+import be.angelcorp.libs.celest.time.{JulianDate, Epoch}
 import be.angelcorp.libs.util.physics.Time
 
 
@@ -39,7 +39,7 @@ class TestCompositeTrajectory extends FlatSpec with ShouldMatchers  {
 
   /** Test trajectory that returns the time at which it is evaluated */
 	class TestTrajectory(id: Double) extends Trajectory {
-    def apply(t: IJulianDate) = new TestState(t.add(id, Time.day).getJD)
+    def apply(t: Epoch) = new TestState(t.add(id, Time.day).jd)
   }
 
   "CompositeTrajectory" should "correctly evaluate the added sub-trajectories" in {

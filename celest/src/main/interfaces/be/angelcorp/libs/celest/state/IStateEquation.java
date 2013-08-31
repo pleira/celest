@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.state;
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.ode.SecondOrderDifferentialEquations;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 /**
  * A set of first differential equations that relate to a specific type of {@link IState} variables, in
@@ -49,7 +49,7 @@ public interface IStateEquation<Y, DY> {
 	 *            Dependent state variables
 	 * @return The derivatives of the dependent state variables
 	 */
-	DY calculateDerivatives(IJulianDate t, Y y);
+	DY calculateDerivatives(Epoch t, Y y);
 
 	/**
 	 * TODO: is this required?

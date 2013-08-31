@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.time.timeStandard
 
-import be.angelcorp.libs.celest.time.{JulianDate, IJulianDate}
+import be.angelcorp.libs.celest.time.{JulianDate, Epoch}
 import scala.math._
 import java.lang.Math
 import scala.Math
@@ -32,8 +32,8 @@ import be.angelcorp.libs.util.physics.Time
  * @author Simon Billemont
  */
 class TAI extends ITimeStandard {
-	override def offsetFromTT(jd_tt: IJulianDate) = -32.184
-	override def offsetToTT(jd_tai: IJulianDate) = 32.184
+	override def offsetFromTT(jd_tt: Epoch) = -32.184
+	override def offsetToTT(jd_tai: Epoch) = 32.184
 }
 
 /**
@@ -47,8 +47,8 @@ class TAI extends ITimeStandard {
  * @author Simon Billemont
  */
 class TT extends ITimeStandard {
-	override def offsetFromTT(jd_tt: IJulianDate) = 0
-	override def offsetToTT(jd_tt: IJulianDate) = 0
+	override def offsetFromTT(jd_tt: Epoch) = 0
+	override def offsetToTT(jd_tt: Epoch) = 0
 }
 
 /**
@@ -62,19 +62,19 @@ class TT extends ITimeStandard {
  *
  * @author Simon Billemont
  */
-class TCB( tdb: ITimeStandard, tcb_epoch: IJulianDate) extends ITimeStandard {
+class TCB( tdb: ITimeStandard, tcb_epoch: Epoch) extends ITimeStandard {
 
   val Lb   = +1.55051976772E-8
   val TDB0 = -6.55E-5
 
-	override def offsetFromTT(jd_tt: IJulianDate) = {
+	override def offsetFromTT(jd_tt: Epoch) = {
     // See [1] equation 3-50
     val TCB_TDB = Lb * jd_tt.relativeTo(tcb_epoch, Time.second) + TDB0
     val jd_tdb  = jd_tt.add( TCB_TDB, Time.second )
     TCB_TDB + tdb.offsetFromTT( jd_tdb )
   }
 
-	override def offsetToTT(jd_tcb: IJulianDate) = {
+	override def offsetToTT(jd_tcb: Epoch) = {
     //TODO: Appropriation, need a rootfinder or something similar
     -offsetFromTT(jd_tcb)
 	}
@@ -97,16 +97,16 @@ class TCB( tdb: ITimeStandard, tcb_epoch: IJulianDate) extends ITimeStandard {
  *
  * @author Simon Billemont
  */
-class TDB( j2000_epoch: IJulianDate ) extends ITimeStandard {
+class TDB( j2000_epoch: Epoch ) extends ITimeStandard {
 
-  def offsetFromTT(JD_tt: IJulianDate) = {
+  def offsetFromTT(JD_tt: Epoch) = {
     val J2000_offset = JD_tt.relativeTo( j2000_epoch )
     val M    = (357.53 + 0.98560028 * J2000_offset) * (Pi/180.0)
     val ΔM_λ = (246.11 + 0.90255617 * J2000_offset) * (Pi/180.0)
     0.001658 * sin(M) + 0.000014 * sin(ΔM_λ)
   }
 
-  def offsetToTT(JD_tdb: IJulianDate) = -offsetFromTT(JD_tdb)
+  def offsetToTT(JD_tdb: Epoch) = -offsetFromTT(JD_tdb)
 
 }
 
@@ -122,7 +122,7 @@ class TDB( j2000_epoch: IJulianDate ) extends ITimeStandard {
  *
  * @author Simon Billemont
  */
-class TCG( tt_epoch: IJulianDate ) extends ITimeStandard {
+class TCG( tt_epoch: Epoch ) extends ITimeStandard {
 
   /**
    * LG is a scale constant accounting for the Earth's gravitational and rotational potential affecting
@@ -131,8 +131,8 @@ class TCG( tt_epoch: IJulianDate ) extends ITimeStandard {
    */
   private val L_g = 6.969290134E-10
 
-  def offsetFromTT(JD_tt: IJulianDate) =  L_g * JD_tt.relativeTo(  tt_epoch , Time.second)
-  def offsetToTT(JD_tcg: IJulianDate)  = -L_g * JD_tcg.relativeTo( tt_epoch , Time.second)
+  def offsetFromTT(JD_tt: Epoch) =  L_g * JD_tt.relativeTo(  tt_epoch , Time.second)
+  def offsetToTT(JD_tcg: Epoch)  = -L_g * JD_tcg.relativeTo( tt_epoch , Time.second)
 
 }
 

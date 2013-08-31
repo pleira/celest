@@ -17,7 +17,7 @@
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert
 
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 
 import math._
 import be.angelcorp.libs.util.physics.Time
@@ -51,7 +51,7 @@ import be.angelcorp.libs.celest.state.PosVel
  * @param leftBranch  True returns the left branch solution [default].
  */
 class Lambert2(r1: PosVel, 					        r2: PosVel,
-							 departure: IJulianDate, 			arrival: IJulianDate,
+							 departure: Epoch, 			arrival: Epoch,
 							 val center: ICelestialBody, 	val N: Double=0,
 							 val prograde: Boolean=true, 	val leftBranch: Boolean=true) extends TPBVP( r1, r2, departure, arrival ) {
 

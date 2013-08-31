@@ -32,7 +32,7 @@ class TestUTC extends FlatSpec with ShouldMatchers {
     val utc       = new DefaultUTC( new MockTime(-32.184) )
     val base_date = new JulianDate( 2451545.0, utc )
 
-    expect( base_date.getJD  ) { base_date.getJulianDate( universe.TT ).getJulianDate( utc ).getJD }
+    expect( base_date.jd  ) { base_date.inTimeStandard( universe.TT ).inTimeStandard( utc ).jd }
   }
 
   /**
@@ -53,8 +53,8 @@ class TestUTC extends FlatSpec with ShouldMatchers {
     val utc_seconds = 28288.3860090000
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_utc = date.getJulianDate( new DefaultUTC( new MockTime(-32.184) ) )
-    secondsInDay( jd_utc.getJD ) should be (utc_seconds plusOrMinus 1E-4)
+    val jd_utc = date.inTimeStandard( new DefaultUTC( new MockTime(-32.184) ) )
+    secondsInDay( jd_utc.jd ) should be (utc_seconds plusOrMinus 1E-4)
   }
 
   /**

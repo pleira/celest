@@ -33,7 +33,7 @@ class TestTAI extends FlatSpec with ShouldMatchers {
     val tai       = new TAI()
     val base_date = new JulianDate( 2.0, tai )
 
-    expect( base_date.getJD  ) { base_date.getJulianDate( universe.TT ).getJulianDate( tai ).getJD }
+    expect( base_date.jd ) { base_date.inTimeStandard( universe.TT ).inTimeStandard( tai ).jd }
   }
 
   /**
@@ -54,8 +54,8 @@ class TestTAI extends FlatSpec with ShouldMatchers {
     val tai_seconds = 28320.3860090000
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tai = date.getJulianDate( new TAI() )
-    secondsInDay( jd_tai.getJD ) should be (tai_seconds plusOrMinus 1E-4)
+    val jd_tai = date.inTimeStandard( new TAI() )
+    secondsInDay( jd_tai.jd ) should be (tai_seconds plusOrMinus 1E-4)
   }
 
   /**

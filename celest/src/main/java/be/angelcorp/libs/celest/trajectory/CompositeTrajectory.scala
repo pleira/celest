@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.trajectory
 
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 
 /**
  * This is a trajectory that is split in discrete trajectory segments, effectively patches several trajectories together.
@@ -27,14 +27,14 @@ import be.angelcorp.libs.celest.time.IJulianDate
  *
  * @author Simon Billemont
  */
-class CompositeTrajectory( val trajectories: java.util.TreeMap[IJulianDate, Trajectory] ) extends Trajectory {
+class CompositeTrajectory( val trajectories: java.util.TreeMap[Epoch, Trajectory] ) extends Trajectory {
 
   /**
    * Construct an empty CompositeTrajectory
    */
-  def this() = this( new java.util.TreeMap[IJulianDate, Trajectory]() )
+  def this() = this( new java.util.TreeMap[Epoch, Trajectory]() )
 
-  def apply( epoch: IJulianDate ) = {
+  def apply( epoch: Epoch ) = {
 		val entry = trajectories.floorEntry(epoch)
 		if (entry == null)
 			throw new ArithmeticException("No trajectory found for julian date " + epoch)

@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.frames.implementations.transforms
 
 import math._
 import be.angelcorp.libs.celest.frames.{IReferenceFrame, ConstantRotationTransformFactory}
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.math.rotation.RotationMatrix._
 import be.angelcorp.libs.math.linear.Matrix3D
@@ -72,8 +72,8 @@ class J2000FrameBias( val preciseForm: Boolean = true ) extends ConstantRotation
          ξ0,   η0,    1
       )
 
-  def rotationMatrix(epoch: IJulianDate) = B
+  def rotationMatrix(epoch: Epoch) = B
 
-  def getCost(epoch: IJulianDate) = 100.0
+  def getCost(epoch: Epoch) = 100.0
 
 }

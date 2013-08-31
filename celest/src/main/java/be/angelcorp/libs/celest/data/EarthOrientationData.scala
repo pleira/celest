@@ -20,10 +20,11 @@ import java.util
 import scala.math._
 import scala.io.Source
 import scala.collection.JavaConverters._
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards.MJD
 import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.libs.celest.time.dateStandard.DateStandards
 
 class EarthOrientationData( val data: util.TreeMap[Double, EarthOrientationDataEntry] )(implicit universe: Universe)
   extends UT1Provider with ExcessLengthOfDay {
@@ -38,8 +39,8 @@ class EarthOrientationData( val data: util.TreeMap[Double, EarthOrientationDataE
    * @param Δt_max Maximum allowable time difference between the epoch and the closest entry [days].
    * @return Optionally the closest eop entry to the given epoch.
    */
-  def findEntry( epoch: IJulianDate, Δt_max: Double = 1.0 ) = {
-    val mjd_utc = epoch.getJulianDate( MJD, universe.UTC )
+  def findEntry( epoch: Epoch, Δt_max: Double = 1.0 ) = {
+    val mjd_utc = DateStandards.MJD.fromJD( epoch.inTimeStandard(universe.UTC).jd )
     val low  = data.floorEntry(   mjd_utc )
     val high = data.ceilingEntry( mjd_utc )
 
@@ -58,13 +59,13 @@ class EarthOrientationData( val data: util.TreeMap[Double, EarthOrientationDataE
 
   /**
    * Get the entry closest to the specified epoch. If the closes entry is further away then the set limit by Δt_max,
-   * onFail(IJulianDate, Double) is returned.
+   * onFail(Epoch, Double) is returned.
    *
    * @param epoch Find the eop closest to this epoch.
    * @param Δt_max Maximum allowable time difference between the epoch and the closest entry [days].
    * @return The closest eop entry to the given epoch.
    */
-  def getEntry(epoch: IJulianDate, Δt_max: Double = 1.0) = findEntry(epoch) match {
+  def getEntry(epoch: Epoch, Δt_max: Double = 1.0) = findEntry(epoch) match {
     case Some(entry) => entry
     case None        => onFail(epoch, Δt_max)
   }
@@ -77,14 +78,14 @@ class EarthOrientationData( val data: util.TreeMap[Double, EarthOrientationDataE
    * @param Δt_max Maximum allowable time difference between the epoch and the closest entry [days].
    * @return Recovered eop entry that is within Δt_max of the specified epoch.
    */
-  def onFail(epoch: IJulianDate, Δt_max: Double): EarthOrientationDataEntry =
+  def onFail(epoch: Epoch, Δt_max: Double): EarthOrientationDataEntry =
     throw new RuntimeException( "Failed to locate EOP data for date " + epoch )
 
   // See [[ExcessLengthOfDay]]
-  def lod(epoch: IJulianDate) = getEntry( epoch ).lod
+  def lod(epoch: Epoch) = getEntry( epoch ).lod
 
   // See [[UT1Provider]]
-  def UT1_UTC(epoch: IJulianDate) = getEntry( epoch ).ut1_utc
+  def UT1_UTC(epoch: Epoch) = getEntry( epoch ).ut1_utc
 
 }
 

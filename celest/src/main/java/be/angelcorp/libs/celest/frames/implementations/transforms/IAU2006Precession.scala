@@ -17,7 +17,7 @@
 package be.angelcorp.libs.celest.frames.implementations.transforms
 
 import scala.math._
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.celest.frames._
 import be.angelcorp.libs.math.rotation.RotationMatrix._
@@ -40,9 +40,9 @@ class IAU2006Precession(implicit universe: Universe) extends ConstantRotationTra
   /**
    * Finds the precession matrix at a given date according to the IAU 2006 Precession model.
    */
-  def rotationMatrix( epoch: IJulianDate ) = {
+  def rotationMatrix( epoch: Epoch ) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.getJulianDate( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
+    val t = epoch.inTimeStandard( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
 
     rotateX(   ArcSecond.convert( - IAU2006Precession.ε0    ) ) !*
       rotateZ( ArcSecond.convert(   IAU2006Precession.ψA(t) ) ) !*
@@ -50,7 +50,7 @@ class IAU2006Precession(implicit universe: Universe) extends ConstantRotationTra
       rotateZ( ArcSecond.convert( - IAU2006Precession.χA(t) ) )
   }
 
-  def getCost(epoch: IJulianDate) = 100.0
+  def getCost(epoch: Epoch) = 100.0
 
 }
 

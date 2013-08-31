@@ -21,7 +21,7 @@ import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.math.rotation.RotationMatrix._
 import be.angelcorp.libs.celest.frames.{IReferenceFrame, ConstantRotationTransformFactory}
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.universe.Universe
 import java.io.{IOException, File}
 import scala.io.Source
@@ -53,11 +53,11 @@ class IAU2000Nutation(coefficients: List[ IAU2000NutationEntry ],
                       IAU2006Corrections: Boolean = true)(implicit universe: Universe)
   extends ConstantRotationTransformFactory[IReferenceFrame, IReferenceFrame] {
 
-  def getCost(epoch: IJulianDate): Double = 100.0
+  def getCost(epoch: Epoch): Double = 100.0
 
-  def rotationMatrix(epoch: IJulianDate) = {
+  def rotationMatrix(epoch: Epoch) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.getJulianDate( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
+    val t = epoch.inTimeStandard( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
 
     // Nutation angles according to this theory
     val (dψ2000, dε2000) = nutationParameters( t )
@@ -75,9 +75,9 @@ class IAU2000Nutation(coefficients: List[ IAU2000NutationEntry ],
    * @param epoch Epoch at which to compute the nutation parameters.
    * @return The nutation parameters longitude (Δψ) and obliquity (Δε) [arcseconds]
    */
-  def nutationParameters( epoch: IJulianDate ): (Double, Double) = {
+  def nutationParameters( epoch: Epoch ): (Double, Double) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.getJulianDate( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
+    val t = epoch.inTimeStandard( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
     nutationParameters( t )
   }
 

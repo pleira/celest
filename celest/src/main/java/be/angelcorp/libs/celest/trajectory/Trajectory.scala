@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.trajectory
 
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.state.Orbit
 
 /**
@@ -32,6 +32,6 @@ trait Trajectory {
 	 * @param t Get the orbit at this epoch.
 	 * @return The state at the given epoch
 	 */
-	def apply(t: IJulianDate): Orbit
+	def apply(t: Epoch): Orbit
 
 }

@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.ephemeris;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.time.JulianDate;
 
 /**
@@ -44,6 +44,6 @@ public interface IEphemeris<S> {
 	 *            Epemeris juliandate to retrieve the emphemeris on
 	 * @return The ephemeris at the specified date (or as close as possible to)
 	 */
-	public S getEphemerisOn(IJulianDate date);
+	public S getEphemerisOn(Epoch date);
 
 }

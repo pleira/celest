@@ -28,7 +28,7 @@ import be.angelcorp.libs.celest.physics.quantities.Torque;
 import be.angelcorp.libs.celest.state.IStateEquation;
 import be.angelcorp.libs.celest.state.positionState.CartesianDerivative;
 import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 import com.google.common.collect.Lists;
@@ -85,7 +85,7 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
 	}
 
 	@Override
-	public ICartesianDerivative calculateDerivatives(IJulianDate t, PosVel y) {
+	public ICartesianDerivative calculateDerivatives(Epoch t, PosVel y) {
 		Vector3D a = Vector3D$.MODULE$.ZERO();
 		for (ObjectForce f : getForcesList()) {
 			Vector3D dA = f.toAcceleration();

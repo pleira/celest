@@ -24,7 +24,7 @@ import org.jgrapht.alg.DijkstraShortestPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -263,7 +263,7 @@ public class ReferenceFrameGraph implements IReferenceFrameGraph {
 	 */
 	@Override
 	public IReferenceFrameTransform<?, ?> getTransform(Predicate<IReferenceFrame> from, Predicate<IReferenceFrame> to,
-			IJulianDate epoch) throws ReferenceFrameTransformationException {
+			Epoch epoch) throws ReferenceFrameTransformationException {
 		// Get the respective factory for the given input
 		IReferenceFrameTransformFactory<?, ?> factory = getTransformFactory(from, to);
 		// Create a new transform for the specific epoch
@@ -277,7 +277,7 @@ public class ReferenceFrameGraph implements IReferenceFrameGraph {
 	 */
 	@Override
 	public <T extends IReferenceFrame, V extends IReferenceFrame> IReferenceFrameTransform<T, V>
-			getTransform(T from, V to, IJulianDate epoch) throws ReferenceFrameTransformationException {
+			getTransform(T from, V to, Epoch epoch) throws ReferenceFrameTransformationException {
 		// Get the respective factory for the given input
 		IReferenceFrameTransformFactory<T, V> factory = getTransformFactory(from, to);
 		// Create a new transform for the specific epoch

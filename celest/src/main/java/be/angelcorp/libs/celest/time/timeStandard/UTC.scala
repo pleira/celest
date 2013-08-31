@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.time.timeStandard
 import scala.collection.immutable.TreeMap
 import org.apache.commons.math3.analysis.UnivariateFunction
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.util.physics.Time
 import java.util
 
@@ -35,10 +35,9 @@ import java.util
  */
 class DefaultUTC(TAI: ITimeStandard) extends ITimeStandard {
 
-	def offsetFromTT(JD_tt: IJulianDate) = {
+	def offsetFromTT(JD_tt: Epoch) = {
 		val from_tt = TAI.offsetFromTT(JD_tt)
-    val jd     = JD_tt.add(from_tt, Time.second).getJD
-    val jd2    = JD_tt.getJulianDate(TAI).getJD
+    val jd     = JD_tt.add(from_tt, Time.second).jd
 
 		val entry  = DefaultUTC.TAI_UTC.floorEntry(jd)
 		var offset = -entry.getValue()(jd)
@@ -51,8 +50,8 @@ class DefaultUTC(TAI: ITimeStandard) extends ITimeStandard {
 		offset + from_tt
 	}
 
-	def offsetToTT(JD_utc: IJulianDate) = {
-		val jd = JD_utc.getJD
+	def offsetToTT(JD_utc: Epoch) = {
+		val jd = JD_utc.jd
 		val entry = DefaultUTC.TAI_UTC.floorEntry(jd)
 		val offset_TAI = entry.getValue()(jd)
 

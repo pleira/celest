@@ -15,16 +15,16 @@
  */
 package be.angelcorp.libs.celest.time
 
-import be.angelcorp.libs.celest.time.timeStandard.ITimeStandard
-import be.angelcorp.libs.celest.universe.Universe
 import java.util._
-import be.angelcorp.libs.celest.time.dateStandard.IDateStandard
 import be.angelcorp.libs.util.physics.Time
+import be.angelcorp.libs.celest.time.timeStandard.ITimeStandard
+import be.angelcorp.libs.celest.time.dateStandard.IDateStandard
+import be.angelcorp.libs.celest.universe.Universe
 
 /**
- * Basic Julian Date, a time/date of a specific epoch. Internaly the representation is handled as a
+ * Basic Julian Date, a time/date of a specific epoch. Internally the representation is handled as a
  * Julian Date number (see [[be.angelcorp.libs.celest.time.dateStandard.DateStandards]]),
- * in a specific time standated (UTC/TAI/TT/... see [[be.angelcorp.libs.celest.time.timeStandard.ITimeStandard]]).
+ * in a specific time standard (UTC/TAI/TT/... see [[be.angelcorp.libs.celest.time.timeStandard.ITimeStandard]]).
  * 
  * <p>
  * The general accuracy of this class is generally lower a millisecond.
@@ -35,20 +35,13 @@ import be.angelcorp.libs.util.physics.Time
  * (double => int for seconds).
  * </p>
  *
- * @param date Set the internal epoch to the given JD.
- * @param timeStandard Time standard that the epoch is given in.
+ * @param jd            Set the internal epoch to the given JD.
+ * @param timeStandard  Time standard that the epoch is given in.
  *
  * @author Simon Billemont
  */
 // TODO: remove (int) sec casts
-class JulianDate(val date: Double, timeStandard: ITimeStandard)(implicit universe: Universe) extends IJulianDate {
-
-	/**
-	 * Create a Julian Date from a given [[java.util.Date]].
-	 * 
-	 * @param date Date to convert to a Julian Date (UTC time).
-	 */
-	//def this(date: Date)(implicit universe: Universe) = this(date, universe.UTC)
+case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe: Universe) extends Epoch {
 
 	/**
 	 * Create a Julian Date from a given [[java.util.Date]].
@@ -120,56 +113,40 @@ class JulianDate(val date: Double, timeStandard: ITimeStandard)(implicit univers
 	def this(year: Int, month: Int, day: Int, hour: Int, minute: Int, seconds: Double, timeStandard: ITimeStandard)(implicit universe: Universe) =
 		this(TimeUtils.jday(year, month, day, hour, minute, seconds), timeStandard)
 
-	override def add(dt: Double, format: Time) = new JulianDate(getJD + Time.convert(dt, format, Time.day), timeStandard)
+	def add(dt: Double, format: Time) = new JulianDate(jd + Time.convert(dt, format, Time.day), timeStandard)
 
-	override def compareTo(other: IJulianDate) = getJD.compareTo( other.getJD )
+	override def compareTo(other: Epoch) = jd.compareTo( other.jd )
 
-	override def equals(obj: Any) = {
-		if (obj != null && classOf[IJulianDate].getClass.isAssignableFrom(obj.getClass)) {
-			val other = obj.asInstanceOf[IJulianDate]
-			compareTo(other) == 0 && timeStandard == other.getTimeStandard
-		} else false
-	}
-
-	override def getDate = {
-		val dateArr = TimeUtils.invjday(date)
+	def date = {
+		val dateArr = TimeUtils.invjday(jd)
 		val calender = new GregorianCalendar(dateArr(0), dateArr(1), dateArr(2), dateArr(3), dateArr(4), dateArr(5))
 		calender.getTime
 	}
 
-	override def getJD = date
-
-  override def getJulianDate(form: IDateStandard) = form.fromJD(date)
-
-	override def getJulianDate(timeStandard: ITimeStandard) =
+  def inTimeStandard(timeStandard: ITimeStandard) =
     if (this.timeStandard.equals(timeStandard))
       this
     else {
      /* First convert this to TT form */
 		  val offset = this.timeStandard.offsetToTT(this)
-      val this_tt = new JulianDate(getJD(), universe.TT).add(offset, Time.second)
+      val this_tt = new JulianDate(jd, universe.TT).add(offset, Time.second)
 
       /* Then convert the TT jd form to the requested type */
       val offset2 = timeStandard.offsetFromTT(this_tt)
-      new JulianDate(this_tt.getJD(), timeStandard).add(offset2, Time.second)
+      new JulianDate(this_tt.jd, timeStandard).add(offset2, Time.second)
     }
 
-  override def getJulianDate(form: IDateStandard, timeStandard: ITimeStandard) =
-    getJulianDate(timeStandard).getJulianDate(form)
+  override def hashCode()= jd.hashCode ^ timeStandard.hashCode
 
-	override def getTimeStandard = timeStandard
+	def relativeTo(epoch: Epoch) = inTimeStandard(timeStandard).jd - epoch.jd
 
-	override def hashCode()= getJD.hashCode ^ timeStandard.hashCode
-
-	override def relativeTo(epoch: IJulianDate) = getJulianDate(timeStandard).getJD - epoch.getJD
-
-	override def relativeTo(epoch: IJulianDate, timeformat: Time) = {
-		val delta_julian_days = getJD - epoch.getJulianDate(timeStandard).getJD
+	def relativeTo(epoch: Epoch, timeformat: Time) = {
+		val delta_julian_days = jd - epoch.inTimeStandard(timeStandard).jd
 		Time.convert(delta_julian_days, Time.day, timeformat)
 	}
 
-	override def toString = "%fJD".format( getJD )
+	override def toString = "%fJD %s".format( jd, timeStandard.getClass.getSimpleName )
 
-  def fractionInDay() = (getJD - 0.5) % 1.0
+  def fractionInDay = (jd - 0.5) % 1.0
 
 }

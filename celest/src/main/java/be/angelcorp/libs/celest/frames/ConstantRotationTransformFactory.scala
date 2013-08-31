@@ -20,7 +20,7 @@ import be.angelcorp.libs.celest.state.orientationState.{OrientationState, IOrien
 import be.angelcorp.libs.celest.state.positionState._
 import be.angelcorp.libs.math.linear.{Matrix3D, Vector3D}
 import be.angelcorp.libs.math.rotation.{RotationMatrix, IRotation}
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.state.{Orbit, PosVel}
 
 trait ConstantRotationTransformFactory[ F0 <: IReferenceFrame, F1 <: IReferenceFrame ]
@@ -31,15 +31,15 @@ trait ConstantRotationTransformFactory[ F0 <: IReferenceFrame, F1 <: IReferenceF
    * @param epoch Epoch for the frame transformation.
    * @return Rotation matrix to transform from F0 to F1.
    */
-  def rotationMatrix(epoch: IJulianDate): Matrix3D
+  def rotationMatrix(epoch: Epoch): Matrix3D
 
   /**
    * Factory that generates the inverse transformation from F1 => F0 by inverting the rotation matrix (= transpose)
    */
   class InverseConstantRotationTransformFactory extends BasicReferenceFrameTransformFactory[F1, F0] {
-    def getCost(epoch: IJulianDate) = ConstantRotationTransformFactory.this.getCost(epoch)
+    def getCost(epoch: Epoch) = ConstantRotationTransformFactory.this.getCost(epoch)
 
-    def getTransform(epoch: IJulianDate) =
+    def getTransform(epoch: Epoch) =
       new ConstantRotationTransform[F1, F0, InverseConstantRotationTransformFactory]( rotationMatrix(epoch).transpose(), epoch, this )
 
     def inverse() = ConstantRotationTransformFactory.this
@@ -47,7 +47,7 @@ trait ConstantRotationTransformFactory[ F0 <: IReferenceFrame, F1 <: IReferenceF
 
   def inverse() = new InverseConstantRotationTransformFactory
 
-  def getTransform(epoch: IJulianDate) =
+  def getTransform(epoch: Epoch) =
     new ConstantRotationTransform[F0, F1, ConstantRotationTransformFactory[F0, F1]]( rotationMatrix(epoch), epoch, this )
 
 }
@@ -64,7 +64,7 @@ trait ConstantRotationTransformFactory[ F0 <: IReferenceFrame, F1 <: IReferenceF
  * @tparam F1 Resulting frame after this transformation.
  * @tparam T  Factory that produced this transformation.
  */
-class ConstantRotationTransform[ F0 <: IReferenceFrame, F1 <: IReferenceFrame, T <: IReferenceFrameTransformFactory[F0, F1] ](val M: RotationMatrix, epoch: IJulianDate, factory: T)
+class ConstantRotationTransform[ F0 <: IReferenceFrame, F1 <: IReferenceFrame, T <: IReferenceFrameTransformFactory[F0, F1] ](val M: RotationMatrix, epoch: Epoch, factory: T)
   extends BasicReferenceFrameTransform[F0, F1, T](factory, epoch) {
 
   def transform(orientationState: IOrientationState) =

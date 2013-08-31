@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
 import be.angelcorp.libs.celest.physics.quantities.Force;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 /**
  * Force model acting on a body.
@@ -34,6 +34,6 @@ public interface IForceModel<B extends ICelestialBody> {
      * @param t Time/date when the force acts.
      * @return The acting force.
      */
-    Force evaluate( B body, IJulianDate t);
+    Force evaluate( B body, Epoch t);
 
 }

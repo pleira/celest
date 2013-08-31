@@ -16,7 +16,7 @@
 package be.angelcorp.libs.celest.maneuvers.targeters;
 
 import be.angelcorp.libs.celest.state.PosVel;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.util.physics.Time;
 
@@ -37,14 +37,14 @@ public abstract class TPBVP {
 	 * <b>Unit: [jd]</b>
 	 * </p>
 	 */
-	protected IJulianDate		departureEpoch;
+	protected Epoch departureEpoch;
 	/**
 	 * Epoch at which the satellite or body arrives at r2
 	 * <p>
 	 * <b>Unit: [jd]</b>
 	 * </p>
 	 */
-	protected IJulianDate		arrivalEpoch;
+	protected Epoch arrivalEpoch;
 	/**
 	 * Start position
 	 * <p>
@@ -72,7 +72,7 @@ public abstract class TPBVP {
 	 * @param arrival
 	 *            Epoch of arrival (epoch at r2)
 	 */
-	public TPBVP(PosVel r1, PosVel r2, IJulianDate departure, IJulianDate arrival) {
+	public TPBVP(PosVel r1, PosVel r2, Epoch departure, Epoch arrival) {
 		this.r1 = r1;
 		this.r2 = r2;
 		this.departureEpoch = departure;

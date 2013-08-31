@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.trajectory
 
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.state.NonSingular
 import be.angelcorp.libs.celest.state.positionState.NonSingularDerivative
 import be.angelcorp.libs.util.physics.Time._
@@ -30,11 +30,11 @@ import be.angelcorp.libs.util.physics.Time._
  * 
  * @author Simon Billemont
  */
-class KeplerVariationTrajectory(val referenceEpoch: IJulianDate,
+class KeplerVariationTrajectory(val referenceEpoch: Epoch,
                                 val referenceElements: NonSingular,
                                 val referenceDerivatives: NonSingularDerivative ) extends Trajectory {
 
-  def apply( epoch: IJulianDate ) = {
+  def apply( epoch: Epoch ) = {
     val dT = epoch.relativeTo(referenceEpoch, second)
 
 		val a_new        = referenceElements.semiMajorAxis       + dT * referenceDerivatives.getSemiMajorAxisVariation

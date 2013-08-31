@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.math.functions.ExponentialSinusoid;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -82,7 +82,7 @@ public class ExpoSin extends TPBVP {
 	 * @param arrival
 	 *            Epoch of arrival (epoch at r2) [jd]
 	 */
-	public ExpoSin(PosVel r1, PosVel r2, IJulianDate departure, IJulianDate arrival) {
+	public ExpoSin(PosVel r1, PosVel r2, Epoch departure, Epoch arrival) {
 		super(r1, r2, departure, arrival);
 	}
 

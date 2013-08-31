@@ -21,7 +21,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.universe.DefaultUniverse
-import be.angelcorp.libs.celest.time.{IJulianDate, JulianDate}
+import be.angelcorp.libs.celest.time.{Epoch, JulianDate}
 import be.angelcorp.libs.celest.frames.implementations.transforms._
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.math.linear.Matrix3D
@@ -41,8 +41,8 @@ class TestEarthRotation extends FlatSpec with ShouldMatchers {
 
   "EarthRotationGAST" should "calculate the same angualr values as SOFA" in {
     val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val t = epoch.getJulianDate( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
-    val mockLOD = new ExcessLengthOfDay { def lod(epoch: IJulianDate) = 0.0 }
+    val t = epoch.inTimeStandard( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
+    val mockLOD = new ExcessLengthOfDay { def lod(epoch: Epoch) = 0.0 }
 
     val transformer = new EarthRotationGAST( new IAU2000Nutation( IAU2000NutationLoader.MHB2000_2000A, false ), mockLOD )
     // Equation of the Equinoxes
@@ -55,7 +55,7 @@ class TestEarthRotation extends FlatSpec with ShouldMatchers {
 
   it should "calculate the same transformation matrix as SOFA" in {
     val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val mockLOD = new ExcessLengthOfDay { def lod(epoch: IJulianDate) = 0.0 }
+    val mockLOD = new ExcessLengthOfDay { def lod(epoch: Epoch) = 0.0 }
 
     // Transform factory under test
     val transformer = new EarthRotationGAST( new IAU2000Nutation( IAU2000NutationLoader.MHB2000_2000A, false ), mockLOD )

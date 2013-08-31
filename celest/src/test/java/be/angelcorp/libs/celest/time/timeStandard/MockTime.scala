@@ -17,12 +17,12 @@
 package be.angelcorp.libs.celest.time.timeStandard
 
 import be.angelcorp.libs.celest.universe.Universe
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import org.scalatest.exceptions.TestFailedException
 
 class MockTime(val offset: Double) extends ITimeStandard {
-  def offsetFromTT(JD_tt: IJulianDate) =  offset
-  def offsetToTT(JD_this: IJulianDate) = -offset
+  def offsetFromTT(JD_tt: Epoch) =  offset
+  def offsetToTT(JD_this: Epoch) = -offset
 }
 
 class MockTimeUniverse extends Universe {

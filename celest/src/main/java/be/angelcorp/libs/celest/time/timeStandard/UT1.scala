@@ -23,7 +23,7 @@ import scala.math._
 import scala.Some
 import scala.collection.mutable
 import scala.collection.JavaConverters._
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards._
 import be.angelcorp.libs.celest.data._
 import be.angelcorp.libs.util.physics.Time._
@@ -41,11 +41,11 @@ class DefaultUT1( utc: ITimeStandard,
   def this( utc: ITimeStandard, immutableContainers: Map[(Double, Double), UT1Provider] )(implicit universe: Universe) =
     this( utc, collection.mutable.Map(immutableContainers.toSeq: _*)  )
 
-  override def offsetFromTT(jd_tt: IJulianDate) = {
-    utc.offsetFromTT(jd_tt) + UT1_UTC( jd_tt.getJulianDate( utc ) )
+  override def offsetFromTT(jd_tt: Epoch) = {
+    utc.offsetFromTT(jd_tt) + UT1_UTC( jd_tt.inTimeStandard( utc ) )
   }
 
-  override def offsetToTT(jd_this: IJulianDate) = {
+  override def offsetToTT(jd_this: Epoch) = {
     var error = - UT1_UTC( jd_this )
     var utc_approximation = jd_this
     var utc_approximation_offset = 0.0
@@ -58,11 +58,11 @@ class DefaultUT1( utc: ITimeStandard,
     utc.offsetToTT( utc_approximation ) - utc_approximation_offset
   }
 
-  def findUTCData( jd_utc: IJulianDate ) = {
+  def findUTCData( jd_utc: Epoch ) = {
     // Download IERS EOP 08 C04 (IAU1980) yearly files
 
     // Year data to retrieve
-    val year     = jd_utc.getDate.getYear.toString
+    val year     = jd_utc.date.getYear.toString
     val filename = "eopc04.%s".format( year takeRight 2  )
     val file     = new File( filename )
     val url      = "ftp://hpiers.obspm.fr/iers/eop/eopc04/%s".format( filename )
@@ -76,12 +76,12 @@ class DefaultUT1( utc: ITimeStandard,
 
   }
 
-  override def UT1_UTC( jd_utc: IJulianDate ) = UT1_UTC(jd_utc, tryDownload = true)
+  override def UT1_UTC( jd_utc: Epoch ) = UT1_UTC(jd_utc, tryDownload = true)
 
-  def UT1_UTC( jd_utc: IJulianDate, tryDownload: Boolean = true): Double =
+  def UT1_UTC( jd_utc: Epoch, tryDownload: Boolean = true): Double =
     containers.find( e => {
       // A container exists if this jd (jd_utc) is between the two boundaries (meaning both compareTo's have a different sign)
-      val mjd_utc = jd_utc.getJulianDate(MJD)
+      val mjd_utc = MJD.fromJD( jd_utc.jd )
       (e._1._1.compareTo( mjd_utc ) * e._1._2.compareTo( mjd_utc ) <= 0)
     } ) match {
       // We found a matching container, return its UT1-UTC
@@ -120,8 +120,8 @@ class UT1Container(val offsets: util.TreeMap[Double, Double] = new util.TreeMap)
     offsets.putAll( m.asJava )
   }
 
-  override def UT1_UTC( jd_utc: IJulianDate ) = {
-    val mjd_utc = jd_utc.getJulianDate( MJD )
+  override def UT1_UTC( jd_utc: Epoch ) = {
+    val mjd_utc = MJD.fromJD( jd_utc.jd )
     val low  = offsets.floorEntry(   mjd_utc )
     val high = offsets.ceilingEntry( mjd_utc )
 

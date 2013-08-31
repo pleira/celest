@@ -16,7 +16,7 @@
 
 package be.angelcorp.libs.celest.data
 
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 
 /**
  * Container for the excess of length of day (LOD).
@@ -34,6 +34,6 @@ trait ExcessLengthOfDay {
    * @param epoch Epoch day from which to retrieve the lod.
    * @return Excess length of day on the considered epoch [s].
    */
-  def lod( epoch: IJulianDate ): Double
+  def lod( epoch: Epoch ): Double
 
 }

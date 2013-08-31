@@ -37,7 +37,7 @@ class TestTT extends FlatSpec with ShouldMatchers {
     }
     val base_date = new JulianDate( 2.0, universe.TT )
 
-    expect( base_date.getJD  ) { base_date.getJulianDate( new MockTime(32) ).getJulianDate( universe.TT ).getJD }
+    expect( base_date.jd ) { base_date.inTimeStandard( new MockTime(32) ).inTimeStandard( universe.TT ).jd }
   }
 
   /**
@@ -60,8 +60,8 @@ class TestTT extends FlatSpec with ShouldMatchers {
     val tt_seconds = 28352.5700090000
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tt = date.getJulianDate( universe.TT )
-    secondsInDay( jd_tt.getJD ) should be (tt_seconds plusOrMinus 1E-4)
+    val jd_tt = date.inTimeStandard( universe.TT )
+    secondsInDay( jd_tt.jd ) should be (tt_seconds plusOrMinus 1E-4)
   }
 
   /**
@@ -79,9 +79,9 @@ class TestTT extends FlatSpec with ShouldMatchers {
     val tt     = new HourMinSec(16, 44, 04.1840).getDayFraction // Reference TT  fraction in day
     val jd_tai = new JulianDate(jd_base + tai, universe.TAI)    // Reference epoch in TAI
 
-    val jd_tt = jd_tai.getJulianDate(universe.TT) // Computed epoch in TT
+    val jd_tt = jd_tai.inTimeStandard(universe.TT) // Computed epoch in TT
 
     // 1E-4 due to the precision restriction of JulianDate
-    secondsInDay(jd_tt.getJD) should be ( secondsInDay(jd_base + tt) plusOrMinus 1E-4)
+    secondsInDay(jd_tt.jd) should be ( secondsInDay(jd_base + tt) plusOrMinus 1E-4)
   }
 }

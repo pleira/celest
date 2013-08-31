@@ -22,7 +22,7 @@ import be.angelcorp.libs.celest.state.orientationState.IOrientationState;
 import be.angelcorp.libs.celest.state.positionState.CartesianDerivative;
 import be.angelcorp.libs.celest.state.positionState.ICartesianDerivative;
 import be.angelcorp.libs.celest.state.positionState.IPositionStateDerivative;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
 
@@ -93,7 +93,7 @@ public class ReferenceFrameTransform<F0 extends IReferenceFrame, F1 extends IRef
 	 * @param parameters
 	 *            Parameters describing the transform between the two frames.
 	 */
-	public ReferenceFrameTransform(IReferenceFrameTransformFactory<F0, F1> factory, IJulianDate epoch,
+	public ReferenceFrameTransform(IReferenceFrameTransformFactory<F0, F1> factory, Epoch epoch,
 			TransformationParameters parameters) {
 		super(factory, epoch);
 		this.parameters = parameters;

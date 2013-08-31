@@ -16,11 +16,10 @@
 package be.angelcorp.libs.celest.stateIntegrator;
 
 import be.angelcorp.libs.celest.state.IState;
-import be.angelcorp.libs.celest.state.IStateDerivative;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 public interface IStateIntegrator<Y extends IState> {
 
-	Y integrate(IJulianDate t0, IJulianDate t, Y y0);
+	Y integrate(Epoch t0, Epoch t, Y y0);
 
 }

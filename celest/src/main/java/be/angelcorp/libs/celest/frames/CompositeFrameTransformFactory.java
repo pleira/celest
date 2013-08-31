@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 /**
  * Factory that creates a {@link CompositeFrameTransform} from two other
@@ -66,7 +66,7 @@ public class CompositeFrameTransformFactory<F0 extends IReferenceFrame, F1 exten
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double getCost(IJulianDate epoch) {
+	public double getCost(Epoch epoch) {
 		double totalCost = factory0.getCost(epoch) + factory1.getCost(epoch);
 		return totalCost;
 	}
@@ -75,7 +75,7 @@ public class CompositeFrameTransformFactory<F0 extends IReferenceFrame, F1 exten
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CompositeFrameTransform<F0, F1, F2> getTransform(IJulianDate epoch) {
+	public CompositeFrameTransform<F0, F1, F2> getTransform(Epoch epoch) {
 		IReferenceFrameTransform<F0, F1> frame0 = factory0.getTransform(epoch);
 		IReferenceFrameTransform<F1, F2> frame1 = factory1.getTransform(epoch);
 

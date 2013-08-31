@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.stateIntegrator
 import be.angelcorp.libs.celest.state._
 import org.apache.commons.math3.ode._
 import org.apache.commons.math3.linear.ArrayRealVector
-import be.angelcorp.libs.celest.time.{IJulianDate, JulianDate}
+import be.angelcorp.libs.celest.time.{Epoch, JulianDate}
 import be.angelcorp.libs.celest.universe.Universe
 
 class CommonsMathPropagator[Y <: IState, DY <: IStateDerivative](
@@ -44,11 +44,11 @@ class CommonsMathPropagator[Y <: IState, DY <: IStateDerivative](
 		override def getDimension = equations.getDimension
 	}
 
-	override def integrate(t0: IJulianDate, t: IJulianDate, y0: Y) = {
+	override def integrate(t0: Epoch, t: Epoch, y0: Y) = {
 		// Wrap the types to commons math compatible types
 		val cm_y0 = y0.toVector.toArray
-    val cm_t0 = t0.getJD
-    val cm_t  = t.getJD
+    val cm_t0 = t0.jd
+    val cm_t  = t.jd
 
 		// Propagate the orbit
 		val cm_y = Array.ofDim[Double](cm_equations.getDimension)

@@ -27,7 +27,7 @@ import org.apache.commons.math3.util.Precision;
 
 import be.angelcorp.libs.celest.body.CelestialBody;
 import be.angelcorp.libs.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -120,8 +120,8 @@ public class LambertUV extends TPBVP {
 	 * @param shortWay
 	 *            Use short arc transfer (transfer solution over the smallest angle between R1 and R2)
 	 */
-	public LambertUV(PosVel r1, PosVel r2, CelestialBody centerbody, IJulianDate departure,
-			IJulianDate arrival, boolean shortWay) {
+	public LambertUV(PosVel r1, PosVel r2, CelestialBody centerbody, Epoch departure,
+			Epoch arrival, boolean shortWay) {
 		super(r1, r2, departure, arrival);
 		this.centerbody = centerbody;
 		this.shortWay = shortWay;

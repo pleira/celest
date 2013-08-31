@@ -16,7 +16,7 @@
 package be.angelcorp.libs.celest.trajectory
 
 import be.angelcorp.libs.util.physics.Time._
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.celest.state.Keplerian
 
 /**
@@ -29,9 +29,9 @@ import be.angelcorp.libs.celest.state.Keplerian
  * @author Simon Billemont
  * @see IKeplerTrajectory
  */
-class KeplerTrajectory(referenceEpoch: IJulianDate, referenceElements: Keplerian) extends Trajectory {
+class KeplerTrajectory(referenceEpoch: Epoch, referenceElements: Keplerian) extends Trajectory {
 
-  def apply( epoch: IJulianDate ) = {
+  def apply( epoch: Epoch ) = {
     val n  = referenceElements.quantities.meanMotion
     val dt = epoch.relativeTo(referenceEpoch, second); // Delta between reference and now in [s]
     val dM = n * dt

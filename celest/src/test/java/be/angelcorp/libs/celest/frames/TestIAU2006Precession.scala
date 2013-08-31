@@ -34,7 +34,7 @@ class TestIAU2006Precession extends FlatSpec with ShouldMatchers {
 
   "IAU2006Precession" should "calculate the correct precession angles" in {
     val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val t = epoch.getJulianDate( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
+    val t = epoch.inTimeStandard( universe.TT ).relativeTo( universe.J2000_EPOCH ) / 36525.0
 
     ArcSecond.convert( IAU2006Precession.ε0    ) should be ( 0.4090926006005829   plusOrMinus ArcSecond.convert( 1E-3 ) )
     ArcSecond.convert( IAU2006Precession.ψA(t) ) should be ( 0.003253545093079898 plusOrMinus ArcSecond.convert( 1E-3 ) )

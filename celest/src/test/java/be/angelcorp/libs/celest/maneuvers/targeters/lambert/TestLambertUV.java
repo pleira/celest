@@ -17,13 +17,13 @@ package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
 import be.angelcorp.libs.celest.constants.Constants;
 import be.angelcorp.libs.celest.state.PosVel;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.trajectory.Trajectory;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
@@ -50,8 +50,8 @@ public class TestLambertUV extends CelestTest {
 		Vector3D r1 = new ImmutableVector3D(1.364377463519496E11, 6.129036612130551E10, 2.784835397959758E09);
 		Vector3D r2 = new ImmutableVector3D(3.730051396741382E09, -1.495513611895726E11, 0.);
 
-		IJulianDate departure = universe.J2000_EPOCH();
-		IJulianDate arrival   = universe.J2000_EPOCH().add(300, Time.day);
+		Epoch departure = universe.J2000_EPOCH();
+		Epoch arrival   = universe.J2000_EPOCH().add(300, Time.day);
 		LambertUV lambert = new LambertUV(
 				new PosVel(r1, Vector3D$.MODULE$.ZERO(), null),
 				new PosVel(r2, Vector3D$.MODULE$.ZERO(), null),

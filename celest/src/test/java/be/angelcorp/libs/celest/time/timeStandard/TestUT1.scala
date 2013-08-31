@@ -20,7 +20,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.libs.celest.time.{JulianDate, IJulianDate}
+import be.angelcorp.libs.celest.time.{JulianDate, Epoch}
 import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.celest.frames.IReferenceFrameGraph
 import org.scalatest.exceptions.TestFailedException
@@ -62,7 +62,7 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
 
     val base_date = new JulianDate( 2.0, MJD, ut1 )
 
-    expect( base_date.getJD  ) { base_date.getJulianDate( universe.UTC ).getJulianDate( ut1 ).getJD }
+    expect( base_date.jd ) { base_date.inTimeStandard( universe.UTC ).inTimeStandard( ut1 ).jd }
   }
 
   /** Validated using Orekit:
@@ -87,9 +87,9 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
     val ut1 = new DefaultUT1( universe.UTC )
 
     val date_utc = new JulianDate( 2012, 03, 04, 00, 00, 0.0, universe.UTC )
-    val date_ut1 = date_utc.getJulianDate( ut1 )
+    val date_ut1 = date_utc.inTimeStandard( ut1 )
 
-    ( ( date_ut1.getJD + 0.5 ) - date_ut1.getJulianDate( JULIAN_DAY_NUMBER )) * 86400 should be (86399.52600540 plusOrMinus 1E-4) // 1E-4 due to the doule accuracy in JulianDate
+    ( ( date_ut1.jd + 0.5 ) - JULIAN_DAY_NUMBER.fromJD(date_ut1.jd)) * 86400 should be (86399.52600540 plusOrMinus 1E-4) // 1E-4 due to the doule accuracy in JulianDate
   }
 
   /**

@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.universe
 
 import be.angelcorp.libs.celest.time.timeStandard._
 import be.angelcorp.libs.celest.frames.IReferenceFrameGraph
-import be.angelcorp.libs.celest.time.{IJulianDate, JulianDate}
+import be.angelcorp.libs.celest.time.{Epoch, JulianDate}
 import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.celest.constants.EarthConstants
 

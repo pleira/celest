@@ -15,13 +15,13 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
 
 /**
  * Abstract factory that can produce transforms, once the
- * {@link ReferenceFrameTransformFactory#calculateParameters(IJulianDate)} is implemented.
+ * {@link ReferenceFrameTransformFactory#calculateParameters(be.angelcorp.libs.celest.time.Epoch)} is implemented.
  * <p>
  * The input for this factory are the {@link TransformationParameters}, which describe the kinematic
  * relation between the origin and destination frames. From these parameters, a
@@ -65,7 +65,7 @@ public abstract class ReferenceFrameTransformFactory<F0 extends IReferenceFrame,
 		 * {@inheritDoc}
 		 */
 		@Override
-		public double getCost(IJulianDate epoch) {
+		public double getCost(Epoch epoch) {
 			return factory.getCost(epoch) + 198; // 3 * 22 vector operations = 3*22*3 operations roughly
 		}
 
@@ -73,7 +73,7 @@ public abstract class ReferenceFrameTransformFactory<F0 extends IReferenceFrame,
 		 * {@inheritDoc}
 		 */
 		@Override
-		public ReferenceFrameTransform<F1, F0> getTransform(IJulianDate epoch) {
+		public ReferenceFrameTransform<F1, F0> getTransform(Epoch epoch) {
 			// Calculate the non-inverted parameters
 			TransformationParameters param = factory.calculateParameters(epoch);
 
@@ -135,7 +135,7 @@ public abstract class ReferenceFrameTransformFactory<F0 extends IReferenceFrame,
 	 * @author Simon Billemont
 	 */
 	public class TransformationParameters {
-		public final IJulianDate	epoch;
+		public final Epoch epoch;
         public final Vector3D	translation;
         public final Vector3D	velocity;
         public final Vector3D	acceleration;
@@ -143,7 +143,7 @@ public abstract class ReferenceFrameTransformFactory<F0 extends IReferenceFrame,
         public final Vector3D	rotationRate;
         public final Vector3D	rotationAcceleration;
 
-		public TransformationParameters(IJulianDate epoch,
+		public TransformationParameters(Epoch epoch,
 				Vector3D translation, Vector3D velocity, Vector3D acceleration,
 				IRotation rotation, Vector3D rotationRate, Vector3D rotationAcceleration) {
 			this.epoch = epoch;
@@ -164,13 +164,13 @@ public abstract class ReferenceFrameTransformFactory<F0 extends IReferenceFrame,
 	 * @return
 	 *         A set of {@link TransformationParameters} for the transformation.
 	 */
-	protected abstract TransformationParameters calculateParameters(IJulianDate date);
+	protected abstract TransformationParameters calculateParameters(Epoch date);
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReferenceFrameTransform<F0, F1> getTransform(IJulianDate epoch) {
+	public ReferenceFrameTransform<F0, F1> getTransform(Epoch epoch) {
 		TransformationParameters p = calculateParameters(epoch);
 		ReferenceFrameTransform<F0, F1> transform = new ReferenceFrameTransform<>(this, epoch, p);
 		return transform;

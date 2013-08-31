@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
@@ -90,12 +90,12 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 	 * </p>
 	 * 
 	 * @return A new {@link HelmertTransformationFactory} with the supplied parameters
-	 * @see HelmertTransformationFactory#HelmertTransformationFactory(IJulianDate, double, double,
+	 * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.libs.celest.time.Epoch, double, double,
 	 *      double, double, double, double, double, double, double, double, double, double, double,
 	 *      double)
 	 */
 	public static <F0 extends IReferenceFrame, F1 extends IReferenceFrame> HelmertTransformationFactory<F0, F1> fromIERSunits(
-			IJulianDate epoch,
+			Epoch epoch,
 			double Tx, double Ty, double Tz, double S, double Rx, double Ry, double Rz,
 			double dTx, double dTy, double dTz, double dS, double dRx, double dRy, double dRz) {
 		return fromIERSunits(epoch,
@@ -118,11 +118,11 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 	 * </p>
 	 * 
 	 * @return A new {@link HelmertTransformationFactory} with the supplied parameters
-	 * @see HelmertTransformationFactory#HelmertTransformationFactory(IJulianDate, Vector3D, double,
+	 * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.libs.celest.time.Epoch, Vector3D, double,
 	 *      Vector3D, Vector3D, double, Vector3D)
 	 */
 	public static <F0 extends IReferenceFrame, F1 extends IReferenceFrame> HelmertTransformationFactory<F0, F1> fromIERSunits(
-			IJulianDate epoch, Vector3D T, double S, Vector3D R, Vector3D dT, double dS, Vector3D dR) {
+			Epoch epoch, Vector3D T, double S, Vector3D R, Vector3D dT, double dS, Vector3D dR) {
 		double mm2m = Length.MILLIMETER.getScaleFactor();
 		double y2s = Time.year_julian.getScaleFactor();
 		double mas2rad = Angle.ArcSecond.convert( 1E-3 );// mas = milliarcsecond
@@ -140,7 +140,7 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 	/**
 	 * Epoch at which the initial parameters are valid.
 	 */
-	private final IJulianDate	helmert_epoch;
+	private final Epoch helmert_epoch;
 	/**
 	 * Translation between F0 and F1 at helmert_epoch:
 	 * $$ T(t_0) = \{ x, y, z \} [m] $$
@@ -214,10 +214,10 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 	 * @param dRz
 	 *            Rotation rate z component at Helmert parameters epoch [rad/s].
 	 * 
-	 * @see HelmertTransformationFactory#HelmertTransformationFactory(IJulianDate, Vector3D, double,
+	 * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.libs.celest.time.Epoch, Vector3D, double,
 	 *      Vector3D, Vector3D, double, Vector3D)
 	 */
-	public HelmertTransformationFactory(IJulianDate epoch,
+	public HelmertTransformationFactory(Epoch epoch,
 			double Tx, double Ty, double Tz, double S, double Rx, double Ry, double Rz,
 			double dTx, double dTy, double dTz, double dS, double dRx, double dRy, double dRz) {
 		this(epoch,
@@ -245,7 +245,7 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 	 * @param ds0
 	 *            Scaling parameter derivative at Helmert parameters epoch [-/s].
 	 */
-	public HelmertTransformationFactory(IJulianDate helmert_epoch, Vector3D T0, double s0,
+	public HelmertTransformationFactory(Epoch helmert_epoch, Vector3D T0, double s0,
 			Vector3D R0, Vector3D dT0, double ds0, Vector3D dR0) {
 
 		this.helmert_epoch = helmert_epoch;
@@ -261,7 +261,7 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TransformationParameters calculateParameters(IJulianDate epoch) {
+	protected TransformationParameters calculateParameters(Epoch epoch) {
 		final double dt = epoch.relativeTo(helmert_epoch, Time.second);
 
 		Vector3D T = T0.add(dT0.multiply(dt));
@@ -279,7 +279,7 @@ public class HelmertTransformationFactory<F0 extends IReferenceFrame, F1 extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double getCost(IJulianDate epoch) {
+	public double getCost(Epoch epoch) {
 		// Update parameters;
 		// 4*3 vector operations = 4*3*3
 		// 3 scalar operations = 3

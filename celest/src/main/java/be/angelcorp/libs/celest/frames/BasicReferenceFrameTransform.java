@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.frames;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 /**
  * A common basis class for most {@link IReferenceFrameTransform}'s. It defines a sinlge epoch at which
@@ -37,7 +37,7 @@ public abstract class BasicReferenceFrameTransform<F0 extends IReferenceFrame, F
 	/** Factory used to create this transform, and create transforms for alternative epochs. */
 	protected final T			factory;
 	/** Epoch at which the {@link BasicReferenceFrameTransform} is guaranteed to be valid. */
-	protected final IJulianDate	epoch;
+	protected final Epoch epoch;
 
 	/**
 	 * Construct a {@link BasicReferenceFrameTransform} using a given parent factory, and an epoch at
@@ -48,7 +48,7 @@ public abstract class BasicReferenceFrameTransform<F0 extends IReferenceFrame, F
 	 * @param epoch
 	 *            Epoch at which the {@link BasicReferenceFrameTransform} is guaranteed to be valid.
 	 */
-	public BasicReferenceFrameTransform(T factory, IJulianDate epoch) {
+	public BasicReferenceFrameTransform(T factory, Epoch epoch) {
 		this.factory = factory;
 		this.epoch = epoch;
 	}
@@ -70,7 +70,7 @@ public abstract class BasicReferenceFrameTransform<F0 extends IReferenceFrame, F
 	 *         Epoch at which the {@link BasicReferenceFrameTransform} is guaranteed to be valid.
 	 * @see BasicReferenceFrameTransform#epoch
 	 */
-	public IJulianDate getEpoch() {
+	public Epoch getEpoch() {
 		return epoch;
 	}
 

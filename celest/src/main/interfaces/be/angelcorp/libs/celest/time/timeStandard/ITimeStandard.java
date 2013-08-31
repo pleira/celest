@@ -15,7 +15,7 @@
  */
 package be.angelcorp.libs.celest.time.timeStandard;
 
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 
 public interface ITimeStandard {
 
@@ -30,7 +30,7 @@ public interface ITimeStandard {
 	 * 
 	 * @return The number of seconds between this {@link TimeStandards} and {@link TimeStandards#TAI}.
 	 */
-	public abstract double offsetFromTT(IJulianDate JD_tt);
+	public abstract double offsetFromTT(Epoch JD_tt);
 
 	/**
 	 * Returns the number of seconds to add to this {@link TimeStandards} to get TT, so;
@@ -43,6 +43,6 @@ public interface ITimeStandard {
 	 * 
 	 * @return The number of seconds between this {@link TimeStandards} and {@link TimeStandards#TAI}.
 	 */
-	public abstract double offsetToTT(IJulianDate JD_this);
+	public abstract double offsetToTT(Epoch JD_this);
 
 }

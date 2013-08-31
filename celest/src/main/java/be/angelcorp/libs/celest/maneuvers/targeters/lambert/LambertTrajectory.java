@@ -15,13 +15,13 @@
  */
 package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.trajectory.Trajectory;
 import scala.Some;
 import be.angelcorp.libs.celest.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.Keplerian;
 import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.state.PosVel;
-import be.angelcorp.libs.celest.time.IJulianDate;
 import be.angelcorp.libs.celest.trajectory.KeplerTrajectory;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.util.physics.Time;
@@ -52,11 +52,11 @@ public class LambertTrajectory implements Trajectory {
 	/**
 	 * Time at r1
 	 */
-	private final IJulianDate	departureEpoch;
+	private final Epoch departureEpoch;
 	/**
 	 * Time at r2
 	 */
-	private final IJulianDate	arrivalEpoch;
+	private final Epoch arrivalEpoch;
 	/**
 	 * Frame in which the motion takes place
 	 */
@@ -88,8 +88,8 @@ public class LambertTrajectory implements Trajectory {
 	 * @param g_dot
 	 *            G dot function (of the F and G functions, NOT SERIES)
 	 */
-	public LambertTrajectory(Vector3D r1, Vector3D r2, BodyCentered frame, IJulianDate departureEpoch,
-			IJulianDate arrivalEpoch, double f, double g, double g_dot) {
+	public LambertTrajectory(Vector3D r1, Vector3D r2, BodyCentered frame, Epoch departureEpoch,
+			Epoch arrivalEpoch, double f, double g, double g_dot) {
 		this.r1 = r1;
 		this.r2 = r2;
 		this.frame = frame;
@@ -108,7 +108,7 @@ public class LambertTrajectory implements Trajectory {
 	 * </p>
 	 */
 	@Override
-	public Orbit apply(IJulianDate t) {
+	public Orbit apply(Epoch t) {
 		return traj.apply(t);
 	}
 

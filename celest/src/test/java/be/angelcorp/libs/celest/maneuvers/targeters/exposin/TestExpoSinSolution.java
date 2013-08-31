@@ -19,7 +19,7 @@ import static org.apache.commons.math3.util.FastMath.PI;
 
 import be.angelcorp.libs.celest.constants.SolarConstants;
 import be.angelcorp.libs.celest.state.PosVel;
-import be.angelcorp.libs.celest.time.IJulianDate;
+import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.unit.CelestTest;
 import be.angelcorp.libs.celest.universe.DefaultUniverse;
 import be.angelcorp.libs.celest.universe.Universe;
@@ -61,8 +61,8 @@ public class TestExpoSinSolution extends CelestTest {
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
 
-		IJulianDate t1 = universe.J2000_EPOCH();
-		IJulianDate t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
+		Epoch t1 = universe.J2000_EPOCH();
+		Epoch t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
@@ -108,8 +108,8 @@ public class TestExpoSinSolution extends CelestTest {
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
 
-		IJulianDate t1 = universe.J2000_EPOCH();
-		IJulianDate t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
+		Epoch t1 = universe.J2000_EPOCH();
+		Epoch t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
@@ -155,8 +155,8 @@ public class TestExpoSinSolution extends CelestTest {
 		double calculated_tof = solutionset.value(gamma);
 		assertEquals(tof, calculated_tof, tof_tol);
 
-		IJulianDate t1 = universe.J2000_EPOCH();
-		IJulianDate t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
+		Epoch t1 = universe.J2000_EPOCH();
+		Epoch t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
 		ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
 		ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 

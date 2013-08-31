@@ -31,7 +31,7 @@ class TestTCG extends FlatSpec with ShouldMatchers {
     val tcg       = new TCG( universe.TT_EPOCH )
     val base_date = new JulianDate( 2451545.0, tcg )
 
-    expect( base_date.getJD  ) { base_date.getJulianDate( universe.TT ).getJulianDate( tcg ).getJD }
+    expect( base_date.jd ) { base_date.inTimeStandard( universe.TT ).inTimeStandard( tcg ).jd }
   }
 
   /**
@@ -52,8 +52,8 @@ class TestTCG extends FlatSpec with ShouldMatchers {
     val tcg_seconds = 28353.1695861742
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tcg = date.getJulianDate( new TCG( universe.TT_EPOCH ) )
-    secondsInDay( jd_tcg.getJD ) should be (tcg_seconds plusOrMinus 1E-4)
+    val jd_tcg = date.inTimeStandard( new TCG( universe.TT_EPOCH ) )
+    secondsInDay( jd_tcg.jd ) should be (tcg_seconds plusOrMinus 1E-4)
   }
 
   /**

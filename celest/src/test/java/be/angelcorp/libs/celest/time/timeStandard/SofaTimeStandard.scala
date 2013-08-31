@@ -57,8 +57,8 @@ class SofaTimeStandard extends FlatSpec with ShouldMatchers {
   referenceData.foreach{ entry => {
     "%s @ %f".format( entry._1.getClass.getSimpleName, (entry._2 + entry._3) ) should
       "convert to %s @ %f".format( entry._4.getClass.getSimpleName, (entry._5 + entry._6) ) in {
-        val transf = new JulianDate( entry._2 + entry._3, entry._1 ).getJulianDate( entry._4 )
-        transf.getJD should be ( (entry._5 + entry._6) plusOrMinus (transf.getJD * 1E-16)  )
+        val transf = new JulianDate( entry._2 + entry._3, entry._1 ).inTimeStandard( entry._4 )
+        transf.jd should be ( (entry._5 + entry._6) plusOrMinus (transf.jd * 1E-16)  )
     }
   } }
 

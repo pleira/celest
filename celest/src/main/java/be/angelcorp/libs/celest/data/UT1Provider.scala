@@ -16,7 +16,7 @@
 
 package be.angelcorp.libs.celest.data
 
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 
 /**
  * Container for the UT1 offset from UTC (UT1-UTC).
@@ -32,6 +32,6 @@ trait UT1Provider {
    * @param jd_utc UTC epoch on which to get the UT1 - UTC difference
    * @return Seconds between the UTC and UT11 timestandard (UT1 - UTC).
    */
-  def UT1_UTC( jd_utc: IJulianDate ): Double
+  def UT1_UTC( jd_utc: Epoch ): Double
 
 }
