@@ -24,7 +24,7 @@ import be.angelcorp.libs.celest.trajectory.{KeplerTrajectory, CompositeTrajector
 import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.celest.maneuvers.ImpulsiveShot
 import be.angelcorp.libs.util.io.CsvWriter
-import be.angelcorp.libs.celest.time.IJulianDate
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.celest.constants.EarthConstants
 import be.angelcorp.libs.celest.state.Keplerian
@@ -46,7 +46,7 @@ class QuickStart {
   }
 
   // Time after the three kicks and an additional orbit
-  var tf: IJulianDate = null
+  var tf: Epoch = null
 
   try {
     /* Compute the trajectory of the AEHF satellite for the first three kicks by the LAE engine */
