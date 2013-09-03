@@ -75,8 +75,8 @@ class TestTT extends FlatSpec with ShouldMatchers {
     // Reference epoch in the book are for April 6, 2004, 16:43:00.0000 UTC or 16:44:04.1840 TT (not May 14)
     implicit val universe = new DefaultUniverse() // <= universe with the under test TT
     val jd_base = 2453102
-    val tai    = new HourMinSec(16, 43, 32.0000).getDayFraction // Reference TAI fraction in day
-    val tt     = new HourMinSec(16, 44, 04.1840).getDayFraction // Reference TT  fraction in day
+    val tai    = new HourMinSec(16, 43, 32.0000).dayFraction // Reference TAI fraction in day
+    val tt     = new HourMinSec(16, 44, 04.1840).dayFraction // Reference TT  fraction in day
     val jd_tai = new JulianDate(jd_base + tai, universe.TAI)    // Reference epoch in TAI
 
     val jd_tt = jd_tai.inTimeStandard(universe.TT) // Computed epoch in TT

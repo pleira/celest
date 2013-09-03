@@ -19,6 +19,7 @@ import java.util._
 import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.celest.time.timeStandard.ITimeStandard
 import be.angelcorp.libs.celest.time.dateStandard.IDateStandard
+import be.angelcorp.libs.celest.time.TimeUtils._
 import be.angelcorp.libs.celest.universe.Universe
 
 /**
@@ -40,7 +41,6 @@ import be.angelcorp.libs.celest.universe.Universe
  *
  * @author Simon Billemont
  */
-// TODO: remove (int) sec casts
 case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe: Universe) extends Epoch {
 
 	/**
@@ -55,7 +55,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
       cal.clear()
       cal.setTime(date)
 
-      TimeUtils.jday(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+      jday(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
           cal.get(Calendar.DATE), cal.get(Calendar.HOUR_OF_DAY),
           cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND))
     }, timeStandard
@@ -119,7 +119,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
 
 	def date = {
 		val dateArr = TimeUtils.invjday(jd)
-		val calender = new GregorianCalendar(dateArr(0), dateArr(1), dateArr(2), dateArr(3), dateArr(4), dateArr(5))
+		val calender = new GregorianCalendar(dateArr._1, dateArr._2, dateArr._3, dateArr._4, dateArr._5, math.round(dateArr._6).toInt)
 		calender.getTime
 	}
 
