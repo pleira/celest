@@ -39,7 +39,7 @@ import static java.lang.Math.floor;
  * 
  * @author Simon Billemont
  */
-public enum DateStandards implements IDateStandard {
+public enum DateStandards implements DateStandard {
 
 	/** Julian date, the default */
 	JULIAN_DATE(0.),

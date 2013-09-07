@@ -16,20 +16,20 @@
 package be.angelcorp.libs.celest.time.dateStandard;
 
 /**
- * An {@link IDateStandard} is a standard that can be used to convert any type of date in the form of a
+ * An {@link DateStandard} is a standard that can be used to convert any type of date in the form of a
  * single number from and to a Julian date.
- * 
+ *
  * <p>
  * A date is considered a container for a specified amount of time since a predefined epoch.
  * </p>
- * 
+ *
  * @author Simon Billemont
  */
-public interface IDateStandard {
+public interface DateStandard {
 
 	/**
-	 * Convert a {@link DateStandards#JULIAN_DATE} to this {@link IDateStandard}.
-	 * 
+	 * Convert a {@link DateStandards#JULIAN_DATE} to this {@link DateStandard}.
+	 *
 	 * @param jd
 	 *            {@link DateStandards#JULIAN_DATE} to convert.
 	 * @return Equivalent date in the format represented by this class.
@@ -38,7 +38,7 @@ public interface IDateStandard {
 
 	/**
 	 * Convert this date format to {@link DateStandards#JULIAN_DATE}.
-	 * 
+	 *
 	 * @param date
 	 *            Date in the format represented by this class.
 	 * @return An equivalent {@link DateStandards#JULIAN_DATE}.

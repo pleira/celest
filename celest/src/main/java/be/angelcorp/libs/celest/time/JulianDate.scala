@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.time
 import java.util._
 import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.celest.time.timeStandard.ITimeStandard
-import be.angelcorp.libs.celest.time.dateStandard.IDateStandard
+import be.angelcorp.libs.celest.time.dateStandard.DateStandard
 import be.angelcorp.libs.celest.time.TimeUtils._
 import be.angelcorp.libs.celest.universe.Universe
 
@@ -74,7 +74,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
 	 * @param date Date to create the Julian Date (UTC time).
 	 * @param dateStandard Date standard that the given epoch is in.
 	 */
-	def this(date: Double, dateStandard: IDateStandard)(implicit universe: Universe) = this(dateStandard.toJD(date), universe.UTC)
+	def this(date: Double, dateStandard: DateStandard)(implicit universe: Universe) = this(dateStandard.toJD(date), universe.UTC)
 
 	/**
 	 * Create a Julian Date from a given date in the given form.
@@ -83,7 +83,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
 	 * @param dateStandard Date standard that the given epoch is in.
 	 * @param timeStandard Time standard that the epoch is given in.
 	 */
-	def this(date: Double, dateStandard: IDateStandard, timeStandard: ITimeStandard)(implicit universe: Universe) =
+	def this(date: Double, dateStandard: DateStandard, timeStandard: ITimeStandard)(implicit universe: Universe) =
     this(dateStandard.toJD(date), timeStandard)
 
 	/**
