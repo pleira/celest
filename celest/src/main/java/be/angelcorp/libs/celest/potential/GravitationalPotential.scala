@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.potential;
+package be.angelcorp.libs.celest.potential
 
-import be.angelcorp.libs.math.field.Vector3dField;
-import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3D
 
 /**
  * Represents the LOCAL gravitational field or potential created by an object
@@ -32,7 +31,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author simon
  * 
  */
-public interface IGravitationalPotential extends Vector3dField<Vector3D> {
+trait GravitationalPotential {
 
 	/**
 	 * Evaluate the gravitational potential at a given point to the the acceleration caused by this
@@ -46,7 +45,6 @@ public interface IGravitationalPotential extends Vector3dField<Vector3D> {
 	 *            Point relative to the center of mass of the body being evaluated
 	 * @return Local acceleration for a unit mass a the location of the given point
 	 */
-	@Override
-	public Vector3D evaluate(Vector3D point);
+	def apply(point: Vector3D): Vector3D
 
 }

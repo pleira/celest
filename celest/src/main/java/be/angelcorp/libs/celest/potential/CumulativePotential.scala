@@ -18,17 +18,16 @@ package be.angelcorp.libs.celest.potential
 import be.angelcorp.libs.math.linear.Vector3D
 
 /**
- * Implementation of {@link ICumulativePotential} that constructs a gravity potential by combining a list of
- * other, known potentials.
+ * Create a GravitationalPotential that is the result of the summation of a set of independent
+ * GravitationalPotentials
  *
  * @param potentials List containing potentials that are to be summed.
  *
- * @author simon
- * @see ICumulativePotential
+ * @author Simon Billemont
  */
-class CumulativePotential(val potentials: List[IGravitationalPotential]) extends ICumulativePotential {
+class CumulativePotential(val potentials: List[GravitationalPotential]) extends GravitationalPotential {
 
-	/** @inheritdoc */
-	override def evaluate(point: Vector3D) = potentials.foldLeft(Vector3D.ZERO)( (sum, p) => sum + p.evaluate(point) )
+	override def apply(point: Vector3D) =
+    potentials.foldLeft(Vector3D.ZERO)( (sum, p) => sum + p(point) )
 
 }

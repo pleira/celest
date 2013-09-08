@@ -20,20 +20,17 @@ import be.angelcorp.libs.math.linear.Vector3D
 import scala.math._
 
 /**
- * Implementation of {@link IPointMassPotential}. Create an ideal gravitational potential of a point
- * mass, homogeneous sphere or body with a spherically symmetric mass distribution.
+ * Create an ideal gravitational potential of a point mass, homogeneous sphere or body with a spherically
+ * symmetric mass distribution.
  *
  * @param body Body that creates the current potential, (uses its mass or mu).
  *
  * @author Simon Billemont
  * @see IPointMassPotential
  */
-class PointMassPotential(val body: CelestialBody) extends IPointMassPotential {
+class PointMassPotential(val body: CelestialBody) extends GravitationalPotential {
 
-	/** @inheritdoc */
-	override def evaluate(point: Vector3D) = point.negate * ( body.getMu() / pow(point.norm, 3))
-
-	/** @inheritdoc */
-	override def getBody() = body
+	override def apply(point: Vector3D) =
+    point.negate * ( body.getMu() / pow(point.norm, 3))
 
 }

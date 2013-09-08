@@ -16,8 +16,7 @@
 package be.angelcorp.libs.celest.body
 
 import be.angelcorp.libs.celest.constants.{Constants, SolarConstants}
-import be.angelcorp.libs.celest.potential.IGravitationalPotential
-import be.angelcorp.libs.celest.potential.PointMassPotential
+import be.angelcorp.libs.celest.potential.{GravitationalPotential, PointMassPotential}
 import be.angelcorp.libs.celest.state.{Orbit, PosVel}
 
 /**
@@ -32,7 +31,7 @@ import be.angelcorp.libs.celest.state.{Orbit, PosVel}
  */
 class CelestialBody(val state: 	Orbit,
 										val mass: 	Double,
-										gravityPotentialFactory: CelestialBody => IGravitationalPotential) extends ICelestialBody {
+										gravityPotentialFactory: CelestialBody => GravitationalPotential) extends ICelestialBody {
 
 	/** The gravitational potential of this object. */
 	lazy val gravitationalPotential = gravityPotentialFactory(this)
@@ -51,7 +50,7 @@ class CelestialBody(val state: 	Orbit,
 	 */
 	def this(state: Orbit, mass: Double) = this(state, mass, new PointMassPotential(_))
 
-	override def getGravitationalPotential: IGravitationalPotential = gravitationalPotential
+	override def getGravitationalPotential: GravitationalPotential = gravitationalPotential
 	override def getMu: Double = Constants.mass2mu(mass)
 	override def getState: Orbit = state
 	override def getTotalMass: Double = mass

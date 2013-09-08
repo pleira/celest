@@ -18,23 +18,22 @@ package be.angelcorp.libs.celest.potential
 import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.math.linear.Vector3D
 
+
 /**
- * Implementation of a [[be.angelcorp.libs.celest.potential.IThinShellPotential]], a potential similar to a spherically symmetric mass
- * distribution outside the shell, and inside it is zero.
+ * Create an ideal gravitational potential of thin spherical shell. This is equivalent to a point mass,
+ * when the point considered is outside the shell and when inside the shell 0(see Gauss' law for
+ * gravity).
  *
  * @param radius Radius of the thin shell [m].
  * @param body Body creating the potential.
  *
  * @author Simon Billemont
- * @see IThinShellPotential
- * 
  */
-class ThinShellPotential(body: CelestialBody, val radius: Double) extends PointMassPotential(body) with IThinShellPotential {
+class ThinShellPotential(body: CelestialBody, val radius: Double) extends PointMassPotential(body) {
 
 	val radiusSq = radius * radius
 
-	/** @inheritdoc */
-	override def evaluate(point: Vector3D) =
+	override def apply(point: Vector3D) =
 		if (point.normSq < radiusSq)
 			// Valid where R is outside the shell, R >= R2
 			// U = Constants.GRAVITATIONAL_CONSTANT / r and is constant, so dU/dr = 0
@@ -42,6 +41,6 @@ class ThinShellPotential(body: CelestialBody, val radius: Double) extends PointM
 		else
 			// Valid where R is inside the shell, R <= R1
 			// U = GM/r = spherically symmetric
-			super.evaluate(point)
+			super.apply(point)
 
 }

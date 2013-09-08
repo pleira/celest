@@ -16,7 +16,7 @@
 
 package be.angelcorp.libs.celest.body;
 
-import be.angelcorp.libs.celest.potential.IGravitationalPotential;
+import be.angelcorp.libs.celest.potential.GravitationalPotential;
 import be.angelcorp.libs.celest.state.Orbit;
 
 /**
@@ -27,7 +27,7 @@ import be.angelcorp.libs.celest.state.Orbit;
 public interface ICelestialBody {
 
     /** Get the local gravitational field produced by the body */
-    IGravitationalPotential getGravitationalPotential();
+    GravitationalPotential getGravitationalPotential();
 
     /**
      * Get the gravitational parameter of the celestial body (&mu; = G * m). This is the result of both

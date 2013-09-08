@@ -80,7 +80,7 @@ public class GravitationalForce_C extends ObjectForce {
 	public Vector3D toAcceleration() {
 		Vector3D rCenter = getGravitationBody().getState().toPosVel().position();
 		Vector3D rSatellite = getObject().getState().toPosVel().position();
-		Vector3D g = gravitationBody.getGravitationalPotential().evaluate(rSatellite.$minus(rCenter));
+		Vector3D g = gravitationBody.getGravitationalPotential().apply(rSatellite.$minus(rCenter));
 		return g;
 	}
 
