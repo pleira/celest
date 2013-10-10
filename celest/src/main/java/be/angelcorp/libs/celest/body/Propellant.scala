@@ -13,63 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest.body
 
-import scala.math._
+package be.angelcorp.libs.celest.body;
 
-class Propellant(	val isp: Double 						= 0.0,
-									var propellantMass: Double 	= 0.0  ) extends IPropellant {
+trait Propellant {
 
-	/**
-	 * Compute the amount of propellant used in ideal conditions (no gravity losses, Tsiolkovsky)
-	 * <p>
-	 * For non ideal maneuvers,correct the dV term with a &Delta;dV, eg see:<br />
-	 * J.Weiss, B. Metzger, M. Gallmeister, Orbit maneuvers with finite thrust, MBB/ERNO, ESA CR(P)-1910,
-	 * 3 volumes, 1983
-	 * </p>
-	 *
-	 * @param body Body that consumes DV.
-	 * @param dV   DV achieve using this propellant.
-	 */
-	def consumeDV(body: ICelestialBody, dV: Double) {
-		val m: Double = body.getTotalMass
-		val dM: Double = m - exp(-dV / getVeff) * m
-		consumeMass(dM)
-	}
+    /**
+     * Specific impulse of the propellant.
+     * @return Propellant specific impulse [1/s]
+     */
+    def Isp: Double
 
-	/**
-	 * Reduce the propellant mass of the propellant with the specified quantity.
-	 * @param dM Amount of consumed propellant [kg]
-	 */
-	def consumeMass(dM: Double) { propellantMass -= dM }
+    /**
+     * Reduce the propellant mass of the propellant with the specified quantity.
+     * @param dM Amount of consumed propellant [kg]
+     */
+    def consumeMass(dM: Double)
 
-	/**
-	 * Compute the maximum dV that can be given with this engine (for an impulse maneuver, Tsiolkovsky).
-	 *
-	 * @param body Body that contains the engine.
-	 * @return Maximum dV that can be given with the given amount of propellant.
-	 */
-	def getDvMax(body: ICelestialBody): Double = Propellant.dvMax(isp, propellantMass, body.getTotalMass)
+    /**
+     * Amount of propellant mass left.
+     * @return Propellant mass [kg].
+     */
+    def wetMass: Double
 
-	/**
-	 * Get the effective exhaust velocity
-	 * <p>Veff = Isp * G0</p>
-	 *
-	 * <p>
-	 * <b>Unit: [m/s]</b>
-	 * </p>
-	 *
-	 * @return The effecitive exhaust velocuty
-	 */
-	def getVeff: Double = Propellant.vEff(isp)
+    /**
+     * Compute the maximum dV that can be given with this engine (for an impulse maneuver, Tsiolkovsky).
+     *
+     * @param body Body that contains the engine.
+     * @return Maximum dV that can be given with the given amount of propellant.
+     */
+    def ΔvMax(body: ICelestialBody): Double
 
-}
+    /**
+     * Get the effective exhaust velocity.
+     * <p>Veff = Isp * G0</p>
+     *
+     * <p>
+     * <b>Unit: [m/s]</b>
+     * </p>
+     *
+     * @return The effective exhaust velocity.
+     */
+    def Veff: Double
 
-object Propellant {
-	private final val G0: Double = 9.81
-
-	def vEff(isp: Double) = isp * G0
-
-	def dvMax(isp: Double, propellantMass: Double, bodyMass: Double): Double =
-		vEff(isp) * log(bodyMass / (bodyMass - propellantMass))
 }

@@ -15,25 +15,20 @@
  */
 package be.angelcorp.libs.celest.body
 
-class BiPropellant( val isp: Double,
-										val primairy: IPropellant,
+class BiPropellant( val Isp:             Double,
+										val primairy:        Propellant,
 										val primairyPercent: Double,
-										val secondairy: IPropellant) extends IPropellant {
+										val secondairy:      Propellant) extends Propellant {
 
 	override def consumeMass(dM: Double) {
 		primairy.consumeMass(dM * primairyPercent)
 		secondairy.consumeMass(dM * (1 - primairyPercent))
 	}
 
-//	def setPropellantMass(propellant: Double) {
-//		primairy.propellantMass = propellant * primairyPercent
-//		secondairy.propellantMass = propellant * (1 - primairyPercent)
-//	}
+	def wetMass = primairy.wetMass + secondairy.wetMass
 
-	def propellantMass() = primairy.propellantMass + secondairy.propellantMass
+	def ΔvMax(body: ICelestialBody): Double = MonoPropellant.ΔvMax(Isp, wetMass, body.getTotalMass)
 
-	def getDvMax(body: ICelestialBody): Double = Propellant.dvMax(isp, propellantMass, body.getTotalMass)
-
-	def getVeff: Double = Propellant.vEff(isp)
+	def Veff: Double = MonoPropellant.vEff(Isp)
 
 }

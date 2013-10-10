@@ -16,8 +16,7 @@
 package be.angelcorp.libs.celest.maneuvers;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
-import be.angelcorp.libs.celest.body.IPropellant;
-import be.angelcorp.libs.celest.state.Orbit;
+import be.angelcorp.libs.celest.body.Propellant;
 import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.math.linear.Vector3D;
 
@@ -42,7 +41,7 @@ public class ImpulsiveShot {
 		return stateNew;
 	}
 
-	public PosVel kick(double dV, IPropellant fuel) {
+	public PosVel kick(double dV, Propellant fuel) {
         PosVel stateNew = kick(body.getState().toPosVel(), dV);
         fuel.consumeMass( dM( body, fuel, dV ) );
 		return stateNew;
@@ -53,7 +52,7 @@ public class ImpulsiveShot {
 		return stateNew;
 	}
 
-	public PosVel kick(Vector3D dV, IPropellant fuel) {
+	public PosVel kick(Vector3D dV, Propellant fuel) {
         PosVel stateNew = kick(body.getState().toPosVel(), dV);
 		fuel.consumeMass( dM( body, fuel, dV.norm() ) );
 		return stateNew;
@@ -65,9 +64,9 @@ public class ImpulsiveShot {
      * @param body Body that consumes DV.
      * @param dV   DV achieve using this propellant.
      */
-    public double dM(ICelestialBody body, IPropellant propellant, double dV) {
+    public double dM(ICelestialBody body, Propellant propellant, double dV) {
         double m  = body.getTotalMass();
-        double dM = m - Math.exp(-dV / (propellant.isp() * 9.81)) * m;
+        double dM = m - Math.exp(-dV / (propellant.Isp() * 9.81)) * m;
         return dM;
     }
 
