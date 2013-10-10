@@ -22,7 +22,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.constants.Constants
-import be.angelcorp.libs.celest.frames
+import be.angelcorp.libs.celest.frameGraph.frames
 import be.angelcorp.libs.celest.state.{TrueAnomaly, Keplerian, Spherical, PosVel}
 import be.angelcorp.libs.celest.unit.CelestTest._
 import scala.Some

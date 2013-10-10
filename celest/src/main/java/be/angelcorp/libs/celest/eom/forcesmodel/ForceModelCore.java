@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.eom.forcesmodel;
 import java.util.List;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
-import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import org.apache.commons.math3.linear.RealVector;

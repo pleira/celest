@@ -22,13 +22,14 @@ import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.util.physics.Time._
-import be.angelcorp.libs.celest.body.{ICelestialBody, CelestialBody}
+import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.constants.Constants._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.celest.unit.CelestTest._
 import be.angelcorp.libs.celest.state.PosVel
-import be.angelcorp.libs.celest.frames
+import be.angelcorp.libs.celest.frameGraph
+import be.angelcorp.libs.celest.frameGraph.frames
 
 /**
  * All reference values computed with:

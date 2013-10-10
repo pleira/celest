@@ -26,12 +26,14 @@ import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.celest.state.{Spherical, Keplerian}
-import be.angelcorp.libs.celest.frames
+import be.angelcorp.libs.celest.frameGraph
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.libs.celest.frameGraph.frames
 ;
 
 @RunWith(classOf[JUnitRunner])
@@ -56,7 +58,7 @@ class TestGravitationalForce  extends FlatSpec with ShouldMatchers  {
 		CelestTest.assertEquals(g1.toAcceleration, Vector3D(cos(Pi / 3) * -3.986d, sin(Pi / 3) * -3.986d, 0), 1E-2 )
 
 		/* Test the f/a in a simple sun system (norm only) */
-		val sun  = new frames.BodyCentered{
+		val sun  = new BodyCentered{
       def centerBody: ICelestialBody = SolarConstants.body
     }
 

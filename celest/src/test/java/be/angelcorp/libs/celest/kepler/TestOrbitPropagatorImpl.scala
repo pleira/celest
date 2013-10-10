@@ -34,8 +34,9 @@ import be.angelcorp.libs.celest.eom.TwoBody
 import be.angelcorp.libs.celest.stateIntegrator.CommonsMathPropagator
 import be.angelcorp.libs.celest.unit.CelestTest
 import be.angelcorp.libs.util.physics.Time
-import be.angelcorp.libs.celest.frames
+import be.angelcorp.libs.celest.frameGraph
 import be.angelcorp.libs.celest.state.{Keplerian, PosVel}
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered
 
 @RunWith(classOf[JUnitRunner])
 class TestOrbitPropagatorImpl extends FlatSpec with ShouldMatchers {
@@ -43,7 +44,7 @@ class TestOrbitPropagatorImpl extends FlatSpec with ShouldMatchers {
 	val delta	= 1E-3; // 0.1%
 
   implicit val universe = new DefaultUniverse
-  val earthFrame = new frames.BodyCentered{
+  val earthFrame = new BodyCentered{
     def centerBody: ICelestialBody = EarthConstants.bodyCenter
   }
 

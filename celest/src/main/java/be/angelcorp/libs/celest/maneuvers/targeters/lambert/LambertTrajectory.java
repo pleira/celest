@@ -18,7 +18,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters.lambert;
 import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.trajectory.Trajectory;
 import scala.Some;
-import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.Keplerian;
 import be.angelcorp.libs.celest.state.Orbit;
 import be.angelcorp.libs.celest.state.PosVel;

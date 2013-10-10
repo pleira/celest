@@ -23,9 +23,9 @@ import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.celest.constants.EarthConstants
-import be.angelcorp.libs.celest.frames
 import be.angelcorp.libs.celest.state.{TrueAnomaly, Keplerian}
 import be.angelcorp.libs.celest.unit.CelestTest._
+import be.angelcorp.libs.celest.frameGraph.frames
 
 @RunWith(classOf[JUnitRunner])
 class TestKeplerTrajectory extends FlatSpec with ShouldMatchers  {

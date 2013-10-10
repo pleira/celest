@@ -1,6 +1,6 @@
 package be.angelcorp.libs.celest.state
 
-import be.angelcorp.libs.celest.frames.IReferenceFrame
+import be.angelcorp.libs.celest.frameGraph.ReferenceFrame
 
 
 trait Orbit {
@@ -10,7 +10,7 @@ trait Orbit {
    *
    * @return The orbit reference frame.
    */
-  def frame: Option[IReferenceFrame]
+  def frame: Option[ReferenceFrame]
 
   /**
    * Converts this orbit into an equivalent position/velocity (Cartesian) one.

@@ -19,7 +19,7 @@ import static org.apache.commons.math3.util.FastMath.abs;
 import static org.apache.commons.math3.util.FastMath.cos;
 
 import be.angelcorp.libs.celest.body.ICelestialBody;
-import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.trajectory.Trajectory;

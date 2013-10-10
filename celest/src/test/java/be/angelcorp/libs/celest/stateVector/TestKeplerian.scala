@@ -19,13 +19,13 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.libs.celest.frames
 import be.angelcorp.libs.celest.body.CelestialBody
 import be.angelcorp.libs.celest.state.{Spherical, TrueAnomaly, Keplerian, PosVel}
 import be.angelcorp.libs.celest.constants.Constants
 import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.celest.unit.CelestTest._
+import be.angelcorp.libs.celest.frameGraph.frames
 
 @RunWith(classOf[JUnitRunner])
 class TestKeplerian extends FlatSpec with ShouldMatchers  {

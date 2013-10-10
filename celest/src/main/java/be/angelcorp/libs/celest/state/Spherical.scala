@@ -16,8 +16,9 @@
 package be.angelcorp.libs.celest.state
 
 import math._
-import be.angelcorp.libs.celest.frames
+import be.angelcorp.libs.celest.frameGraph
 import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered
 
 /**
  * Spherical elements are basically the length of the radius r and velocity vector v, and its orientation
@@ -49,7 +50,7 @@ class Spherical(val r: Double,
                 val v: Double,
                 val γ: Double,
                 val ψ: Double,
-                val frame: Option[frames.BodyCentered] = None) extends Orbit {
+                val frame: Option[BodyCentered] = None) extends Orbit {
 
   def radius = r
   def rightAscension = α

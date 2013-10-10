@@ -17,10 +17,9 @@
 package be.angelcorp.libs.celest.universe
 
 import be.angelcorp.libs.celest.time.timeStandard._
-import be.angelcorp.libs.celest.frames.IReferenceFrameGraph
-import be.angelcorp.libs.celest.time.{Epoch, JulianDate}
+import be.angelcorp.libs.celest.frameGraph.ReferenceFrameGraph
+import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.util.physics.Time
-import be.angelcorp.libs.celest.constants.EarthConstants
 
 /**
  * Contains all the context information regarding a simulation, such as the reference frame/time data.
@@ -65,7 +64,7 @@ trait Universe {
   lazy val TDB_EPOCH	= TAI_EPOCH.add(-65.5, Time.microsecond)
 
   /** Reference frame graph */
-  def frames: IReferenceFrameGraph
+  def frames: ReferenceFrameGraph
 
   def epoch(year: Int) = new JulianDate(year, 1, 1, 12, 0, 0, TT)(this)
 

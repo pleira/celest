@@ -17,7 +17,7 @@ package be.angelcorp.libs.celest.maneuvers.targeters.exposin;
 
 import static org.apache.commons.math3.util.FastMath.PI;
 import be.angelcorp.libs.celest.body.CelestialBody;
-import be.angelcorp.libs.celest.frames.BodyCentered;
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.libs.celest.state.PosVel;
 import be.angelcorp.libs.celest.time.Epoch;
 import be.angelcorp.libs.celest.unit.CelestTest;

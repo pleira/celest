@@ -24,7 +24,8 @@ import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.libs.celest.trajectory.KeplerVariationTrajectory
 import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.celest.state.{NonSingular, PosVel, Keplerian}
-import be.angelcorp.libs.celest.frames
+import be.angelcorp.libs.celest.frameGraph
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered
 
 /**
  * Different constants specific to the earth. Has constants in the following categories:
@@ -225,7 +226,7 @@ object EarthConstants {
 		val w_bar0 = Deg.convert(102.9373481)
 		val W0 = Deg.convert(174.8731758)
 		val L0 = Deg.convert(100.4664568)
-		val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, Some(new frames.BodyCentered{
+		val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, Some(new BodyCentered{
       //TODO: Use an actual frame
       def centerBody = jpl_sun
     }))

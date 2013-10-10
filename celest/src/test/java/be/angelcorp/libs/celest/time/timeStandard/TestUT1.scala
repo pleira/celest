@@ -20,10 +20,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.libs.celest.time.{JulianDate, Epoch}
-import be.angelcorp.libs.celest.universe.Universe
-import be.angelcorp.libs.celest.frames.IReferenceFrameGraph
-import org.scalatest.exceptions.TestFailedException
+import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.celest.time.dateStandard.DateStandards._
 import be.angelcorp.libs.celest.data.UT1Provider
 

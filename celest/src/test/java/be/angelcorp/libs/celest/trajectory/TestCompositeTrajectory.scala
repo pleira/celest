@@ -21,7 +21,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.libs.celest.universe.DefaultUniverse
 import be.angelcorp.libs.celest.state.{PosVel, Orbit}
-import be.angelcorp.libs.celest.frames.IReferenceFrame
+import be.angelcorp.libs.celest.frameGraph.ReferenceFrame
 import be.angelcorp.libs.celest.time.{JulianDate, Epoch}
 import be.angelcorp.libs.util.physics.Time
 
@@ -33,7 +33,7 @@ class TestCompositeTrajectory extends FlatSpec with ShouldMatchers  {
 
 	/** Test state that contains a given constant */
 	class TestState( val value: Double ) extends Orbit {
-    def frame: Option[IReferenceFrame] = throw new UnsupportedOperationException
+    def frame: Option[ReferenceFrame] = throw new UnsupportedOperationException
     def toPosVel: PosVel = throw new UnsupportedOperationException
   }
 
