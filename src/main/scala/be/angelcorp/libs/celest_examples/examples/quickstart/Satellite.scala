@@ -17,21 +17,21 @@ package be.angelcorp.libs.celest_examples.examples.quickstart
 
 import be.angelcorp.libs.celest.body.BiPropellant
 import be.angelcorp.libs.celest.body.CelestialBody
-import be.angelcorp.libs.celest.body.Propellant
+import be.angelcorp.libs.celest.body.MonoPropellant
 import be.angelcorp.libs.celest.state.Orbit
 
 class Satellite(s: Orbit) extends CelestialBody(s, 0) {
 
 	/* Different propellants */
-	val hydrazine			= new Propellant(225, 1550)
-  val nitrogenTetroxide	= new Propellant(0, 1200)
-  val xenon				= new Propellant(2000, 400)
+	val hydrazine			    = new MonoPropellant(225,  1550)
+  val nitrogenTetroxide	= new MonoPropellant(0,    1200)
+  val xenon				      = new MonoPropellant(2000, 400 )
 
   def getHydrazineLAE = {
 		val oxToFuel = 1.3
 		new BiPropellant(340, hydrazine, 1 / (1 + oxToFuel), nitrogenTetroxide)
 	}
 
-	override def getTotalMass = 6170 - hydrazine.propellantMass - nitrogenTetroxide.propellantMass - xenon.propellantMass
+	override def getTotalMass = 6170 - hydrazine.wetMass - nitrogenTetroxide.wetMass - xenon.wetMass
 
 }
