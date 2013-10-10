@@ -28,8 +28,8 @@ import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.celest.constants.EarthConstants
 import be.angelcorp.libs.celest.state.Keplerian
-import be.angelcorp.libs.celest.frames
-import be.angelcorp.libs.celest.frames.BodyCentered
+import be.angelcorp.libs.celest.frameGraph
+import be.angelcorp.libs.celest.frameGraph.frames.BodyCentered
 
 @CelestExample(
   name = "Quickstart example",
@@ -37,7 +37,7 @@ import be.angelcorp.libs.celest.frames.BodyCentered
 class QuickStart {
  val logger	= LoggerFactory.getLogger(classOf[QuickStart])
 
-  /** Create the default universe (defines time standards and reference frames) */
+  /** Create the default universe (defines time standards and reference frameGraph) */
   implicit val universe = new DefaultUniverse
 
   /** Create the earth based frame of a generic template, with the earth having the state <0,0,0,0,0,0> (R,V) */
