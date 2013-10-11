@@ -15,10 +15,8 @@
  */
 package be.angelcorp.libs.celest.time.timeStandard
 
-import be.angelcorp.libs.celest.time.{JulianDate, Epoch}
 import scala.math._
-import java.lang.Math
-import scala.Math
+import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.util.physics.Time
 
 trait ITimeStandard {

@@ -21,4 +21,13 @@ package be.angelcorp.libs.celest.frameGraph
  *
  * @author Simon Billemont
  */
-case class NamedReferenceFrame(name: String) extends ReferenceFrame
+class NamedReferenceFrame(val name: String) extends ReferenceFrame
+
+object NamedReferenceFrame {
+
+  def unapply( frame: ReferenceFrame ): Option[String] = frame match {
+    case nrf: NamedReferenceFrame => Some(nrf.name)
+    case _ => None
+  }
+
+}
