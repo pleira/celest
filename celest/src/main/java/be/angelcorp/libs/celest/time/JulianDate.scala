@@ -86,6 +86,25 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
 	def this(date: Double, dateStandard: DateStandard, timeStandard: ITimeStandard)(implicit universe: Universe) =
     this(dateStandard.toJD(date), timeStandard)
 
+  /**
+   * Create a Julian date from a specified day in the year (UTC).
+   *
+   * @param year Year of the epoch.
+   * @param days Fractional days in the year of the epoch.
+   */
+  def this(year: Int, days: Double)(implicit universe: Universe) =
+    this(TimeUtils.jday(year, 1, 1, 0, 0, 0) - 1.0 + days, universe.UTC)
+
+  /**
+   * Create a Julian date from a specified day in the year.
+   *
+   * @param year Year of the epoch.
+   * @param days Fractional days in the year of the epoch.
+   * @param timeStandard Time standard that the epoch is given in.
+   */
+  def this(year: Int, days: Double, timeStandard: ITimeStandard)(implicit universe: Universe) =
+    this(TimeUtils.jday(year, 0, 0, 0, 0, 0) + days, timeStandard)
+
 	/**
 	 * Create a Julian date from a specified calendar date.
 	 * 
@@ -146,7 +165,5 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
 	}
 
 	override def toString = "%fJD %s".format( jd, timeStandard.getClass.getSimpleName )
-
-  def fractionInDay = (jd - 0.5) % 1.0
 
 }

@@ -93,6 +93,101 @@ trait Epoch extends Comparable[Epoch] {
    *
    * @return Fraction in the current day [-]
    */
-  def fractionInDay: Double
+  def fractionInDay: Double = (jd - 0.5) % 1.0
+
+  /**
+   * Move the epoch forward by the specified amount of days.
+   *
+   * @param days Amount of Julian days to add to this epoch.
+   * @return A new epoch, shifted by the specified number of days.
+   */
+  def +(days: Double): Epoch = add( days, Time.day_julian )
+
+  /**
+   * Move the epoch backwards by the specified amount of days.
+   *
+   * @param days Amount of Julian days to subtract from this epoch.
+   * @return A new epoch, shifted by the specified number of days.
+   */
+  def -(days: Double): Epoch = add( -days, Time.day_julian )
+
+  /**
+   * Check if a specified epoch is equal to this epoch.
+   * This means the Julian date of this instance should be equal to the value compared against.
+   *
+   * @param epoch Epoch to compare to.
+   * @return True if this epoch is equal to the parameter epoch.
+   */
+  def ==(epoch: Epoch) = this.relativeTo(epoch) == 0
+
+  /**
+   * Check if a specified epoch is after this epoch.
+   * This means the Julian date of this instance should be smaller then the value compared against.
+   *
+   * @param epoch Epoch to compare to.
+   * @return True if this epoch is before the parameter epoch.
+   */
+  def <(epoch: Epoch) = this.relativeTo(epoch) < 0
+
+  /**
+   * Check if a specified epoch is equal to or after this epoch.
+   * This means the Julian date of this instance should be equal or smaller then the value compared against.
+   *
+   * @param epoch Epoch to compare to.
+   * @return True if this epoch is equal to or before the parameter epoch.
+   */
+  def <=(epoch: Epoch) = this.relativeTo(epoch) <= 0
+
+  /**
+   * Check if a specified epoch is before this epoch.
+   * This means the Julian date of this instance should be larger then the value compared against.
+   *
+   * @param epoch Epoch to compare to.
+   * @return True if this epoch is after the parameter epoch.
+   */
+  def >(epoch: Epoch) = this.relativeTo(epoch) > 0
+
+  /**
+   * Check if a specified epoch is equal to or before this epoch.
+   * This means the Julian date of this instance should be equal to or larger then the value compared against.
+   *
+   * @param epoch Epoch to compare to.
+   * @return True if this epoch is equal to or after the parameter epoch.
+   */
+  def >=(epoch: Epoch) = this.relativeTo(epoch) >= 0
+
+  /**
+   * Create a `TimeRange` from this instance up to but not including the end Epoch.
+   *
+   * @param end The final bound of the range to make.
+   * @return A [[be.angelcorp.libs.celest.time.TimeRange]] from `this` up to but not including `end`.
+   */
+  def until(end: Epoch): TimeRange = TimeRange(this, end)
+
+  /**
+   * Create a `TimeRange` from this instance up to but not including the end Epoch with a predefined step in Julian days.
+   *
+   * @param end The final bound of the range to make.
+   * @param step The number to increase by for each step of the range.
+   * @return A [[be.angelcorp.libs.celest.time.TimeRange]] from `this` up to but not including `end`.
+   */
+  def until(end: Epoch, step: Double): TimeRange = TimeRange(this, end, step)
+
+  /**
+   * Create a `TimeRange` from this instance up to and including the end Epoch with a predefined step in Julian days.
+   *
+   * @param end The final bound of the range to make.
+   * @return A [[be.angelcorp.libs.celest.time.TimeRange]] from `'''this'''` up to and including `end`.
+   */
+  def to(end: Epoch): TimeRange.Inclusive = TimeRange.inclusive(this, end)
+
+  /**
+   * Create a `TimeRange` from this instance up to and including the end Epoch with a predefined step in Julian days.
+   *
+   * @param end The final bound of the range to make.
+   * @param step The number to increase by for each step of the range.
+   * @return A [[be.angelcorp.libs.celest.time.TimeRange]] from `'''this'''` up to and including `end`.
+   */
+  def to(end: Epoch, step: Double): TimeRange.Inclusive = TimeRange.inclusive(this, end, step)
 
 }

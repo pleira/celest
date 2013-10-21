@@ -122,4 +122,81 @@ class TestJulianDate extends FlatSpec with ShouldMatchers  {
     epoch2.fractionInDay should be (0.72 plusOrMinus 1E-15)
   }
 
+  it should "construct the correct instance from the days in year" in {
+    // Based on http://ssd.jpl.nasa.gov/tc.cgi : Time Conversion Tool
+
+    // A.D. 2013-Oct-21 22:06:47.00 = A.D. 2013-Oct-21.9213773
+    // A.D.   2013--294 22:06:47.00 = A.D.   2013--294.9213773
+    // 2456587.4213773 UT
+    val epoch1 = new JulianDate(2013, 294.9213773)
+    epoch1.jd should be (2456587.4213773 plusOrMinus 1E-16)
+
+    // A.D. 1911-Jun-16 11:04:38.90 = A.D. 1911-Jun-16.4615613
+    // A.D.   1911--167 11:04:38.90 = A.D.   1911--167.4615613
+    // 2419203.9615613 UT
+    val epoch2 = new JulianDate(1911, 167.4615613)
+    epoch2.jd should be (2419203.9615613 plusOrMinus 1E-16)
+  }
+
+  it should "compare correctly with respect to other Epochs" in {
+    val epoch1 = new JulianDate(1.0)
+    val epoch2 = new JulianDate(2.0)
+    val epoch3 = new JulianDate(2.0)
+    val epoch4 = new JulianDate(3.0)
+
+    (epoch2 == epoch1) should equal (false)
+    (epoch2 == epoch2) should equal (true )
+    (epoch2 == epoch3) should equal (true )
+    (epoch2 == epoch4) should equal (false)
+
+    (epoch2 <  epoch1) should equal (false)
+    (epoch2 <  epoch2) should equal (false)
+    (epoch2 <  epoch3) should equal (false)
+    (epoch2 <  epoch4) should equal (true )
+
+    (epoch2 <= epoch1) should equal (false)
+    (epoch2 <= epoch2) should equal (true )
+    (epoch2 <= epoch3) should equal (true )
+    (epoch2 <= epoch4) should equal (true )
+
+    (epoch2 >  epoch1) should equal (true )
+    (epoch2 >  epoch2) should equal (false)
+    (epoch2 >  epoch3) should equal (false)
+    (epoch2 >  epoch4) should equal (false)
+
+    (epoch2 >= epoch1) should equal (true )
+    (epoch2 >= epoch2) should equal (true )
+    (epoch2 >= epoch3) should equal (true )
+    (epoch2 >= epoch4) should equal (false)
+  }
+
+  it should "generate the correct TimeRanges" in {
+    val start = new JulianDate(1.0)
+    val end   = new JulianDate(5.0)
+
+    val range_until_1 = start.until(end)
+    range_until_1.start should equal (start)
+    range_until_1.end   should equal (end  )
+    range_until_1.step  should equal (1.0  )
+    range_until_1.isInclusive should equal (false)
+
+    val range_until_2 = start.until(end, 2.0)
+    range_until_2.start should equal (start)
+    range_until_2.end   should equal (end  )
+    range_until_2.step  should equal (2.0  )
+    range_until_2.isInclusive should equal (false)
+
+    val range_to_1 = start.to(end)
+    range_to_1.start should equal (start)
+    range_to_1.end   should equal (end  )
+    range_to_1.step  should equal (1.0  )
+    range_to_1.isInclusive should equal (true)
+
+    val range_to_2 = start.to(end, 2.0)
+    range_to_2.start should equal (start)
+    range_to_2.end   should equal (end  )
+    range_to_2.step  should equal (2.0  )
+    range_to_2.isInclusive should equal (true)
+  }
+
 }
