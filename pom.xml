@@ -27,6 +27,7 @@
 		
 		<scala.version>2.10.3</scala.version>
         <scala.version.scalatest>2.10.0</scala.version.scalatest>
+        <scala.version.scala-chart>2.10</scala.version.scala-chart>
 	</properties>
 	
 	<licenses>
@@ -45,6 +46,13 @@
 		</developer>
 	</developers>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>1.3.9</version>
+        </dependency>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

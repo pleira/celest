@@ -40,7 +40,7 @@ class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrie
     val year     = epoch.date.getYear.toString
     val filename = "eopc04_IAU2000.%s".format( year takeRight 2  )
 
-    getDataFile( "iers/eop/long-term/c04_08/iau2000/"+filename ) match {
+    getData( "iers/eop/long-term/c04_08/iau2000/"+filename ) match {
       case Some(content) => {
         val newData = EarthOrientationData(content)
         data.putAll( newData.data )

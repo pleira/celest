@@ -16,12 +16,12 @@
 
 package be.angelcorp.libs.celest
 
-import scala.io.{BufferedSource, Source}
-import java.io.File
-import com.google.common.io.Files
-import java.nio.charset.Charset
+import java.io._
+import scala.io._
 import java.net.URI
+import com.google.common.io.Files
 import org.slf4j.LoggerFactory
+import java.nio.file.Paths
 
 package object data {
   val logger = LoggerFactory.getLogger( "data" )
@@ -35,9 +35,8 @@ package object data {
    *
    * @param id
    * @param fallbackUrls
-   * @return
    */
-  def getDataFile( id: String, fallbackUrls: Seq[URI] = Nil ): Option[Source] = {
+  def getData( id: String, fallbackUrls: Seq[URI] = Nil ): Option[Source] = {
     val file            = new File( id )
     val defaultFallback = "http://angelcorp.be/celest/resources/" + id
 
@@ -59,11 +58,51 @@ package object data {
             try {
               // Download success, try and save the file locally (as cache)
               Files.createParentDirs(file)
-              val writer = Files.newWriter( file, Charset.defaultCharset() )
+              val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
               writer.write( data.toArray )
               writer.close()
             } catch { case _: Throwable => }
             Some(data)
+          } catch {
+            // Download failed
+            case e: Throwable =>
+              logger.info("Failed to retrieve data file %s from the uri %s:".format(id, uri), e)
+              None
+          }
+      } )
+    }
+  }
+
+  def getDataFile( id: String, fallbackUrls: Seq[URI] = Nil ): Option[File] = {
+    val file            = new File( id )
+    val defaultFallback = "http://angelcorp.be/celest/resources/" + id
+
+    val fallback = URI.create(defaultFallback) :: fallbackUrls.toList
+
+    if ( file.exists() ) {
+      // Return the cached file
+      Some( file )
+    } else {
+      // Iterate over all the fallback url's and try to download the file:
+      fallback.foldLeft( None: Option[File] )( (f, uri) => f match {
+        // File already downloaded
+        case Some(_) =>
+          f
+        // Try this new url
+        case _ =>
+          try {
+            val input  = uri.toURL.openConnection().getInputStream
+            val buffer = Array.ofDim[Byte](4096)
+            Files.createParentDirs(file)
+            file.createNewFile()
+            val output = new FileOutputStream( file )
+            var n = input.read(buffer)
+            while ( n != -1) {
+              if (n > 0) output.write(buffer, 0, n)
+              n = input.read(buffer)
+            }
+            output.close()
+            Some(file)
           } catch {
             // Download failed
             case e: Throwable =>

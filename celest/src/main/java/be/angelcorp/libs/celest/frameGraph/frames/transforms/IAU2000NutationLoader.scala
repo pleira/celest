@@ -128,17 +128,17 @@ object IAU2000NutationLoader {
   lazy val IERS2010: List[IAU2000NutationEntry] = {
     // Download the nutation in longitude coefficients (IAU 2000_R06 expression) derived from the IAU 2000A
     // lunisolar and planetary components with slight IAU 2006 adjustments (provided by N. Capitaine).
-    parseIERS2010( getDataFile("iers/conv2010/tab5.3a.txt").getOrElse(Source.fromString("")), longitudeFile = true ) :::
-      parseIERS2010( getDataFile( "iers/conv2010/tab5.3b.txt" ).getOrElse(Source.fromString("")), longitudeFile = false )
+    parseIERS2010( getData("iers/conv2010/tab5.3a.txt").getOrElse(Source.fromString("")), longitudeFile = true ) :::
+      parseIERS2010( getData( "iers/conv2010/tab5.3b.txt" ).getOrElse(Source.fromString("")), longitudeFile = false )
   }
 
   lazy val MHB2000_2000A: List[IAU2000NutationEntry] = {
-    parseMHB2000( getDataFile( "sofa/iau00a_nutation_ls.tab" ).getOrElse(Source.fromString("")) ) :::
-      parseMHB2000Planet( getDataFile( "sofa/iau00a_nutation_pl.tab" ).getOrElse(Source.fromString("")) )
+    parseMHB2000( getData( "sofa/iau00a_nutation_ls.tab" ).getOrElse(Source.fromString("")) ) :::
+      parseMHB2000Planet( getData( "sofa/iau00a_nutation_pl.tab" ).getOrElse(Source.fromString("")) )
   }
 
   lazy val MHB2000_2000B: List[IAU2000NutationEntry] = {
-    parseMHB2000( getDataFile( "sofa/iau00b_nutation.tab" ).getOrElse(Source.fromString("")) )
+    parseMHB2000( getData( "sofa/iau00b_nutation.tab" ).getOrElse(Source.fromString("")) )
   }
 
 }

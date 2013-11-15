@@ -67,7 +67,7 @@ class DefaultUT1( utc: ITimeStandard,
     val file     = new File( filename )
     val url      = "ftp://hpiers.obspm.fr/iers/eop/eopc04/%s".format( filename )
 
-    getDataFile( "iers/eop/long-term/c04_08/iau2000/eopc04_08_IAU2000." + (year takeRight 2), List(URI.create(url)) ) match {
+    getData( "iers/eop/long-term/c04_08/iau2000/eopc04_08_IAU2000." + (year takeRight 2), List(URI.create(url)) ) match {
       case Some( data ) =>
         val container = EarthOrientationData( data )
         containers.put( container.epochRange, container )

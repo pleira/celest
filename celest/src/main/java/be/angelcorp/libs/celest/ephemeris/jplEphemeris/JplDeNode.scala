@@ -1,7 +1,7 @@
-package be.angelcorp.libs.celest.ephemeris.jplDE
+package be.angelcorp.libs.celest.ephemeris.jplEphemeris
 
 import be.angelcorp.libs.celest.time.Epoch
-import be.angelcorp.libs.celest.ephemeris.jplDE._
+import be.angelcorp.libs.celest.ephemeris.jplEphemeris._
 
 sealed abstract class JplDeNode
 

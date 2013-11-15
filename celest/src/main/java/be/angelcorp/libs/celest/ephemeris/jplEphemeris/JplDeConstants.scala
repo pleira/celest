@@ -1,4 +1,4 @@
-package be.angelcorp.libs.celest.ephemeris.jplDE
+package be.angelcorp.libs.celest.ephemeris.jplEphemeris
 
 object JplDeConstants {
 
