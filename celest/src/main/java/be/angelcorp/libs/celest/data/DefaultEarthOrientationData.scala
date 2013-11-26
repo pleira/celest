@@ -19,8 +19,13 @@ package be.angelcorp.libs.celest.data
 import be.angelcorp.libs.celest.universe.Universe
 import be.angelcorp.libs.celest.time.Epoch
 import java.util
+import scala.io.Source
+import org.slf4j.LoggerFactory
+import be.angelcorp.libs.celest.data._
+import scala.Some
 
 class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrientationData( new  util.TreeMap() ) {
+  private val logger = LoggerFactory.getLogger(getClass)
 
   /**
    * Tries to load an additional EOP data file from the IERS: EOP 08 C04 (IAU2000) yearly file containing:
@@ -40,12 +45,12 @@ class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrie
     val year     = epoch.date.getYear.toString
     val filename = "eopc04_IAU2000.%s".format( year takeRight 2  )
 
-    getData( "iers/eop/long-term/c04_08/iau2000/"+filename ) match {
-      case Some(content) => {
-        val newData = EarthOrientationData(content)
+    getZipEntrySource("org.iers.products.eop.long-term.c04_08", "iau2000", filename) match {
+      case Some( source ) =>
+        val newData = EarthOrientationData( source )
         data.putAll( newData.data )
-      }
       case _ =>
+        logger.warn(s"Could not find file $filename in artifact org.iers.products.eop.long-term.c04_08:iau2000 for Earth orientation data on $epoch")
     }
   }
 

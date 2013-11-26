@@ -18,6 +18,9 @@ package be.angelcorp.libs.celest.time.timeStandard
 import scala.math._
 import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.util.physics.Time
+import javax.inject.Inject
+import com.google.inject.name.Named
+import be.angelcorp.libs.celest.time.Epochs.{TT_EPOCH, J2000}
 
 trait ITimeStandard {
   /**
@@ -88,14 +91,14 @@ class TT extends ITimeStandard {
  *
  * @author Simon Billemont
  */
-class TCB( tdb: ITimeStandard, tcb_epoch: Epoch) extends ITimeStandard {
+class TCB@Inject()( @Named("TDB") tdb: ITimeStandard, @TT_EPOCH tt_epoch: Epoch) extends ITimeStandard {
 
   val Lb   = +1.55051976772E-8
   val TDB0 = -6.55E-5
 
 	override def offsetFromTT(jd_tt: Epoch) = {
     // See [1] equation 3-50
-    val TCB_TDB = Lb * jd_tt.relativeTo(tcb_epoch, Time.second) + TDB0
+    val TCB_TDB = Lb * jd_tt.relativeTo(tt_epoch, Time.second) + TDB0
     val jd_tdb  = jd_tt.add( TCB_TDB, Time.second )
     TCB_TDB + tdb.offsetFromTT( jd_tdb )
   }
@@ -123,7 +126,7 @@ class TCB( tdb: ITimeStandard, tcb_epoch: Epoch) extends ITimeStandard {
  *
  * @author Simon Billemont
  */
-class TDB( j2000_epoch: Epoch ) extends ITimeStandard {
+class TDB@Inject()( @J2000 j2000_epoch: Epoch ) extends ITimeStandard {
 
   def offsetFromTT(JD_tt: Epoch) = {
     val J2000_offset = JD_tt.relativeTo( j2000_epoch )
@@ -148,7 +151,7 @@ class TDB( j2000_epoch: Epoch ) extends ITimeStandard {
  *
  * @author Simon Billemont
  */
-class TCG( tt_epoch: Epoch ) extends ITimeStandard {
+class TCG@Inject()( @TT_EPOCH tt_epoch: Epoch ) extends ITimeStandard {
 
   /**
    * LG is a scale constant accounting for the Earth's gravitational and rotational potential affecting

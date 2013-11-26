@@ -16,9 +16,11 @@
 
 package be.angelcorp.libs.celest.time.timeStandard
 
-import be.angelcorp.libs.celest.universe.Universe
+import be.angelcorp.libs.celest.universe.{modules, Universe}
 import be.angelcorp.libs.celest.time.Epoch
 import org.scalatest.exceptions.TestFailedException
+import org.eclipse.aether.repository.RemoteRepository
+import com.google.inject._
 
 class MockTime(val offset: Double) extends ITimeStandard {
   def offsetFromTT(JD_tt: Epoch) =  offset
@@ -35,4 +37,18 @@ class MockTimeUniverse extends Universe {
   def TCB: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
   def UTC: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
   def UT1: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
+  def injector: Injector = {
+    val universe = this
+    Guice.createInjector(
+      new modules.DefaultAether,
+      new AbstractModule {
+        def configure() = bind( classOf[Universe] ).toInstance( universe )
+        @Provides
+        @Singleton
+        def provideRemoteRepositories = Seq(
+          new RemoteRepository.Builder("resources", "default", "http://angelcorp.be/celest/resources").build()
+        )
+      }
+    )
+  }
 }

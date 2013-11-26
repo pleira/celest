@@ -21,6 +21,7 @@ import be.angelcorp.libs.celest.time.dateStandard.DateStandards
 import be.angelcorp.libs.celest.time.Epoch
 import be.angelcorp.libs.util.physics.Time
 import java.util
+import javax.inject.{Named, Inject}
 
 /**
  * Coordinated Universal Time.
@@ -33,7 +34,7 @@ import java.util
  * @author Simon Billemont
  * 
  */
-class DefaultUTC(TAI: ITimeStandard) extends ITimeStandard {
+class DefaultUTC@Inject()( @Named("TAI") TAI: ITimeStandard) extends ITimeStandard {
 
 	def offsetFromTT(JD_tt: Epoch) = {
 		val from_tt = TAI.offsetFromTT(JD_tt)

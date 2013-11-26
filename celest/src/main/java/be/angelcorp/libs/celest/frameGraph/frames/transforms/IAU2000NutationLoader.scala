@@ -17,7 +17,9 @@
 package be.angelcorp.libs.celest.frameGraph.frames.transforms
 
 import scala.io.Source
+import scala.collection.JavaConverters._
 import be.angelcorp.libs.celest.data._
+import be.angelcorp.libs.celest.universe.Universe
 
 object IAU2000NutationLoader {
 
@@ -125,20 +127,20 @@ object IAU2000NutationLoader {
     } ).toList
   }
 
-  lazy val IERS2010: List[IAU2000NutationEntry] = {
+  def IERS2010(implicit universe: Universe): List[IAU2000NutationEntry] = {
     // Download the nutation in longitude coefficients (IAU 2000_R06 expression) derived from the IAU 2000A
     // lunisolar and planetary components with slight IAU 2006 adjustments (provided by N. Capitaine).
-    parseIERS2010( getData("iers/conv2010/tab5.3a.txt").getOrElse(Source.fromString("")), longitudeFile = true ) :::
-      parseIERS2010( getData( "iers/conv2010/tab5.3b.txt" ).getOrElse(Source.fromString("")), longitudeFile = false )
+    parseIERS2010( getZipEntrySource("org.iers.conv2010", "chapter5", "tab5.3a.txt").getOrElse(Source.fromString("")), longitudeFile = true ) :::
+      parseIERS2010( getZipEntrySource("org.iers.conv2010", "chapter5", "tab5.3b.txt").getOrElse(Source.fromString("")), longitudeFile = false )
   }
 
-  lazy val MHB2000_2000A: List[IAU2000NutationEntry] = {
-    parseMHB2000( getData( "sofa/iau00a_nutation_ls.tab" ).getOrElse(Source.fromString("")) ) :::
-      parseMHB2000Planet( getData( "sofa/iau00a_nutation_pl.tab" ).getOrElse(Source.fromString("")) )
+  def MHB2000_2000A(implicit universe: Universe): List[IAU2000NutationEntry] = {
+    parseMHB2000( getZipEntrySource("org.iers", "MHB2000", "iau00a_nutation_ls.tab" ).getOrElse(Source.fromString("")) ) :::
+      parseMHB2000Planet( getZipEntrySource("org.iers", "MHB2000", "iau00a_nutation_pl.tab" ).getOrElse(Source.fromString("")) )
   }
 
-  lazy val MHB2000_2000B: List[IAU2000NutationEntry] = {
-    parseMHB2000( getData( "sofa/iau00b_nutation.tab" ).getOrElse(Source.fromString("")) )
+  def MHB2000_2000B(implicit universe: Universe): List[IAU2000NutationEntry] = {
+    parseMHB2000( getZipEntrySource("org.iers", "MHB2000", "iau00b_nutation.tab" ).getOrElse(Source.fromString("")) )
   }
 
 }

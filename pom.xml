@@ -26,7 +26,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
 		<scala.version>2.10.3</scala.version>
-        <scala.version.scalatest>2.10.0</scala.version.scalatest>
+        <scala.version.scalatest>2.10</scala.version.scalatest>
         <scala.version.scala-chart>2.10</scala.version.scala-chart>
 	</properties>
 	

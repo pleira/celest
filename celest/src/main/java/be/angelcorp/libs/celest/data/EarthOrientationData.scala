@@ -100,8 +100,8 @@ object EarthOrientationData {
    * @return New eop data container.
    */
   def apply( content: Source )(implicit universe: Universe) = {
-    // Convert the downloaded data to the format used by [[UT1Container]]
-    val dataEntries = content.getLines().drop(14).map( line => {
+    // Convert the downloaded data to the format used by [[EarthOrientationData]]
+    val dataEntries = content.getLines().drop(13).filterNot(_.isEmpty).map( line => {
       val entries = line.split("""\s+""")
       // yr mo day mjd x" y" ut1-utc lod dx dy ...
       val year  = entries(0).toInt

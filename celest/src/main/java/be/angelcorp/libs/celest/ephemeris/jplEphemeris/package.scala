@@ -1,7 +1,7 @@
 package be.angelcorp.libs.celest.ephemeris
 
 import java.nio.file.{Paths, Files, Path}
-import java.io.{FileReader, RandomAccessFile}
+import java.io.{Reader, FileReader, RandomAccessFile}
 import java.nio.channels.FileChannel.MapMode
 import java.nio.{ByteBuffer, ByteOrder}
 import java.text.{DecimalFormatSymbols, DecimalFormat, NumberFormat}
@@ -19,7 +19,6 @@ import be.angelcorp.libs.celest.time.JulianDate
 package object jplEphemeris {
   private val logger = LoggerFactory.getLogger(getClass)
 
-
   /**
    * Create a JplEphemeris object from a set of ascii data files.
    *
@@ -30,14 +29,27 @@ package object jplEphemeris {
    * @param header    Path to the ephemeris header file.
    * @param dataFiles Path to any supplementary data files.
    */
-  def fromAscii( header: Path, dataFiles: Seq[Path] = Nil )(implicit universe: Universe) = {
+  def fromAscii( header: Path, dataFiles: Seq[Path] )(implicit universe: Universe): AsciiEphemeris =
+    fromAscii( new FileReader(header.toFile), dataFiles.map( x => new FileReader(x.toFile) ) )
+
+  /**
+   * Create a JplEphemeris object from a set of ascii data file readers.
+   *
+   * - This loads all the data files in memory!
+   * - Make sure you add all the data files in the correct temporal sequence.
+   * - Make sure to start with the first data file (you cannot skip epochs you don't need)
+   *
+   * @param header    The ephemeris header file reader.
+   * @param dataFiles Any supplementary data file readers.
+   */
+  def fromAscii( header: Reader, dataFiles: Seq[Reader] )(implicit universe: Universe): AsciiEphemeris = {
     val parser = new AsciiParser()
     // Create the ephemeris object from the header
-    val ephemeris = parser.ephemeris( new FileReader(header.toFile) )
+    val ephemeris = parser.ephemeris( header )
     val metadata  = ephemeris.metadata
     // Add all the additional data records to the ephemeris
     for (dataFile <- dataFiles)
-      ephemeris.addRecords( parser.ephemerisData(metadata, new FileReader(dataFile.toFile)) )
+      ephemeris.addRecords( parser.ephemerisData(metadata, dataFile) )
     ephemeris
   }
 
@@ -289,14 +301,27 @@ package object jplEphemeris {
    *
    * @param header    Ascii header file.
    * @param dataFiles Ascii data files (can be Nil if the data is contained in the header).
-   * @param output    Output file for the binary epehemris.
-   * @param endianness Optional endianess to use for the epehemeris.
-   * @param alignment  Optional alignment to use for the epehemeris.
+   * @param output    Output file for the binary ephemeris.
+   * @param endianness Optional endianess to use for the ephemeris.
+   * @param alignment  Optional alignment to use for the ephemeris.
    */
-  def ascii2binary(header: Path, dataFiles: Seq[Path], output: Path, endianness: ByteOrder = ByteOrder.LITTLE_ENDIAN, alignment: AlignmentStrategy = PackedAlignment.instance)(implicit universe: Universe) = {
+  def ascii2binary(header: Path, dataFiles: Seq[Path], output: Path, endianness: ByteOrder = ByteOrder.LITTLE_ENDIAN, alignment: AlignmentStrategy = PackedAlignment.instance)(implicit universe: Universe) {
+    asciiReader2binary(new FileReader(header.toFile), dataFiles.map(x=>new FileReader(x.toFile)), output: Path, endianness, alignment)
+  }
+
+  /**
+   * Convert an ascii form of the JPL ephemeris to the equivalent binary form.
+   *
+   * @param header    Ascii header file reader.
+   * @param dataFiles Ascii data file readers (can be Nil if the data is contained in the header).
+   * @param output    Output file for the binary ephemeris.
+   * @param endianness Optional endianess to use for the ephemeris.
+   * @param alignment  Optional alignment to use for the ephemeris.
+   */
+  def asciiReader2binary(header: Reader, dataFiles: Seq[Reader], output: Path, endianness: ByteOrder = ByteOrder.LITTLE_ENDIAN, alignment: AlignmentStrategy = PackedAlignment.instance)(implicit universe: Universe) {
     val parser = new AsciiParser()
     // Create the ephemeris object from the header
-    val ephemeris = parser.ephemeris( new FileReader(header.toFile) )
+    val ephemeris = parser.ephemeris( header )
 
     // Write out the two header records
     toBinary(ephemeris, output, endianness, alignment)
@@ -309,7 +334,7 @@ package object jplEphemeris {
     // Add all the additional data records to the ephemeris
     var lastRecord: Option[DataRecord] = None
     for (dataFile <- dataFiles;
-         record   <- parser.ephemerisData(ephemeris.metadata, new FileReader(dataFile.toFile))) {
+         record   <- parser.ephemerisData(ephemeris.metadata, dataFile)) {
       lastRecord match {
         case Some(rec) if rec.begin == record.begin => // Skip identical records
         case _ => // Write the record:
@@ -332,18 +357,18 @@ package object jplEphemeris {
    * - http://cow.physics.wisc.edu/~craigm/idl/down/jplephinterp.pro
    *
    * @param ephemeris     JPL ephemeris to test.
-   * @param testFilePath  Path to the test data file.
+   * @param testFile      The test data file source.
    * @param maximumTests  Maximum number of test lines to evaluate (for all lines, pass None).
    * @return List of evaluated test lines, each containing:
    * - Test string
    * - {de_number, calender_date, Julian_Date, target_body, center_body, coordinate_id, coordinate_value}
    * - Expected value, computed value [AU|AU/s|rad|rad/s]
    */
-  def test( ephemeris: JplEphemeris, testFilePath: Path, maximumTests: Option[Int] = None)(implicit universe: Universe) = {
+  def test( ephemeris: JplEphemeris, testFile: Source, maximumTests: Option[Int] = None)(implicit universe: Universe) = {
     // Ephemeris AU is in [km] not in [m]
     val AU = ephemeris.metadata.AU * 1E3
     // Read header of file, up to and including the EOT line
-    val testDataStr = Source.fromFile( testFilePath.toFile ).getLines().dropWhile( !_.contains("EOT")).drop(1).toList
+    val testDataStr = testFile.getLines().dropWhile( !_.contains("EOT")).drop(1).toList
 
     // The testpo.xxx file uses slightly different body definitions, so transform to the correct one
     def correctBody(id: Int) = {

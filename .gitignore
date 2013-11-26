@@ -6,6 +6,8 @@ bin
 classes
 .idea
 
+repository
+
 *.opensdf
 *.iml
 .settings

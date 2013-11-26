@@ -28,15 +28,23 @@ import be.angelcorp.libs.celest.time.dateStandard.DateStandards._
 import be.angelcorp.libs.celest.data._
 import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.libs.celest.universe.Universe
+import com.google.inject.Inject
+import javax.inject.Named
+import scala.io.Source
+import org.slf4j.LoggerFactory
 
 
 /**
  * @param utc The UTC reference time scale to use
  * @param containers Map linking an UTC MJD date range to a specific container < [mjd utc min, mjd utc max], provider >
  */
-class DefaultUT1( utc: ITimeStandard,
-                  val containers: mutable.Map[(Double, Double), UT1Provider] = mutable.Map()
+class DefaultUT1( utc: ITimeStandard, val containers: mutable.Map[(Double, Double), UT1Provider]
                     )(implicit universe: Universe) extends ITimeStandard with UT1Provider {
+  private val logger = LoggerFactory.getLogger(getClass)
+
+  @Inject
+  def this( @Named("UTC") utc: ITimeStandard)(implicit universe: Universe) =
+    this(utc, mutable.Map[(Double, Double), UT1Provider]())
 
   def this( utc: ITimeStandard, immutableContainers: Map[(Double, Double), UT1Provider] )(implicit universe: Universe) =
     this( utc, collection.mutable.Map(immutableContainers.toSeq: _*)  )
@@ -63,17 +71,15 @@ class DefaultUT1( utc: ITimeStandard,
 
     // Year data to retrieve
     val year     = jd_utc.date.getYear.toString
-    val filename = "eopc04.%s".format( year takeRight 2  )
-    val file     = new File( filename )
-    val url      = "ftp://hpiers.obspm.fr/iers/eop/eopc04/%s".format( filename )
+    val filename = "eopc04_08_IAU2000.%s".format( year takeRight 2  )
 
-    getData( "iers/eop/long-term/c04_08/iau2000/eopc04_08_IAU2000." + (year takeRight 2), List(URI.create(url)) ) match {
-      case Some( data ) =>
-        val container = EarthOrientationData( data )
+    getZipEntrySource("org.iers.products.eop.long-term.c04_08", "iau2000", filename) match {
+      case Some( source ) =>
+        val container = EarthOrientationData( source )
         containers.put( container.epochRange, container )
-      case None =>
+      case _ =>
+        logger.warn(s"Could not find file $filename in artifact org.iers.products.eop.long-term.c04_08:iau2000 for Earth orientation data (UT1) on $jd_utc")
     }
-
   }
 
   override def UT1_UTC( jd_utc: Epoch ) = UT1_UTC(jd_utc, tryDownload = true)

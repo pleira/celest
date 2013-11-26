@@ -20,6 +20,7 @@ import be.angelcorp.libs.celest.time.timeStandard._
 import be.angelcorp.libs.celest.frameGraph.ReferenceFrameGraph
 import be.angelcorp.libs.celest.time.JulianDate
 import be.angelcorp.libs.util.physics.Time
+import com.google.inject.{Key, Injector}
 
 /**
  * Contains all the context information regarding a simulation, such as the reference frame/time data.
@@ -65,6 +66,9 @@ trait Universe {
 
   /** Reference frame graph */
   def frames: ReferenceFrameGraph
+
+  /** Dependency injector */
+  def injector: Injector
 
   def epoch(year: Int) = new JulianDate(year, 1, 1, 12, 0, 0, TT)(this)
 

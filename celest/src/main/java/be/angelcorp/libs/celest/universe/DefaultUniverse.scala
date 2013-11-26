@@ -16,19 +16,48 @@
 
 package be.angelcorp.libs.celest.universe
 
+import javax.inject.{Singleton, Named}
+import com.google.inject._
+import com.google.inject.name.Names
+import org.eclipse.aether.repository.RemoteRepository
 import be.angelcorp.libs.celest.time.timeStandard._
 
 class DefaultUniverse extends Universe {
 
-  val TAI = new TAI()
-  val TT  = new TT()
-  lazy val TDT = TT
-  lazy val TCB = new TCB( TDB, TT_EPOCH )
-  lazy val TCG = new TCG( TT_EPOCH )
-  lazy val TDB = new TDB( TT_EPOCH )
-  lazy val UTC = new DefaultUTC( TAI )
-  lazy val UT1 = new DefaultUT1( UTC )(this)
+  def configurationModules: Iterable[Module] = Seq(
+    new modules.DefaultAether,
+    new modules.DefaultTime,
+    thisUniverseModule,
+    repositoriesModule
+  )
+
+  val injector = Guice.createInjector( configurationModules.toArray : _* )
+
+  val TAI: ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("TAI") ) )
+  val TT:  ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("TT" ) ) )
+  val TDT: ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("TDT") ) )
+  val TCB: ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("TCB") ) )
+  val TCG: ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("TCG") ) )
+  val TDB: ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("TDB") ) )
+  val UTC: ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("UTC") ) )
+  val UT1: ITimeStandard = injector.getInstance( Key.get( classOf[ITimeStandard], Names.named("UT1") ) )
 
   lazy val frames = throw new UnsupportedOperationException("Operation not yet implemented")
+
+  def thisUniverseModule = {
+    val universe = this
+    new AbstractModule {
+      def configure() = bind( classOf[Universe] ).toInstance( universe )
+    }
+  }
+
+  def repositoriesModule = new AbstractModule {
+    def configure() {}
+    @Provides
+    @Singleton
+    def provideRemoteRepositories = Seq(
+      new RemoteRepository.Builder("resources", "default", "http://angelcorp.be/celest/resources").build()
+    )
+  }
 
 }
