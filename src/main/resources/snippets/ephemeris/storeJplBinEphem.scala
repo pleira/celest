@@ -9,7 +9,7 @@ val ephemerisFile = getPath("be.angelcorp.celest.test.ephemeris", "DE405-1980-20
 val ephemeris     = jplEphemeris.fromBinary( ephemerisFile, 405 )
 
 // File in which the ephemeris will be saved
-val path =  java.nio.file.Paths.get("epehemeris.bin")
+val path =  java.nio.file.Paths.get("ephemeris.bin")
 
 // Actual serialization, of the ephemeris to the given file
 be.angelcorp.libs.celest.ephemeris.jplEphemeris.toBinary(ephemeris, path)
