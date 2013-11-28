@@ -1,11 +1,11 @@
-package be.angelcorp.libs.celest_examples.gui
+package be.angelcorp.celest.examples.gui
 
 import org.slf4j.LoggerFactory
 
-class Example( val clazz: Class[_] ) {
-  val logger = LoggerFactory.getLogger( classOf[Example] )
+class Example(val clazz: Class[_]) {
+  val logger = LoggerFactory.getLogger(classOf[Example])
 
-  val annotation = clazz.getAnnotation( classOf[CelestExample] )
+  val annotation = clazz.getAnnotation(classOf[CelestExample])
 
   override def toString = annotation.name()
 

@@ -5,7 +5,7 @@
  * (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
  *
- *        http://www.opensource.org/licenses/NOSL3.0
+ * http://www.opensource.org/licenses/NOSL3.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest_examples.gui
+package be.angelcorp.celest.examples.gui
 
 import java.awt._
 import java.awt.event._
@@ -23,16 +23,15 @@ import javax.swing.tree._
 
 import net.miginfocom.swing.MigLayout
 
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import be.angelcorp.libs.util.gui.config.confgGui.ConfigGui
 
 class SimpleGui(examples: Seq[Example]) extends JFrame {
-	val logger	= LoggerFactory.getLogger(classOf[SimpleGui])
+  val logger = LoggerFactory.getLogger(classOf[SimpleGui])
 
   // Initialize frame
-	setTitle("Celest examples")
+  setTitle("Celest examples")
   setSize(600, 400)
   setLayout(new MigLayout("fill", "[fill]", "[]10[fill]10[]"))
   add(new JLabel("Celest Examples", SwingConstants.CENTER), "wrap")
@@ -48,16 +47,18 @@ class SimpleGui(examples: Seq[Example]) extends JFrame {
   tree.addTreeSelectionListener(new TreeSelectionListener() {
     override def valueChanged(e: TreeSelectionEvent) {
       val node = tree.getLastSelectedPathComponent.asInstanceOf[DefaultMutableTreeNode]
-      details.setText( node.getUserObject match {
+      details.setText(node.getUserObject match {
         case example: Example => example.annotation.description()
         case o => "Example description error for " + o.getClass
-      } )
+      })
     }
   })
 
   val exit = new JButton("Exit")
   exit.addActionListener(new ActionListener() {
-    override def actionPerformed(e: ActionEvent) { SimpleGui.this.dispose() }
+    override def actionPerformed(e: ActionEvent) {
+      SimpleGui.this.dispose()
+    }
   })
   add(exit, "split 3")
 
@@ -66,7 +67,7 @@ class SimpleGui(examples: Seq[Example]) extends JFrame {
     override def actionPerformed(e: ActionEvent) {
       val gui = new ConfigGui()
       gui.setVisible(true)
-      gui.setDefaultCloseOperation( WindowConstants.DISPOSE_ON_CLOSE )
+      gui.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
     }
   })
   add(settings, "")
@@ -76,8 +77,8 @@ class SimpleGui(examples: Seq[Example]) extends JFrame {
     override def actionPerformed(e: ActionEvent) {
       val node = tree.getLastSelectedPathComponent.asInstanceOf[DefaultMutableTreeNode]
       node.getUserObject match {
-        case example: Example => example.invoke
-        case _  =>
+        case example: Example => example.invoke()
+        case _ =>
           logger.warn("You need to select an example before pressing RUN")
           details.setText("Select an example to run!")
       }
@@ -91,9 +92,9 @@ class SimpleGui(examples: Seq[Example]) extends JFrame {
   setVisible(true)
 
 
-	def makeTree() = {
-		val root = new DefaultMutableTreeNode("Examples")
-    examples.foreach( example => root.add(new DefaultMutableTreeNode(example)) )
-		root
-	}
+  def makeTree() = {
+    val root = new DefaultMutableTreeNode("Examples")
+    examples.foreach(example => root.add(new DefaultMutableTreeNode(example)))
+    root
+  }
 }

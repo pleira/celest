@@ -1,15 +1,18 @@
-import be.angelcorp.libs.celest.data._
-import be.angelcorp.libs.celest.ephemeris.jplEphemeris
-implicit val universe = new be.angelcorp.libs.celest.universe.DefaultUniverse
-def toFile(fname: String, content: String) { new java.io.FileWriter(java.nio.file.Paths.get(fname).toFile).write(content) }
+import be.angelcorp.celest.data._
+import be.angelcorp.celest.ephemeris.jplEphemeris
+
+implicit val universe = new be.angelcorp.celest.universe.DefaultUniverse
+def toFile(fname: String, content: String) {
+  new java.io.FileWriter(java.nio.file.Paths.get(fname).toFile).write(content)
+}
 
 // Load/create any existing ephemeris.
 // Here it is binary, but it can be any type
 val ephemerisFile = getPath("be.angelcorp.celest.test.ephemeris", "DE405-1980-2020", "bin")
-val ephemeris     = jplEphemeris.fromBinary( ephemerisFile, 405 )
+val ephemeris = jplEphemeris.fromBinary(ephemerisFile, 405)
 
 // Save the ephemeris header
-val headerData: String = jplEphemeris.toAsciiHeader( ephemeris )
+val headerData: String = jplEphemeris.toAsciiHeader(ephemeris)
 toFile("header.txt", headerData)
 
 // Save all the data in the ephemeris over groups of 10 records:
@@ -28,6 +31,6 @@ batches.foreach {
 
 
 // Alternative: Save the header and all the data in a single file (not recommended)
-val headerString: String = jplEphemeris.toAsciiHeader( ephemeris )
-val dataString:   String = jplEphemeris.toAsciiData( ephemeris.records.zipWithIndex.toSeq )
+val headerString: String = jplEphemeris.toAsciiHeader(ephemeris)
+val dataString: String = jplEphemeris.toAsciiData(ephemeris.records.zipWithIndex.toSeq)
 toFile("ephemeris.txt", headerString + dataString)

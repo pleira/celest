@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.libs.celest_examples.gui;
+package be.angelcorp.celest.examples.gui;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CelestExample {
 
-	public String description() default "";
+    public String description() default "";
 
-	public String name();
+    public String name();
 
 }
