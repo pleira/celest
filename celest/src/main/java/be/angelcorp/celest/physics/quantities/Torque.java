@@ -1,0 +1,70 @@
+/**
+ * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
+ *
+ * Licensed under the Non-Profit Open Software License version 3.0
+ * (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *        http://www.opensource.org/licenses/NOSL3.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package be.angelcorp.celest.physics.quantities;
+
+import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.libs.math.linear.Vector3D$;
+
+public class Torque implements Cloneable {
+
+    private Vector3D torque;
+
+    public Torque() {
+        this(Vector3D$.MODULE$.ZERO());
+    }
+
+    public Torque(Force f, Vector3D arm) {
+        setTorque(arm.cross(f.getForce()));
+    }
+
+    public Torque(Torque torque2) {
+        setTorque(torque2.getTorque().clone());
+    }
+
+    public Torque(Vector3D torque) {
+        setTorque(torque);
+    }
+
+    public Torque(Vector3D force, Vector3D arm) {
+        setTorque(arm.cross(force));
+    }
+
+    public void add(Torque torque2) {
+        torque = torque.add(torque2.getTorque());
+    }
+
+    public void add(Vector3D term) {
+        torque = torque.add(term);
+    }
+
+    @Override
+    public Torque clone() {
+        return new Torque(this);
+    }
+
+    public Vector3D getTorque() {
+        return torque;
+    }
+
+    public void setTorque(Vector3D torque) {
+        this.torque = torque;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[Torque t:%s]", getTorque());
+    }
+}

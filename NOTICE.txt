@@ -1,7 +1,7 @@
 NOTICE.txt - credits and copyright notices
 
 
-	be.angelcorp.libs.celest Copyright (c) 2010 by the project members: 
+	be.angelcorp.celest Copyright (c) 2010 by the project members:
            Simon Billemont
 
 	Generic concepts and equations based on the work of:

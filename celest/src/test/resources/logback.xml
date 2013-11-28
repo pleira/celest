@@ -6,11 +6,11 @@
         </encoder>
     </appender>
 
-    <logger name="be.angelcorp" level="TRACE" />
-    <logger name="org.apache.http.wire" level="INFO" />
+    <logger name="be.angelcorp" level="TRACE"/>
+    <logger name="org.apache.http.wire" level="INFO"/>
 
     <root level="DEBUG">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 
 </configuration>
