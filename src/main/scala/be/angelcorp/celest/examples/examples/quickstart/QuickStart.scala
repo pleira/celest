@@ -21,14 +21,13 @@ import be.angelcorp.celest.examples.gui.{Services, CelestExample}
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.kepler._
 import be.angelcorp.celest.trajectory.{KeplerTrajectory, CompositeTrajectory}
-import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.celest.maneuvers.ImpulsiveShot
-import be.angelcorp.libs.util.io.CsvWriter
-import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.constants.EarthConstants
 import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import java.io.FileWriter
 
 @CelestExample(
   name = "Quickstart example",
@@ -54,20 +53,19 @@ class QuickStart {
 
     /* Now you can simply evaluate the trajectory, and plot the results using an external app */
     val samples = 1000.0
-    val ephemerisFile = Services.newFile("quickstart.csv")
-    val writer = new CsvWriter(ephemerisFile, Array[String]("t", "rx", "ry", "rz", "vx", "vy", "vz"))
-    val t0 = universe.J2000_EPOCH
+    val ephemerisFile = new FileWriter(Services.newFile("quickstart.csv"))
+    ephemerisFile.write("t, rx, ry, rz, vx, vy, vz")
+    val t0 = Epochs.J2000
 
     logger.info("Saving ephemeris to file {}", ephemerisFile)
 
-    val tFinal = tf.relativeTo(t0, Time.second)
+    val tFinal = tf.relativeToS(t0)
     val states = for (t <- 0.0 until tFinal by (tFinal / samples)) yield {
-      val time = t0.add(t, Time.second)
+      val time = t0.addS(t)
       val state = trajectory(time).toPosVel
 
       logger.debug("At jd={} the state is: {}", time, state)
-      writer.write(t, state.position.x, state.position.y, state.position.z,
-        state.velocity.x, state.velocity.y, state.velocity.z)
+      ephemerisFile.write(s"$t, ${state.position.x}, ${state.position.y}, ${state.position.z}, ${state.velocity.x}, ${state.velocity.y}, ${state.velocity.z}")
       state
     }
 
@@ -105,7 +103,7 @@ class QuickStart {
 
     /* First leg of the trajectory, the orbit as it was injected by the atlas launcher */
     /* Without any intervention, it would keep this orbit */
-    val t0 = universe.J2000_EPOCH
+    val t0 = Epochs.J2000
     trajectory.trajectories.put(t0, new KeplerTrajectory(t0, k))
 
     /* Add first kick to the satellite */
@@ -118,7 +116,7 @@ class QuickStart {
     val dV = sqrt(visViva(earthFrame.centerBody.getMu(), Ra, (Ra + Rp) / 2)) - Va
 
     /* Time when we reach the kick location (after 1.5 periods */
-    var t = t0.add((3.0 / 2.0) * k.quantities.period, Time.second)
+    var t = t0.addS((3.0 / 2.0) * k.quantities.period)
     satellite = new Satellite(trajectory(t))
 
     /* Make the LAE engine */
@@ -131,20 +129,20 @@ class QuickStart {
 
     /* Add kick 2 */
     /* The time of the 2nd kick is the time of the first kick plus one orbit */
-    t = t.add(k.quantities.period, Time.second)
+    t = t.addS(k.quantities.period)
     /* Same procedure */
     state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
     k = Keplerian(state)
     trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
 
     /* And the third kick */
-    t = t.add(k.quantities.period, Time.second)
+    t = t.addS(k.quantities.period)
     state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
     k = Keplerian(state)
     trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
 
     // Time after the three kicks and an additional orbit
-    tf = t.add(k.quantities.period, Time.second)
+    tf = t.addS(k.quantities.period)
 
     /* Return the composite trajectory */
     trajectory
