@@ -17,7 +17,6 @@
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
 import math._
-import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.time.Epoch
@@ -53,7 +52,7 @@ class Lambert3(r1: PosVel, r2: PosVel,
     val mcrsprd = crsprod.norm // magnitude of that cross product
     val th1unit = (crsprod / mcrsprd) !* r1unit // unit vectors in the tangential-directions
     val th2unit = (crsprod / mcrsprd) !* r2unit
-    val tf = abs(arrivalEpoch.relativeTo(departureEpoch, Time.second))
+    val tf = abs(arrivalEpoch.relativeToS(departureEpoch))
 
     val dth = if (longWay) 2 * Pi - r1vec.angle(r2vec) else r1vec.angle(r2vec)
 

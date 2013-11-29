@@ -16,15 +16,14 @@
 package be.angelcorp.celest.constants
 
 import Constants._
-import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.celest.state.positionState._
 import be.angelcorp.celest.body.CelestialBody
-import be.angelcorp.libs.util.physics.Length._
-import be.angelcorp.libs.util.physics.Time._
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.trajectory.KeplerVariationTrajectory
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.state.{NonSingular, PosVel, Keplerian}
 import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.time.Epochs
 
 /**
  * Different constants specific to the earth. Has constants in the following categories:
@@ -151,7 +150,7 @@ object EarthConstants {
    * <b>Unit: [m]</b>
    * </p>
    */
-  val semiMajorAxis = AU convert 1.00000011
+  val semiMajorAxis = astronomicalUnit(1.00000011)
 
   /**
    * Eccentricity (e) of the orbit of the earth around the sun at the J2000 epoch.
@@ -170,7 +169,7 @@ object EarthConstants {
    * <b>Unit: [rad]</b>
    * </p>
    */
-  val inclination = 0.00005 * (Deg to Rad)
+  val inclination = degrees(0.00005)
 
   /**
    * Argument of perigee (&omega;) of the orbit of the earth around the sun at the J2000 epoch.
@@ -180,7 +179,7 @@ object EarthConstants {
    * <b>Unit: [rad]</b>
    * </p>
    */
-  val argPerigee = 102.94719 * (Deg to Rad)
+  val argPerigee = degrees(102.94719)
 
   /**
    * Right ascension of the ascending node (&Omega;) of the orbit of the earth around the sun at the J2000 epoch.
@@ -190,7 +189,7 @@ object EarthConstants {
    * <b>Unit: [rad]</b>
    * </p>
    */
-  val raan = -11.26064 * (Deg to Rad)
+  val raan = degrees(-11.26064)
 
   /**
    * The mean anomaly of the Earth orbit around the sun at the J2000 epoch.
@@ -200,7 +199,7 @@ object EarthConstants {
    * <b>Unit: [rad]</b>
    * </p>
    */
-  val mean_anomaly = 100.46435 * (Deg to Rad)
+  val mean_anomaly = degrees(100.46435)
 
   /** Kepler state vector of the earth, around the sun at the J2000 epoch */
   lazy val solarOrbit =
@@ -219,26 +218,26 @@ object EarthConstants {
 
     val jpl_sun = new CelestialBody(PosVel(), mu2mass(1.32712440018E20))
 
-    val a0 = AU.convert(1.0000010)
+    val a0 = astronomicalUnit(1.0000010)
     val e0 = 0.0167086
     val i0 = 0.0
-    val w_bar0 = Deg.convert(102.9373481)
-    val W0 = Deg.convert(174.8731758)
-    val L0 = Deg.convert(100.4664568)
+    val w_bar0 = degrees(102.9373481)
+    val W0 = degrees(174.8731758)
+    val L0 = degrees(100.4664568)
     val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, Some(new BodyCentered {
       //TODO: Use an actual frame
       def centerBody = jpl_sun
     }))
 
-    val centuryToS = year.convert(100)
+    val centuryToS = julianCentury
     val da0 = 0.0 / centuryToS
     val de0 = -0.0000478 / centuryToS
-    val di0 = Deg.convert(-0.0008568) / centuryToS
-    val dw_bar0 = Deg.convert(0.0048746) / centuryToS
-    val dW0 = Deg.convert(-0.2780134) / centuryToS
-    val dL0 = Deg.convert(35999.3728565) / centuryToS
+    val di0 = degrees(-0.0008568) / centuryToS
+    val dw_bar0 = degrees(0.0048746) / centuryToS
+    val dW0 = degrees(-0.2780134) / centuryToS
+    val dL0 = degrees(35999.3728565) / centuryToS
     val keplerVariation = new NonSingularDerivative(da0, de0, di0, dw_bar0, dW0, dL0)
 
-    new KeplerVariationTrajectory(universe.J2000_EPOCH, keplerAtJ2000, keplerVariation)
+    new KeplerVariationTrajectory(Epochs.J2000, keplerAtJ2000, keplerVariation)
   }
 }

@@ -27,7 +27,6 @@ import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 import be.angelcorp.libs.math.rotation.IRotation;
 import be.angelcorp.libs.math.rotation.RotationMatrix$;
-import be.angelcorp.libs.util.physics.Time;
 import org.apache.commons.math3.analysis.FunctionUtils;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.function.Inverse;
@@ -84,7 +83,7 @@ public class ExpoSinTrajectory implements Trajectory {
     @Override
     public PosVel apply(Epoch evalEpoch) {
         // Travel time from the start position [s]
-        final double t = evalEpoch.relativeTo(epoch, Time.second);
+        final double t = evalEpoch.relativeToS(epoch);
 
         // Equation of d(theta)/dt
         final ExpoSinAngularRate thetaDot = new ExpoSinAngularRate(exposin, center.getMu());

@@ -18,7 +18,6 @@ package be.angelcorp.celest.maneuvers.targeters;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
 import be.angelcorp.celest.trajectory.Trajectory;
-import be.angelcorp.libs.util.physics.Time;
 
 /**
  * Base class for the Lambert problem, meaning finding the transfer arc for a two-point boundary value
@@ -79,7 +78,7 @@ public abstract class TPBVP {
      * @return Travel time [s]
      */
     public double getdT() {
-        return arrivalEpoch.relativeTo(departureEpoch, Time.second);
+        return arrivalEpoch.relativeToS(departureEpoch);
     }
 
     /**

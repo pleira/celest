@@ -18,7 +18,7 @@ package be.angelcorp.celest.constants
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.time.{Epochs, JulianDate}
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.libs.math.linear.ImmutableVector3D
 import be.angelcorp.libs.util.physics.Angle._
@@ -40,7 +40,7 @@ class TestEarthConstants extends FlatSpec with ShouldMatchers {
     // Frame: @Sun, ecliptic, J2000
     // AU/days/Degree
 
-    val state_actual_k = trajectory(universe.J2000_EPOCH)
+    val state_actual_k = trajectory(Epochs.J2000)
     val state_actual_c = state_actual_k.toPosVel
     val state_actual_s = Spherical(state_actual_c)
 

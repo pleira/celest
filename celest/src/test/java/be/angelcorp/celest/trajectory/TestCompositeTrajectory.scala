@@ -23,7 +23,6 @@ import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.state.{PosVel, Orbit}
 import be.angelcorp.celest.frameGraph.ReferenceFrame
 import be.angelcorp.celest.time.{JulianDate, Epoch}
-import be.angelcorp.libs.util.physics.Time
 
 
 @RunWith(classOf[JUnitRunner])
@@ -40,7 +39,7 @@ class TestCompositeTrajectory extends FlatSpec with ShouldMatchers {
 
   /** Test trajectory that returns the time at which it is evaluated */
   class TestTrajectory(id: Double) extends Trajectory {
-    def apply(t: Epoch) = new TestState(t.add(id, Time.day).jd)
+    def apply(t: Epoch) = new TestState(t.add(id).jd)
   }
 
   "CompositeTrajectory" should "correctly evaluate the added sub-trajectories" in {

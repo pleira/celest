@@ -22,7 +22,6 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
-import be.angelcorp.libs.util.physics.Time._
 
 @RunWith(classOf[JUnitRunner])
 class TestUTC extends FlatSpec with ShouldMatchers {
@@ -83,9 +82,9 @@ class TestUTC extends FlatSpec with ShouldMatchers {
     val utc = new DefaultUTC(new MockTime(-32.184))
 
     // Just after (0.5s later) switch epoch in UTC-TAI=-35
-    val jd_tt_1 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), universe.TT).add(35.5 + 32.184, second)
+    val jd_tt_1 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), universe.TT).addS(35.5 + 32.184)
     // Just before (-0.5s) switch epoch in UTC-TAI=-34
-    val jd_tt_2 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), universe.TT).add(34.5 + 32.184, second)
+    val jd_tt_2 = new JulianDate(TimeUtils.jday(2012, 7, 1, 0, 0, 0), universe.TT).addS(34.5 + 32.184)
 
     utc.offsetFromTT(jd_tt_1) should be(-35 - 32.184 plusOrMinus 1E-16)
     utc.offsetFromTT(jd_tt_2) should be(-34 - 32.184 plusOrMinus 1E-16)

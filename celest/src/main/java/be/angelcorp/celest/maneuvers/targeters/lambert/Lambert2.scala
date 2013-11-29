@@ -18,7 +18,6 @@ package be.angelcorp.celest.maneuvers.targeters.lambert
 
 import math._
 import org.apache.commons.math3.util.FastMath
-import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.time.Epoch
@@ -76,7 +75,7 @@ class Lambert2(r1: PosVel, r2: PosVel,
     val r2vec = destination / r1
     val V = sqrt(center.getMu / r1)
     val T = r1 / V
-    val tf = abs(arrivalEpoch.relativeTo(departureEpoch, Time.second) / T)
+    val tf = abs(arrivalEpoch.relativeToS(departureEpoch) / T)
 
     // relevant geometry parameters (non dimensional)
     val mr2vec = r2vec.norm

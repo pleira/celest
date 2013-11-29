@@ -21,7 +21,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.time.{Epoch, JulianDate}
+import be.angelcorp.celest.time.{Epochs, Epoch, JulianDate}
 import be.angelcorp.celest.frameGraph.frames.transforms._
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.math.linear.Matrix3D
@@ -41,7 +41,7 @@ class TestEarthRotation extends FlatSpec with ShouldMatchers {
 
   "EarthRotationGAST" should "calculate the same angualr values as SOFA" in {
     val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(universe.J2000_EPOCH) / 36525.0
+    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
     val mockLOD = new ExcessLengthOfDay {
       def lod(epoch: Epoch) = 0.0
     }

@@ -19,6 +19,7 @@ import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.celest.constants.Constants;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
+import be.angelcorp.celest.time.Epochs;
 import be.angelcorp.celest.trajectory.Trajectory;
 import be.angelcorp.celest.unit.CelestTest;
 import be.angelcorp.celest.universe.DefaultUniverse;
@@ -26,7 +27,6 @@ import be.angelcorp.celest.universe.Universe;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
-import be.angelcorp.libs.util.physics.Time;
 import org.junit.Ignore;
 
 @Ignore
@@ -50,8 +50,8 @@ public class TestLambertUV extends CelestTest {
         Vector3D r1 = new ImmutableVector3D(1.364377463519496E11, 6.129036612130551E10, 2.784835397959758E09);
         Vector3D r2 = new ImmutableVector3D(3.730051396741382E09, -1.495513611895726E11, 0.);
 
-        Epoch departure = universe.J2000_EPOCH();
-        Epoch arrival = universe.J2000_EPOCH().add(300, Time.day);
+        Epoch departure = Epochs.J2000(universe);
+        Epoch arrival = Epochs.J2000(universe).addS(300);
         LambertUV lambert = new LambertUV(
                 new PosVel(r1, Vector3D$.MODULE$.ZERO(), null),
                 new PosVel(r2, Vector3D$.MODULE$.ZERO(), null),

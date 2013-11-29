@@ -19,9 +19,9 @@ package be.angelcorp.celest.frameGraph.frames
 import math._
 import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.util.physics.{Angle, Time}
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.frameGraph._
-import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph.transformations.KinematicTransformationFactory
 
@@ -55,6 +55,8 @@ import be.angelcorp.celest.frameGraph.transformations.KinematicTransformationFac
  */
 class HeliosphericCoordinateFrames(implicit universe: Universe) {
 
+  val j2000 = Epochs.J2000
+
   /**
    * ZXZ rotation matrix to use in a coordinate transformation
    * There are 80 sub-expresions in this function (using Mathematica LeafCount):
@@ -81,21 +83,21 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    * @param date Date to calculate the epoch day number from.
    * @return Epoch day nr (fractional days since J2000)
    */
-  def d0(date: Epoch) = date.relativeTo(universe.J2000_EPOCH, Time.day_julian)
+  def d0(date: Epoch) = date.relativeTo(j2000)
 
   /**
    * Number of julian centuries since the J2000 epoch.
    * @param date Epoch.
    * @return Julian centuries since J2000.
    */
-  def T0(date: Epoch) = date.relativeTo(universe.J2000_EPOCH, Time.century_julian)
+  def T0(date: Epoch) = date.relativeTo(j2000) / 36525
 
   /**
    * Number of julian years since the J2000 epoch.
    * @param date Epoch.
    * @return Julian years since J2000.
    */
-  def y0(date: Epoch) = date.relativeTo(universe.J2000_EPOCH, Time.year_julian)
+  def y0(date: Epoch) = date.relativeTo(j2000) / 36525
 
   /**
    * Angle between the Earth equatorial plane and the ecliptic (the Earth orbital plane) at the J2000 epoch [rad]
@@ -103,7 +105,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    * See ε_J2000, equation 3 of [1]
    * </p>
    */
-  val obliquityAtJ2000 = Angle.Degree.convert(23.439291111)
+  val obliquityAtJ2000 = degrees(23.439291111)
 
   /**
    * Angle between the Earth equatorial plane and the ecliptic (the Earth orbital plane). The orientation of both
@@ -186,12 +188,11 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    */
   def ecliptic(date0: Epoch, date1: Epoch): (Double, Double, Double) = {
     val T = T0(date0)
-    val t = date1.relativeTo(date0, Time.century_julian)
-    val arcSecToRad = Angle.ArcSecond to Angle.Rad
+    val t = date1.relativeTo(date0) / 36525
     (
-      ((((0.000598 * T - 0.06603) * T + 47.0029) + ((0.000598 * T - 0.03302) + 0.000060 * t) * t) * t) * arcSecToRad,
-      (629554.982 + (3289.4789 + 0.60622 * T) * T + ((-869.8089 - 0.50491 * T) + 0.03536 * t) * t) * arcSecToRad,
-      (((5029.0966 + (2.22226 - 0.000042 * T) * T) + ((1.11113 - 0.000042 * T) - 0.000006 * t) * t) * t) * arcSecToRad
+      ((((0.000598 * T - 0.06603) * T + 47.0029) + ((0.000598 * T - 0.03302) + 0.000060 * t) * t) * t) * arcSecond,
+      (629554.982 + (3289.4789 + 0.60622 * T) * T + ((-869.8089 - 0.50491 * T) + 0.03536 * t) * t) * arcSecond,
+      (((5029.0966 + (2.22226 - 0.000042 * T) * T) + ((1.11113 - 0.000042 * T) - 0.000006 * t) * t) * t) * arcSecond
       )
   }
 
@@ -205,7 +206,6 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    */
   def equator(date: Epoch): (Double, Double, Double) = {
     val T = T0(date)
-    val degree = Angle.Degree to Angle.Rad
     (
       T * (0.55675 - 0.00012 * T) * degree,
       T * (0.64062 + 0.0008 * T) * degree,
@@ -221,23 +221,23 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    * </p>
    */
   val solarRotationAxis = (
-    Angle.Degree.convert(63.87), // Right ascension α_sun
-    Angle.Degree.convert(286.13) // Declination δ_sun
+    degrees(63.87), // Right ascension α_sun
+    degrees(286.13) // Declination δ_sun
     )
 
   /**
    * Inclination i_sun of the solar equator [rad].
    */
-  val solarEclipticInclination = Angle.Degree.convert(7.25)
+  val solarEclipticInclination = degrees(7.25)
 
   /**
    * longitude of the ascending node Ω_sun [rad].
    * The time dependence in Ω_sun takes approximate account of the ecliptic precession.
    */
-  def solarEclipticLongitude(date: Epoch) = Angle.Degree.convert(75.76 + 1.397 * T0(date))
+  def solarEclipticLongitude(date: Epoch) = degrees(75.76 + 1.397 * T0(date))
 
-  val solarRotationTimeSidereal = Time.day.convert(25.38)
-  val solarRotationTimeSynodic = Time.day.convert(27.2753)
+  val solarRotationTimeSidereal = julianDay(25.38)
+  val solarRotationTimeSynodic = julianDay(27.2753)
 
   lazy val frameGraph = {
     val graph = ReferenceFrameGraphImpl()
@@ -284,7 +284,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    * @return Transformation factory to transform from HAE_J2000 to HAE_D
    */
   def transform_HAE_J2000_To_HAE_D = transformFactory(date => {
-    val (inc, ascNode, ang) = ecliptic(universe.J2000_EPOCH, date)
+    val (inc, ascNode, ang) = ecliptic(j2000, date)
     // See P(HAE_J2000, HAE_D), equation 9 of [1]
     transform(ascNode, inc, -ang - ascNode)
   })

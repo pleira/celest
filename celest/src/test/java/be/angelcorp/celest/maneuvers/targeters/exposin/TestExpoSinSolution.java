@@ -18,6 +18,7 @@ package be.angelcorp.celest.maneuvers.targeters.exposin;
 import be.angelcorp.celest.constants.SolarConstants;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
+import be.angelcorp.celest.time.Epochs;
 import be.angelcorp.celest.unit.CelestTest;
 import be.angelcorp.celest.universe.DefaultUniverse;
 import be.angelcorp.celest.universe.Universe;
@@ -61,8 +62,8 @@ public class TestExpoSinSolution extends CelestTest {
         double calculated_tof = solutionset.value(gamma);
         assertEquals(tof, calculated_tof, tof_tol);
 
-        Epoch t1 = universe.J2000_EPOCH();
-        Epoch t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
+        Epoch t1 = Epochs.J2000(universe);
+        Epoch t2 = Epochs.J2000(universe).addS(calculated_tof);
         ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
         ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
@@ -108,8 +109,8 @@ public class TestExpoSinSolution extends CelestTest {
         double calculated_tof = solutionset.value(gamma);
         assertEquals(tof, calculated_tof, tof_tol);
 
-        Epoch t1 = universe.J2000_EPOCH();
-        Epoch t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
+        Epoch t1 = Epochs.J2000(universe);
+        Epoch t2 = Epochs.J2000(universe).addS(calculated_tof);
         ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
         ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 
@@ -155,8 +156,8 @@ public class TestExpoSinSolution extends CelestTest {
         double calculated_tof = solutionset.value(gamma);
         assertEquals(tof, calculated_tof, tof_tol);
 
-        Epoch t1 = universe.J2000_EPOCH();
-        Epoch t2 = universe.J2000_EPOCH().add(calculated_tof, Time.second);
+        Epoch t1 = Epochs.J2000(universe);
+        Epoch t2 = Epochs.J2000(universe).addS(calculated_tof);
         ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
         ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
 

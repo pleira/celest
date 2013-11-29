@@ -19,7 +19,7 @@ package be.angelcorp.celest.frameGraph.frames.transforms
 import math._
 import be.angelcorp.celest.frameGraph.ReferenceFrame
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
 
@@ -38,19 +38,19 @@ class J2000FrameBias(val preciseForm: Boolean = true) extends ConstantRotationTr
    *
    * See reference [3], section 3.5.
    */
-  val δα0 = ArcSecond convert -0.0146
+  val δα0 = arcSeconds(-0.0146)
   /**
    * Part of the ICRS pole offsets (ξ0 and η0).
    *
    * See reference [3], section 3.5.
    */
-  val ξ0 = ArcSecond convert -0.0166170
+  val ξ0 = arcSeconds(-0.0166170)
   /**
    * Part of the ICRS pole offsets (ξ0 and η0).
    *
    * See reference [3], section 3.5.
    */
-  val η0 = ArcSecond convert -0.0068192
+  val η0 = arcSeconds(-0.0068192)
 
   /**
    * The frame bias matrix (constant as a function of time).

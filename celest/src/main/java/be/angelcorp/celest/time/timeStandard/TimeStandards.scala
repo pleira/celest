@@ -18,9 +18,8 @@ package be.angelcorp.celest.time.timeStandard
 import scala.math._
 import javax.inject.Inject
 import com.google.inject.name.Named
-import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.time.Epochs.{TT_EPOCH, J2000}
+import be.angelcorp.celest.time.EpochAnnotations.{TT_EPOCH, J2000}
 
 trait ITimeStandard {
   /**
@@ -100,8 +99,8 @@ class TCB @Inject()(@Named("TDB") tdb: ITimeStandard, @TT_EPOCH tt_epoch: Epoch)
 
   override def offsetFromTT(jd_tt: Epoch) = {
     // See [1] equation 3-50
-    val TCB_TDB = Lb * jd_tt.relativeTo(tt_epoch, Time.second) + TDB0
-    val jd_tdb = jd_tt.add(TCB_TDB, Time.second)
+    val TCB_TDB = Lb * jd_tt.relativeToS(tt_epoch) + TDB0
+    val jd_tdb = jd_tt.addS(TCB_TDB)
     TCB_TDB + tdb.offsetFromTT(jd_tdb)
   }
 
@@ -162,9 +161,9 @@ class TCG @Inject()(@TT_EPOCH tt_epoch: Epoch) extends ITimeStandard {
    */
   private val L_g = 6.969290134E-10
 
-  def offsetFromTT(JD_tt: Epoch) = L_g * JD_tt.relativeTo(tt_epoch, Time.second)
+  def offsetFromTT(JD_tt: Epoch) = L_g * JD_tt.relativeToS(tt_epoch)
 
-  def offsetToTT(JD_tcg: Epoch) = -L_g * JD_tcg.relativeTo(tt_epoch, Time.second)
+  def offsetToTT(JD_tcg: Epoch) = -L_g * JD_tcg.relativeToS(tt_epoch)
 
 }
 

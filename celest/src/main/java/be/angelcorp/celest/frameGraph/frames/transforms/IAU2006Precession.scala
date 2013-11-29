@@ -17,11 +17,11 @@
 package be.angelcorp.celest.frameGraph.frames.transforms
 
 import scala.math._
-import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph._
 import be.angelcorp.libs.math.rotation.RotationMatrix._
-import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
 
 /**
@@ -43,12 +43,12 @@ class IAU2006Precession(implicit universe: Universe) extends ConstantRotationTra
    */
   def rotationMatrix(epoch: Epoch) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(universe.J2000_EPOCH) / 36525.0
+    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
 
-    rotateX(ArcSecond.convert(-IAU2006Precession.ε0)) !*
-      rotateZ(ArcSecond.convert(IAU2006Precession.ψA(t))) !*
-      rotateX(ArcSecond.convert(IAU2006Precession.ωA(t))) !*
-      rotateZ(ArcSecond.convert(-IAU2006Precession.χA(t)))
+    rotateX(arcSeconds(-IAU2006Precession.ε0)) !*
+      rotateZ(arcSeconds(IAU2006Precession.ψA(t))) !*
+      rotateX(arcSeconds(IAU2006Precession.ωA(t))) !*
+      rotateZ(arcSeconds(-IAU2006Precession.χA(t)))
   }
 
   def cost(epoch: Epoch) = 100.0

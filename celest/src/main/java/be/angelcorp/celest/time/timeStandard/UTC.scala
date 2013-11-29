@@ -15,11 +15,11 @@
  */
 package be.angelcorp.celest.time.timeStandard
 
-import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.celest.time.dateStandard.DateStandards
 import be.angelcorp.celest.time.Epoch
 import java.util
 import javax.inject.{Named, Inject}
+import be.angelcorp.celest.physics.Units
 
 /**
  * Coordinated Universal Time.
@@ -36,13 +36,13 @@ class DefaultUTC @Inject()(@Named("TAI") TAI: ITimeStandard) extends ITimeStanda
 
   def offsetFromTT(JD_tt: Epoch) = {
     val from_tt = TAI.offsetFromTT(JD_tt)
-    val jd = JD_tt.add(from_tt, Time.second).jd
+    val jd = JD_tt.addS(from_tt).jd
 
     val entry = DefaultUTC.TAI_UTC.floorEntry(jd)
     var offset = -entry.getValue()(jd)
 
     // Check if the leap second pushes over a TAI - UTC bound
-    if (jd + Time.convert(offset, Time.second, Time.day_julian) < entry.getKey) {
+    if (jd + offset / Units.julianDay < entry.getKey) {
       val entry = DefaultUTC.TAI_UTC.floorEntry(jd - 1)
       offset = -entry.getValue()(jd)
     }

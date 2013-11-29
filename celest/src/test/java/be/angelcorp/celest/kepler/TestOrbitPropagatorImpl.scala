@@ -34,6 +34,7 @@ import be.angelcorp.celest.eom.TwoBody
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.state.{Keplerian, PosVel}
 import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.time.Epochs
 
 @RunWith(classOf[JUnitRunner])
 class TestOrbitPropagatorImpl extends FlatSpec with ShouldMatchers {
@@ -71,7 +72,7 @@ class TestOrbitPropagatorImpl extends FlatSpec with ShouldMatchers {
     val rk4 = new ClassicalRungeKuttaIntegrator(2)
     rk4.addStepHandler(new StepHandler() {
       override def handleStep(interpolator: StepInterpolator, isLast: Boolean) {
-        val t = interpolator.getCurrentTime - universe.J2000_EPOCH.jd
+        val t = interpolator.getCurrentTime - Epochs.J2000.jd
         val y = interpolator.getInterpolatedState
         if (abs(t - 2) < delta) {
           val step1True = Array[Double](6640305.22, 16251.75, 0.0, -18.08, 8125.86, 0.0)

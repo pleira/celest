@@ -15,7 +15,6 @@
  */
 package be.angelcorp.celest.trajectory
 
-import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.Keplerian
 
@@ -33,7 +32,7 @@ class KeplerTrajectory(referenceEpoch: Epoch, referenceElements: Keplerian) exte
 
   def apply(epoch: Epoch) = {
     val n = referenceElements.quantities.meanMotion
-    val dt = epoch.relativeTo(referenceEpoch, second)
+    val dt = epoch.relativeToS(referenceEpoch)
     // Delta between reference and now in [s]
     val dM = n * dt
     new Keplerian(

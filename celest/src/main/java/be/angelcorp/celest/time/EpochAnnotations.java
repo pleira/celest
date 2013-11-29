@@ -9,7 +9,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * This class contains a set of annotations that can be used to retrieve a specific epoch from the universe injector.
  */
-public abstract class Epochs {
+public abstract class EpochAnnotations {
 
     @Qualifier
     @Documented

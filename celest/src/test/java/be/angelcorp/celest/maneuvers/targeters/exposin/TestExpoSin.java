@@ -20,6 +20,7 @@ import be.angelcorp.celest.constants.Constants;
 import be.angelcorp.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
+import be.angelcorp.celest.time.Epochs;
 import be.angelcorp.celest.unit.CelestTest;
 import be.angelcorp.celest.universe.DefaultUniverse;
 import be.angelcorp.celest.universe.Universe;
@@ -54,8 +55,8 @@ public class TestExpoSin extends CelestTest {
         double k2 = 0.7013;
         double dt = Time.convert(130, Time.day);
 
-        Epoch t1 = universe.J2000_EPOCH();
-        Epoch t2 = universe.J2000_EPOCH().add(dt, Time.second);
+        Epoch t1 = Epochs.J2000(universe);
+        Epoch t2 = Epochs.J2000(universe).addS(dt);
 
         final scala.Option<BodyCentered> none = scala.Option.apply(null);
         PosVel s1 = new PosVel(
@@ -114,8 +115,8 @@ public class TestExpoSin extends CelestTest {
         PosVel r1 = new PosVel(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO(), none);
         PosVel r2 = new PosVel(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO(), none);
 
-        Epoch t1 = universe.J2000_EPOCH();
-        Epoch t2 = universe.J2000_EPOCH().add(dt, Time.second);
+        Epoch t1 = Epochs.J2000(universe);
+        Epoch t2 = Epochs.J2000(universe).addS(dt);
         CelestialBody center = new CelestialBody(PosVel.apply(), Constants.mu2mass(1E4));
 
         ExpoSin exposin = new ExpoSin(r1, r2, t1, t2);

@@ -22,13 +22,15 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
+import be.angelcorp.celest.universe.Universe
 
 @RunWith(classOf[JUnitRunner])
 class TestTCG extends FlatSpec with ShouldMatchers {
+  def TT_EPOCH(implicit universe: Universe) = new JulianDate(2443144.5003725, universe.TT)
 
   "TCG" should "select transform symmetrically" in {
     implicit val universe = new MockTimeUniverse()
-    val tcg = new TCG(universe.TT_EPOCH)
+    val tcg = new TCG(TT_EPOCH)
     val base_date = new JulianDate(2451545.0, tcg)
 
     expect(base_date.jd) {
@@ -54,7 +56,7 @@ class TestTCG extends FlatSpec with ShouldMatchers {
     val tcg_seconds = 28353.1695861742
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tcg = date.inTimeStandard(new TCG(universe.TT_EPOCH))
+    val jd_tcg = date.inTimeStandard(new TCG(TT_EPOCH))
     secondsInDay(jd_tcg.jd) should be(tcg_seconds plusOrMinus 1E-4)
   }
 
@@ -70,7 +72,7 @@ class TestTCG extends FlatSpec with ShouldMatchers {
     implicit val universe = new MockTimeUniverse()
     val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, universe.TT)
 
-    val tcg = new TCG(universe.TT_EPOCH)
+    val tcg = new TCG(TT_EPOCH)
     tcg.offsetFromTT(jd_tt) should be(+0.5996 plusOrMinus 1E-4)
   }
 }

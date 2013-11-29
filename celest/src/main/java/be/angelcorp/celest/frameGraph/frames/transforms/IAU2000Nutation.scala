@@ -17,10 +17,10 @@
 package be.angelcorp.celest.frameGraph.frames.transforms
 
 import scala.math._
-import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.libs.math.rotation.RotationMatrix._
 import be.angelcorp.celest.frameGraph.ReferenceFrame
-import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
 
@@ -52,7 +52,7 @@ class IAU2000Nutation(coefficients: List[IAU2000NutationEntry],
 
   def rotationMatrix(epoch: Epoch) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(universe.J2000_EPOCH) / 36525.0
+    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
 
     // Nutation angles according to this theory
     val (dψ2000, dε2000) = nutationParameters(t)
@@ -61,7 +61,7 @@ class IAU2000Nutation(coefficients: List[IAU2000NutationEntry],
     val ε_ = IAU2000Nutation.ε_(t)
 
     // Compute the nutation matrix
-    rotateX(ArcSecond.convert(-(ε_ + dε2000))) !* rotateZ(ArcSecond.convert(-dψ2000)) !* rotateX(ArcSecond.convert(ε_))
+    rotateX(arcSeconds(-(ε_ + dε2000))) !* rotateZ(arcSeconds(-dψ2000)) !* rotateX(arcSeconds(ε_))
   }
 
   /**
@@ -72,7 +72,7 @@ class IAU2000Nutation(coefficients: List[IAU2000NutationEntry],
    */
   def nutationParameters(epoch: Epoch): (Double, Double) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(universe.J2000_EPOCH) / 36525.0
+    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
     nutationParameters(t)
   }
 
@@ -113,8 +113,8 @@ object IAU2000Nutation {
    * The IAU 2000A nutation series is associated with the following offset (originally provided as frame bias in d?bias and d?bias)
    * of the direction of the CIP at J2000.0 from the direction of the pole of the GCRS:
    */
-  val ξ0 = ArcSecond.convert(-0.0166170)
-  val η0 = ArcSecond.convert(-0.0068192)
+  val ξ0 = arcSeconds(-0.0166170)
+  val η0 = arcSeconds(-0.0068192)
 
   /**
    * Find the corrections equivalent for the equinox based transformation (this) based on the CIO coordinates dX dY.

@@ -23,7 +23,6 @@ import be.angelcorp.celest.time.Epoch;
 import be.angelcorp.celest.trajectory.KeplerTrajectory;
 import be.angelcorp.celest.trajectory.Trajectory;
 import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.util.physics.Time;
 import scala.Some;
 
 public class LambertTrajectory implements Trajectory {
@@ -117,7 +116,7 @@ public class LambertTrajectory implements Trajectory {
      * @return Transfer time [s]
      */
     public double getDt() {
-        return departureEpoch.relativeTo(arrivalEpoch, Time.second);
+        return departureEpoch.relativeToS(arrivalEpoch);
     }
 
     /**

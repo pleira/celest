@@ -16,7 +16,7 @@
 package be.angelcorp.celest.time
 
 import java.util.Date
-import be.angelcorp.libs.util.physics.Time
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.timeStandard.ITimeStandard
 
 /**
@@ -27,13 +27,20 @@ import be.angelcorp.celest.time.timeStandard.ITimeStandard
 trait Epoch extends Comparable[Epoch] {
 
   /**
-   * Add time to this epoch.
+   * Add time [julian day] to this epoch.
    *
-   * @param dt      Amount of time to add.
-   * @param format  Format of dt.
+   * @param dt      Julian days to add.
    * @return        New [[be.angelcorp.celest.time.Epoch]].
    */
-  def add(dt: Double, format: Time): Epoch
+  def add(dt: Double): Epoch
+
+  /**
+   * Add time [second] to this epoch.
+   *
+   * @param dt      Seconds to add.
+   * @return        New [[be.angelcorp.celest.time.Epoch]].
+   */
+  def addS(dt: Double): Epoch = add(dt / julianDay)
 
   /**
    * Get the Julian date in a standard java date object.
@@ -76,17 +83,16 @@ trait Epoch extends Comparable[Epoch] {
   def relativeTo(epoch: Epoch): Double
 
   /**
-   * Get the amount of Julian days that this date is after the specified epoch:
+   * Get the amount of SI seconds that this date is after the specified epoch:
    *
    * <pre>
    * this_time - epoch_time
    * </pre>
    *
-   * @param epoch       Epoch to which to find the relative time.
-   * @param timeformat  Format in which to return the time difference.
-   * @return Amount of time from the passed epoch to this epoch.
+   * @param epoch Epoch to which to find the relative time.
+   * @return Amount of seconds from the passed epoch to this epoch.
    */
-  def relativeTo(epoch: Epoch, timeformat: Time): Double
+  def relativeToS(epoch: Epoch): Double = relativeTo(epoch) * julianDay
 
   /**
    * Get the fraction of the current (gregorian) day where 0 is midnight, and 0.5 is midday.
@@ -101,7 +107,7 @@ trait Epoch extends Comparable[Epoch] {
    * @param days Amount of Julian days to add to this epoch.
    * @return A new epoch, shifted by the specified number of days.
    */
-  def +(days: Double): Epoch = add(days, Time.day_julian)
+  def +(days: Double): Epoch = add(days)
 
   /**
    * Move the epoch backwards by the specified amount of days.
@@ -109,7 +115,7 @@ trait Epoch extends Comparable[Epoch] {
    * @param days Amount of Julian days to subtract from this epoch.
    * @return A new epoch, shifted by the specified number of days.
    */
-  def -(days: Double): Epoch = add(-days, Time.day_julian)
+  def -(days: Double): Epoch = add(-days)
 
   /**
    * Check if a specified epoch is equal to this epoch.

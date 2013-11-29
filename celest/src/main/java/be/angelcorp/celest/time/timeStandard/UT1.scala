@@ -21,7 +21,6 @@ import scala.math._
 import scala.Some
 import scala.collection.mutable
 import scala.collection.JavaConverters._
-import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.dateStandard.DateStandards._
 import be.angelcorp.celest.data._
@@ -55,9 +54,9 @@ class DefaultUT1(utc: ITimeStandard, val containers: mutable.Map[(Double, Double
     var utc_approximation = jd_this
     var utc_approximation_offset = 0.0
     do {
-      utc_approximation = utc_approximation.add(error, second)
+      utc_approximation = utc_approximation.addS(error)
       utc_approximation_offset = UT1_UTC(utc_approximation)
-      error = utc_approximation.add(utc_approximation_offset, second).relativeTo(jd_this, second)
+      error = utc_approximation.addS(utc_approximation_offset).relativeToS(jd_this)
     } while (abs(error) > 1E-3)
 
     utc.offsetToTT(utc_approximation) - utc_approximation_offset

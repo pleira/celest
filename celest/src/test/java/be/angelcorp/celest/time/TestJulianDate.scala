@@ -20,9 +20,9 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.libs.util.physics.Time
 import java.util.{Calendar, GregorianCalendar}
 import be.angelcorp.celest.time.dateStandard.DateStandards
+import be.angelcorp.celest.physics.Units._
 
 @RunWith(classOf[JUnitRunner])
 class TestJulianDate extends FlatSpec with ShouldMatchers {
@@ -34,11 +34,11 @@ class TestJulianDate extends FlatSpec with ShouldMatchers {
     val jd0 = new JulianDate(5)
     val dt = 325; // [s]
 
-    jd0.add(dt, Time.second).jd should equal(5 + Time.convert(dt, Time.second, Time.day))
+    jd0.addS(dt).jd should equal(5 + dt / julianDay)
 
     // Check of the value of ITimeStandard is correctly kept after adding
     val jd1 = new JulianDate(1.0, universe.TT)
-    val jd1_actual = jd1.add(1, Time.day_julian)
+    val jd1_actual = jd1 + 1.0
     jd1_actual.jd should be(2.0 plusOrMinus 1E-16)
     jd1_actual.timeStandard should equal(universe.TT)
   }
@@ -111,7 +111,7 @@ class TestJulianDate extends FlatSpec with ShouldMatchers {
     val epoch2 = new JulianDate(5.22)
 
     epoch2.relativeTo(epoch1) should equal(5.22)
-    epoch2.relativeTo(epoch1, Time.second) should equal(Time.convert(5.22, Time.day))
+    epoch2.relativeToS(epoch1) should equal(julianDay(5.22))
   }
 
   it should "compute the correct faction-in-day quantity" in {

@@ -22,7 +22,7 @@ import scala.io.Source
 import scala.collection.JavaConverters._
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.universe.Universe
-import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.dateStandard.DateStandards
 
 class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEntry])(implicit universe: Universe)
@@ -91,7 +91,7 @@ class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEn
 object EarthOrientationData {
 
   /**
-   * Load an IERS data file with EOP data into a new [[be.angelcorp.libs.celest.data.EarthOrientationData]] object.
+   * Load an IERS data file with EOP data into a new [[be.angelcorp.celest.data.EarthOrientationData]] object.
    *
    * <p>Build for the IERS EOP C04 yearly file text format.</p>
    *
@@ -107,12 +107,12 @@ object EarthOrientationData {
       val month = entries(1).toInt
       val day = entries(2).toInt
       val mjd = entries(3).toInt
-      val x = ArcSecond.convert(entries(4).toDouble)
-      val y = ArcSecond.convert(entries(5).toDouble)
+      val x = arcSeconds(entries(4).toDouble)
+      val y = arcSeconds(entries(5).toDouble)
       val ut1_utc = entries(6).toDouble
       val lod = entries(7).toDouble
-      val dx = ArcSecond.convert(entries(8).toDouble)
-      val dy = ArcSecond.convert(entries(9).toDouble)
+      val dx = arcSeconds(entries(8).toDouble)
+      val dy = arcSeconds(entries(9).toDouble)
       new EarthOrientationDataEntry(year, month, day, mjd, x, y, ut1_utc, lod, dx, dy)
     })
 

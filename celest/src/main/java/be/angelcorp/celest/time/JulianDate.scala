@@ -16,7 +16,6 @@
 package be.angelcorp.celest.time
 
 import java.util._
-import be.angelcorp.libs.util.physics.Time
 import be.angelcorp.celest.time.timeStandard.ITimeStandard
 import be.angelcorp.celest.time.dateStandard.DateStandard
 import be.angelcorp.celest.time.TimeUtils._
@@ -24,8 +23,8 @@ import be.angelcorp.celest.universe.Universe
 
 /**
  * Basic Julian Date, a time/date of a specific epoch. Internally the representation is handled as a
- * Julian Date number (see [[be.angelcorp.libs.celest.time.dateStandard.DateStandards]]),
- * in a specific time standard (UTC/TAI/TT/... see [[be.angelcorp.libs.celest.time.timeStandard.ITimeStandard]]).
+ * Julian Date number (see [[be.angelcorp.celest.time.dateStandard.DateStandards]]),
+ * in a specific time standard (UTC/TAI/TT/... see [[be.angelcorp.celest.time.timeStandard.ITimeStandard]]).
  *
  * <p>
  * The general accuracy of this class is generally lower a millisecond.
@@ -132,7 +131,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
   def this(year: Int, month: Int, day: Int, hour: Int, minute: Int, seconds: Double, timeStandard: ITimeStandard)(implicit universe: Universe) =
     this(TimeUtils.jday(year, month, day, hour, minute, seconds), timeStandard)
 
-  def add(dt: Double, format: Time) = new JulianDate(jd + Time.convert(dt, format, Time.day), timeStandard)
+  def add(dt: Double) = new JulianDate(jd + dt, timeStandard)
 
   override def compareTo(other: Epoch) = jd.compareTo(other.jd)
 
@@ -148,21 +147,16 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
     else {
       /* First convert this to TT form */
       val offset = this.timeStandard.offsetToTT(this)
-      val this_tt = new JulianDate(jd, universe.TT).add(offset, Time.second)
+      val this_tt = new JulianDate(jd, universe.TT).addS(offset)
 
       /* Then convert the TT jd form to the requested type */
       val offset2 = timeStandard.offsetFromTT(this_tt)
-      new JulianDate(this_tt.jd, timeStandard).add(offset2, Time.second)
+      new JulianDate(this_tt.jd, timeStandard).addS(offset2)
     }
 
   override def hashCode() = jd.hashCode ^ timeStandard.hashCode
 
   def relativeTo(epoch: Epoch) = inTimeStandard(timeStandard).jd - epoch.jd
-
-  def relativeTo(epoch: Epoch, timeformat: Time) = {
-    val delta_julian_days = jd - epoch.inTimeStandard(timeStandard).jd
-    Time.convert(delta_julian_days, Time.day, timeformat)
-  }
 
   override def toString = "%fJD %s".format(jd, timeStandard.getClass.getSimpleName)
 

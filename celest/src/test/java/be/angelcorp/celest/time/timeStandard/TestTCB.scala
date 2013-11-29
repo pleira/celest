@@ -22,13 +22,17 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
+import be.angelcorp.celest.universe.Universe
 
 @RunWith(classOf[JUnitRunner])
 class TestTCB extends FlatSpec with ShouldMatchers {
+  def TT_EPOCH(implicit universe: Universe) = new JulianDate(2443144.5003725, universe.TT)
+
+  def J2000_EPOCH(implicit universe: Universe) = new JulianDate(2451545.0, universe.TT)
 
   "TCB" should "select transform symmetrically" in {
     implicit val universe = new MockTimeUniverse()
-    val tcb = new TCB(new TDB(universe.TT_EPOCH), universe.TT_EPOCH)
+    val tcb = new TCB(new TDB(TT_EPOCH), TT_EPOCH)
     val base_date = new JulianDate(2451545.0, tcb)
 
     expect(base_date.jd) {
@@ -54,7 +58,7 @@ class TestTCB extends FlatSpec with ShouldMatchers {
     val tcb_seconds = 28365.9109901113
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tcb = date.inTimeStandard(new TCB(new TDB(universe.TT_EPOCH), universe.TT_EPOCH))
+    val jd_tcb = date.inTimeStandard(new TCB(new TDB(J2000_EPOCH), TT_EPOCH))
     secondsInDay(jd_tcb.jd) should be(tcb_seconds plusOrMinus 1E-4)
   }
 
@@ -70,7 +74,7 @@ class TestTCB extends FlatSpec with ShouldMatchers {
     implicit val universe = new MockTimeUniverse()
     val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, universe.TT)
 
-    val tcb = new TCB(new TDB(universe.TT_EPOCH), universe.TT_EPOCH)
+    val tcb = new TCB(new TDB(J2000_EPOCH), TT_EPOCH)
     tcb.offsetFromTT(jd_tt) should be(+13.3415 plusOrMinus 1.1E-4)
   }
 }

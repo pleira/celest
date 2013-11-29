@@ -237,7 +237,7 @@ public class HelmertTransformationFactory<F0 extends ReferenceFrame, F1 extends 
      */
     @Override
     protected TransformationParameters calculateParameters(Epoch epoch) {
-        final double dt = epoch.relativeTo(helmert_epoch, Time.second);
+        final double dt = epoch.relativeToS(helmert_epoch);
 
         Vector3D T = T0.add(dT0.multiply(dt));
         Vector3D R = R0.add(dR0.multiply(dt));

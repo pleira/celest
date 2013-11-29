@@ -166,7 +166,7 @@ class Keplerian(val a: Double,
 object Keplerian {
 
   /**
-   * Create a set of Kepler elements from another [[be.angelcorp.libs.celest.state.Orbit]]. Chooses itself what the best
+   * Create a set of Kepler elements from another [[be.angelcorp.celest.state.Orbit]]. Chooses itself what the best
    * way of converting is.
    *
    * @param orbit Orbit to convert to Keplerian elements.

@@ -21,7 +21,6 @@ import junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.util.physics.Time._
 import be.angelcorp.celest.body.CelestialBody
 import be.angelcorp.celest.constants.Constants._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
@@ -29,6 +28,7 @@ import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.unit.CelestTest._
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.frameGraph.frames
+import be.angelcorp.celest.time.Epochs
 
 /**
  * All reference values computed with:
@@ -50,8 +50,8 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
     val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
     val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
-    val t0 = universe.J2000_EPOCH
-    val te = t0.add(tf, day_julian)
+    val t0 = Epochs.J2000
+    val te = t0 + tf
 
     val v1_prograde_true = Vector3D(10096.6831628413530000, 4333.9040463802048000, -764.1842151784204600) // m/s
     val v2_prograde_true = Vector3D(-8110.7563755037318000, -6018.4641067406237000, 1061.2176044438429000) // m/s
@@ -90,8 +90,8 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
     val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
     val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
-    val t0 = universe.J2000_EPOCH
-    val te = t0.add(tf, day_julian)
+    val t0 = Epochs.J2000
+    val te = t0 + tf
 
     val v1_prograde_left = Vector3D(-1265.9264854521123000, 10660.0671819508730000, -1879.6574603427921000) //m/s
     val v2_prograde_left = Vector3D(-5584.6019382811455000, 8204.5589196619712000, -1446.6851023487011000) //m/s
@@ -134,8 +134,8 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
     val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
     val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
-    val t0 = universe.J2000_EPOCH
-    val te = t0.add(tf, day_julian)
+    val t0 = Epochs.J2000
+    val te = t0 + tf
 
     val v1_prograde_left = Vector3D(1618.0817850488665000, 7225.3760295109969000, -1274.0287397669906000) //m/s
     val v2_prograde_left = Vector3D(-5148.0510872930554000, 3378.2948229580488000, -595.6845260752310200) //m/s
@@ -179,8 +179,8 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
 
       val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
       val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
-      val t0 = universe.J2000_EPOCH
-      val te = t0.add(tf, day_julian)
+      val t0 = Epochs.J2000
+      val te = t0 + tf
 
       new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true).getTrajectory
       fail("The case of N=5 should not be solvable")

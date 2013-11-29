@@ -18,7 +18,7 @@ package be.angelcorp.celest.frameGraph.frames.transforms
 
 import math._
 import be.angelcorp.libs.math.MathUtils2._
-import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.celest.physics.Units._
 
 /**
  * Single contribution of luni-solar/planertairy effects to the nutation angles according to the IAU2000 nutation theory:
@@ -112,11 +112,11 @@ object IAU2000NutationEntry {
   def fundamentalArguments(t: Double) = {
     // Reference [2], equation 5.43
     // The "% 1296000.0" is to reduce the angle to maximum once circle turn
-    val F1 = ArcSecond.convert((485868.249036 + t * (1717915923.2178 + t * (31.8792 + t * (0.051635 + t * (-0.00024470))))) % 1296000.0) // mean anomaly of the moon
-    val F2 = ArcSecond.convert((1287104.79305 + t * (129596581.0481 + t * (-0.5532 + t * (0.000136 + t * (-0.00001149))))) % 1296000.0) // mean anomaly of the sun
-    val F3 = ArcSecond.convert((335779.526232 + t * (1739527262.8478 + t * (-12.7512 + t * (-0.001037 + t * (0.00000417))))) % 1296000.0) // mean argument of the latitude of the moon
-    val F4 = ArcSecond.convert((1072260.70369 + t * (1602961601.2090 + t * (-6.3706 + t * (0.006593 + t * (-0.00003169))))) % 1296000.0) // mean elongation of the moon from the sun
-    val F5 = ArcSecond.convert((450160.398036 + t * (-6962890.5431 + t * (7.4722 + t * (0.007702 + t * (-0.00005939))))) % 1296000.0) // mean longitude of the ascending node of the moon
+    val F1 = arcSeconds((485868.249036 + t * (1717915923.2178 + t * (31.8792 + t * (0.051635 + t * (-0.00024470))))) % 1296000.0) // mean anomaly of the moon
+    val F2 = arcSeconds((1287104.79305 + t * (129596581.0481 + t * (-0.5532 + t * (0.000136 + t * (-0.00001149))))) % 1296000.0) // mean anomaly of the sun
+    val F3 = arcSeconds((335779.526232 + t * (1739527262.8478 + t * (-12.7512 + t * (-0.001037 + t * (0.00000417))))) % 1296000.0) // mean argument of the latitude of the moon
+    val F4 = arcSeconds((1072260.70369 + t * (1602961601.2090 + t * (-6.3706 + t * (0.006593 + t * (-0.00003169))))) % 1296000.0) // mean elongation of the moon from the sun
+    val F5 = arcSeconds((450160.398036 + t * (-6962890.5431 + t * (7.4722 + t * (0.007702 + t * (-0.00005939))))) % 1296000.0) // mean longitude of the ascending node of the moon
     (F1, F2, F3, F4, F5)
   }
 
