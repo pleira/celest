@@ -52,68 +52,58 @@ class DefaultTime extends AbstractModule {
     bind(classOf[ITimeStandard]).annotatedWith(Names.named("UT1")).to(classOf[DefaultUT1]).asEagerSingleton()
   }
 
+  /** The J2000 epoch in JulianDate form. */
   @Provides
   @J2000
   @Singleton
-
-  /** The J2000 epoch in JulianDate form. */
   def j2000Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2451545.0, tt)(universe)
 
+  /** The J1950 epoch in JulianDate form. */
   @Provides
   @J1950
   @Singleton
-
-  /** The J1950 epoch in JulianDate form. */
   def j1950Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2433282.5, tt)(universe)
 
+  /** The J1900 epoch in JulianDate form. */
   @Provides
   @J1900
   @Singleton
-
-  /** The J1900 epoch in JulianDate form. */
   def j1900Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2415020.0, tt)(universe)
 
+  /** The B1950 epoch in JulianDate form. */
   @Provides
   @B1950
   @Singleton
-
-  /** The B1950 epoch in JulianDate form. */
   def b950Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2433282.42345905, tt)(universe)
 
-
+  /** The starting epoch of the TAI timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   @Provides
   @TAI_EPOCH
   @Singleton
-
-  /** The starting epoch of the TAI timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   def taiEpochProvider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2443144.5003725, tt)(universe)
 
+  /** The starting epoch of the TT timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   @Provides
   @TT_EPOCH
   @Singleton
-
-  /** The starting epoch of the TT timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   def ttEpochProvider(@TAI_EPOCH epoch: Epoch): Epoch = epoch
 
+  /** The starting epoch of the TCG timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   @Provides
   @TCG_EPOCH
   @Singleton
-
-  /** The starting epoch of the TCG timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   def tcgEpochProvider(@TAI_EPOCH epoch: Epoch): Epoch = epoch
 
+  /** The starting epoch of the TCB timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   @Provides
   @TCB_EPOCH
   @Singleton
-
-  /** The starting epoch of the TCB timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   def tcbEpochProvider(@TAI_EPOCH epoch: Epoch): Epoch = epoch
 
+  /** The starting epoch of the TDB timeline. */
   @Provides
   @TDB_EPOCH
   @Singleton
-
-  /** The starting epoch of the TDB timeline. */
   def tdbEpochProvider(@TAI_EPOCH epoch: Epoch): Epoch = epoch.addS(Units.microsecond(-65.5))
 
 }
