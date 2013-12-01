@@ -23,6 +23,7 @@ import be.angelcorp.celest.universe.DefaultUniverse
 import java.util.{Calendar, GregorianCalendar}
 import be.angelcorp.celest.time.dateStandard.DateStandards
 import be.angelcorp.celest.physics.Units._
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
 
 @RunWith(classOf[JUnitRunner])
 class TestJulianDate extends FlatSpec with ShouldMatchers {
@@ -37,10 +38,10 @@ class TestJulianDate extends FlatSpec with ShouldMatchers {
     jd0.addS(dt).jd should equal(5 + dt / julianDay)
 
     // Check of the value of ITimeStandard is correctly kept after adding
-    val jd1 = new JulianDate(1.0, universe.TT)
+    val jd1 = new JulianDate(1.0, TT)
     val jd1_actual = jd1 + 1.0
     jd1_actual.jd should be(2.0 plusOrMinus 1E-16)
-    jd1_actual.timeStandard should equal(universe.TT)
+    jd1_actual.timeStandard should equal(TT)
   }
 
   it should "reference retain the correct TimeStandard" in {
@@ -48,17 +49,17 @@ class TestJulianDate extends FlatSpec with ShouldMatchers {
     // Terrestrial Time: January 1 2000, 12:00:00 TT = 2451545.0 JD TT
     // International Atomic Time: January 1, 2000, 11:59:27.816 TAI = 2451544.99962750 JD TAI
     // Coordinated Universal Time: January 1, 2000, 11:58:55.816 UTC = 2451544.99925713 JD UTC
-    val jd_tt_j2000 = new JulianDate(2451545.0, universe.TT)
-    val jd_tai_j2000_true = new JulianDate(2451544.99962750, universe.TAI)
-    val jd_utc_j2000_true = new JulianDate(2451544.99925713, universe.UTC)
-    jd_tt_j2000.timeStandard should equal(universe.TT)
-    jd_tai_j2000_true.timeStandard should equal(universe.TAI)
-    jd_utc_j2000_true.timeStandard should equal(universe.UTC)
+    val jd_tt_j2000 = new JulianDate(2451545.0, TT)
+    val jd_tai_j2000_true = new JulianDate(2451544.99962750, TAI)
+    val jd_utc_j2000_true = new JulianDate(2451544.99925713, UTC)
+    jd_tt_j2000.timeStandard should equal(TT)
+    jd_tai_j2000_true.timeStandard should equal(TAI)
+    jd_utc_j2000_true.timeStandard should equal(UTC)
 
-    val jd_tai_j2000_actual = jd_tt_j2000.inTimeStandard(universe.TAI)
-    val jd_utc_j2000_actual = jd_tt_j2000.inTimeStandard(universe.UTC)
-    jd_tai_j2000_actual.timeStandard should equal(universe.TAI)
-    jd_utc_j2000_actual.timeStandard should equal(universe.UTC)
+    val jd_tai_j2000_actual = jd_tt_j2000.inTimeStandard(TAI)
+    val jd_utc_j2000_actual = jd_tt_j2000.inTimeStandard(UTC)
+    jd_tai_j2000_actual.timeStandard should equal(TAI)
+    jd_utc_j2000_actual.timeStandard should equal(UTC)
 
     jd_tai_j2000_actual.jd should be(jd_tai_j2000_true.jd plusOrMinus 1E-8)
     jd_utc_j2000_actual.jd should be(jd_utc_j2000_true.jd plusOrMinus 1E-8)
@@ -71,7 +72,7 @@ class TestJulianDate extends FlatSpec with ShouldMatchers {
     // 2453289.0147916665
     val cal = new GregorianCalendar(2004, 10, 10, 12, 21, 18)
     val jd = new JulianDate(2453289.0147916665)
-    val jd2 = new JulianDate(cal.getTime, universe.UTC)
+    val jd2 = new JulianDate(cal.getTime, UTC)
     val jd3 = new JulianDate(2453289.0147916665, DateStandards.JULIAN_DATE)
     val jd4 = new JulianDate(53288.5147916665, DateStandards.MODIFIED_JULIAN_DAY)
 

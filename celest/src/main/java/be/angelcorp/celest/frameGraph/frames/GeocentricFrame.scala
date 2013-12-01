@@ -18,6 +18,7 @@ package be.angelcorp.celest.frameGraph.frames
 import be.angelcorp.celest.frameGraph.systems._
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph.ReferenceFrame
+import be.angelcorp.celest.time.Epochs
 
 /**
  * The ITRF (International Terrestrial Reference Frame) is the default implementation of the
@@ -45,7 +46,7 @@ case class ITRF(year: Int = 2008)(implicit universe: Universe) extends ITRS {
   /**
    * Get the epoch of the `ITRS` realization.
    */
-  def epoch = universe.epoch(year)
+  def epoch = Epochs.epoch(year)
 
   override def toString = "ICRF" + year
 

@@ -25,18 +25,19 @@ import scala.Predef._
 import scala.io.Source
 import java.io.File
 import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
 
 @RunWith(classOf[JUnitRunner])
 class SofaTimeStandard extends FlatSpec with ShouldMatchers {
 
-  def toTimeStandard(s: String): ITimeStandard = s match {
-    case "TT" => universe.TT
-    case "TAI" => universe.TAI
-    case "TDT" => universe.TT
-    case "TCB" => universe.TCB
-    case "TCG" => universe.TCG
-    case "TDB" => universe.TDB
-    case "UTC" => universe.UTC
+  def toTimeStandard(s: String): TimeStandard = s match {
+    case "TT" => TT
+    case "TAI" => TAI
+    case "TDT" => TT
+    case "TCB" => TCB
+    case "TCG" => TCG
+    case "TDB" => TDB
+    case "UTC" => UTC
     case _ => throw new UnsupportedOperationException("Unknown TimeStandard: " + s)
   }
 
@@ -44,7 +45,7 @@ class SofaTimeStandard extends FlatSpec with ShouldMatchers {
 
   println(new File(".").getAbsolutePath)
 
-  val referenceData: List[(ITimeStandard, Double, Double, ITimeStandard, Double, Double)] =
+  val referenceData: List[(TimeStandard, Double, Double, TimeStandard, Double, Double)] =
     Source.fromFile(new File("celest/src/test/resources/time/timestandards.csv")).getLines().filterNot(_.startsWith("#")).map(s => {
       val entries = s.split(",")
       (

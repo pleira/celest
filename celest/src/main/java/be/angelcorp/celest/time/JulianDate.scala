@@ -16,15 +16,16 @@
 package be.angelcorp.celest.time
 
 import java.util._
-import be.angelcorp.celest.time.timeStandard.ITimeStandard
+import be.angelcorp.celest.time.timeStandard.TimeStandard
 import be.angelcorp.celest.time.dateStandard.DateStandard
 import be.angelcorp.celest.time.TimeUtils._
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
 import be.angelcorp.celest.universe.Universe
 
 /**
  * Basic Julian Date, a time/date of a specific epoch. Internally the representation is handled as a
  * Julian Date number (see [[be.angelcorp.celest.time.dateStandard.DateStandards]]),
- * in a specific time standard (UTC/TAI/TT/... see [[be.angelcorp.celest.time.timeStandard.ITimeStandard]]).
+ * in a specific time standard (UTC/TAI/TT/... see [[be.angelcorp.celest.time.timeStandard.TimeStandard]]).
  *
  * <p>
  * The general accuracy of this class is generally lower a millisecond.
@@ -40,7 +41,7 @@ import be.angelcorp.celest.universe.Universe
  *
  * @author Simon Billemont
  */
-case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe: Universe) extends Epoch {
+case class JulianDate(jd: Double, timeStandard: TimeStandard)(implicit universe: Universe) extends Epoch {
 
   /**
    * Create a Julian Date from a given [[java.util.Date]].
@@ -48,7 +49,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    * @param date Date to convert to a Julian Date.
    * @param timeStandard Time standard that the epoch is given in.
    */
-  def this(date: Date, timeStandard: ITimeStandard)(implicit universe: Universe) = this(
+  def this(date: Date, timeStandard: TimeStandard)(implicit universe: Universe) = this(
   {
     val cal = new GregorianCalendar()
     cal.clear()
@@ -65,7 +66,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    *
    * @param date Set the internal date to the given JD (UTC time).
    */
-  def this(date: Double)(implicit universe: Universe) = this(date, universe.UTC)
+  def this(date: Double)(implicit universe: Universe) = this(date, UTC)
 
   /**
    * Create a Julian Date from a given date in the given form.
@@ -73,7 +74,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    * @param date Date to create the Julian Date (UTC time).
    * @param dateStandard Date standard that the given epoch is in.
    */
-  def this(date: Double, dateStandard: DateStandard)(implicit universe: Universe) = this(dateStandard.toJD(date), universe.UTC)
+  def this(date: Double, dateStandard: DateStandard)(implicit universe: Universe) = this(dateStandard.toJD(date), UTC)
 
   /**
    * Create a Julian Date from a given date in the given form.
@@ -82,7 +83,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    * @param dateStandard Date standard that the given epoch is in.
    * @param timeStandard Time standard that the epoch is given in.
    */
-  def this(date: Double, dateStandard: DateStandard, timeStandard: ITimeStandard)(implicit universe: Universe) =
+  def this(date: Double, dateStandard: DateStandard, timeStandard: TimeStandard)(implicit universe: Universe) =
     this(dateStandard.toJD(date), timeStandard)
 
   /**
@@ -92,7 +93,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    * @param days Fractional days in the year of the epoch.
    */
   def this(year: Int, days: Double)(implicit universe: Universe) =
-    this(TimeUtils.jday(year, 1, 1, 0, 0, 0) - 1.0 + days, universe.UTC)
+    this(TimeUtils.jday(year, 1, 1, 0, 0, 0) - 1.0 + days, UTC)
 
   /**
    * Create a Julian date from a specified day in the year.
@@ -101,7 +102,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    * @param days Fractional days in the year of the epoch.
    * @param timeStandard Time standard that the epoch is given in.
    */
-  def this(year: Int, days: Double, timeStandard: ITimeStandard)(implicit universe: Universe) =
+  def this(year: Int, days: Double, timeStandard: TimeStandard)(implicit universe: Universe) =
     this(TimeUtils.jday(year, 0, 0, 0, 0, 0) + days, timeStandard)
 
   /**
@@ -115,7 +116,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    * @param seconds Seconds of the epoch.
    */
   def this(year: Int, month: Int, day: Int, hour: Int, minute: Int, seconds: Double)(implicit universe: Universe) =
-    this(TimeUtils.jday(year, month, day, hour, minute, seconds), universe.UTC)
+    this(TimeUtils.jday(year, month, day, hour, minute, seconds), UTC)
 
   /**
    * Create a Julian date from a specified calendar date.
@@ -128,7 +129,7 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
    * @param seconds Seconds of the epoch.
    * @param timeStandard Time standard that the epoch is given in.
    */
-  def this(year: Int, month: Int, day: Int, hour: Int, minute: Int, seconds: Double, timeStandard: ITimeStandard)(implicit universe: Universe) =
+  def this(year: Int, month: Int, day: Int, hour: Int, minute: Int, seconds: Double, timeStandard: TimeStandard)(implicit universe: Universe) =
     this(TimeUtils.jday(year, month, day, hour, minute, seconds), timeStandard)
 
   def add(dt: Double) = new JulianDate(jd + dt, timeStandard)
@@ -141,13 +142,13 @@ case class JulianDate(jd: Double, timeStandard: ITimeStandard)(implicit universe
     calender.getTime
   }
 
-  def inTimeStandard(timeStandard: ITimeStandard) =
+  def inTimeStandard(timeStandard: TimeStandard) =
     if (this.timeStandard.equals(timeStandard))
       this
     else {
       /* First convert this to TT form */
       val offset = this.timeStandard.offsetToTT(this)
-      val this_tt = new JulianDate(jd, universe.TT).addS(offset)
+      val this_tt = new JulianDate(jd, TT).addS(offset)
 
       /* Then convert the TT jd form to the requested type */
       val offset2 = timeStandard.offsetFromTT(this_tt)

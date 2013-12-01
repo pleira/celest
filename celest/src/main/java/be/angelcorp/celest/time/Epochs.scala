@@ -3,6 +3,7 @@ package be.angelcorp.celest.time
 import com.google.inject.Key
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.EpochAnnotations._
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 /**
  * A set of short-hand functions to retrieve predefined epochs's (see [[be.angelcorp.celest.time.EpochAnnotations]]) from the universe
@@ -35,5 +36,7 @@ object Epochs {
 
   /** See [[be.angelcorp.celest.time.EpochAnnotations.TDB_EPOCH]] */
   def TDB_EPOCH(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[Epoch], classOf[TDB_EPOCH]))
+
+  def epoch(year: Int)(implicit universe: Universe) = new JulianDate(year, 1, 1, 12, 0, 0, TT)
 
 }

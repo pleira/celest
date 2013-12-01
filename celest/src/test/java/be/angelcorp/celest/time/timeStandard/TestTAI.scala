@@ -22,17 +22,18 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 @RunWith(classOf[JUnitRunner])
 class TestTAI extends FlatSpec with ShouldMatchers {
 
   "TAI" should "select transform symmetrically" in {
     implicit val universe = new MockTimeUniverse()
-    val tai = new TAI()
+    val tai = new TAITime()
     val base_date = new JulianDate(2.0, tai)
 
     expect(base_date.jd) {
-      base_date.inTimeStandard(universe.TT).inTimeStandard(tai).jd
+      base_date.inTimeStandard(TT).inTimeStandard(tai).jd
     }
   }
 
@@ -48,13 +49,13 @@ class TestTAI extends FlatSpec with ShouldMatchers {
     // April 6, 2004, 7:51:28.386009 UTC = JD 2453101.827411875
     // dut1 -0.439962 s dat 32 s
     implicit val universe = new MockTimeUniverse()
-    val date = new JulianDate(2004, 04, 06, 00, 00, 28352.5700090000, universe.TT) // Test epoch in TT, see paper.
+    val date = new JulianDate(2004, 04, 06, 00, 00, 28352.5700090000, TT) // Test epoch in TT, see paper.
 
     // Reference seconds in the current day TAI
     val tai_seconds = 28320.3860090000
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tai = date.inTimeStandard(new TAI())
+    val jd_tai = date.inTimeStandard(new TAITime())
     secondsInDay(jd_tai.jd) should be(tai_seconds plusOrMinus 1E-4)
   }
 
@@ -68,9 +69,9 @@ class TestTAI extends FlatSpec with ShouldMatchers {
   it should "conform to the 'Fundamentals of Astrodynamics and Applications' validation data" in {
     // Reference epoch in the book are for April 6, 2004, 16:43:00.0000 UTC or 16:44:04.1840 TT (not May 14)
     implicit val universe = new MockTimeUniverse()
-    val jd_tt = new JulianDate(2004, 5, 14, 16, 44, 04.1840, universe.TT)
+    val jd_tt = new JulianDate(2004, 5, 14, 16, 44, 04.1840, TT)
 
-    val tai = new TAI()
+    val tai = new TAITime()
     tai.offsetFromTT(jd_tt) should equal(-32.184)
   }
 }

@@ -23,6 +23,7 @@ import be.angelcorp.celest.frameGraph._
 import be.angelcorp.libs.math.rotation.RotationMatrix._
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 /**
  * IAU 2006 precession theory. Computes the precession of the ecliptic for the MOD (mean of date) to J2000 (or EME2000) reference frame. This implementation is based on [1] and [2]
@@ -43,7 +44,7 @@ class IAU2006Precession(implicit universe: Universe) extends ConstantRotationTra
    */
   def rotationMatrix(epoch: Epoch) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
 
     rotateX(arcSeconds(-IAU2006Precession.ε0)) !*
       rotateZ(arcSeconds(IAU2006Precession.ψA(t))) !*

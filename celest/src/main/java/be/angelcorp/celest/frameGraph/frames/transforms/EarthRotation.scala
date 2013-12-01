@@ -25,6 +25,7 @@ import be.angelcorp.libs.math.rotation.RotationMatrix
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.data.ExcessLengthOfDay
 import be.angelcorp.celest.frameGraph.transformations.KinematicTransformationFactory
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
 
 /**
  * Generic earth rotation equations
@@ -48,7 +49,7 @@ object EarthRotation {
    * @return The earth rotation angle [rad].
    */
   def θ_ERA(epoch: Epoch)(implicit universe: Universe) = {
-    val epoch_ut1 = epoch.inTimeStandard(universe.UT1)
+    val epoch_ut1 = epoch.inTimeStandard(UT1)
     val t = epoch_ut1.jd - 2451545.0
 
     // Same as ( θ0 + dθdt * t ), but more accurate (see reference [2][3]):
@@ -126,7 +127,7 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
    * @return The Greenwich Mean Sidereal Time (GMST) angle [rad].
    */
   def θ_GMST2000(epoch: Epoch): Double =
-    θ_GMST2000(epoch, epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525)
+    θ_GMST2000(epoch, epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525)
 
 
   /**
@@ -154,7 +155,7 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
    */
   def θ_GAST2000(epoch: Epoch) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525
 
     /** Greenwich apparent sidereal time (GAST) [rad], see reference [3] eqn 2.13 */
     θ_GMST2000(epoch, t) + equationOfEquinoxes(t)

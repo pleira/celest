@@ -23,6 +23,7 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.immutable.ListMap
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.universe.Universe
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 
 class AsciiEphemeris(val metadata: Metadata, private val recordsList: ListBuffer[DataRecord]) extends JplEphemeris {
 
@@ -93,7 +94,7 @@ class AsciiParser(implicit universe: Universe) extends JavaTokenParsers {
         val sz = x._1._1._1._1
 
         val tags = g104._2
-        val range = JulianDate(g103._1, universe.TDB).until(JulianDate(g103._2, universe.TDB), g103._3)
+        val range = JulianDate(g103._1, TDB).until(JulianDate(g103._2, TDB), g103._3)
 
         new Metadata(sz._2, g101(0), g101(1), g101(2),
           tags, range, tags.get("AU").get, tags.get("EMRAT").get,

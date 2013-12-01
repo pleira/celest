@@ -1,170 +1,38 @@
-/**
- * Copyright (C) 2009-2012 simon <simon@angelcorp.be>
- *
- * Licensed under the Non-Profit Open Software License version 3.0
- * (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- * http://www.opensource.org/licenses/NOSL3.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package be.angelcorp.celest.time.timeStandard
 
-import scala.math._
-import javax.inject.Inject
-import com.google.inject.name.Named
-import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.time.EpochAnnotations.{TT_EPOCH, J2000}
-
-trait ITimeStandard {
-  /**
-   * Returns the number of seconds to add to TT to get this timeStandard, so;
-   *
-   * <pre>
-   * offsetFromTT(jd_tt) = this - TT
-   * T<sub>this</sub>  = T<sub>TT</sub>  + this.offsetFromTT(JD<sub>TAI</sub>)
-   * JD<sub>this</sub> = JD<sub>TT</sub> + Time.convert(this.offsetFromTT(JD<sub>TT</sub>), Time.second, Time.day)
-   * </pre>
-   *
-   * @return The number of seconds between this time standard and TAI.
-   */
-  def offsetFromTT(JD_tt: Epoch): Double
-
-  /**
-   * Returns the number of seconds to add to this time standard to get TT, so;
-   *
-   * <pre>
-   * offsetToTT(jd_this) = TT - this
-   * T<sub>TT</sub>  = T<sub>this</sub>  + this.offsetToTT(JD<sub>this</sub>)
-   * JD<sub>TT</sub> = JD<sub>this</sub> + Time.convert(this.offsetToTT(JD<sub>this</sub>), Time.second, Time.day)
-   * </pre>
-   *
-   * @return The number of seconds between this time standard and TAI.
-   */
-  def offsetToTT(JD_this: Epoch): Double
-}
+import be.angelcorp.celest.universe.Universe
+import com.google.inject.Key
 
 /**
- * <p>
- * Conversions based on:<br>
- * [1] D. Vallado et al. ,
- * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
- * AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006
- * </p>
- *
- * @author Simon Billemont
+ * A set of short-hand functions to retrieve predefined time standards (see [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations]]) from the universe.
  */
-class TAI extends ITimeStandard {
-  override def offsetFromTT(jd_tt: Epoch) = -32.184
+object TimeStandards {
 
-  override def offsetToTT(jd_tai: Epoch) = 32.184
-}
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TT]] */
+  def TT(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.TT]))
 
-/**
- * <p>
- * Conversions based on:<br>
- * [1] D. Vallado et al. ,
- * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
- * AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006
- * </p>
- *
- * @author Simon Billemont
- */
-class TT extends ITimeStandard {
-  override def offsetFromTT(jd_tt: Epoch) = 0
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TDT]] */
+  def TDT(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.TDT]))
 
-  override def offsetToTT(jd_tt: Epoch) = 0
-}
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TAI]] */
+  def TAI(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.TAI]))
 
-/**
- * Barycentric Coordinate Time.
- *
- * <p>
- * Conversions based on:<br>
- * [1] D. Vallado et al. ,
- * D.A. Vallado, <b>"Fundamentals of Astrodynamics and Applications"</b>, 2007, ISBN: 978-0-387-71831-6, p199 equation 3-50.
- * </p>
- *
- * @author Simon Billemont
- */
-class TCB @Inject()(@Named("TDB") tdb: ITimeStandard, @TT_EPOCH tt_epoch: Epoch) extends ITimeStandard {
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TCB]] */
+  def TCB(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.TCB]))
 
-  val Lb = +1.55051976772E-8
-  val TDB0 = -6.55E-5
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TCG]] */
+  def TCG(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.TCG]))
 
-  override def offsetFromTT(jd_tt: Epoch) = {
-    // See [1] equation 3-50
-    val TCB_TDB = Lb * jd_tt.relativeToS(tt_epoch) + TDB0
-    val jd_tdb = jd_tt.addS(TCB_TDB)
-    TCB_TDB + tdb.offsetFromTT(jd_tdb)
-  }
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TDB]] */
+  def TDB(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.TDB]))
 
-  override def offsetToTT(jd_tcb: Epoch) = {
-    //TODO: Appropriation, need a rootfinder or something similar
-    -offsetFromTT(jd_tcb)
-  }
-}
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC]] */
+  def UTC(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.UTC]))
 
-/**
- * Barycentric Dynamical Time.
- *
- * <p>
- * For most purposes, one may neglect the difference of appoximatly 1.7 msec between Barycentric Dynamical
- * Time (TDB) and Terrestrial Time (TT). (Fränz and Harper, <b>"Heliospheric Coordinate Systems"</b>)
- * </p>
- *
- * <p>
- * Conversions based on:<br>
- * [1] D. Vallado et al. ,
- * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
- * AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006
- * </p>
- *
- * @author Simon Billemont
- */
-class TDB @Inject()(@J2000 j2000_epoch: Epoch) extends ITimeStandard {
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UT1]] */
+  def UT1(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.UT1]))
 
-  def offsetFromTT(JD_tt: Epoch) = {
-    val J2000_offset = JD_tt.relativeTo(j2000_epoch)
-    val M = (357.53 + 0.98560028 * J2000_offset) * (Pi / 180.0)
-    val ΔM_λ = (246.11 + 0.90255617 * J2000_offset) * (Pi / 180.0)
-    0.001658 * sin(M) + 0.000014 * sin(ΔM_λ)
-  }
-
-  def offsetToTT(JD_tdb: Epoch) = -offsetFromTT(JD_tdb)
+  /** See [[be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.GPS]] */
+  def GPS(implicit universe: Universe) = universe.injector.getInstance(Key.get(classOf[TimeStandard], classOf[TimeStandardAnnotations.GPS]))
 
 }
-
-/**
- * Geocentric Coordinate Time.
- *
- * <p>
- * Conversions based on:<br>
- * [1] D. Vallado et al. ,
- * <b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th
- * AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006
- * </p>
- *
- * @author Simon Billemont
- */
-class TCG @Inject()(@TT_EPOCH tt_epoch: Epoch) extends ITimeStandard {
-
-  /**
-   * LG is a scale constant accounting for the Earth's gravitational and rotational potential affecting
-   * the rate of clocks according to the IAU-specified relativistic metric. IAU Resolution B1.9 (2000)
-   * recommends LG as a defining constant, so the relationship cannot change. [1]
-   */
-  private val L_g = 6.969290134E-10
-
-  def offsetFromTT(JD_tt: Epoch) = L_g * JD_tt.relativeToS(tt_epoch)
-
-  def offsetToTT(JD_tcg: Epoch) = -L_g * JD_tcg.relativeToS(tt_epoch)
-
-}
-
-

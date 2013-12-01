@@ -26,6 +26,7 @@ import be.angelcorp.celest.frameGraph.frames.transforms._
 import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 @RunWith(classOf[JUnitRunner])
 class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
@@ -33,7 +34,7 @@ class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
   implicit val universe = new DefaultUniverse
 
   "IAU2000Nutation" should "match the IAU2000A SOFA values" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
     val iau2000a = new IAU2000Nutation(sofaCoefficients, false)
@@ -53,7 +54,7 @@ class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
   }
 
   it should "match the IAU2006A SOFA values" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
     val iau2000a = new IAU2000Nutation(sofaCoefficients, true)

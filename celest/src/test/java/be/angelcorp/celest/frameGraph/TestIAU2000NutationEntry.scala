@@ -26,6 +26,7 @@ import be.angelcorp.celest.time.{Epochs, JulianDate}
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.math.MathUtils2._
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 /**
  * The numerical values in these test cases where obtained from SOFA using the Microsoft visual studio 2012 debugger,
@@ -47,8 +48,8 @@ class TestIAU2000NutationEntry extends FlatSpec with ShouldMatchers {
   implicit val universe = new DefaultUniverse
 
   "IAU2000NutationEntry" should "calculate the same fundamental arguments as SOFA" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
 
     // Check luni-solar arguments
     val (f1, f2, f3, f4, f5) = IAU2000NutationEntry.fundamentalArguments(t)
@@ -72,8 +73,8 @@ class TestIAU2000NutationEntry extends FlatSpec with ShouldMatchers {
   }
 
   it should "calculate the same luni-solar nutation contributions as SOFA" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
 
@@ -97,8 +98,8 @@ class TestIAU2000NutationEntry extends FlatSpec with ShouldMatchers {
 
   it should "calculate the same planetary nutation contributions as SOFA" in {
     // Note sofa uses the MHB2000 and not those from IAU, so the outcome is sightly off (sofa says up to 0.1 arcsecond).
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
 

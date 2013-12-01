@@ -26,6 +26,7 @@ import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.celest.frameGraph.frames.transforms.J2000FrameBias
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 /**
  * The numerical values in these test cases where obtained from SOFA using the Microsoft visual studio 2012 debugger,
@@ -47,7 +48,7 @@ class TestJ2000FrameBias extends FlatSpec with ShouldMatchers {
   implicit val universe = new DefaultUniverse
 
   "J2000FrameBias" should "conform to the sofa library" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
 
     val sofaRotation = Matrix3D(
       0.9999999999999942, -7.078279744199198E-8, 8.056217146976134E-8,

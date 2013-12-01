@@ -21,8 +21,9 @@ import be.angelcorp.celest.time.Epoch
 import org.scalatest.exceptions.TestFailedException
 import org.eclipse.aether.repository.RemoteRepository
 import com.google.inject._
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TT
 
-class MockTime(val offset: Double) extends ITimeStandard {
+class MockTime(val offset: Double) extends TimeStandard {
   def offsetFromTT(JD_tt: Epoch) = offset
 
   def offsetToTT(JD_this: Epoch) = -offset
@@ -31,28 +32,20 @@ class MockTime(val offset: Double) extends ITimeStandard {
 class MockTimeUniverse extends Universe {
   def frames = throw new TestFailedException("Unsupported mock operation", 0)
 
-  def TT: ITimeStandard = new MockTime(0)
-
-  def TAI: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-
-  def TCG: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-
-  def TDT: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-
-  def TDB: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-
-  def TCB: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-
-  def UTC: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
-
-  def UT1: ITimeStandard = throw new TestFailedException("Unsupported mock operation", 0)
+  def additionalConfig = new AbstractModule {
+    def configure() {}
+  }
 
   def injector: Injector = {
     val universe = this
     Guice.createInjector(
+      additionalConfig,
       new modules.DefaultAether,
       new AbstractModule {
-        def configure() = bind(classOf[Universe]).toInstance(universe)
+        def configure() = {
+          bind(classOf[TimeStandard]).annotatedWith(classOf[TT]).to(classOf[TTTime]).asEagerSingleton()
+          bind(classOf[Universe]).toInstance(universe)
+        }
 
         @Provides
         @Singleton

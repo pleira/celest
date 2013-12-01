@@ -23,6 +23,7 @@ import be.angelcorp.celest.frameGraph.ReferenceFrame
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 /**
  * IAU 2000 nutation theory (IAU2000A/IAU2000B), optionally with slight IAU 2006 adjustments).
@@ -52,7 +53,7 @@ class IAU2000Nutation(coefficients: List[IAU2000NutationEntry],
 
   def rotationMatrix(epoch: Epoch) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
 
     // Nutation angles according to this theory
     val (dψ2000, dε2000) = nutationParameters(t)
@@ -72,7 +73,7 @@ class IAU2000Nutation(coefficients: List[IAU2000NutationEntry],
    */
   def nutationParameters(epoch: Epoch): (Double, Double) = {
     // Julian centuries TT from the J2000.0 epoch
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
     nutationParameters(t)
   }
 

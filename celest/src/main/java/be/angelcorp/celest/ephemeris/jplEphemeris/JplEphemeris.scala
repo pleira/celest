@@ -6,6 +6,7 @@ import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.ephemeris.IEphemeris
 import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 
 trait JplEphemeris {
 
@@ -214,9 +215,9 @@ trait JplEphemeris {
 }
 
 class DataRecord(val metadata: Metadata, val data: Array[Double])(implicit universe: Universe) {
-  val begin = JulianDate(data(0), universe.TDB)
+  val begin = JulianDate(data(0), TDB)
   // Beginning time of the record
-  val end = JulianDate(data(1), universe.TDB)
+  val end = JulianDate(data(1), TDB)
   // Ending    time of the record
   val span = end relativeTo begin // Time step in this record [days]
 

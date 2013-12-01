@@ -18,9 +18,7 @@ package be.angelcorp.celest.universe
 
 import javax.inject.Singleton
 import com.google.inject._
-import com.google.inject.name.Names
 import org.eclipse.aether.repository.RemoteRepository
-import be.angelcorp.celest.time.timeStandard._
 
 class DefaultUniverse extends Universe {
 
@@ -32,15 +30,6 @@ class DefaultUniverse extends Universe {
   )
 
   val injector = Guice.createInjector(configurationModules.toArray: _*)
-
-  val TAI: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("TAI")))
-  val TT: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("TT")))
-  val TDT: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("TDT")))
-  val TCB: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("TCB")))
-  val TCG: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("TCG")))
-  val TDB: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("TDB")))
-  val UTC: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("UTC")))
-  val UT1: ITimeStandard = injector.getInstance(Key.get(classOf[ITimeStandard], Names.named("UT1")))
 
   lazy val frames = throw new UnsupportedOperationException("Operation not yet implemented")
 

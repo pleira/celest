@@ -23,6 +23,7 @@ import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
 
 /**
  * TT is very hard to test, as it is the time reference to which all other time streams are referenced.
@@ -31,13 +32,11 @@ import be.angelcorp.celest.time._
 class TestTT extends FlatSpec with ShouldMatchers {
 
   "TT" should "select transform symmetrically" in {
-    implicit val universe = new MockTimeUniverse {
-      override val TT = new TT()
-    }
-    val base_date = new JulianDate(2.0, universe.TT)
+    implicit val universe = new MockTimeUniverse
+    val base_date = new JulianDate(2.0, TT)
 
     expect(base_date.jd) {
-      base_date.inTimeStandard(new MockTime(32)).inTimeStandard(universe.TT).jd
+      base_date.inTimeStandard(new MockTime(32)).inTimeStandard(TT).jd
     }
   }
 
@@ -52,16 +51,14 @@ class TestTT extends FlatSpec with ShouldMatchers {
   it should "conform to the 'Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics' validation data" in {
     // April 6, 2004, 7:51:28.386009 UTC = JD 2453101.827411875
     // dut1 -0.439962 s dat 32 s
-    implicit val universe = new MockTimeUniverse {
-      override def TT = new TT()
-    } // <= universe with the under test TT
+    implicit val universe = new MockTimeUniverse
     val date = new JulianDate(2453101.827411875104167, new MockTime(-32 - 32.184))
 
     // Reference seconds in the current day TT
     val tt_seconds = 28352.5700090000
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tt = date.inTimeStandard(universe.TT)
+    val jd_tt = date.inTimeStandard(TT)
     secondsInDay(jd_tt.jd) should be(tt_seconds plusOrMinus 1E-4)
   }
 
@@ -78,9 +75,9 @@ class TestTT extends FlatSpec with ShouldMatchers {
     val jd_base = 2453102
     val tai = new HourMinSec(16, 43, 32.0000).dayFraction // Reference TAI fraction in day
     val tt = new HourMinSec(16, 44, 04.1840).dayFraction // Reference TT  fraction in day
-    val jd_tai = new JulianDate(jd_base + tai, universe.TAI) // Reference epoch in TAI
+    val jd_tai = new JulianDate(jd_base + tai, TAI) // Reference epoch in TAI
 
-    val jd_tt = jd_tai.inTimeStandard(universe.TT) // Computed epoch in TT
+    val jd_tt = jd_tai.inTimeStandard(TT) // Computed epoch in TT
 
     // 1E-4 due to the precision restriction of JulianDate
     secondsInDay(jd_tt.jd) should be(secondsInDay(jd_base + tt) plusOrMinus 1E-4)

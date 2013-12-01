@@ -17,7 +17,7 @@ package be.angelcorp.celest.time
 
 import java.util.Date
 import be.angelcorp.celest.physics.Units._
-import be.angelcorp.celest.time.timeStandard.ITimeStandard
+import be.angelcorp.celest.time.timeStandard.TimeStandard
 
 /**
  * A container for a Julian date
@@ -57,18 +57,18 @@ trait Epoch extends Comparable[Epoch] {
   def jd: Double
 
   /**
-   * Get the Julian date in an alternate [[be.angelcorp.celest.time.timeStandard.ITimeStandard]].
+   * Get the Julian date in an alternate [[be.angelcorp.celest.time.timeStandard.TimeStandard]].
    *
-   * @return Julian date of the epoch, in an alternative [[be.angelcorp.celest.time.timeStandard.ITimeStandard]].
+   * @return Julian date of the epoch, in an alternative [[be.angelcorp.celest.time.timeStandard.TimeStandard]].
    */
-  def inTimeStandard(timeStandard: ITimeStandard): Epoch
+  def inTimeStandard(timeStandard: TimeStandard): Epoch
 
   /**
-   * Get the [[be.angelcorp.celest.time.timeStandard.ITimeStandard]] used within this Julian date.
+   * Get the [[be.angelcorp.celest.time.timeStandard.TimeStandard]] used within this Julian date.
    *
    * @return ITimeStandard used by this Epoch.
    */
-  def timeStandard: ITimeStandard
+  def timeStandard: TimeStandard
 
   /**
    * Get the amount of Julian days that this date is after the specified epoch:

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.util._
 import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 
 package object jplEphemeris {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -157,7 +158,7 @@ package object jplEphemeris {
       val records = file.length / recordSize - 2 // 2 header records exist
 
       // Real range of the data, the header has a tendency to lie (most libraries dont change this when subsetting the ephemeris)
-      val range = JulianDate(realEphemStart, universe.TDB).until(JulianDate(realEphemStart + records * ephemStep, universe.TDB), ephemStep)
+      val range = JulianDate(realEphemStart, TDB).until(JulianDate(realEphemStart + records * ephemStep, TDB), ephemStep)
 
       new Metadata(recordEntries, label1, label2, label3, tags,
         range, AU, EMRAT, coeffPtr.toList ::: List(libratPtr), DENUM)
@@ -414,7 +415,7 @@ package object jplEphemeris {
       val value = elements(6).toDouble // Expected value of the coordinate [AU|AU/s|rad|rad/s]
 
       // The test epoch
-      val epoch = JulianDate(jd, universe.TDB)
+      val epoch = JulianDate(jd, TDB)
 
       // Compute the true value as by the given ephemeris
       val trueValue = try {

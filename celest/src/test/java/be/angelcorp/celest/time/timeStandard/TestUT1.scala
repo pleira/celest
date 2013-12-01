@@ -23,12 +23,19 @@ import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.dateStandard.DateStandards._
 import be.angelcorp.celest.data.UT1Provider
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
+import com.google.inject.AbstractModule
 
 @RunWith(classOf[JUnitRunner])
 class TestUT1 extends FlatSpec with ShouldMatchers {
 
   implicit val universe = new MockTimeUniverse {
-    override def UTC: ITimeStandard = new MockTime(35)
+
+    override def additionalConfig = new AbstractModule {
+      def configure() {
+        bind(classOf[TimeStandard]).annotatedWith(classOf[TimeStandardAnnotations.UTC]).toInstance(new MockTime(35))
+      }
+    }
   }
 
   "The UT1Container" should "select the correct UT1-UTC offset" in {
@@ -60,27 +67,27 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
   }
 
   "DefaultUT1" should "download the correct UT1 historic offsets from IERS" in {
-    val ut1 = new DefaultUT1(universe.UTC)
+    val ut1 = new UT1Time(UTC)
 
     expect(-0.0337602) {
-      ut1.UT1_UTC(new JulianDate(38048, MJD, universe.UTC))
+      ut1.UT1_UTC(new JulianDate(38048, MJD, UTC))
     } // 1963 / 1 / 19
     expect(-0.4232747) {
-      ut1.UT1_UTC(new JulianDate(55931, MJD, universe.UTC))
+      ut1.UT1_UTC(new JulianDate(55931, MJD, UTC))
     } // 2012 / 1 / 5
     expect(0.4044970) {
-      ut1.UT1_UTC(new JulianDate(56160, MJD, universe.UTC))
+      ut1.UT1_UTC(new JulianDate(56160, MJD, UTC))
     } // 2012 / 8 / 21
   }
 
   it should "select Transform symmetrically" in {
     val container = new UT1Container(Map(0.0 -> 5.5, 1.0 -> 6.2, 2.0 -> 7.4, 3.0 -> 9.0, 4.0 -> 6.1, 5.0 -> 3.4, 6.0 -> 1.1, 7.0 -> -0.1, 8.0 -> -1.1, 9.0 -> -2.7))
-    val ut1 = new DefaultUT1(universe.UTC, Map[(Double, Double), UT1Provider]((0.0, 9.0) -> container))
+    val ut1 = new UT1Time(UTC, Map[(Double, Double), UT1Provider]((0.0, 9.0) -> container))
 
     val base_date = new JulianDate(2.0, MJD, ut1)
 
     expect(base_date.jd) {
-      base_date.inTimeStandard(universe.UTC).inTimeStandard(ut1).jd
+      base_date.inTimeStandard(UTC).inTimeStandard(ut1).jd
     }
   }
 
@@ -103,9 +110,9 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
     * Seconds in UT1 day: 86399,5260054000000000
     */
   it should "select correctly apply the UT1-UTC offset" in {
-    val ut1 = new DefaultUT1(universe.UTC)
+    val ut1 = new UT1Time(UTC)
 
-    val date_utc = new JulianDate(2012, 03, 04, 00, 00, 0.0, universe.UTC)
+    val date_utc = new JulianDate(2012, 03, 04, 00, 00, 0.0, UTC)
     val date_ut1 = date_utc.inTimeStandard(ut1)
 
     ((date_ut1.jd + 0.5) - JULIAN_DAY_NUMBER.fromJD(date_ut1.jd)) * 86400 should be(86399.52600540 plusOrMinus 1E-4) // 1E-4 due to the doule accuracy in JulianDate
@@ -121,9 +128,9 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
   it should "conform to the 'Fundamentals of Astrodynamics and Applications' validation data" in {
     // Reference epoch in the book are for April 6, 2004, 16:43:00.0000 UTC or 16:44:04.1840 TT (not May 14)
     implicit val universe = new MockTimeUniverse()
-    val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, universe.TT)
+    val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, TT)
 
-    val ut1 = new DefaultUT1(new MockTime(-64.184 /* UTC => TT offset at the test epoch */), // <= UTC
+    val ut1 = new UT1Time(new MockTime(-64.184 /* UTC => TT offset at the test epoch */), // <= UTC
       Map((0.0, Double.PositiveInfinity) -> // UT1-UTC offset
         new UT1Container(Map(53140.0 -> -0.463326))))
     ut1.offsetFromTT(jd_tt) should be(-64.647326 plusOrMinus 1E-6)

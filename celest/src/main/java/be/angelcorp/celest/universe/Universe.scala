@@ -16,9 +16,7 @@
 
 package be.angelcorp.celest.universe
 
-import be.angelcorp.celest.time.timeStandard._
 import be.angelcorp.celest.frameGraph.ReferenceFrameGraph
-import be.angelcorp.celest.time.JulianDate
 import com.google.inject.Injector
 
 /**
@@ -26,36 +24,10 @@ import com.google.inject.Injector
  */
 trait Universe {
 
-  /** International Atomic Time (TAI) */
-  def TAI: ITimeStandard
-
-  /** Barycentric Coordinate Time (TCB) */
-  def TCB: ITimeStandard
-
-  /** Geocentric Coordinate Time (TCG) */
-  def TCG: ITimeStandard
-
-  /** Barycentric Dynamical Time (TDB) */
-  def TDB: ITimeStandard
-
-  /** Terrestrial Dynamical Time (TDT, is now TT) */
-  def TDT: ITimeStandard
-
-  /** Terrestrial Time (TT) */
-  def TT: ITimeStandard
-
-  /** Coordinated Universal Time (UTC) */
-  def UTC: ITimeStandard
-
-  /** Universal Time (UT1) */
-  def UT1: ITimeStandard
-
   /** Reference frame graph */
   def frames: ReferenceFrameGraph
 
   /** Dependency injector */
   def injector: Injector
-
-  def epoch(year: Int) = new JulianDate(year, 1, 1, 12, 0, 0, TT)(this)
 
 }

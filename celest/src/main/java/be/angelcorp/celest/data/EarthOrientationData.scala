@@ -24,6 +24,7 @@ import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.dateStandard.DateStandards
+import be.angelcorp.celest.time.timeStandard.TimeStandards.UTC
 
 class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEntry])(implicit universe: Universe)
   extends UT1Provider with ExcessLengthOfDay {
@@ -39,7 +40,7 @@ class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEn
    * @return Optionally the closest eop entry to the given epoch.
    */
   def findEntry(epoch: Epoch, Δt_max: Double = 1.0) = {
-    val mjd_utc = DateStandards.MJD.fromJD(epoch.inTimeStandard(universe.UTC).jd)
+    val mjd_utc = DateStandards.MJD.fromJD(epoch.inTimeStandard(UTC).jd)
     val low = data.floorEntry(mjd_utc)
     val high = data.ceilingEntry(mjd_utc)
 

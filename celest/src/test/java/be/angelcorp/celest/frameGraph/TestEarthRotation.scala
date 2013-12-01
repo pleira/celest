@@ -27,6 +27,7 @@ import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.data.ExcessLengthOfDay
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 @RunWith(classOf[JUnitRunner])
 class TestEarthRotation extends FlatSpec with ShouldMatchers {
@@ -34,14 +35,14 @@ class TestEarthRotation extends FlatSpec with ShouldMatchers {
   implicit val universe = new DefaultUniverse
 
   "EarthRotation" should "calculate the same earth rotation angle as SOFA" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
 
     EarthRotation.θ_ERA(epoch) should be(0.7597905005561572 plusOrMinus ArcSecond.convert(1E-3))
   }
 
   "EarthRotationGAST" should "calculate the same angualr values as SOFA" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
-    val t = epoch.inTimeStandard(universe.TT).relativeTo(Epochs.J2000) / 36525.0
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
     val mockLOD = new ExcessLengthOfDay {
       def lod(epoch: Epoch) = 0.0
     }
@@ -56,7 +57,7 @@ class TestEarthRotation extends FlatSpec with ShouldMatchers {
   }
 
   it should "calculate the same transformation matrix as SOFA" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, universe.TT)
+    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
     val mockLOD = new ExcessLengthOfDay {
       def lod(epoch: Epoch) = 0.0
     }

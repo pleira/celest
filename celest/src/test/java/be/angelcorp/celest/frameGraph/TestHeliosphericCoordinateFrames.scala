@@ -25,6 +25,8 @@ import org.junit.runner.RunWith
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.frameGraph.frames.HeliosphericCoordinateFrames
 import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
+
 
 @RunWith(classOf[JUnitRunner])
 class TestHeliosphericCoordinateFrames extends FlatSpec with ShouldMatchers {
@@ -35,7 +37,7 @@ class TestHeliosphericCoordinateFrames extends FlatSpec with ShouldMatchers {
    * This is a numerical example for the transformations described in
    * Fraenz/Harper, 'Heliospheric Coordinate Systems' and verifies based on Tables 8 and 9 of the paper.
    */
-  val referenceEpoch = new JulianDate(1996, 28, 8, 16, 46, 00, universe.TT)
+  val referenceEpoch = new JulianDate(1996, 28, 8, 16, 46, 00, TT)
   val Re = 6378.14E3
   val referenceDistances = Map(
     //(transforms.GEO_T(), 			Vector3D( 6.9027400, -1.6362400,  1.9166900)),

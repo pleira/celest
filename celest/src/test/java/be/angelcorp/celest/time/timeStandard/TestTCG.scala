@@ -23,18 +23,19 @@ import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
 import be.angelcorp.celest.universe.Universe
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 
 @RunWith(classOf[JUnitRunner])
 class TestTCG extends FlatSpec with ShouldMatchers {
-  def TT_EPOCH(implicit universe: Universe) = new JulianDate(2443144.5003725, universe.TT)
+  def TT_EPOCH(implicit universe: Universe) = new JulianDate(2443144.5003725, TT)
 
   "TCG" should "select transform symmetrically" in {
     implicit val universe = new MockTimeUniverse()
-    val tcg = new TCG(TT_EPOCH)
+    val tcg = new TCGTime(TT_EPOCH)
     val base_date = new JulianDate(2451545.0, tcg)
 
     expect(base_date.jd) {
-      base_date.inTimeStandard(universe.TT).inTimeStandard(tcg).jd
+      base_date.inTimeStandard(TT).inTimeStandard(tcg).jd
     }
   }
 
@@ -50,13 +51,13 @@ class TestTCG extends FlatSpec with ShouldMatchers {
     // April 6, 2004, 7:51:28.386009 UTC = JD 2453101.827411875
     // dut1 -0.439962 s dat 32 s
     implicit val universe = new MockTimeUniverse()
-    val date = new JulianDate(2004, 04, 06, 00, 00, 28352.5700090000, universe.TT) // Test epoch in TT, see paper.
+    val date = new JulianDate(2004, 04, 06, 00, 00, 28352.5700090000, TT) // Test epoch in TT, see paper.
 
     // Reference seconds in the current day TCG
     val tcg_seconds = 28353.1695861742
 
     // 1E-4 due to the precision restriction of JulianDate
-    val jd_tcg = date.inTimeStandard(new TCG(TT_EPOCH))
+    val jd_tcg = date.inTimeStandard(new TCGTime(TT_EPOCH))
     secondsInDay(jd_tcg.jd) should be(tcg_seconds plusOrMinus 1E-4)
   }
 
@@ -70,9 +71,9 @@ class TestTCG extends FlatSpec with ShouldMatchers {
   it should "conform to the 'Fundamentals of Astrodynamics and Applications' validation data" in {
     // Reference epoch in the book are for April 6, 2004, 16:43:00.0000 UTC or 16:44:04.1840 TT (not May 14)
     implicit val universe = new MockTimeUniverse()
-    val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, universe.TT)
+    val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, TT)
 
-    val tcg = new TCG(TT_EPOCH)
+    val tcg = new TCGTime(TT_EPOCH)
     tcg.offsetFromTT(jd_tt) should be(+0.5996 plusOrMinus 1E-4)
   }
 }

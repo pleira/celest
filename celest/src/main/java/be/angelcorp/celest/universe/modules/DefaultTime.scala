@@ -1,12 +1,12 @@
 package be.angelcorp.celest.universe.modules
 
 import com.google.inject._
-import com.google.inject.name.{Named, Names}
 import be.angelcorp.celest.time.{JulianDate, Epoch}
 import be.angelcorp.celest.time.EpochAnnotations._
 import be.angelcorp.celest.time.timeStandard._
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.physics.Units
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations._
 
 /**
  * This module configures the default behaviour of the different time standards available in the universe.
@@ -14,14 +14,14 @@ import be.angelcorp.celest.physics.Units
  * It defines the following time standards:
  *
  * <ul>
- * <li>TAI: [[be.angelcorp.celest.time.timeStandard.TAI]]</li>
- * <li>TT: [[be.angelcorp.celest.time.timeStandard.TT]]</li>
- * <li>TDT: [[be.angelcorp.celest.time.timeStandard.TT]]</li>
- * <li>TCB: [[be.angelcorp.celest.time.timeStandard.TCB]]</li>
- * <li>TCG: [[be.angelcorp.celest.time.timeStandard.TCG]]</li>
- * <li>TDB: [[be.angelcorp.celest.time.timeStandard.TDB]]</li>
- * <li>UTC: [[be.angelcorp.celest.time.timeStandard.DefaultUTC]]</li>
- * <li>UT1: [[be.angelcorp.celest.time.timeStandard.DefaultUT1]]</li>
+ * <li>TAI: [[be.angelcorp.celest.time.timeStandard.TAITime]]</li>
+ * <li>TT: [[be.angelcorp.celest.time.timeStandard.TTTime]]</li>
+ * <li>TDT: [[be.angelcorp.celest.time.timeStandard.TTTime]]</li>
+ * <li>TCB: [[be.angelcorp.celest.time.timeStandard.TCBTime]]</li>
+ * <li>TCG: [[be.angelcorp.celest.time.timeStandard.TCGTime]]</li>
+ * <li>TDB: [[be.angelcorp.celest.time.timeStandard.TDBTime]]</li>
+ * <li>UTC: [[be.angelcorp.celest.time.timeStandard.UTCTime]]</li>
+ * <li>UT1: [[be.angelcorp.celest.time.timeStandard.UT1Time]]</li>
  * </ul>
  *
  * Furthermore it defines the following epochs:
@@ -42,45 +42,46 @@ import be.angelcorp.celest.physics.Units
 class DefaultTime extends AbstractModule {
 
   def configure() {
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("TAI")).to(classOf[TAI]).asEagerSingleton()
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("TT")).to(classOf[TT]).asEagerSingleton()
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("TDT")).to(classOf[TT]).asEagerSingleton()
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("TCB")).to(classOf[TCB]).asEagerSingleton()
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("TCG")).to(classOf[TCG]).asEagerSingleton()
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("TDB")).to(classOf[TDB]).asEagerSingleton()
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("UTC")).to(classOf[DefaultUTC]).asEagerSingleton()
-    bind(classOf[ITimeStandard]).annotatedWith(Names.named("UT1")).to(classOf[DefaultUT1]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[TAI]).to(classOf[TAITime]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[TT]).to(classOf[TTTime]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[TDT]).to(classOf[TTTime]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[TCB]).to(classOf[TCBTime]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[TCG]).to(classOf[TCGTime]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[TDB]).to(classOf[TDBTime]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[UTC]).to(classOf[UTCTime]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[UT1]).to(classOf[UT1Time]).asEagerSingleton()
+    bind(classOf[TimeStandard]).annotatedWith(classOf[GPS]).to(classOf[GPSTime]).asEagerSingleton()
   }
 
   /** The J2000 epoch in JulianDate form. */
   @Provides
   @J2000
   @Singleton
-  def j2000Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2451545.0, tt)(universe)
+  def j2000Provider(@TT tt: TimeStandard, universe: Universe): Epoch = new JulianDate(2451545.0, tt)(universe)
 
   /** The J1950 epoch in JulianDate form. */
   @Provides
   @J1950
   @Singleton
-  def j1950Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2433282.5, tt)(universe)
+  def j1950Provider(@TT tt: TimeStandard, universe: Universe): Epoch = new JulianDate(2433282.5, tt)(universe)
 
   /** The J1900 epoch in JulianDate form. */
   @Provides
   @J1900
   @Singleton
-  def j1900Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2415020.0, tt)(universe)
+  def j1900Provider(@TT tt: TimeStandard, universe: Universe): Epoch = new JulianDate(2415020.0, tt)(universe)
 
   /** The B1950 epoch in JulianDate form. */
   @Provides
   @B1950
   @Singleton
-  def b950Provider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2433282.42345905, tt)(universe)
+  def b950Provider(@TT tt: TimeStandard, universe: Universe): Epoch = new JulianDate(2433282.42345905, tt)(universe)
 
   /** The starting epoch of the TAI timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   @Provides
   @TAI_EPOCH
   @Singleton
-  def taiEpochProvider(@Named("TT") tt: ITimeStandard, universe: Universe): Epoch = new JulianDate(2443144.5003725, tt)(universe)
+  def taiEpochProvider(@TT tt: TimeStandard, universe: Universe): Epoch = new JulianDate(2443144.5003725, tt)(universe)
 
   /** The starting epoch of the TT timeline: 1 January 1977 00:00:00 TAI (same as TAI/TT/TCG/TCB). */
   @Provides
