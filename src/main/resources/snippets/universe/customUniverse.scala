@@ -13,25 +13,6 @@ implicit val universe = new Universe {
   // Ignore the framegraph
   def frames = ???
 
-  // ??? is a method that throws NotImplementedError
-  // Make TT, TAI, UTC, and UT1 all the same timeline (so effectively there is no TAI/UTC/UT1)
-  val TT = new be.angelcorp.celest.time.timeStandard.TT()
-
-  def TAI = TT
-
-  def UTC = TT
-
-  def UT1 = TT
-
-  // The other time scales are undefined
-  def TCG = ???
-
-  def TDT = ???
-
-  def TDB = ???
-
-  def TCB = ???
-
   def injector: Injector = {
     val universe = this // <= used as a handle to this universe instance in the following AbstractModule (so class[Universe] => this)
     Guice.createInjector(
@@ -39,6 +20,8 @@ implicit val universe = new Universe {
         def configure() = {
           // Bind the default behaviour for resource resolution
           install(new modules.DefaultAether)
+          // Bind the default behaviour for timescales and epochs
+          install(new modules.DefaultTime)
           // Install the other custom module
           install(myModule)
           // Bind Class[Universe] to our custom implementation
