@@ -21,8 +21,7 @@ import be.angelcorp.celest.examples.gui.{Services, CelestExample}
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.kepler._
 import be.angelcorp.celest.trajectory.{KeplerTrajectory, CompositeTrajectory}
-import be.angelcorp.celest.maneuvers.ImpulsiveShot
-import be.angelcorp.celest.time.{Epochs, Epoch}
+import be.angelcorp.celest.time.Epochs
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.constants.EarthConstants
 import be.angelcorp.celest.state.Keplerian
@@ -40,16 +39,13 @@ class QuickStart {
 
   /** Create the earth based frame of a generic template, with the earth having the state <0,0,0,0,0,0> (R,V) */
   val earthFrame = new BodyCentered {
-    def centerBody = EarthConstants.bodyCenter
+    def centerBody = EarthConstants.body
   }
-
-  // Time after the three kicks and an additional orbit
-  var tf: Epoch = null
 
   try {
     /* Compute the trajectory of the AEHF satellite for the first three kicks by the LAE engine */
     logger.info("Creating the quickstart trajectory")
-    val trajectory = getTrajectory
+    val (trajectory, tf) = getTrajectory
 
     /* Now you can simply evaluate the trajectory, and plot the results using an external app */
     val samples = 1000.0
@@ -90,12 +86,12 @@ class QuickStart {
 
   def getTrajectory = {
     // Original orbit
-    var Rp = EarthConstants.radiusMean + 190E3
-    var Ra = 50000E3
-    var k = new Keplerian((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, Some(earthFrame))
+    val Rp = EarthConstants.radiusMean + 190E3
+    val Ra = 50000E3
+    val k = new Keplerian((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, Some(earthFrame))
 
     // The satellite that will perform the specific maneuver
-    var satellite = new Satellite(k)
+    val satelliteT0 = MySatellite(Epochs.J2000, k)
 
     /* This is the trajectory that will store the different trajectory segments */
     /* You can add trajectory and a time from where this trajectory should be evaluated */
@@ -103,49 +99,39 @@ class QuickStart {
 
     /* First leg of the trajectory, the orbit as it was injected by the atlas launcher */
     /* Without any intervention, it would keep this orbit */
-    val t0 = Epochs.J2000
-    trajectory.trajectories.put(t0, new KeplerTrajectory(t0, k))
+    trajectory.trajectories.put(satelliteT0.epoch, new KeplerTrajectory(satelliteT0.epoch, Keplerian(satelliteT0.state)))
 
     /* Add first kick to the satellite */
     /* Compute dV for LAE (main engine) */
     /* Current speed in apogee */
-    val Va = sqrt(visViva(earthFrame.centerBody.getMu(), Ra, k.semiMajorAxis))
+    val Va = sqrt(visViva(earthFrame.centerBody.μ, Ra, k.semiMajorAxis))
     /* Raise the perigee to this value after 3 kicks */
-    Rp = EarthConstants.radiusMean + 19000E3
+    val Rp2 = EarthConstants.radiusMean + 19000E3
     /* Total dV for the 3 kicks */
-    val dV = sqrt(visViva(earthFrame.centerBody.getMu(), Ra, (Ra + Rp) / 2)) - Va
+    val dV = sqrt(visViva(earthFrame.centerBody.μ, Ra, (Ra + Rp2) / 2)) - Va
 
-    /* Time when we reach the kick location (after 1.5 periods */
-    var t = t0.addS((3.0 / 2.0) * k.quantities.period)
-    satellite = new Satellite(trajectory(t))
-
-    /* Make the LAE engine */
-    val LAE = new ImpulsiveShot(satellite)
+    /* Time and state when we reach the kick location (after 1.5 periods */
+    val beforeManeuver15 = satelliteT0.propagateFor((3.0 / 2.0) * k.quantities.period)
     /* Add the first kick of the LAE */
-    var state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
+    val satellite15 = beforeManeuver15.kickLAE(dV / 3)
     /* Add the next leg to the trajectory */
-    k = Keplerian(state)
-    trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
+    trajectory.trajectories.put(satellite15.epoch, new KeplerTrajectory(satellite15.epoch, Keplerian(satellite15.state)))
 
-    /* Add kick 2 */
-    /* The time of the 2nd kick is the time of the first kick plus one orbit */
-    t = t.addS(k.quantities.period)
-    /* Same procedure */
-    state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
-    k = Keplerian(state)
-    trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
+    /* Add kick 2, Same procedure */
+    val beforeManeuver25 = satellite15.propagateFor(Keplerian(satellite15.state).quantities.period)
+    val satellite25 = beforeManeuver25.kickLAE(dV / 3)
+    trajectory.trajectories.put(satellite25.epoch, new KeplerTrajectory(satellite25.epoch, Keplerian(satellite25.state)))
 
     /* And the third kick */
-    t = t.addS(k.quantities.period)
-    state = LAE.kick(dV / 3, satellite.getHydrazineLAE)
-    k = Keplerian(state)
-    trajectory.trajectories.put(t, new KeplerTrajectory(t, k))
+    val beforeManeuver35 = satellite25.propagateFor(Keplerian(satellite25.state).quantities.period)
+    val satellite35 = beforeManeuver35.kickLAE(dV / 3)
+    trajectory.trajectories.put(satellite35.epoch, new KeplerTrajectory(satellite35.epoch, Keplerian(satellite35.state)))
 
-    // Time after the three kicks and an additional orbit
-    tf = t.addS(k.quantities.period)
+    // State after the three kicks and an additional orbit
+    val satelliteFinal = satellite35.propagateFor(Keplerian(satellite35.state).quantities.period)
 
-    /* Return the composite trajectory */
-    trajectory
+    /* Return the composite trajectory, and the final time */
+    (trajectory, satelliteFinal.epoch)
   }
 
 }

@@ -15,23 +15,64 @@
  */
 package be.angelcorp.celest.examples.examples.quickstart
 
-import be.angelcorp.celest.body.BiPropellant
-import be.angelcorp.celest.body.CelestialBody
-import be.angelcorp.celest.body.MonoPropellant
-import be.angelcorp.celest.state.Orbit
+import be.angelcorp.celest.body.{Propellant, BiPropellant, Satellite, MonoPropellant}
+import be.angelcorp.celest.state.{Keplerian, PosVel, Orbit}
+import be.angelcorp.celest.time.Epoch
 
-class Satellite(s: Orbit) extends CelestialBody(s, 0) {
+class MySatellite(e: Epoch, s: Orbit,
+                  val hydrazine: Propellant,
+                  val nitrogenTetroxide: Propellant,
+                  val xenon: Propellant) extends Satellite(e, 0, s) {
 
-  /* Different propellants */
-  val hydrazine = new MonoPropellant(225, 1550)
-  val nitrogenTetroxide = new MonoPropellant(0, 1200)
-  val xenon = new MonoPropellant(2000, 400)
-
+  /**
+   * Get the propellant view for the bipropellant LAE engine.
+   */
   def getHydrazineLAE = {
     val oxToFuel = 1.3
     new BiPropellant(340, hydrazine, 1 / (1 + oxToFuel), nitrogenTetroxide)
   }
 
-  override def getTotalMass = 6170 - hydrazine.wetMass - nitrogenTetroxide.wetMass - xenon.wetMass
+  /**
+   * Perform a kick using the Hydrazine LAE engine. This instantaneously changes the state of the satellite by increasing
+   * the satellite velocity norm with the given ΔV quantity.
+   *
+   * @param ΔV Amount of ΔV to add the the current velocity vector [m/s].
+   * @return The new satellite sate.
+   */
+  def kickLAE(ΔV: Double) = {
+    val HLAE = getHydrazineLAE.consumeDV(this, ΔV)
+    val currentState = s.toPosVel
+    val newState = new PosVel(currentState.position, currentState.velocity + s.toPosVel.velocity.normalize * ΔV, currentState.frame)
+    new MySatellite(e, newState, HLAE.primairy, HLAE.secondairy, xenon)
+  }
+
+  /**
+   * Propagate the current state forward using kepler propagation (unperturbed) for the given amount of seconds.
+   * @param Δt_seconds Number of seconds to advance the current epoch & state.
+   * @return The new satellite state.
+   */
+  def propagateFor(Δt_seconds: Double) = {
+    val newEpoch = epoch.addS(Δt_seconds)
+    val newState = Keplerian(state).propagateFor(Δt_seconds)
+    new MySatellite(newEpoch, newState, hydrazine, nitrogenTetroxide, xenon)
+  }
+
+  override val mass = 6170 -
+    (1550 - hydrazine.propellantMass) - //  (initial propellant mass - current propellant mass)
+    (1200 - nitrogenTetroxide.propellantMass) -
+    (400 - xenon.propellantMass)
+
+}
+
+object MySatellite {
+
+  def apply(epoch: Epoch, state: Orbit) = {
+    /* Initial propellant quantities */
+    val hydrazine = new MonoPropellant(225, 1550)
+    val nitrogenTetroxide = new MonoPropellant(0, 1200)
+    val xenon = new MonoPropellant(2000, 400)
+
+    new MySatellite(epoch, state, hydrazine, nitrogenTetroxide, xenon)
+  }
 
 }
