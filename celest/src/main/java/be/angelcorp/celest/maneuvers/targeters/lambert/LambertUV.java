@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.lambert;
 
-import be.angelcorp.celest.body.CelestialBody;
+import be.angelcorp.celest.body.Satellite;
 import be.angelcorp.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
@@ -85,7 +85,7 @@ public class LambertUV extends TPBVP {
             double y = computeY(z, C, S);
 
             double x = sqrt(y / C);
-            double currentDT = (pow(x, 3) * S + A * sqrt(y)) / centerbody.getMu();
+            double currentDT = (pow(x, 3) * S + A * sqrt(y)) / centerbody.μ();
             return currentDT;
         }
     }
@@ -94,7 +94,7 @@ public class LambertUV extends TPBVP {
      * Body at the center of the Keplerian motion, r1 and r2 are measured wrt this body. This us usually
      * The Earth for near Earth orbits, and the Sun for interplanetary missions.
      */
-    private CelestialBody centerbody;
+    private Satellite centerbody;
 
     /**
      * Indicates if the direction of motion is the small angle between r1 and r2, or the large angle
@@ -112,7 +112,7 @@ public class LambertUV extends TPBVP {
      * @param arrival    Epoch of arrival (epoch at r2)
      * @param shortWay   Use short arc transfer (transfer solution over the smallest angle between R1 and R2)
      */
-    public LambertUV(PosVel r1, PosVel r2, CelestialBody centerbody, Epoch departure,
+    public LambertUV(PosVel r1, PosVel r2, Satellite centerbody, Epoch departure,
                      Epoch arrival, boolean shortWay) {
         super(r1, r2, departure, arrival);
         this.centerbody = centerbody;
@@ -147,7 +147,7 @@ public class LambertUV extends TPBVP {
 
         double y = func.computeY(z);
         double f = 1d - y / r1norm;
-        double g = A * sqrt(y / centerbody.getMu());
+        double g = A * sqrt(y / centerbody.μ());
         double g_dot = 1d - y / r2norm;
 
         // Compute the initial velocities at beginning and end points

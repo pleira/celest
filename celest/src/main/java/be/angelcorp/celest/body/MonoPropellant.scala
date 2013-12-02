@@ -17,7 +17,7 @@ package be.angelcorp.celest.body
 
 import scala.math._
 
-class MonoPropellant(val Isp: Double = 0.0, var wetMass: Double = 0.0) extends Propellant {
+class MonoPropellant(val Isp: Double = 0.0, val propellantMass: Double = 0.0) extends Propellant {
 
   /**
    * Compute the amount of propellant used in ideal conditions (no gravity losses, Tsiolkovsky)
@@ -28,10 +28,10 @@ class MonoPropellant(val Isp: Double = 0.0, var wetMass: Double = 0.0) extends P
    * </p>
    *
    * @param body Body that consumes DV.
-   * @param dV   DV achieve using this propellant.
+   * @param dV   ΔV achieve using this propellant.
    */
-  def consumeDV(body: ICelestialBody, dV: Double) {
-    val m: Double = body.getTotalMass
+  def consumeDV(body: CelestialBody, dV: Double) = {
+    val m: Double = body.mass
     val dM: Double = m - exp(-dV / Veff) * m
     consumeMass(dM)
   }
@@ -40,8 +40,8 @@ class MonoPropellant(val Isp: Double = 0.0, var wetMass: Double = 0.0) extends P
    * Reduce the propellant mass of the propellant with the specified quantity.
    * @param dM Amount of consumed propellant [kg]
    */
-  def consumeMass(dM: Double) {
-    wetMass -= dM
+  def consumeMass(dM: Double) = {
+    new MonoPropellant(Isp, dM)
   }
 
   /**
@@ -50,7 +50,7 @@ class MonoPropellant(val Isp: Double = 0.0, var wetMass: Double = 0.0) extends P
    * @param body Body that contains the engine.
    * @return Maximum dV that can be given with the given amount of propellant.
    */
-  def ΔvMax(body: ICelestialBody): Double = MonoPropellant.ΔvMax(Isp, wetMass, body.getTotalMass)
+  def ΔvMax(body: CelestialBody): Double = MonoPropellant.ΔvMax(Isp, propellantMass, body.mass)
 
   /**
    * Get the effective exhaust velocity

@@ -15,19 +15,39 @@
  */
 package be.angelcorp.celest.body
 
+import scala.math._
+
 class BiPropellant(val Isp: Double,
                    val primairy: Propellant,
                    val primairyPercent: Double,
                    val secondairy: Propellant) extends Propellant {
 
-  override def consumeMass(dM: Double) {
-    primairy.consumeMass(dM * primairyPercent)
-    secondairy.consumeMass(dM * (1 - primairyPercent))
+  override def consumeMass(dM: Double) = {
+    val pri = primairy.consumeMass(dM * primairyPercent)
+    val sec = secondairy.consumeMass(dM * (1 - primairyPercent))
+    new BiPropellant(Isp, pri, primairyPercent, sec)
   }
 
-  def wetMass = primairy.wetMass + secondairy.wetMass
+  /**
+   * Compute the amount of propellant used in ideal conditions (no gravity losses, Tsiolkovsky)
+   * <p>
+   * For non ideal maneuvers,correct the dV term with a &Delta;dV, eg see:<br />
+   * J.Weiss, B. Metzger, M. Gallmeister, Orbit maneuvers with finite thrust, MBB/ERNO, ESA CR(P)-1910,
+   * 3 volumes, 1983
+   * </p>
+   *
+   * @param body Body that consumes DV.
+   * @param dV   ΔV achieve using this propellant.
+   */
+  def consumeDV(body: CelestialBody, dV: Double) = {
+    val m: Double = body.mass
+    val dM: Double = m - exp(-dV / Veff) * m
+    consumeMass(dM)
+  }
 
-  def ΔvMax(body: ICelestialBody): Double = MonoPropellant.ΔvMax(Isp, wetMass, body.getTotalMass)
+  def propellantMass = primairy.propellantMass + secondairy.propellantMass
+
+  def ΔvMax(body: CelestialBody): Double = MonoPropellant.ΔvMax(Isp, propellantMass, body.mass)
 
   def Veff: Double = MonoPropellant.vEff(Isp)
 

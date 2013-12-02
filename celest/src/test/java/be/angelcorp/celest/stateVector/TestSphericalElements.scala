@@ -20,23 +20,28 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.body.CelestialBody
-import be.angelcorp.celest.constants.Constants
+import be.angelcorp.celest.body.Body
 import be.angelcorp.celest.frameGraph.frames
-import be.angelcorp.celest.state.{TrueAnomaly, Keplerian, Spherical, PosVel}
+import be.angelcorp.celest.state._
 import be.angelcorp.celest.unit.CelestTest._
+import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.state.TrueAnomaly
 import scala.Some
 
 
 @RunWith(classOf[JUnitRunner])
 class TestSphericalElements extends FlatSpec with ShouldMatchers {
 
-  val jplEarthFrame = frames.BodyCentered(new CelestialBody(PosVel(), Constants.mu2mass(398600.440E9)))
+  val jplEarthFrame = frames.BodyCentered(new Body() {
+    def μ: Double = 398600.440E9
+
+    def orbit(epoch: Epoch): Orbit = ???
+  })
 
   "Spherical" should "convert the Cartesian elements from/to Spherical for geostationairy orbits" in {
     /* Classical geo orbit */
-    val rGEO = pow(jplEarthFrame.centerBody.getMu / pow((2.0 * Pi) / (3600.0 * 24.0), 2), 1.0 / 3.0)
-    val vc = sqrt(jplEarthFrame.centerBody.getMu / rGEO)
+    val rGEO = pow(jplEarthFrame.centerBody.μ / pow((2.0 * Pi) / (3600.0 * 24.0), 2), 1.0 / 3.0)
+    val vc = sqrt(jplEarthFrame.centerBody.μ / rGEO)
 
     val pv = PosVel(rGEO, 0, 0,
       0, vc, 0, Some(jplEarthFrame))

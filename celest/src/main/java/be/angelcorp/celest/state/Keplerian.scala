@@ -176,7 +176,7 @@ object Keplerian {
     case s: Spherical =>
       // See Fundamentals of astrodynamics - II , K.F. Wakker, p 16-4, eqn 16.1-16.7
       val frame = s.frame.getOrElse(throw new Exception("Cannot determine the standard gravitational parameter if not frame was set"))
-      val μ = frame.centerBody.getMu
+      val μ = frame.centerBody.μ
 
       val rv2m = s.r * s.v * s.v / μ
       val a = s.r / (2 - rv2m)
@@ -193,7 +193,7 @@ object Keplerian {
         case Some(f) if f.isInstanceOf[BodyCentered] => f.asInstanceOf[BodyCentered]
         case _ => throw new Exception("Cannot convert state to keplerian elements, no body centered frame has been set.")
       }
-      var k = kepler.cartesian2kepler(orbit.toPosVel, frame.centerBody.getMu)
+      val k = kepler.cartesian2kepler(orbit.toPosVel, frame.centerBody.μ)
 
       new Keplerian(k._1, k._2, k._3, k._4, k._5, kepler.meanAnomalyFromTrue(k._6, k._2), Some(frame))
   }

@@ -15,8 +15,8 @@
  */
 package be.angelcorp.celest.constants
 
-import be.angelcorp.celest.body.CelestialBody
-import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.body.Satellite
+import be.angelcorp.celest.universe.Universe
 
 /**
  * Different constants specific to the sun. Has constants in the following categories:
@@ -108,5 +108,5 @@ object SolarConstants {
   val volume = 1.412E27
 
   /** Celestial body representation of the sun. */
-  val body = new CelestialBody(PosVel(), mass)
+  def body(implicit universe: Universe) = new Satellite(mass)
 }

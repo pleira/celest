@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.body.bodyCollection;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 
 /**
  * This is a collection holding always just two bodies. There are some methods to allow for getting the
@@ -28,12 +28,12 @@ public interface ITwoBodyCollection extends IBodyCollection {
     /**
      * Get the fist body in the collection (usually center body)
      */
-    public abstract ICelestialBody getBody1();
+    public abstract CelestialBody getBody1();
 
     /**
      * Get the second body in the collection (usually the satellites)
      */
-    public abstract ICelestialBody getBody2();
+    public abstract CelestialBody getBody2();
 
     /**
      * Find the other body when one body is known. If the given body is not in the collection, the first
@@ -42,6 +42,6 @@ public interface ITwoBodyCollection extends IBodyCollection {
      * @param body One body in the twobody system
      * @return the other body
      */
-    public abstract ICelestialBody other(ICelestialBody body);
+    public abstract CelestialBody other(CelestialBody body);
 
 }

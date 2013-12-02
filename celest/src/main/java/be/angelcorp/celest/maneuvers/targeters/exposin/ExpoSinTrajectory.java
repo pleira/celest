@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.celest.state.PosVel;
@@ -46,7 +46,7 @@ import static org.apache.commons.math3.util.FastMath.cos;
 public class ExpoSinTrajectory implements Trajectory {
 
     private ExponentialSinusoid exposin;
-    private ICelestialBody center;
+    private CelestialBody center;
     private Epoch epoch;
     private double gamma;
 
@@ -57,7 +57,7 @@ public class ExpoSinTrajectory implements Trajectory {
      * @param center  Center body of the trajectory e.g. Sun
      * @param epoch   Epoch at which the transfer starts
      */
-    public ExpoSinTrajectory(ExponentialSinusoid exposin, ICelestialBody center, Epoch epoch) {
+    public ExpoSinTrajectory(ExponentialSinusoid exposin, CelestialBody center, Epoch epoch) {
         this(exposin, Double.NaN, center, epoch);
     }
 
@@ -69,7 +69,7 @@ public class ExpoSinTrajectory implements Trajectory {
      * @param center  Center body of the trajectory e.g. Sun
      * @param epoch   Epoch at which the transfer starts
      */
-    public ExpoSinTrajectory(ExponentialSinusoid exposin, double gamma, ICelestialBody center, Epoch epoch) {
+    public ExpoSinTrajectory(ExponentialSinusoid exposin, double gamma, CelestialBody center, Epoch epoch) {
         this.exposin = exposin;
         this.gamma = gamma;
         this.center = center;
@@ -86,7 +86,7 @@ public class ExpoSinTrajectory implements Trajectory {
         final double t = evalEpoch.relativeToS(epoch);
 
         // Equation of d(theta)/dt
-        final ExpoSinAngularRate thetaDot = new ExpoSinAngularRate(exposin, center.getMu());
+        final ExpoSinAngularRate thetaDot = new ExpoSinAngularRate(exposin, center.μ());
 
         // Find the angle (theta) of the satellite at the time t
         double theta = 0;

@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.body.bodyCollection;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 
 import java.util.Collection;
 
@@ -31,6 +31,6 @@ public interface IBodyCollection {
      *
      * @return A collection of bodies in the container
      */
-    public Collection<ICelestialBody> getBodies();
+    public Collection<CelestialBody> getBodies();
 
 }

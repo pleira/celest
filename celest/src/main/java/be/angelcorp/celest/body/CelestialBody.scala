@@ -13,49 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package be.angelcorp.celest.body
 
-import be.angelcorp.celest.constants.{Constants, SolarConstants}
-import be.angelcorp.celest.potential.{GravitationalPotential, PointMassPotential}
-import be.angelcorp.celest.state.{Orbit, PosVel}
 
 /**
- * Representation of a celestial body (eg planet/sun/satellite). It is a wrapper for a state vector and
- * the mass of the body
- *
- * @param state Body state vector.
- * @param mass  Body mass [kg].
- * @param gravityPotentialFactory Function that creates the gravitational potential of this object.
+ * Representation of a celestial body (eg planet/sun/satellite).
  *
  * @author simon
  */
-class CelestialBody(val state: Orbit,
-                    val mass: Double,
-                    gravityPotentialFactory: CelestialBody => GravitationalPotential) extends ICelestialBody {
-
-  /** The gravitational potential of this object. */
-  lazy val gravitationalPotential = gravityPotentialFactory(this)
+trait CelestialBody {
 
   /**
-   * Generic body with coordinates with R: <0, 0, 0> and V: <0, 0, 0> and with mass of our sun (one
-   * solar mass).
-   */
-  def this() = this(PosVel(), SolarConstants.mass, new PointMassPotential(_))
-
-  /**
-   * Create a generic body with given statevector (location/speed) and mass
+   * Get the gravitational parameter of the celestial body (μ = G * m). This is the result of both
+   * the dry and wet mass of the body.
+   * <p>
+   * <b>Unit: [m<sup>3</sup> / s<sup>2</sup>]</b>
+   * </p>
    *
-   * @param state State of the body.
-   * @param mass Mass of the body [kg].
+   * @return Standard gravitational parameter of the body.
    */
-  def this(state: Orbit, mass: Double) = this(state, mass, new PointMassPotential(_))
+  def μ: Double
 
-  override def getGravitationalPotential: GravitationalPotential = gravitationalPotential
-
-  override def getMu: Double = Constants.mass2mu(mass)
-
-  override def getState: Orbit = state
-
-  override def getTotalMass: Double = mass
+  /**
+   * Get the total mass of the celestial body.
+   * <p>
+   * <b>Unit: [kg]</b>
+   * </p>
+   *
+   * @return Mass of the body [kg].
+   */
+  def mass: Double
 
 }

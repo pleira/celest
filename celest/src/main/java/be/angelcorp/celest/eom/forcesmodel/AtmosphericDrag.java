@@ -15,9 +15,9 @@
  */
 package be.angelcorp.celest.eom.forcesmodel;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.celest.physics.atmosphere.IAtmosphere;
-import be.angelcorp.celest.physics.quantities.ObjectForce;
+import be.angelcorp.celest.state.Orbit;
 import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
@@ -35,7 +35,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  * @author simon
  */
 
-abstract public class AtmosphericDrag extends ObjectForce {
+abstract public class AtmosphericDrag {
 
     /**
      * Drag coefficient
@@ -55,28 +55,20 @@ abstract public class AtmosphericDrag extends ObjectForce {
      * </p>
      */
     protected double area;
-    /**
-     * Planet with the atmosphere around it
-     */
-    protected ICelestialBody planet;
+
     /**
      * Atmosphere creating the drag
      */
     protected IAtmosphere atmosphere;
 
     /**
-     * @param satellite  The satellite experiencing the drag
      * @param cd         coefficient of drag
      * @param area       drag cross-sectional area
-     * @param planet     The planet to which the atmosphere belongs
      * @param atmosphere The atmosphere creating the drag
      */
-    public AtmosphericDrag(ICelestialBody satellite, double cd, double area,
-                           ICelestialBody planet, IAtmosphere atmosphere) {
-        super(satellite);
+    public AtmosphericDrag(double cd, double area, IAtmosphere atmosphere) {
         this.cd = cd;
         this.area = area;
-        this.planet = planet;
         this.atmosphere = atmosphere;
     }
 
@@ -102,18 +94,12 @@ abstract public class AtmosphericDrag extends ObjectForce {
     }
 
     /**
-     * {@inheritDoc}
+     * @param planet    State of the planet to which this atmosphere belongs.
+     * @param body      The body traveling through the atmosphere.
+     * @param bodyOrbit State of the body traveling through the atmosphere.
      */
-    @Override
-    public Vector3D getForce() {
-        return toAcceleration().multiply(getObject().getTotalMass());
-    }
-
-    /**
-     * @see AtmosphericDrag#planet
-     */
-    public ICelestialBody getPlanet() {
-        return planet;
+    public Vector3D getForce(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
+        return toAcceleration(planet, body, bodyOrbit).multiply(body.mass());
     }
 
     /**
@@ -138,21 +124,15 @@ abstract public class AtmosphericDrag extends ObjectForce {
     }
 
     /**
-     * @see AtmosphericDrag#planet
+     * @param planet    State of the planet to which this atmosphere belongs.
+     * @param body      The body traveling through the atmosphere.
+     * @param bodyOrbit State of the body traveling through the atmosphere.
      */
-    public void setPlanet(ICelestialBody planet) {
-        this.planet = planet;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Vector3D toAcceleration() {
-        Vector3D r = getObject().getState().toPosVel().position().$minus(
-                getPlanet().getState().toPosVel().position());
-        Vector3D v = getObject().getState().toPosVel().velocity().$minus(
-                getPlanet().getState().toPosVel().velocity());
+    public Vector3D toAcceleration(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
+        Vector3D r = bodyOrbit.toPosVel().position().$minus(
+                planet.toPosVel().position());
+        Vector3D v = bodyOrbit.toPosVel().velocity().$minus(
+                planet.toPosVel().velocity());
 
         // compute the atmospheric density
         double rho = atmosphere.computeDensity(r); // [kg/m^3]
@@ -163,7 +143,7 @@ abstract public class AtmosphericDrag extends ObjectForce {
         double vrmag = vr.norm();
 
         // form -1/2 (Cd*A/m) rho
-        double beta = cd * area / getObject().getTotalMass(); // [m^2/kg]
+        double beta = cd * area / body.mass(); // [m^2/kg]
         double coeff = -0.5 * beta * rho;
         double coeff2 = coeff * vrmag;
 

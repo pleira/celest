@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.physics.quantities;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.linear.Vector3D$;
 
@@ -30,7 +30,7 @@ public class ObjectForce extends Force {
     /**
      * Object where the force acts on
      */
-    private ICelestialBody object;
+    private CelestialBody object;
     /**
      * Offset with respect to its center of gravity
      */
@@ -41,7 +41,7 @@ public class ObjectForce extends Force {
      *
      * @param object Object where the force acts on
      */
-    public ObjectForce(ICelestialBody object) {
+    public ObjectForce(CelestialBody object) {
         this(object, Vector3D$.MODULE$.ZERO());
     }
 
@@ -51,7 +51,7 @@ public class ObjectForce extends Force {
      * @param object Object where the force acts on
      * @param force  Force vector
      */
-    public ObjectForce(ICelestialBody object, Vector3D force) {
+    public ObjectForce(CelestialBody object, Vector3D force) {
         setObject(object);
         setForce(force);
     }
@@ -67,7 +67,7 @@ public class ObjectForce extends Force {
     /**
      * @see ObjectForce#object
      */
-    public ICelestialBody getObject() {
+    public CelestialBody getObject() {
         return object;
     }
 
@@ -82,7 +82,7 @@ public class ObjectForce extends Force {
     /**
      * @see ObjectForce#object
      */
-    public void setObject(ICelestialBody object) {
+    public void setObject(CelestialBody object) {
         this.object = object;
     }
 
@@ -101,6 +101,6 @@ public class ObjectForce extends Force {
     public Vector3D toAcceleration() {
         // F = m a
         // a = F/m
-        return getForce().divide(getObject().getTotalMass());
+        return getForce().divide(getObject().mass());
     }
 }

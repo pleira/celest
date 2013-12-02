@@ -65,7 +65,7 @@ public class TestExpoSinSolution extends CelestTest {
         Epoch t1 = Epochs.J2000(universe);
         Epoch t2 = Epochs.J2000(universe).addS(calculated_tof);
         ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
-        ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
+        ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(universe), t1);
 
         PosVel c1 = trajectory.apply(t1);
         PosVel c2 = trajectory.apply(t2);
@@ -112,7 +112,7 @@ public class TestExpoSinSolution extends CelestTest {
         Epoch t1 = Epochs.J2000(universe);
         Epoch t2 = Epochs.J2000(universe).addS(calculated_tof);
         ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
-        ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
+        ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(universe), t1);
 
         PosVel c1 = trajectory.apply(t1);
         PosVel c2 = trajectory.apply(t2);
@@ -159,7 +159,7 @@ public class TestExpoSinSolution extends CelestTest {
         Epoch t1 = Epochs.J2000(universe);
         Epoch t2 = Epochs.J2000(universe).addS(calculated_tof);
         ExponentialSinusoid solution = solutionset.getExpoSin(gamma);
-        ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(), t1);
+        ExpoSinTrajectory trajectory = new ExpoSinTrajectory(solution, SolarConstants.body(universe), t1);
 
         PosVel c1 = trajectory.apply(t1);
         PosVel c2 = trajectory.apply(t2);

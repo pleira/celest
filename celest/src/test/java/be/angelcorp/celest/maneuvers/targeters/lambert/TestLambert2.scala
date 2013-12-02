@@ -21,7 +21,7 @@ import junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.celest.body.CelestialBody
+import be.angelcorp.celest.body.Satellite
 import be.angelcorp.celest.constants.Constants._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.universe.DefaultUniverse
@@ -46,7 +46,7 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val N = 0
     val mu = 3986004418E5 // m^3/s^2
 
-    val centerFrame = frames.BodyCentered(new CelestialBody(PosVel.apply(), mu2mass(mu)))
+    val centerFrame = frames.BodyCentered(new Satellite(mu2mass(mu)))
 
     val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
     val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
@@ -86,7 +86,7 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val N = 1
     val mu = 3986004418E5 // m^3/s^2
 
-    val centerFrame = frames.BodyCentered(new CelestialBody(PosVel.apply(), mu2mass(mu)))
+    val centerFrame = frames.BodyCentered(new Satellite(mu2mass(mu)))
 
     val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
     val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
@@ -130,7 +130,7 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val N = 4
     val mu = 3986004418E5 // m^3/s^2
 
-    val centerFrame = frames.BodyCentered(new CelestialBody(PosVel.apply(), mu2mass(mu)))
+    val centerFrame = frames.BodyCentered(new Satellite(mu2mass(mu)))
 
     val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
     val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
@@ -175,7 +175,7 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
       val N = 5
       val mu = 3986004418E5 // m^3/s^2
 
-      val centerFrame = frames.BodyCentered(new CelestialBody(PosVel.apply(), mu2mass(mu)))
+      val centerFrame = frames.BodyCentered(new Satellite(mu2mass(mu)))
 
       val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
       val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))

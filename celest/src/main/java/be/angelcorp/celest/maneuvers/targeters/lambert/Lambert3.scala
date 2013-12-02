@@ -20,14 +20,14 @@ import math._
 import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.body.CelestialBody
+import be.angelcorp.celest.body.Satellite
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.state.PosVel
 import com.google.common.base.Preconditions._
 
 class Lambert3(r1: PosVel, r2: PosVel,
                departure: Epoch, arrival: Epoch,
-               val center: CelestialBody, val N: Double = 0,
+               val center: Satellite, val N: Double = 0,
                val prograde: Boolean = true, val leftBranch: Boolean = true) extends TPBVP(r1, r2, departure, arrival) {
 
   val longWay = {
@@ -59,7 +59,7 @@ class Lambert3(r1: PosVel, r2: PosVel,
     // define constants
     val c = sqrt(pow(r1, 2) + pow(r2, 2) - 2 * r1 * r2 * cos(dth))
     val s = (r1 + r2 + c) / 2
-    val T = sqrt(8 * center.getMu / pow(s, 3)) * tf
+    val T = sqrt(8 * center.μ / pow(s, 3)) * tf
     val q = sqrt(r1 * r2) / s * cos(dth / 2)
 
     // general formulae for the initial values (Gooding)
@@ -202,7 +202,7 @@ class Lambert3(r1: PosVel, r2: PosVel,
     // calculate terminal velocities
 
     // constants required for this calculation
-    val gamma = sqrt(center.getMu * s / 2)
+    val gamma = sqrt(center.μ * s / 2)
     val (sigma, rho, z) =
       if (c == 0) {
         val sigma = 1.0

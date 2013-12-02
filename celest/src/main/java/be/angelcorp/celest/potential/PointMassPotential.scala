@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.potential
 
-import be.angelcorp.celest.body.CelestialBody
+import be.angelcorp.celest.body.Satellite
 import be.angelcorp.libs.math.linear.Vector3D
 import scala.math._
 
@@ -28,9 +28,9 @@ import scala.math._
  * @author Simon Billemont
  * @see IPointMassPotential
  */
-class PointMassPotential(val body: CelestialBody) extends GravitationalPotential {
+class PointMassPotential(val body: Satellite) extends GravitationalPotential {
 
   override def apply(point: Vector3D) =
-    point.negate * (body.getMu() / pow(point.norm, 3))
+    point.negate * (body.μ / pow(point.norm, 3))
 
 }

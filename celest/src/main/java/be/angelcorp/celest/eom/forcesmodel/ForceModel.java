@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.eom.forcesmodel;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.celest.physics.quantities.ObjectForce;
 import be.angelcorp.celest.physics.quantities.Torque;
 import com.google.common.collect.ImmutableList;
@@ -33,7 +33,7 @@ public class ForceModel extends ForceModelCore {
      *
      * @param body Bod where the forces act on
      */
-    public ForceModel(ICelestialBody body, ObjectForce... forces) {
+    public ForceModel(CelestialBody body, ObjectForce... forces) {
         super(body);
 
         for (ObjectForce f : forces)

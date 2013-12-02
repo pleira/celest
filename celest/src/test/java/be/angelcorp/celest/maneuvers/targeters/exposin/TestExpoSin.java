@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin;
 
-import be.angelcorp.celest.body.CelestialBody;
+import be.angelcorp.celest.body.Satellite;
 import be.angelcorp.celest.constants.Constants;
 import be.angelcorp.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.celest.state.PosVel;
@@ -64,8 +64,7 @@ public class TestExpoSin extends CelestTest {
         PosVel s2 = new PosVel(
                 Vector3D$.MODULE$.apply(dTheta, 0).multiply(r2), Vector3D$.MODULE$.ZERO(), none);
 
-        ExpoSin exposin = new ExpoSin(s1, s2, t1, t2);
-        exposin.setCenter(new CelestialBody(PosVel.apply(), 1.9891E30));
+        ExpoSin exposin = new ExpoSin(s1, s2, t1, t2, new Satellite(1.9891E30, universe));
         exposin.assumeK2(k2);
 
         // Results as computed by the Matlab routine:
@@ -117,10 +116,8 @@ public class TestExpoSin extends CelestTest {
 
         Epoch t1 = Epochs.J2000(universe);
         Epoch t2 = Epochs.J2000(universe).addS(dt);
-        CelestialBody center = new CelestialBody(PosVel.apply(), Constants.mu2mass(1E4));
 
-        ExpoSin exposin = new ExpoSin(r1, r2, t1, t2);
-        exposin.setCenter(center);
+        ExpoSin exposin = new ExpoSin(r1, r2, t1, t2, new Satellite(Constants.mu2mass(1E4), universe));
         exposin.setN(N);
         exposin.assumeK2(k2);
 

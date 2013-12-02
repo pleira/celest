@@ -15,8 +15,7 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin;
 
-import be.angelcorp.celest.body.ICelestialBody;
-import be.angelcorp.celest.constants.SolarConstants;
+import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
@@ -46,7 +45,7 @@ public class ExpoSin extends TPBVP {
      * <b>Unit: [m<sup>3</sup>/s<sup>2</sup>]</b>
      * </p>
      */
-    private ICelestialBody center = SolarConstants.body();
+    private final CelestialBody center;
     /**
      * Amount of rotations to perform around the center body in order to arrive at r2.
      * <p>
@@ -74,8 +73,9 @@ public class ExpoSin extends TPBVP {
      * @param departure Epoch of departure (epoch at r1) [jd]
      * @param arrival   Epoch of arrival (epoch at r2) [jd]
      */
-    public ExpoSin(PosVel r1, PosVel r2, Epoch departure, Epoch arrival) {
+    public ExpoSin(PosVel r1, PosVel r2, Epoch departure, Epoch arrival, CelestialBody center) {
         super(r1, r2, departure, arrival);
+        this.center = center;
     }
 
     /**
@@ -120,7 +120,7 @@ public class ExpoSin extends TPBVP {
         double psi = acos(r1vec.dot(r2vec) / (r1 * r2));
         double theta = psi + 2 * PI * N;
 
-        return new ExpoSinSolutionSet(r1, r2, assumeK2, theta, center.getMu());
+        return new ExpoSinSolutionSet(r1, r2, assumeK2, theta, center.μ());
     }
 
     @Override
@@ -134,13 +134,6 @@ public class ExpoSin extends TPBVP {
         // Create a trajectory from the found solution
         ExponentialSinusoid solution = solutions.getExpoSin(gammaOptimal);
         return new ExpoSinTrajectory(solution, gammaOptimal, center, departureEpoch);
-    }
-
-    /**
-     * Set the center celesital body
-     */
-    public void setCenter(ICelestialBody center) {
-        this.center = center;
     }
 
     /**

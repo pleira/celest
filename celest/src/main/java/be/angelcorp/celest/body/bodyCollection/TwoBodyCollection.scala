@@ -17,7 +17,7 @@ package be.angelcorp.celest.body.bodyCollection
 
 import java.util.Collection
 import scala.collection.JavaConversions._
-import be.angelcorp.celest.body.ICelestialBody
+import be.angelcorp.celest.body.CelestialBody
 
 /**
  * Implementation of `ITwoBodyCollection`, this is a collection holding always just two bodies.
@@ -29,14 +29,14 @@ import be.angelcorp.celest.body.ICelestialBody
  * @author Simon Billemont
  * @see ITwoBodyCollection
  */
-class TwoBodyCollection(val body1: ICelestialBody, val body2: ICelestialBody) extends ITwoBodyCollection {
+class TwoBodyCollection(val body1: CelestialBody, val body2: CelestialBody) extends ITwoBodyCollection {
 
-  override def getBodies: Collection[ICelestialBody] = List(body1, body2)
+  override def getBodies: Collection[CelestialBody] = List(body1, body2)
 
   override def getBody1 = body1
 
   override def getBody2 = body2
 
-  override def other(body: ICelestialBody): ICelestialBody = if (body eq body1) body2 else body1
+  override def other(body: CelestialBody): CelestialBody = if (body eq body1) body2 else body1
 
 }

@@ -29,7 +29,7 @@ abstract class KeplerEquations(k: Keplerian) {
    */
   lazy val μ = {
     val frame = k.frame.getOrElse(throw new Exception("Cannot derive mu from Keplerian when no frame has been set!"))
-    frame.centerBody.getMu
+    frame.centerBody.μ
   }
 
   /**

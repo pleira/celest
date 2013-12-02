@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.state.orientationState;
 
-import be.angelcorp.celest.body.CelestialBody;
+import be.angelcorp.celest.body.Satellite;
 import be.angelcorp.celest.state.IState;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
@@ -38,7 +38,7 @@ import org.apache.commons.math3.linear.RealVector;
  * </p>
  * <p/>
  * <pre>
- * public static [StateVectorClass] as({@link IOrientationState} state, {@link CelestialBody} center);
+ * public static [StateVectorClass] as({@link IOrientationState} state, {@link Satellite} center);
  * </pre>
  */
 public interface IOrientationState extends IState {

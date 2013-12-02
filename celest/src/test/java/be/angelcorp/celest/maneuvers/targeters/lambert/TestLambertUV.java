@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.lambert;
 
-import be.angelcorp.celest.body.CelestialBody;
+import be.angelcorp.celest.body.Satellite;
 import be.angelcorp.celest.constants.Constants;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
@@ -45,7 +45,7 @@ public class TestLambertUV extends CelestTest {
         // V1 = 27.4408 -14.0438 0.5468 (km/s)
         // V2 = -24.5242 18.6776 -0.4856 (km/s)
 
-        CelestialBody center = new CelestialBody(PosVel.apply(), Constants.mu2mass(1.32712428E20));
+        Satellite center = new Satellite(Constants.mu2mass(1.32712428E20), universe);
 
         Vector3D r1 = new ImmutableVector3D(1.364377463519496E11, 6.129036612130551E10, 2.784835397959758E09);
         Vector3D r2 = new ImmutableVector3D(3.730051396741382E09, -1.495513611895726E11, 0.);

@@ -17,11 +17,11 @@ package be.angelcorp.celest.constants
 
 import Constants._
 import be.angelcorp.celest.state.positionState._
-import be.angelcorp.celest.body.CelestialBody
+import be.angelcorp.celest.body.Satellite
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.trajectory.KeplerVariationTrajectory
 import be.angelcorp.celest.universe.Universe
-import be.angelcorp.celest.state.{NonSingular, PosVel, Keplerian}
+import be.angelcorp.celest.state.{NonSingular, Keplerian}
 import be.angelcorp.celest.frameGraph.frames.BodyCentered
 import be.angelcorp.celest.time.Epochs
 
@@ -206,17 +206,14 @@ object EarthConstants {
     new Keplerian(semiMajorAxis, eccentricity, inclination, argPerigee, raan, mean_anomaly, None) // TODO: set correct frame
 
   /** Celestial body representation of the earth around the sun at the J2000 epoch. */
-  val body = new CelestialBody(solarOrbit, mass)
-
-  /** Celestial body representation of the earth in the center in the HAE_J2000 reference frame. */
-  val bodyCenter = new CelestialBody(PosVel(), mass)
+  def body(implicit universe: Universe) = new Satellite(mass)
 
   def orbit(implicit universe: Universe) = {
     // Values based on
     // Simon, J., Bretagnon, P., Chapront, J., Chapront-Touzé, M., Francou, G., Laskar, J., 1994. Numerical expressions
     // for precession formulas and mean elements for the moon and the planets. Astron. Astrophys. 282 (2), 663–683.
 
-    val jpl_sun = new CelestialBody(PosVel(), mu2mass(1.32712440018E20))
+    val jpl_sun = new Satellite(mu2mass(1.32712440018E20))
 
     val a0 = astronomicalUnit(1.0000010)
     val e0 = 0.0167086

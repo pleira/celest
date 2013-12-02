@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.eom.forcesmodel;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.celest.frameGraph.frames.BodyCentered;
 import be.angelcorp.celest.physics.quantities.ObjectForce;
 import be.angelcorp.celest.physics.quantities.Torque;
@@ -42,7 +42,7 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
     /**
      * Body where all the forces/torques act on
      */
-    private ICelestialBody body;
+    private CelestialBody body;
 
     /**
      * Forces acting on the specific body
@@ -58,7 +58,7 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
      *
      * @param body Body where all the forces act on
      */
-    public ForceModelCore(ICelestialBody body) {
+    public ForceModelCore(CelestialBody body) {
         this.body = body;
     }
 
@@ -99,7 +99,7 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
     /**
      * @see ForceModelCore#body
      */
-    public ICelestialBody getBody() {
+    public CelestialBody getBody() {
         return body;
     }
 

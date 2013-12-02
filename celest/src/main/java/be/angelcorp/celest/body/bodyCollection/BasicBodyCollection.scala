@@ -18,7 +18,7 @@ package be.angelcorp.celest.body.bodyCollection
 import java.util.Collection
 import scala.collection.mutable
 import scala.collection.JavaConversions._
-import be.angelcorp.celest.body.ICelestialBody
+import be.angelcorp.celest.body.CelestialBody
 
 /**
  * Basic implementation of a [[be.angelcorp.celest.body.bodyCollection.IBodyCollection]] using a [[scala.collection.mutable.Set]]
@@ -27,8 +27,8 @@ import be.angelcorp.celest.body.ICelestialBody
  *
  * @author Simon Billemont
  */
-class BasicBodyCollection(val bodySet: mutable.Set[ICelestialBody]) extends IBodyCollection {
+class BasicBodyCollection(val bodySet: mutable.Set[CelestialBody]) extends IBodyCollection {
 
-  override def getBodies: Collection[ICelestialBody] = asJavaCollection(bodySet)
+  override def getBodies: Collection[CelestialBody] = asJavaCollection(bodySet)
 
 }

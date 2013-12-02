@@ -28,13 +28,13 @@ trait Propellant {
    * Reduce the propellant mass of the propellant with the specified quantity.
    * @param dM Amount of consumed propellant [kg]
    */
-  def consumeMass(dM: Double)
+  def consumeMass(dM: Double): Propellant
 
   /**
    * Amount of propellant mass left.
    * @return Propellant mass [kg].
    */
-  def wetMass: Double
+  def propellantMass: Double
 
   /**
    * Compute the maximum dV that can be given with this engine (for an impulse maneuver, Tsiolkovsky).
@@ -42,7 +42,7 @@ trait Propellant {
    * @param body Body that contains the engine.
    * @return Maximum dV that can be given with the given amount of propellant.
    */
-  def ΔvMax(body: ICelestialBody): Double
+  def ΔvMax(body: CelestialBody): Double
 
   /**
    * Get the effective exhaust velocity.

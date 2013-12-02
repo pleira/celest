@@ -23,7 +23,7 @@ import be.angelcorp.libs.math.linear.Vector3D;
  *
  * @author Simon Billemont
  */
-public interface IShapedBody extends ICelestialBody {
+public interface IShapedBody extends CelestialBody {
 
     /**
      * Get the cross-sectional area of a body, when looked upon from the provided direction (observer to this body).

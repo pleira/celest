@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.state.positionState;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -109,7 +109,7 @@ public class NonSingularDerivative extends StateDerivativeVector {
     /**
      * Center body of the {@link NonSignuarElements}
      */
-    private ICelestialBody centerbody;
+    private CelestialBody centerbody;
 
     /**
      * Create the Kepler derivative from direct numerical values
@@ -138,7 +138,7 @@ public class NonSingularDerivative extends StateDerivativeVector {
      * @param centerbody  The body that is being orbited by these elements
      */
     public NonSingularDerivative(double da, double de, double di, double domega_true, double draan, double dlambda_M,
-                                 ICelestialBody centerbody) {
+                                 CelestialBody centerbody) {
         super();
         this.da = da;
         this.de = de;
@@ -162,7 +162,7 @@ public class NonSingularDerivative extends StateDerivativeVector {
      *
      * @see NonSingularDerivative#centerbody
      */
-    public ICelestialBody getCenterbody() {
+    public CelestialBody getCenterbody() {
         return centerbody;
     }
 
@@ -225,7 +225,7 @@ public class NonSingularDerivative extends StateDerivativeVector {
      *
      * @see NonSingularDerivative#centerbody
      */
-    public void setCenterbody(ICelestialBody centerbody) {
+    public void setCenterbody(CelestialBody centerbody) {
         this.centerbody = centerbody;
     }
 

@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.state.positionState;
 
-import be.angelcorp.celest.body.ICelestialBody;
+import be.angelcorp.celest.body.CelestialBody;
 import org.apache.commons.math3.linear.RealVector;
 
 /**
@@ -61,7 +61,7 @@ public interface IKeplerDerivative extends IPositionStateDerivative {
     /**
      * @see KeplerElements#centerbody
      */
-    public abstract ICelestialBody getCenterbody();
+    public abstract CelestialBody getCenterbody();
 
     /**
      * @see KeplerElements#e
@@ -96,7 +96,7 @@ public interface IKeplerDerivative extends IPositionStateDerivative {
     /**
      * @see KeplerElements#centerbody
      */
-    public abstract void setCenterbody(ICelestialBody centerbody);
+    public abstract void setCenterbody(CelestialBody centerbody);
 
     /**
      * @see KeplerElements#e

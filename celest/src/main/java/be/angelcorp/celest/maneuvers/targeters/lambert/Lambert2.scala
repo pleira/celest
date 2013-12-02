@@ -21,7 +21,7 @@ import org.apache.commons.math3.util.FastMath
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.body.ICelestialBody
+import be.angelcorp.celest.body.CelestialBody
 import be.angelcorp.celest.state.PosVel
 
 /**
@@ -50,7 +50,7 @@ import be.angelcorp.celest.state.PosVel
  */
 class Lambert2(r1: PosVel, r2: PosVel,
                departure: Epoch, arrival: Epoch,
-               val center: ICelestialBody, val N: Double = 0,
+               val center: CelestialBody, val N: Double = 0,
                val prograde: Boolean = true, val leftBranch: Boolean = true) extends TPBVP(r1, r2, departure, arrival) {
 
   val longWay = {
@@ -73,7 +73,7 @@ class Lambert2(r1: PosVel, r2: PosVel,
     val r1 = origin.norm
     val r1vec = origin / r1
     val r2vec = destination / r1
-    val V = sqrt(center.getMu / r1)
+    val V = sqrt(center.μ / r1)
     val T = r1 / V
     val tf = abs(arrivalEpoch.relativeToS(departureEpoch) / T)
 

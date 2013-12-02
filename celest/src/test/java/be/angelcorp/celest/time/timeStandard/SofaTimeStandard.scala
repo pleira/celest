@@ -30,6 +30,8 @@ import be.angelcorp.celest.time.timeStandard.TimeStandards._
 @RunWith(classOf[JUnitRunner])
 class SofaTimeStandard extends FlatSpec with ShouldMatchers {
 
+  implicit val universe = new DefaultUniverse()
+
   def toTimeStandard(s: String): TimeStandard = s match {
     case "TT" => TT
     case "TAI" => TAI
@@ -40,8 +42,6 @@ class SofaTimeStandard extends FlatSpec with ShouldMatchers {
     case "UTC" => UTC
     case _ => throw new UnsupportedOperationException("Unknown TimeStandard: " + s)
   }
-
-  implicit val universe = new DefaultUniverse()
 
   println(new File(".").getAbsolutePath)
 

@@ -25,15 +25,18 @@ import be.angelcorp.celest.constants.Constants._
 import be.angelcorp.celest.kepler
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.unit.CelestTest._
-import be.angelcorp.celest.body.CelestialBody
+import be.angelcorp.celest.body.Satellite
 import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.universe.DefaultUniverse
 
 
 @RunWith(classOf[JUnitRunner])
 class TestKeplerEquations extends FlatSpec with ShouldMatchers {
+
+  implicit val universe = new DefaultUniverse
 
   /** **********************************
     * Non-Static function tests
@@ -79,7 +82,7 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
 
   it should "compute the correct cartesian to kepler conversion" in {
     val frame = new BodyCentered {
-      val centerBody = new CelestialBody(PosVel(), 5.9736E24)
+      val centerBody = new Satellite(5.9736E24)
     }
     val c = new PosVel(
       Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
@@ -87,7 +90,7 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
       Some(frame)
     )
 
-    val k = kepler.cartesian2kepler(c, frame.centerBody.getMu)
+    val k = kepler.cartesian2kepler(c, frame.centerBody.μ)
     val expected = Array[Double](1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560)
     val tol = expected.map(_ * 1E-3)
 
@@ -96,7 +99,7 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
 
   it should "compute the correct cartesian to kepler (2d) conversion" in {
     val frame = new BodyCentered {
-      val centerBody = new CelestialBody(PosVel(), 5.9736E24)
+      val centerBody = new Satellite(5.9736E24)
     }
     val c = new PosVel(
       Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
@@ -104,7 +107,7 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
       Some(frame)
     )
 
-    val k = kepler.cartesian2kepler2D(c, frame.centerBody.getMu)
+    val k = kepler.cartesian2kepler2D(c, frame.centerBody.μ)
 
     k._1 should be(1.216495E7 plusOrMinus 1E4)
     k._2 should be(0.01404 plusOrMinus 1E-5)
