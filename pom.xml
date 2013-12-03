@@ -71,14 +71,21 @@
 
     <profiles>
         <profile>
-            <id>celest-examples</id>
+            <id>examples</id>
             <activation>
-                <file>
-                    <exists>examples/pom.xml</exists>
-                </file>
+                <file> <exists>examples/pom.xml</exists> </file>
             </activation>
             <modules>
                 <module>examples</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>console</id>
+            <activation>
+                <file> <exists>console/pom.xml</exists> </file>
+            </activation>
+            <modules>
+                <module>console</module>
             </modules>
         </profile>
     </profiles>

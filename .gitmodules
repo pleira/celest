@@ -1,3 +1,6 @@
 [submodule "examples"]
 	path = examples
 	url = http://scm.angelcorp.be/git/be.angelcorp.celest.examples.git
+[submodule "console"]
+	path = console
+	url = http://scm.angelcorp.be/git/be.angelcorp.celest.console.git
