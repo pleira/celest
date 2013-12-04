@@ -144,7 +144,7 @@ package object jplEphemeris {
       headerData.position(recordSize)
 
       val tagValues = for (i <- 0 until tagCount) yield headerData.getDouble
-      val tags = ListMap(tagNames zip tagValues filterNot (_._1.matches( """\s+""")): _*)
+      val tags = ListMap(tagNames.map(_.trim) zip tagValues filterNot (_._1.matches( """^\s*$""")): _*)
 
       // Skip over the padding of the second record
       headerData.position(2 * recordSize)
@@ -248,7 +248,9 @@ package object jplEphemeris {
     // Shorthand for the metadata
     val metadata = ephmeris.metadata
     // This is the list of tags that will be stored, stretched to the required number of elements
-    val tags = metadata.tags.toList.padTo(if (metadata.tags.size <= 400) 400 else 1000, ("      ", 0.0))
+    val tags = metadata.tags.toList.padTo(if (metadata.tags.size <= 400) 400 else 1000, ("      ", 0.0)).map(
+      (entry) => (entry._1.padTo(6, ' '), entry._2)
+    )
 
     val buffer = ByteBuffer.allocateDirect(metadata.recordEntries * 8)
     buffer.order(endianness)

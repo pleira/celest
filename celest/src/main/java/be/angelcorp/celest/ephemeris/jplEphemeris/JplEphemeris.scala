@@ -1,12 +1,13 @@
 package be.angelcorp.celest.ephemeris.jplEphemeris
 
 import be.angelcorp.celest.time.{TimeRange, Epoch}
-import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.state.{Orbit, PosVel}
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.universe.Universe
-import be.angelcorp.celest.ephemeris.IEphemeris
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
+import be.angelcorp.celest.body.Body
+import be.angelcorp.celest.physics.Units
 
 trait JplEphemeris {
 
@@ -146,8 +147,30 @@ trait JplEphemeris {
    *
    * @param body Body for which to generate the ephemeris.
    */
-  def bodyEphemeris(body: JDEBody) = new IEphemeris[PosVel] {
-    def getEphemerisOn(date: Epoch) = interpolateState(date, body)
+  def body(body: JDEBody) = new Body {
+    val μ: Double = {
+      val gm = body match {
+        case Mercury() => metadata.tags.getOrElse("GM1", throw JplConstantException("GM1"))
+        case Venus() => metadata.tags.getOrElse("GM2", throw JplConstantException("GM2"))
+        case EMB() => metadata.tags.getOrElse("GMB", throw JplConstantException("GMB"))
+        case Earth() => metadata.EMRAT * metadata.tags.getOrElse("GMB", throw JplConstantException("GMB")) / (1.0 + metadata.EMRAT)
+        case Mars() => metadata.tags.getOrElse("GM4", throw JplConstantException("GM4"))
+        case Jupiter() => metadata.tags.getOrElse("GM5", throw JplConstantException("GM5"))
+        case Saturn() => metadata.tags.getOrElse("GM6", throw JplConstantException("GM6"))
+        case Uranus() => metadata.tags.getOrElse("GM7", throw JplConstantException("GM7"))
+        case Neptune() => metadata.tags.getOrElse("GM8", throw JplConstantException("GM8"))
+        case Pluto() => metadata.tags.getOrElse("GM9", throw JplConstantException("GM9"))
+        case MoonGEO() => metadata.tags.getOrElse("GMB", throw JplConstantException("GMB")) / (1.0 + metadata.EMRAT)
+        case Moon() => metadata.tags.getOrElse("GMB", throw JplConstantException("GMB")) / (1.0 + metadata.EMRAT)
+        case Sun() => metadata.tags.getOrElse("GMS", throw JplConstantException("GM1"))
+        case SSB() => List("GMS", "GM1", "GM2", "GMB", "GM4", "GM5", "GM6", "GM7", "GM8", "GM9").map(tag => {
+          metadata.tags.getOrElse(tag, throw JplConstantException(tag))
+        }).sum
+      }
+      gm * math.pow(metadata.AU * 1E3, 3) / math.pow(Units.julianDay, 2)
+    }
+
+    def orbit(epoch: Epoch): Orbit = interpolateState(epoch, body)
   }
 
   /**
