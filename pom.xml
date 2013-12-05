@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>be.angelcorp</groupId>
-    <artifactId>celestPool</artifactId>
+    <groupId>be.angelcorp.celest</groupId>
+    <artifactId>pool</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <description>Celest library and related tools</description>
@@ -26,8 +26,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <scala.version>2.10.3</scala.version>
-        <scala.version.scalatest>2.10</scala.version.scalatest>
-        <scala.version.scala-chart>2.10</scala.version.scala-chart>
+        <scala.version.short>2.10</scala.version.short>
     </properties>
 
     <licenses>
@@ -46,13 +45,6 @@
         </developer>
     </developers>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-    </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>

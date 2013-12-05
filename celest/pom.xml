@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.angelcorp</groupId>
-        <artifactId>celestPool</artifactId>
+        <groupId>be.angelcorp.celest</groupId>
+        <artifactId>pool</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
@@ -97,10 +97,15 @@
             <artifactId>guice</artifactId>
             <version>4.0-beta</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>2.0.2</version>
+        </dependency>
 
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_${scala.version.scalatest}</artifactId>
+            <artifactId>scalatest_${scala.version.short}</artifactId>
             <version>2.0</version>
             <scope>test</scope>
         </dependency>
