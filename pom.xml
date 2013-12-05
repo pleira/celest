@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.angelcorp</groupId>
-        <artifactId>celestPool</artifactId>
+        <groupId>be.angelcorp.celest</groupId>
+        <artifactId>pool</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
@@ -14,12 +14,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>be.angelcorp</groupId>
+            <groupId>be.angelcorp.celest</groupId>
             <artifactId>celest</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
         <dependency>
-            <groupId>org.reflections</groupId>
+            <groupId>be.angelcorp.libs</groupId>
+            <artifactId>matlabConnect</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+        <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.9-RC1</version>
         </dependency>
@@ -33,13 +41,6 @@
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
             <version>4.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>be.angelcorp.libs</groupId>
-            <artifactId>matlabConnect</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -60,7 +61,7 @@
 
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_${scala.version.scalatest}</artifactId>
+            <artifactId>scalatest_${scala.version.short}</artifactId>
             <version>2.0</version>
             <scope>test</scope>
         </dependency>
