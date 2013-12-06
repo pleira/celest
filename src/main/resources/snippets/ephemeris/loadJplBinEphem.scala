@@ -4,9 +4,10 @@ import be.angelcorp.celest.ephemeris.jplEphemeris.JplEphemeris
 implicit val universe = new be.angelcorp.celest.universe.DefaultUniverse
 
 // Download the binary data file and save to disk
-val ftpPath = "ftp://ssd.jpl.nasa.gov/pub/eph/planets/Linux/de405/lnx1600.405"
+val urlBase = "http://static.angelcorp.be/projects/celest/testResources/lnx1600.405"
+// Alternatively use "ftp://ssd.jpl.nasa.gov/pub/eph/planets/Linux/de405/lnx1600.405"
 val path = java.nio.file.Files.createTempFile("lnx1600", "405")
-val stream = java.net.URI.create(ftpPath).toURL.openStream()
+val stream = java.net.URI.create(urlBase).toURL.openStream()
 java.nio.file.Files.copy(stream, path, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
 
 // Read in the downloaded ephemeris file
