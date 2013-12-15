@@ -33,8 +33,6 @@ class DefaultUniverse extends Universe {
 
   val injector = Guice.createInjector(configurationModules.toArray: _*)
 
-  lazy val frames = throw new UnsupportedOperationException("Operation not yet implemented")
-
   def thisUniverseModule = {
     val universe = this
     new AbstractModule {

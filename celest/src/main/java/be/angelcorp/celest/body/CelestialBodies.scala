@@ -25,42 +25,42 @@ import be.angelcorp.celest.body.CelestialBodyAnnotations._
 object CelestialBodies {
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Mercury]] */
-  def mercury(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Mercury])
+  def mercury(implicit universe: Universe) = universe.instance[Body, Mercury]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Venus]] */
-  def venus(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Venus])
+  def venus(implicit universe: Universe) = universe.instance[Body, Venus]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Earth]] */
-  def earth(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Earth])
+  def earth(implicit universe: Universe) = universe.instance[Body, Earth]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Moon]] */
-  def moon(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Moon])
+  def moon(implicit universe: Universe) = universe.instance[Body, Moon]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.EarthMoonBarycenter]] */
-  def earthMoonBarycenter(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[EarthMoonBarycenter])
+  def earthMoonBarycenter(implicit universe: Universe) = universe.instance[Body, EarthMoonBarycenter]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Mars]] */
-  def mars(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Mars])
+  def mars(implicit universe: Universe) = universe.instance[Body, Mars]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Jupiter]] */
-  def jupiter(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Jupiter])
+  def jupiter(implicit universe: Universe) = universe.instance[Body, Jupiter]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Saturn]] */
-  def saturn(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Saturn])
+  def saturn(implicit universe: Universe) = universe.instance[Body, Saturn]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Uranus]] */
-  def uranus(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Uranus])
+  def uranus(implicit universe: Universe) = universe.instance[Body, Uranus]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Neptune]] */
-  def neptune(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Neptune])
+  def neptune(implicit universe: Universe) = universe.instance[Body, Neptune]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Pluto]] */
-  def pluto(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Pluto])
+  def pluto(implicit universe: Universe) = universe.instance[Body, Pluto]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.Sun]] */
-  def sun(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[Sun])
+  def sun(implicit universe: Universe) = universe.instance[Body, Sun]
 
   /** See [[be.angelcorp.celest.body.CelestialBodyAnnotations.SolarSystemBarycenter]] */
-  def solarSystemBarycenter(implicit universe: Universe) = universe.getInstance(classOf[Body], classOf[SolarSystemBarycenter])
+  def solarSystemBarycenter(implicit universe: Universe) = universe.instance[Body, SolarSystemBarycenter]
 
 }

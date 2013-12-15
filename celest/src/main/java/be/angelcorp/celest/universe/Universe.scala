@@ -16,88 +16,80 @@
 
 package be.angelcorp.celest.universe
 
-import be.angelcorp.celest.frameGraph.ReferenceFrameGraph
-import com.google.inject.spi.TypeConverterBinding
 import com.google.inject._
 import java.lang.annotation.Annotation
+import net.codingwell.scalaguice._
+import net.codingwell.scalaguice.KeyExtensions._
 
 /**
  * Contains all the context information regarding a simulation, such as the reference frame/time data.
+ *
+ * This trait is based on the dependency injection technique, as implemented by Guide. For more information see
+ * http://code.google.com/p/google-guice.
  */
-trait Universe extends Injector {
-
-  /** Reference frame graph */
-  def frames: ReferenceFrameGraph
+trait Universe {
 
   /** Dependency injector */
   def injector: Injector
 
-  override def injectMembers(instance: AnyRef) =
+  /**
+   * Injects dependencies into the fields and methods of `instance`. Ignores the presence or absence of an injectable constructor.
+   * <p>
+   * Whenever Guice creates an instance, it performs this injection automatically (after first performing constructor
+   * injection), so if you're able to let Guice create all your objects for you, you'll never need to use this method.
+   * </p>
+   * @param instance to inject members on
+   * @see com.google.inject.Injector#injectMembers
+   */
+  def injectMembers(instance: AnyRef) =
     injector.injectMembers(instance)
 
-  override def getMembersInjector[T](typeLiteral: TypeLiteral[T]): MembersInjector[T] =
-    injector.getMembersInjector(typeLiteral)
+  /**
+   * Returns the provider used to obtain instances for the given injection type.
+   * When feasible, avoid using this method, in favor of having Guice inject your dependencies ahead of time.
+   * @see com.google.inject.Injector#getProvider
+   */
+  def provider[T: Manifest]: Provider[T] =
+    injector.getProvider(typeLiteral[T].toKey)
 
-  override def getMembersInjector[T](`type`: Class[T]): MembersInjector[T] =
-    injector.getMembersInjector(`type`)
-
-  override def getBindings: java.util.Map[Key[_], Binding[_]] =
-    injector.getBindings
-
-  override def getAllBindings: java.util.Map[Key[_], Binding[_]] =
-    injector.getAllBindings
-
-  override def getBinding[T](key: Key[T]): Binding[T] =
-    injector.getBinding(key)
-
-  override def getBinding[T](`type`: Class[T]): Binding[T] =
-    injector.getBinding(`type`)
-
-  override def getExistingBinding[T](key: Key[T]): Binding[T] =
-    injector.getExistingBinding(key)
-
-  override def findBindingsByType[T](`type`: TypeLiteral[T]): java.util.List[Binding[T]] =
-    injector.findBindingsByType(`type`)
-
-  override def getProvider[T](key: Key[T]): Provider[T] =
+  /**
+   * Returns the provider used to obtain instances for the given injection key.
+   * When feasible, avoid using this method, in favor of having Guice inject your dependencies ahead of time.
+   * @see com.google.inject.Injector#getProvider
+   */
+  def provider[T](key: Key[T]): Provider[T] =
     injector.getProvider(key)
 
-  override def getProvider[T](`type`: Class[T]): Provider[T] =
-    injector.getProvider(`type`)
+  /**
+   * Returns the appropriate instance for the given injection type.
+   * When feasible, avoid using this method, in favor of having Guice inject your dependencies ahead of time.
+   * @see com.google.inject.Injector#getInstance
+   */
+  def instance[T: Manifest]: T =
+    injector.getInstance(typeLiteral[T].toKey)
 
-  override def getInstance[T](key: Key[T]): T =
+  /**
+   * Returns the appropriate instance for the given injection key.
+   * When feasible, avoid using this method, in favor of having Guice inject your dependencies ahead of time.
+   * @see com.google.inject.Injector#getInstance
+   */
+  def instance[T](key: Key[T]): T =
     injector.getInstance(key)
-
-  override def getInstance[T](`type`: Class[T]): T =
-    injector.getInstance(`type`)
 
   /**
    * Returns the appropriate instance for the given injection type annotated with the given annotation.
    * When feasible, avoid using this method, in favor of having Guice inject your dependencies ahead of time.
+   * @see com.google.inject.Injector#getInstance
    */
-  def getInstance[T](`type`: Class[T], annotation: Annotation): T =
-    injector.getInstance(Key.get(`type`, annotation))
+  def instance[T: Manifest](annotation: Annotation): T =
+    injector.getInstance(typeLiteral[T].annotatedWith(annotation))
 
   /**
    * Returns the appropriate instance for the given injection type annotated with the given annotation class.
    * When feasible, avoid using this method, in favor of having Guice inject your dependencies ahead of time.
+   * @see com.google.inject.Injector#getInstance
    */
-  def getInstance[T](`type`: Class[T], annotation: Class[_ <: Annotation]): T =
-    injector.getInstance(Key.get(`type`, annotation))
-
-  override def getParent: Injector =
-    injector.getParent
-
-  override def createChildInjector(modules: java.lang.Iterable[_ <: Module]): Injector =
-    injector.createChildInjector(modules)
-
-  override def createChildInjector(modules: Module*): Injector =
-    injector.createChildInjector(modules: _*)
-
-  override def getScopeBindings: java.util.Map[Class[_ <: Annotation], Scope] =
-    injector.getScopeBindings
-
-  override def getTypeConverterBindings: java.util.Set[TypeConverterBinding] =
-    injector.getTypeConverterBindings
+  def instance[T: Manifest, A <: java.lang.annotation.Annotation](implicit evidence: scala.Predef.Manifest[A]): T =
+    injector.getInstance(enrichTypeLiteral(typeLiteral[T]).annotatedWith(evidence))
 
 }

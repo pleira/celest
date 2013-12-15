@@ -18,7 +18,6 @@ package be.angelcorp.celest.time.timeStandard
 
 import be.angelcorp.celest.universe.{modules, Universe}
 import be.angelcorp.celest.time.Epoch
-import org.scalatest.exceptions.TestFailedException
 import org.eclipse.aether.repository.RemoteRepository
 import com.google.inject._
 import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TT
@@ -30,8 +29,6 @@ class MockTime(val offset: Double) extends TimeStandard {
 }
 
 class MockTimeUniverse extends Universe {
-  def frames = throw new TestFailedException("Unsupported mock operation", 0)
-
   def additionalConfig = new AbstractModule {
     def configure() {}
   }
