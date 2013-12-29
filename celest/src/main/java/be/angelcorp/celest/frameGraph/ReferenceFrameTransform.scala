@@ -27,7 +27,7 @@ import be.angelcorp.libs.math.rotation.IRotation
  *
  * @author Simon Billemont
  */
-trait ReferenceFrameTransform[F0 <: ReferenceFrame, F1 <: ReferenceFrame] {
+trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
 
   /**
    * Apply another ReferenceFrameTransform on top of this transform, so that the resulting
@@ -37,7 +37,7 @@ trait ReferenceFrameTransform[F0 <: ReferenceFrame, F1 <: ReferenceFrame] {
    * @param other ReferenceFrameTransform to add to this frame.
    * @return A ReferenceFrameTransform from F0 to F2.
    */
-  def add[F2 <: ReferenceFrame](other: ReferenceFrameTransform[F1, F2]): ReferenceFrameTransform[F0, F2]
+  def add[F2 <: ReferenceSystem](other: ReferenceFrameTransform[F1, F2]): ReferenceFrameTransform[F0, F2]
 
   /**
    * Get a factory capable of creating this type of transform under alternative conditions.

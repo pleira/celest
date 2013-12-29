@@ -16,9 +16,9 @@
 package be.angelcorp.celest.frameGraph.transformations;
 
 import be.angelcorp.celest.frameGraph.BasicReferenceFrameTransformFactory;
-import be.angelcorp.celest.frameGraph.ReferenceFrame;
 import be.angelcorp.celest.frameGraph.ReferenceFrameTransform;
 import be.angelcorp.celest.frameGraph.ReferenceFrameTransformFactory;
+import be.angelcorp.celest.frameGraph.ReferenceSystem;
 import be.angelcorp.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.Vector3D;
 import be.angelcorp.libs.math.rotation.IRotation;
@@ -37,7 +37,7 @@ import be.angelcorp.libs.math.rotation.IRotation;
  * @param <F1> Destination frame of the produced transformation
  * @author Simon Billemont
  */
-public abstract class KinematicTransformationFactory<F0 extends ReferenceFrame, F1 extends ReferenceFrame>
+public abstract class KinematicTransformationFactory<F0 extends ReferenceSystem, F1 extends ReferenceSystem>
         extends BasicReferenceFrameTransformFactory<F0, F1> {
 
     /**

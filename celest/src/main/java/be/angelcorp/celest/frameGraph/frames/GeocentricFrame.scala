@@ -15,14 +15,13 @@
  */
 package be.angelcorp.celest.frameGraph.frames
 
-import be.angelcorp.celest.frameGraph.systems._
 import be.angelcorp.celest.universe.Universe
-import be.angelcorp.celest.frameGraph.ReferenceFrame
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.time.Epochs
 
 /**
  * The ITRF (International Terrestrial Reference Frame) is the default implementation of the
- * [[be.angelcorp.celest.frameGraph.systems.ITRS]]. It comes in several definitions based
+ * [[ITRS]]. It comes in several definitions based
  * on different years:
  * <p>
  * 2013, 2008, 2005, 2000, 1997, 1996, 1994, 1993, 1992, 1991, 1990, 1989, 1988
@@ -60,24 +59,24 @@ object ITRF {
    * @param year Year of the ITRF frame to search for.
    * @return A Predicate to identify the ITRF frameGraph of a specific year.
    */
-  def itrfPreficate(year: Int): ReferenceFrame => Boolean = {
+  def itrfPreficate(year: Int): ReferenceSystem => Boolean = {
     case ITRF(`year`) => true
     case _ => false
   }
 
 }
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.systems.TIRS]] reference system. */
+/** Default implementation of the [[TIRS]] reference system. */
 case class TIRF() extends TIRS
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.systems.ERS]] reference system. */
+/** Default implementation of the [[ERS]] reference system. */
 case class ERF() extends ERS
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.systems.MODs]] reference system. */
-case class MOD() extends MODs
+/** Default implementation of the [[MODs]] reference system. */
+case class MOD() extends MODSystem
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.systems.J2000s]] reference system. */
-case class J2000() extends J2000s
+/** Default implementation of the [[J2000s]] reference system. */
+case class J2000() extends J2000System
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.systems.GCRS]] reference system. */
+/** Default implementation of the [[GCRS]] reference system. */
 case class GCRF() extends GCRS

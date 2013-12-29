@@ -22,7 +22,7 @@ import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.trajectory.KeplerVariationTrajectory
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.state.{NonSingular, Keplerian}
-import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import be.angelcorp.celest.time.Epochs
 
 /**
@@ -221,7 +221,7 @@ object EarthConstants {
     val w_bar0 = degrees(102.9373481)
     val W0 = degrees(174.8731758)
     val L0 = degrees(100.4664568)
-    val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, Some(new BodyCentered {
+    val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, Some(new BodyCenteredSystem {
       //TODO: Use an actual frame
       def centerBody = jpl_sun
     }))

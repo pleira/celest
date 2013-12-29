@@ -67,7 +67,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    */
   def transform(omega: Double, theta: Double, phi: Double) = RotationMatrix.rotateZXZ(omega, theta, phi)
 
-  def transformFactory(trans: Epoch => IRotation) = new KinematicTransformationFactory[ReferenceFrame, ReferenceFrame] {
+  def transformFactory(trans: Epoch => IRotation) = new KinematicTransformationFactory[ReferenceSystem, ReferenceSystem] {
     protected def calculateParameters(date: Epoch): TransformationParameters = {
       new TransformationParameters(date,
         Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO,

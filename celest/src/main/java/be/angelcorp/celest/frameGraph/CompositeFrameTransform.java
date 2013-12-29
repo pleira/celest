@@ -38,7 +38,7 @@ import scala.Tuple3;
  * @param <F2> Transform to a state in this frame.
  * @author Simon Billemont
  */
-public class CompositeFrameTransform<F0 extends ReferenceFrame, F1 extends ReferenceFrame, F2 extends ReferenceFrame>
+public class CompositeFrameTransform<F0 extends ReferenceSystem, F1 extends ReferenceSystem, F2 extends ReferenceSystem>
         extends BasicReferenceFrameTransform<F0, F2, CompositeFrameTransformFactory<F0, F1, F2>> {
 
     /**

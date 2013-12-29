@@ -32,7 +32,7 @@ import scala.Some
 @RunWith(classOf[JUnitRunner])
 class TestKeplerian extends FlatSpec with ShouldMatchers {
 
-  val sunFrame = frames.BodyCentered(new Body() {
+  val sunFrame = frames.BodyCenteredSystem(new Body() {
     def μ: Double = 132712440040.944000E9
 
     def orbit(epoch: Epoch): Orbit = ???
@@ -106,7 +106,7 @@ class TestKeplerian extends FlatSpec with ShouldMatchers {
     // JDCT = 2455562.500000000 = A.D. 2011-Jan-01 00:00:00.0000 (CT)
     // X =-1.947136151107762E+05 Y =-3.249790482942117E+05 Z =-1.934593293850985E+04 [km]
     // VX= 8.680230862574665E-01 VY=-5.629777269508974E-01 VZ= 7.784227958608481E-02 [km/s]
-    val jplEarthFrame = frames.BodyCentered(new Body() {
+    val jplEarthFrame = frames.BodyCenteredSystem(new Body() {
       def μ: Double = 398600.440E9
 
       def orbit(epoch: Epoch): Orbit = ???

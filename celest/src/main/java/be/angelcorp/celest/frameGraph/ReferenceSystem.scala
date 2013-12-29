@@ -25,4 +25,4 @@ package be.angelcorp.celest.frameGraph
  *
  * @author Simon Billemont
  */
-trait ReferenceFrame
+trait ReferenceSystem

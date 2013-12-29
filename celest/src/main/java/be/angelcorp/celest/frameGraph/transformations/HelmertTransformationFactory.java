@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.frameGraph.transformations;
 
-import be.angelcorp.celest.frameGraph.ReferenceFrame;
+import be.angelcorp.celest.frameGraph.ReferenceSystem;
 import be.angelcorp.celest.time.Epoch;
 import be.angelcorp.libs.math.linear.ImmutableVector3D;
 import be.angelcorp.libs.math.linear.Vector3D;
@@ -70,7 +70,7 @@ import be.angelcorp.libs.util.physics.Time;
  * @param <F1> Create a transformation from to frame.
  * @author Simon Billemont
  */
-public class HelmertTransformationFactory<F0 extends ReferenceFrame, F1 extends ReferenceFrame>
+public class HelmertTransformationFactory<F0 extends ReferenceSystem, F1 extends ReferenceSystem>
         extends KinematicTransformationFactory<F0, F1> {
 
     /**
@@ -92,7 +92,7 @@ public class HelmertTransformationFactory<F0 extends ReferenceFrame, F1 extends 
      * double, double, double, double, double, double, double, double, double, double, double,
      * double)
      */
-    public static <F0 extends ReferenceFrame, F1 extends ReferenceFrame> HelmertTransformationFactory<F0, F1> fromIERSunits(
+    public static <F0 extends ReferenceSystem, F1 extends ReferenceSystem> HelmertTransformationFactory<F0, F1> fromIERSunits(
             Epoch epoch,
             double Tx, double Ty, double Tz, double S, double Rx, double Ry, double Rz,
             double dTx, double dTy, double dTz, double dS, double dRx, double dRy, double dRz) {
@@ -119,7 +119,7 @@ public class HelmertTransformationFactory<F0 extends ReferenceFrame, F1 extends 
      * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.celest.time.Epoch, Vector3D, double,
      * Vector3D, Vector3D, double, Vector3D)
      */
-    public static <F0 extends ReferenceFrame, F1 extends ReferenceFrame> HelmertTransformationFactory<F0, F1> fromIERSunits(
+    public static <F0 extends ReferenceSystem, F1 extends ReferenceSystem> HelmertTransformationFactory<F0, F1> fromIERSunits(
             Epoch epoch, Vector3D T, double S, Vector3D R, Vector3D dT, double dS, Vector3D dR) {
         double mm2m = Length.MILLIMETER.getScaleFactor();
         double y2s = Time.year_julian.getScaleFactor();

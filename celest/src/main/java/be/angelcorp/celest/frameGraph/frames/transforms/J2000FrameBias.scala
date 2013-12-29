@@ -17,7 +17,7 @@
 package be.angelcorp.celest.frameGraph.frames.transforms
 
 import math._
-import be.angelcorp.celest.frameGraph.ReferenceFrame
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.libs.math.linear.Matrix3D
@@ -30,7 +30,7 @@ import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformF
  * 2) G. Petit, B. Luzum (eds.).,<b>"IERS Conventions (2010)"</b>, IERS Technical Note 36, Frankfurt am Main: Verlag des Bundesamts für Kartographie und Geodäsie, 2010. 179 pp., ISBN 3-89888-989-6<br/>
  * 3) G. H. Kaplan, <b>"The IAU Resolutions on Astronomical Reference Systems, Time Scales, and Earth Rotation Models"</b>, 2005, U.S. Naval Observatory Circular No. 179, [online] http://arxiv.org/abs/astro-ph/0602086
  */
-class J2000FrameBias(val preciseForm: Boolean = true) extends ConstantRotationTransformFactory[ReferenceFrame, ReferenceFrame] {
+class J2000FrameBias(val preciseForm: Boolean = true) extends ConstantRotationTransformFactory[ReferenceSystem, ReferenceSystem] {
 
   /**
    * The offset in the ICRS right ascension origin with respect to the dynamical equinox of J2000.0,

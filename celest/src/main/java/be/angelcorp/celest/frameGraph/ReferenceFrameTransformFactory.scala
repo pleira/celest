@@ -25,7 +25,7 @@ import be.angelcorp.celest.time.Epoch
  *
  * @author Simon Billemont
  */
-trait ReferenceFrameTransformFactory[F0 <: ReferenceFrame, F1 <: ReferenceFrame] {
+trait ReferenceFrameTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
 
   /**
    * Apply another ReferenceFrameTransformFactory on top of this transformFactory, so that the
@@ -35,7 +35,7 @@ trait ReferenceFrameTransformFactory[F0 <: ReferenceFrame, F1 <: ReferenceFrame]
    * @param other ReferenceFrameTransformFactory to add to this factory.
    * @return A ReferenceFrameTransformFactory from F0 to F2.
    */
-  def add[F2 <: ReferenceFrame](other: ReferenceFrameTransformFactory[F1, F2]): ReferenceFrameTransformFactory[F0, F2]
+  def add[F2 <: ReferenceSystem](other: ReferenceFrameTransformFactory[F1, F2]): ReferenceFrameTransformFactory[F0, F2]
 
   /**
    * Rough estimate of the number of operations required to <b>create and apply</b> a ReferenceFrame.

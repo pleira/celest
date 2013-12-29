@@ -23,14 +23,14 @@ package be.angelcorp.celest.frameGraph;
  * @param <F1> Creates transforms to this type of frame.
  * @author Simon Billemont
  */
-public abstract class BasicReferenceFrameTransformFactory<F0 extends ReferenceFrame, F1 extends ReferenceFrame>
+public abstract class BasicReferenceFrameTransformFactory<F0 extends ReferenceSystem, F1 extends ReferenceSystem>
         implements ReferenceFrameTransformFactory<F0, F1> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <F2 extends ReferenceFrame> CompositeFrameTransformFactory<F0, F1, F2> add(
+    public <F2 extends ReferenceSystem> CompositeFrameTransformFactory<F0, F1, F2> add(
             ReferenceFrameTransformFactory<F1, F2> other) {
         CompositeFrameTransformFactory<F0, F1, F2> newFactory = new CompositeFrameTransformFactory<>(this, other);
         return newFactory;

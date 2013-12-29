@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.lambert;
 
-import be.angelcorp.celest.frameGraph.frames.BodyCentered;
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem;
 import be.angelcorp.celest.state.Keplerian;
 import be.angelcorp.celest.state.Orbit;
 import be.angelcorp.celest.state.PosVel;
@@ -59,7 +59,7 @@ public class LambertTrajectory implements Trajectory {
     /**
      * Frame in which the motion takes place
      */
-    private final BodyCentered frame;
+    private final BodyCenteredSystem frame;
 
     /**
      * This is the trajectory that the satellite flies from r1 to r2
@@ -79,7 +79,7 @@ public class LambertTrajectory implements Trajectory {
      * @param g              G function (of the F and G functions, NOT SERIES)
      * @param g_dot          G dot function (of the F and G functions, NOT SERIES)
      */
-    public LambertTrajectory(Vector3D r1, Vector3D r2, BodyCentered frame, Epoch departureEpoch,
+    public LambertTrajectory(Vector3D r1, Vector3D r2, BodyCenteredSystem frame, Epoch departureEpoch,
                              Epoch arrivalEpoch, double f, double g, double g_dot) {
         this.r1 = r1;
         this.r2 = r2;
@@ -106,7 +106,7 @@ public class LambertTrajectory implements Trajectory {
     /**
      * Get the frame in which the motion takes place
      */
-    public BodyCentered getFrame() {
+    public BodyCenteredSystem getFrame() {
         return frame;
     }
 

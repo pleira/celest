@@ -16,7 +16,7 @@
 package be.angelcorp.celest.maneuvers.targeters.exposin;
 
 import be.angelcorp.celest.body.CelestialBody;
-import be.angelcorp.celest.frameGraph.frames.BodyCentered;
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem;
 import be.angelcorp.celest.maneuvers.targeters.TPBVP;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
@@ -128,7 +128,7 @@ public class ExpoSinTrajectory implements Trajectory {
         Vector3D V = rotation.applyTo(Vector3D$.MODULE$.apply(V_r, R.normalize(), V_theta, V_theta_norm));
 
         // Convert to the position in cartesian elements (in plane coordinates)
-        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+        final scala.Option<BodyCenteredSystem> none = scala.Option.apply(null);
         return new PosVel(R, V, none);
     }
 

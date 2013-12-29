@@ -32,7 +32,7 @@ import scala.Some
 @RunWith(classOf[JUnitRunner])
 class TestSphericalElements extends FlatSpec with ShouldMatchers {
 
-  val jplEarthFrame = frames.BodyCentered(new Body() {
+  val jplEarthFrame = frames.BodyCenteredSystem(new Body() {
     def μ: Double = 398600.440E9
 
     def orbit(epoch: Epoch): Orbit = ???

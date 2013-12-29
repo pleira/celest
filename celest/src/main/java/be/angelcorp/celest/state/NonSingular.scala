@@ -16,7 +16,7 @@
 package be.angelcorp.celest.state
 
 import be.angelcorp.celest.kepler._
-import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 /**
  * Holds the state using the non-singular Keplerian elements:
@@ -55,7 +55,7 @@ class NonSingular(val a: Double,
                   val ω_true: Double,
                   val Ω: Double,
                   val λ_mean: Double,
-                  val frame: Option[BodyCentered] = None) extends Orbit {
+                  val frame: Option[BodyCenteredSystem] = None) extends Orbit {
 
   /** A more verbose name for a [m] */
   def semiMajorAxis = a

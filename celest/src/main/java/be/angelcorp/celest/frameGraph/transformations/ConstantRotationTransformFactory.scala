@@ -1,10 +1,10 @@
 package be.angelcorp.celest.frameGraph.transformations
 
-import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransformFactory, ReferenceFrame}
+import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransformFactory, ReferenceSystem}
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.libs.math.linear.Matrix3D
 
-trait ConstantRotationTransformFactory[F0 <: ReferenceFrame, F1 <: ReferenceFrame]
+trait ConstantRotationTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
   extends BasicReferenceFrameTransformFactory[F0, F1] {
 
   /**

@@ -19,7 +19,7 @@ import scala.math._
 import be.angelcorp.celest.kepler
 import be.angelcorp.celest.kepler._
 import be.angelcorp.libs.math.MathUtils2._
-import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 sealed abstract class FastAngle
 
@@ -99,7 +99,7 @@ class Keplerian(val a: Double,
                 val ω: Double,
                 val Ω: Double,
                 val meanAnomaly: Double,
-                val frame: Option[BodyCentered] = None) extends Orbit {
+                val frame: Option[BodyCenteredSystem] = None) extends Orbit {
 
   /** A more verbose name for a */
   def semiMajorAxis = a
@@ -190,7 +190,7 @@ object Keplerian {
       Keplerian(a, e, i, ω, Ω, TrueAnomaly(trueA), s.frame)
     case orbit =>
       val frame = orbit.frame match {
-        case Some(f) if f.isInstanceOf[BodyCentered] => f.asInstanceOf[BodyCentered]
+        case Some(f) if f.isInstanceOf[BodyCenteredSystem] => f.asInstanceOf[BodyCenteredSystem]
         case _ => throw new Exception("Cannot convert state to keplerian elements, no body centered frame has been set.")
       }
       val k = kepler.cartesian2kepler(orbit.toPosVel, frame.centerBody.μ)
@@ -209,7 +209,7 @@ object Keplerian {
    * @param fast Fast angle (position of the satellite) [rad]
    * @param frame Frame in which this set of elements is defined.
    */
-  def apply(a: Double, e: Double, i: Double, ω: Double, Ω: Double, fast: FastAngle, frame: Option[BodyCentered]): Keplerian = {
+  def apply(a: Double, e: Double, i: Double, ω: Double, Ω: Double, fast: FastAngle, frame: Option[BodyCenteredSystem]): Keplerian = {
     val ma = fast match {
       case MeanAnomaly(ma) => ma
       case TrueAnomaly(ta) => kepler.meanAnomalyFromTrue(ta, e)
@@ -224,7 +224,7 @@ object Keplerian {
    * @param elements Tuple with the respective Kepler elements.
    * @param frame Frame in which this set of elements is defined.
    */
-  def apply(elements: (Double, Double, Double, Double, Double, Double), frame: Option[BodyCentered]): Keplerian =
+  def apply(elements: (Double, Double, Double, Double, Double, Double), frame: Option[BodyCenteredSystem]): Keplerian =
     new Keplerian(elements._1, elements._2, elements._3, elements._4, elements._5, elements._6, frame)
 
 }

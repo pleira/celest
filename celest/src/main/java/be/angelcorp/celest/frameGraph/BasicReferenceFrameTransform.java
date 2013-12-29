@@ -26,7 +26,7 @@ import be.angelcorp.celest.time.Epoch;
  * @tparam F1 Transforms to this typ of frame.
  * @tparam T  Type of the factory, used to create new instances of this ReferenceFrameTransform.
  */
-public abstract class BasicReferenceFrameTransform<F0 extends ReferenceFrame, F1 extends ReferenceFrame, T extends ReferenceFrameTransformFactory<F0, F1>>
+public abstract class BasicReferenceFrameTransform<F0 extends ReferenceSystem, F1 extends ReferenceSystem, T extends ReferenceFrameTransformFactory<F0, F1>>
         implements ReferenceFrameTransform<F0, F1> {
 
     /**
@@ -54,7 +54,7 @@ public abstract class BasicReferenceFrameTransform<F0 extends ReferenceFrame, F1
      * {@inheritDoc}
      */
     @Override
-    public <F2 extends ReferenceFrame> ReferenceFrameTransform<F0, F2> add(ReferenceFrameTransform<F1, F2> other) {
+    public <F2 extends ReferenceSystem> ReferenceFrameTransform<F0, F2> add(ReferenceFrameTransform<F1, F2> other) {
         ReferenceFrameTransformFactory<F0, F2> newFactory = factory.add(other.factory());
         ReferenceFrameTransform<F0, F2> transform = newFactory.transform(epoch);
         return transform;

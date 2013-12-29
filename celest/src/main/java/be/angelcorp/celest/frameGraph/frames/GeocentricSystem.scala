@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.celest.frameGraph.systems
+package be.angelcorp.celest.frameGraph.frames
 
-import be.angelcorp.celest.frameGraph.ReferenceFrame
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * A reference system that is centered at te Earth center of mass.
  */
-trait GeocentricSystem extends ReferenceFrame
+trait GeocentricSystem extends ReferenceSystem
 
 /**
  * The International Terrestrial Reference System (ITRS) is a world spatial reference system co-rotating with the
- * Earth in its diurnal motion in space. The realizations of the [[be.angelcorp.libs.celest.frameGraph.systems.ITRS]]
- * are the [[be.angelcorp.libs.celest.frameGraph.frames.ITRF]] frameGraph defined by IERS services.
+ * Earth in its diurnal motion in space. The realizations of the [[be.angelcorp.celest.frameGraph.frames.ITRS]]
+ * are the [[be.angelcorp.celest.frameGraph.frames.ITRF]] frameGraph defined by IERS services.
  *
  * This frame is centered at the center of mass of the Earth including oceans and atmosphere. The frame axes are linked
  * to the ICRS through the Earth orientation parameters (EOP). This frame co-rotates with the Earth.
@@ -57,8 +57,8 @@ trait TIRS extends GeocentricSystem
 /**
  * The Earth Reference System (ERS).
  *
- * This frame is linked to the Terestrial Intermediate Reference System ([[be.angelcorp.libs.celest.frameGraph.systems.TIRS]]) through the Earth rotation.
- * This frame is also linked to the Mean Of Date system ([[be.angelcorp.libs.celest.frameGraph.systems.MODs]]) through nutation of the Earth rotation axis.
+ * This frame is linked to the Terestrial Intermediate Reference System ([[be.angelcorp.celest.frameGraph.frames.TIRS]]) through the Earth rotation.
+ * This frame is also linked to the Mean Of Date system ([[be.angelcorp.celest.frameGraph.frames.MODSystem]]) through nutation of the Earth rotation axis.
  *
  * See frame graph documentation.
  *
@@ -76,7 +76,7 @@ trait ERS extends GeocentricSystem with PseudoInertialSystem
  *
  * @author Simon Billemont
  */
-trait MODs extends GeocentricSystem with PseudoInertialSystem
+trait MODSystem extends GeocentricSystem with PseudoInertialSystem
 
 /**
  * The J2000 or EME2000 reference system (J2000s).
@@ -85,7 +85,7 @@ trait MODs extends GeocentricSystem with PseudoInertialSystem
  *
  * @author Simon Billemont
  */
-trait J2000s extends GeocentricSystem with PseudoInertialSystem
+trait J2000System extends GeocentricSystem with PseudoInertialSystem
 
 /**
  * The Geocentric Celestial Reference System (TIRS).
@@ -94,4 +94,4 @@ trait J2000s extends GeocentricSystem with PseudoInertialSystem
  *
  * @author Simon Billemont
  */
-trait GCRS extends ReferenceFrame with PseudoInertialSystem
+trait GCRS extends ReferenceSystem with PseudoInertialSystem

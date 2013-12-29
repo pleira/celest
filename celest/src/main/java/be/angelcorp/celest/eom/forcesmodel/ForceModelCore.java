@@ -16,7 +16,7 @@
 package be.angelcorp.celest.eom.forcesmodel;
 
 import be.angelcorp.celest.body.CelestialBody;
-import be.angelcorp.celest.frameGraph.frames.BodyCentered;
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem;
 import be.angelcorp.celest.physics.quantities.ObjectForce;
 import be.angelcorp.celest.physics.quantities.Torque;
 import be.angelcorp.celest.state.IStateEquation;
@@ -92,7 +92,7 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
 
     @Override
     public PosVel createState(RealVector y) {
-        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+        final scala.Option<BodyCenteredSystem> none = scala.Option.apply(null);
         return PosVel.apply(y.getEntry(0), y.getEntry(1), y.getEntry(2), y.getEntry(3), y.getEntry(4), y.getEntry(5), none);
     }
 

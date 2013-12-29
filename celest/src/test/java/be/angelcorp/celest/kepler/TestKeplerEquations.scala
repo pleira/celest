@@ -29,7 +29,7 @@ import be.angelcorp.celest.body.Satellite
 import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.state.PosVel
-import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import be.angelcorp.celest.universe.DefaultUniverse
 
 
@@ -81,7 +81,7 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
   //}
 
   it should "compute the correct cartesian to kepler conversion" in {
-    val frame = new BodyCentered {
+    val frame = new BodyCenteredSystem {
       val centerBody = new Satellite(5.9736E24)
     }
     val c = new PosVel(
@@ -98,7 +98,7 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
   }
 
   it should "compute the correct cartesian to kepler (2d) conversion" in {
-    val frame = new BodyCentered {
+    val frame = new BodyCenteredSystem {
       val centerBody = new Satellite(5.9736E24)
     }
     val c = new PosVel(

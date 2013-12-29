@@ -33,7 +33,7 @@ class TestKeplerTrajectory extends FlatSpec with ShouldMatchers {
   implicit val universe = new DefaultUniverse
 
   "KeplerTrajectory" should "correctly propagate geostationairy orbits" in {
-    val earthFrame = frames.BodyCentered(EarthConstants.body)
+    val earthFrame = frames.BodyCenteredSystem(EarthConstants.body)
 
     val a = pow(earthFrame.centerBody.μ / pow((2.0 * Pi) / 86400.0, 2), 1.0 / 3.0)
     val k = new Keplerian(a, 0, 0, 0, 0, 0, Some(earthFrame))
@@ -64,7 +64,7 @@ class TestKeplerTrajectory extends FlatSpec with ShouldMatchers {
   }
 
   it should "correctly propagate a fixed 3d orbit" in {
-    val earthFrame = frames.BodyCentered(EarthConstants.body)
+    val earthFrame = frames.BodyCenteredSystem(EarthConstants.body)
 
     // Some pseudo random start elements
     val k = Keplerian.apply(1E8, 0.3, 1.1, 0.3, 0.9, TrueAnomaly(0.2), Some(earthFrame))

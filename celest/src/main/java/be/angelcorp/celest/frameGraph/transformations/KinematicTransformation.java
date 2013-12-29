@@ -16,9 +16,9 @@
 package be.angelcorp.celest.frameGraph.transformations;
 
 import be.angelcorp.celest.frameGraph.BasicReferenceFrameTransform;
-import be.angelcorp.celest.frameGraph.ReferenceFrame;
 import be.angelcorp.celest.frameGraph.ReferenceFrameTransformFactory;
-import be.angelcorp.celest.frameGraph.frames.BodyCentered;
+import be.angelcorp.celest.frameGraph.ReferenceSystem;
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem;
 import be.angelcorp.celest.state.Orbit;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
@@ -62,7 +62,7 @@ import scala.Tuple3;
  * @param <F1> Destination reference frame type.
  * @author Simon Billemont
  */
-public class KinematicTransformation<F0 extends ReferenceFrame, F1 extends ReferenceFrame> extends
+public class KinematicTransformation<F0 extends ReferenceSystem, F1 extends ReferenceSystem> extends
         BasicReferenceFrameTransform<F0, F1, ReferenceFrameTransformFactory<F0, F1>> {
 
     /**
@@ -114,7 +114,7 @@ public class KinematicTransformation<F0 extends ReferenceFrame, F1 extends Refer
         Vector3D p_f1 = pv_f1._1();
         Vector3D v_f1 = pv_f1._2();
 
-        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+        final scala.Option<BodyCenteredSystem> none = scala.Option.apply(null);
         PosVel state_f1 = new PosVel(p_f1, v_f1, none);
         return state_f1;
     }

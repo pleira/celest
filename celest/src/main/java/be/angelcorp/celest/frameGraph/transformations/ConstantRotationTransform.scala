@@ -20,7 +20,7 @@ import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.libs.math.rotation.{RotationMatrix, IRotation}
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.{Orbit, PosVel}
-import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceFrame}
+import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
 
 /**
  * Transformation that consists only of a single rotation between the two respective frameGraph. This transformation neglects
@@ -34,7 +34,7 @@ import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFr
  * @tparam F1 Resulting frame after this transformation.
  * @tparam T  Factory that produced this transformation.
  */
-class ConstantRotationTransform[F0 <: ReferenceFrame, F1 <: ReferenceFrame, T <: ReferenceFrameTransformFactory[F0, F1]](val M: RotationMatrix, epoch: Epoch, factory: T)
+class ConstantRotationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val M: RotationMatrix, epoch: Epoch, factory: T)
   extends BasicReferenceFrameTransform[F0, F1, T](factory, epoch) {
 
   def transform(positionState: Orbit): Orbit = {

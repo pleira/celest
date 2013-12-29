@@ -44,7 +44,7 @@ trait ReferenceFrameGraph {
    *
    * @param frame Frame to attach to this graph.
    */
-  def attachFrame(frame: ReferenceFrame)
+  def attachFrame(frame: ReferenceSystem)
 
   /**
    * Attach a transform between two existing ReferenceFrames in this graph.
@@ -58,7 +58,7 @@ trait ReferenceFrameGraph {
    * @param frame2    Destination reference frame of the transformation.
    * @param transform Transformation factory to to produce transforms between the origin and destination frame.
    */
-  def attachTransform[F1 <: ReferenceFrame, F2 <: ReferenceFrame](frame1: F1, frame2: F2, transform: ReferenceFrameTransformFactory[F1, F2])
+  def attachTransform[F1 <: ReferenceSystem, F2 <: ReferenceSystem](frame1: F1, frame2: F2, transform: ReferenceFrameTransformFactory[F1, F2])
 
   /**
    * Find the first frame from all the connected ReferenceFrames that match a specified
@@ -67,7 +67,7 @@ trait ReferenceFrameGraph {
    * @param frame_predicate Predicate to identify a specific frame.
    * @return The first frame to match the given predicate or else null.
    */
-  def findReferenceFrame(frame_predicate: ReferenceFrame => Boolean): Option[ReferenceFrame]
+  def findReferenceFrame(frame_predicate: ReferenceSystem => Boolean): Option[ReferenceSystem]
 
   /**
    * Search for all the ReferenceFrameTransformFactories connected to the provided frame
@@ -76,7 +76,7 @@ trait ReferenceFrameGraph {
    * @param frame Find all factories to connected to this frame instance.
    * @return Iterator over all connected factories.
    */
-  def findReferenceFrameTransforms(frame: ReferenceFrame): Iterable[ReferenceFrameTransformFactory[_, _]]
+  def findReferenceFrameTransforms(frame: ReferenceSystem): Iterable[ReferenceFrameTransformFactory[_, _]]
 
   /**
    * Searches for the first frame to match the given predicate. After this, an iterator over all the
@@ -86,14 +86,14 @@ trait ReferenceFrameGraph {
    * @param frame_predicate Find all factories to connected to the first matching frame with this predicate.
    * @return Iterator over all connected factories.
    */
-  def findReferenceFrameTransforms(frame_predicate: ReferenceFrame => Boolean): Iterable[ReferenceFrameTransformFactory[_, _]]
+  def findReferenceFrameTransforms(frame_predicate: ReferenceSystem => Boolean): Iterable[ReferenceFrameTransformFactory[_, _]]
 
   /**
    * Returns an iterator that iterates over all the registered ReferenceFrames.
    *
    * @return Iterator for all the frameGraph in this graph.
    */
-  def getReferenceFrames: Iterable[ReferenceFrame]
+  def getReferenceFrames: Iterable[ReferenceSystem]
 
   /**
    * Find a transformation between two ReferenceFrames. The source and destination ReferenceFrame are identified
@@ -105,7 +105,7 @@ trait ReferenceFrameGraph {
    * @param epoch The epoch at which the ReferenceFrameTransform must be valid.
    * @return An ReferenceFrameTransform describing the transformation between the first matched frame of the "from" and "to" predicates.
    */
-  def getTransform(from: ReferenceFrame => Boolean, to: ReferenceFrame => Boolean, epoch: Epoch): Option[ReferenceFrameTransform[_, _]]
+  def getTransform(from: ReferenceSystem => Boolean, to: ReferenceSystem => Boolean, epoch: Epoch): Option[ReferenceFrameTransform[_, _]]
 
   /**
    * Find a transformation between two known ReferenceFrames.
@@ -120,7 +120,7 @@ trait ReferenceFrameGraph {
    * @param epoch The epoch at which the ReferenceFrameTransform must be valid.
    * @return An ReferenceFrameTransform describing the transformation between the two provided reference frameGraph.
    */
-  def getTransform[F <: ReferenceFrame, T <: ReferenceFrame](from: F, to: T, epoch: Epoch): Option[ReferenceFrameTransform[F, T]]
+  def getTransform[F <: ReferenceSystem, T <: ReferenceSystem](from: F, to: T, epoch: Epoch): Option[ReferenceFrameTransform[F, T]]
 
   /**
    * Find a factory capable of generating transformations between two ReferenceFrames. The source and destination
@@ -132,7 +132,7 @@ trait ReferenceFrameGraph {
    * @return An ReferenceFrameTransformFactory capable of producing transformations between the first matched frame of
    *         the "from" and "to" predicates.
    */
-  def getTransformFactory(from: ReferenceFrame => Boolean, to: ReferenceFrame => Boolean): Option[ReferenceFrameTransformFactory[_, _]]
+  def getTransformFactory(from: ReferenceSystem => Boolean, to: ReferenceSystem => Boolean): Option[ReferenceFrameTransformFactory[_, _]]
 
   /**
    * Find a factory capable of producing transformations between two known ReferenceFrames.
@@ -146,6 +146,6 @@ trait ReferenceFrameGraph {
    * @param to    Destination reference frame.
    * @return A ReferenceFrameTransformFactory capable of producing transformations between the two provided reference frameGraph.
    */
-  def getTransformFactory[F <: ReferenceFrame, T <: ReferenceFrame](from: F, to: T): Option[ReferenceFrameTransformFactory[F, T]]
+  def getTransformFactory[F <: ReferenceSystem, T <: ReferenceSystem](from: F, to: T): Option[ReferenceFrameTransformFactory[F, T]]
 
 }

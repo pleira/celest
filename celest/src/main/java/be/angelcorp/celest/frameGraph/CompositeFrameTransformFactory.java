@@ -36,9 +36,9 @@ import be.angelcorp.celest.time.Epoch;
  * @param <F2> Resulting frame of the transformation produced.
  * @author Simon Billemont
  */
-public class CompositeFrameTransformFactory<F0 extends ReferenceFrame,
-        F1 extends ReferenceFrame,
-        F2 extends ReferenceFrame>
+public class CompositeFrameTransformFactory<F0 extends ReferenceSystem,
+        F1 extends ReferenceSystem,
+        F2 extends ReferenceSystem>
         extends BasicReferenceFrameTransformFactory<F0, F2> {
 
     /**

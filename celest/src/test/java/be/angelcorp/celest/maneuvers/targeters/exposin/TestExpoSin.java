@@ -17,7 +17,7 @@ package be.angelcorp.celest.maneuvers.targeters.exposin;
 
 import be.angelcorp.celest.body.Satellite;
 import be.angelcorp.celest.constants.Constants;
-import be.angelcorp.celest.frameGraph.frames.BodyCentered;
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
 import be.angelcorp.celest.time.Epochs;
@@ -58,7 +58,7 @@ public class TestExpoSin extends CelestTest {
         Epoch t1 = Epochs.J2000(universe);
         Epoch t2 = Epochs.J2000(universe).addS(dt);
 
-        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+        final scala.Option<BodyCenteredSystem> none = scala.Option.apply(null);
         PosVel s1 = new PosVel(
                 new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO(), none);
         PosVel s2 = new PosVel(
@@ -110,7 +110,7 @@ public class TestExpoSin extends CelestTest {
         double k2 = 1. / 12.;
         double dt = Time.convert(1E-3, Time.day);
         int N = 3;
-        final scala.Option<BodyCentered> none = scala.Option.apply(null);
+        final scala.Option<BodyCenteredSystem> none = scala.Option.apply(null);
         PosVel r1 = new PosVel(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO(), none);
         PosVel r2 = new PosVel(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO(), none);
 

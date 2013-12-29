@@ -19,7 +19,7 @@ package be.angelcorp.celest.frameGraph.frames.transforms
 import scala.math._
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.libs.math.rotation.RotationMatrix._
-import be.angelcorp.celest.frameGraph.ReferenceFrame
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
@@ -47,7 +47,7 @@ import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
  */
 class IAU2000Nutation(coefficients: List[IAU2000NutationEntry],
                       IAU2006Corrections: Boolean = true)(implicit universe: Universe)
-  extends ConstantRotationTransformFactory[ReferenceFrame, ReferenceFrame] {
+  extends ConstantRotationTransformFactory[ReferenceSystem, ReferenceSystem] {
 
   def cost(epoch: Epoch): Double = 100.0
 
