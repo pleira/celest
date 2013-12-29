@@ -25,7 +25,7 @@ import be.angelcorp.celest.time.Epochs
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.constants.EarthConstants
 import be.angelcorp.celest.state.Keplerian
-import be.angelcorp.celest.frameGraph.frames.BodyCentered
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import java.io.FileWriter
 
 @CelestExample(
@@ -38,7 +38,7 @@ class QuickStart {
   implicit val universe = new DefaultUniverse
 
   /** Create the earth based frame of a generic template, with the earth having the state <0,0,0,0,0,0> (R,V) */
-  val earthFrame = new BodyCentered {
+  val earthFrame = new BodyCenteredSystem {
     def centerBody = EarthConstants.body
   }
 
