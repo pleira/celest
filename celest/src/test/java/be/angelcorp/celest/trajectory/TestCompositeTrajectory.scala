@@ -20,8 +20,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.state.{PosVel, Orbit}
-import be.angelcorp.celest.frameGraph.ReferenceSystem
+import be.angelcorp.celest.state.Orbit
 import be.angelcorp.celest.time.{JulianDate, Epoch}
 
 
@@ -31,19 +30,19 @@ class TestCompositeTrajectory extends FlatSpec with ShouldMatchers {
   implicit val universe = new DefaultUniverse
 
   /** Test state that contains a given constant */
-  class TestState(val value: Double) extends Orbit {
-    def frame: Option[ReferenceSystem] = throw new UnsupportedOperationException
+  class TestState(val value: Double) extends Orbit[Null] {
+    def toPosVel = ???
 
-    def toPosVel: PosVel = throw new UnsupportedOperationException
+    def frame = ???
   }
 
   /** Test trajectory that returns the time at which it is evaluated */
-  class TestTrajectory(id: Double) extends Trajectory {
+  class TestTrajectory(id: Double) extends Trajectory[Null] {
     def apply(t: Epoch) = new TestState(t.add(id).jd)
   }
 
   "CompositeTrajectory" should "correctly evaluate the added sub-trajectories" in {
-    val trajectory = new CompositeTrajectory()
+    val trajectory = new CompositeTrajectory[Null]()
 
     // Add various trajectories at various times
     trajectory.trajectories.put(new JulianDate(0), new TestTrajectory(100))
@@ -63,7 +62,7 @@ class TestCompositeTrajectory extends FlatSpec with ShouldMatchers {
   }
 
   it should "fail when queried for an epoch before the first trajectory" in {
-    val trajectory = new CompositeTrajectory()
+    val trajectory = new CompositeTrajectory[Null]()
 
     // Add a state a t=0
     trajectory.trajectories.put(new JulianDate(0), new TestTrajectory(0))

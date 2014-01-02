@@ -20,15 +20,16 @@ import math._
 import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.body.Satellite
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.state.PosVel
 import com.google.common.base.Preconditions._
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
-class Lambert3(r1: PosVel, r2: PosVel,
-               departure: Epoch, arrival: Epoch,
-               val center: Satellite, val N: Double = 0,
-               val prograde: Boolean = true, val leftBranch: Boolean = true) extends TPBVP(r1, r2, departure, arrival) {
+class Lambert3[F <: BodyCenteredSystem]
+(val r1: PosVel[F], val r2: PosVel[F],
+ val departureEpoch: Epoch, val arrivalEpoch: Epoch,
+ val frame: F, val N: Double = 0,
+ val prograde: Boolean = true, val leftBranch: Boolean = true) extends TPBVP[F] {
 
   val longWay = {
     val r1 = this.r1.position
@@ -37,7 +38,7 @@ class Lambert3(r1: PosVel, r2: PosVel,
     if (prograde) progradeIsLong else !progradeIsLong
   }
 
-  override lazy val getTrajectory = {
+  override lazy val trajectory = {
     val r1vec = this.r1.position
     val r2vec = this.r2.position
 
@@ -59,7 +60,7 @@ class Lambert3(r1: PosVel, r2: PosVel,
     // define constants
     val c = sqrt(pow(r1, 2) + pow(r2, 2) - 2 * r1 * r2 * cos(dth))
     val s = (r1 + r2 + c) / 2
-    val T = sqrt(8 * center.μ / pow(s, 3)) * tf
+    val T = sqrt(8 * frame.centerBody.μ / pow(s, 3)) * tf
     val q = sqrt(r1 * r2) / s * cos(dth / 2)
 
     // general formulae for the initial values (Gooding)
@@ -202,7 +203,7 @@ class Lambert3(r1: PosVel, r2: PosVel,
     // calculate terminal velocities
 
     // constants required for this calculation
-    val gamma = sqrt(center.μ * s / 2)
+    val gamma = sqrt(frame.centerBody.μ * s / 2)
     val (sigma, rho, z) =
       if (c == 0) {
         val sigma = 1.0
@@ -235,9 +236,10 @@ class Lambert3(r1: PosVel, r2: PosVel,
     // also determine minimum/maximum distance
     // val a = s/2/(1 - x*x); // semi-major axis
 
-    new LambertTrajectory2(new PosVel(r1vec, V1),
-      new PosVel(r2vec, V2),
-      departure, arrival, center)
+    new LambertTrajectory2(new PosVel(r1vec, V1, frame),
+      new PosVel(r2vec, V2, frame),
+      departureEpoch, arrivalEpoch, frame
+    )
   }
 
 }

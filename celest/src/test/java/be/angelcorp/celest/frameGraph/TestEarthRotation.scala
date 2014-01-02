@@ -47,7 +47,7 @@ class TestEarthRotation extends FlatSpec with ShouldMatchers {
       def lod(epoch: Epoch) = 0.0
     }
 
-    val transformer = new EarthRotationGAST(new IAU2000Nutation(IAU2000NutationLoader.MHB2000_2000A, false), mockLOD)
+    val transformer = new EarthRotationGAST(new IAU2000Nutation(null, null, IAU2000NutationLoader.MHB2000_2000A, false), mockLOD)
     // Equation of the Equinoxes
     transformer.equationOfEquinoxes(t) should be(5.139302755607717E-5 plusOrMinus ArcSecond.convert(1E-3))
     // Greenwich Mean Sidereal Time (GMST)
@@ -63,8 +63,8 @@ class TestEarthRotation extends FlatSpec with ShouldMatchers {
     }
 
     // Transform factory under test
-    val transformer = new EarthRotationGAST(new IAU2000Nutation(IAU2000NutationLoader.MHB2000_2000A, false), mockLOD)
-    val transformParams = transformer.transform(epoch).getParameters
+    val transformer = new EarthRotationGAST(new IAU2000Nutation(null, null, IAU2000NutationLoader.MHB2000_2000A, false), mockLOD)
+    val transformParams = transformer.transform(epoch).parameters
     val R = transformParams.rotation.asInstanceOf[Matrix3D]
 
     val sofaMatrix = Matrix3D(

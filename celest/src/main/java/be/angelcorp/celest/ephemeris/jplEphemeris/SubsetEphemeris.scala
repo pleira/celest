@@ -1,6 +1,7 @@
 package be.angelcorp.celest.ephemeris.jplEphemeris
 
 import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * Create a subset of an existing ephemeris object.
@@ -12,7 +13,9 @@ import be.angelcorp.celest.time.Epoch
  * @param recordOffset Index of the first record to INCLUDE in this ephemeris.
  * @param recordLimit  Index of the first record to EXCLUDE from this ephemeris.
  */
-class SubsetEphemeris(val ephemeris: JplEphemeris, val recordOffset: Int, val recordLimit: Int) extends JplEphemeris {
+class SubsetEphemeris[F <: ReferenceSystem](val ephemeris: JplEphemeris[F], val recordOffset: Int, val recordLimit: Int) extends JplEphemeris[F] {
+
+  def frame = ephemeris.frame
 
   def records: Iterator[DataRecord] =
     ephemeris.records.slice(recordOffset, recordOffset)
@@ -42,7 +45,7 @@ object SubsetEphemeris {
    * @param start     Initial (inclusive) epoch that the ephemeris should contain.
    * @param end       Final   (inclusive) epoch that the ephemeris should contain.
    */
-  def apply(ephemeris: JplEphemeris, start: Epoch, end: Epoch) =
+  def apply[F <: ReferenceSystem](ephemeris: JplEphemeris[F], start: Epoch, end: Epoch) =
     new SubsetEphemeris(
       ephemeris,
       math.max(ephemeris.epoch2index(start), 0),

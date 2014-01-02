@@ -41,7 +41,7 @@ class TestJplEphemeris extends FlatSpec with Matchers {
 
   implicit val universe = new DefaultUniverse
 
-  def testEphemeris(ephemeris: JplEphemeris, testFile: Source) {
+  def testEphemeris(ephemeris: JplEphemeris[_], testFile: Source) {
     jplEphemeris.test(ephemeris, testFile).drop(1).map(entry => {
       val line = entry._1
       val (denum, caldate, jd, targ, cent, coord, value) = entry._2

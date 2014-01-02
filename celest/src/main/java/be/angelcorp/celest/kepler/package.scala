@@ -73,7 +73,7 @@ package object kepler {
    * @param µ Standard gravitational parameter of the central body [m^3/s^2]
    * @return (a, e, i, ω, Ω, ν)
    */
-  def cartesian2kepler(state: PosVel, µ: Double) = {
+  def cartesian2kepler(state: PosVel[_], µ: Double) = {
     val R = state.position
     val V = state.velocity
 
@@ -120,7 +120,7 @@ package object kepler {
    * @param μ Standard gravitational parameter of the central body [m^3/s^2]
    * @return Subset of kepler elements (a, e, ν)
    */
-  def cartesian2kepler2D(state: PosVel, μ: Double) = {
+  def cartesian2kepler2D(state: PosVel[_], μ: Double) = {
     val R = state.position
     val V = state.velocity
 

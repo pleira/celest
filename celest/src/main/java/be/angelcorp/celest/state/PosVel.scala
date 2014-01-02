@@ -16,7 +16,7 @@
 package be.angelcorp.celest.state
 
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * [[be.angelcorp.celest.state.Orbit]] in the form of the Cartesian position (x,y,z) and velocity (&#7819;,
@@ -33,7 +33,7 @@ import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
  *
  * @author Simon Billemont
  */
-class PosVel(val position: Vector3D, val velocity: Vector3D, val frame: Option[BodyCenteredSystem] = None) extends Orbit {
+class PosVel[F <: ReferenceSystem](val position: Vector3D, val velocity: Vector3D, val frame: F) extends Orbit[F] {
 
   /**
    * {@inheritDoc}
@@ -51,7 +51,7 @@ object PosVel {
    * V = [0, 0, 0]
    * </pre>
    */
-  def apply(): PosVel = new PosVel(Vector3D.ZERO, Vector3D.ZERO)
+  def apply[F <: ReferenceSystem](frame: F): PosVel[F] = new PosVel(Vector3D.ZERO, Vector3D.ZERO, frame)
 
   /**
    * Create a pair of position/velocity, both equal to zero:
@@ -66,7 +66,7 @@ object PosVel {
    * @param vy Instantaneous y velocity [m/s].
    * @param vz Instantaneous z velocity [m/s].
    */
-  def apply(x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double, frame: Option[BodyCenteredSystem] = None): PosVel =
+  def apply[F <: ReferenceSystem](x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double, frame: F): PosVel[F] =
     new PosVel(Vector3D(x, y, z), Vector3D(vx, vy, vz), frame)
 
   /**
@@ -80,7 +80,7 @@ object PosVel {
    *
    * @param array Array to extract the position and velocity from
    */
-  def apply(array: Array[Double], frame: Option[BodyCenteredSystem]): PosVel = {
+  def apply[F <: ReferenceSystem](array: Array[Double], frame: F): PosVel[F] = {
     require(array.size == 6)
     PosVel(array(0), array(1), array(2), array(3), array(4), array(5), frame)
   }

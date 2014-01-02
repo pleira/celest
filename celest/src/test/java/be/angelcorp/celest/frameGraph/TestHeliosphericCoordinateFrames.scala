@@ -59,7 +59,7 @@ class TestHeliosphericCoordinateFrames extends FlatSpec with ShouldMatchers {
 
   "GEI_J2000" should "transform to GEI_D_MEAN" in {
     val pos_calc = transforms.transform_GEI_J2000_To_GEI_D_MEAN.transform(referenceEpoch).transform(
-      new PosVel(referenceDistances.get(transforms.GEI_J2000()).get * Re, Vector3D.ZERO)
+      new PosVel(referenceDistances.get(transforms.GEI_J2000()).get * Re, Vector3D.ZERO, null)
     )
     val pos_true = referenceDistances.get(transforms.GEI_D_MEAN()).get
     assert(pos_true.equals(pos_calc.toPosVel.position / Re, 5E-3))
@@ -67,7 +67,7 @@ class TestHeliosphericCoordinateFrames extends FlatSpec with ShouldMatchers {
 
   "GEI_D_MEAN" should "transform to GEI_D_TRUE" in {
     val pos_calc = transforms.transform_GEI_D_MEAN_To_GEI_D_TRUE.transform(referenceEpoch).transform(
-      new PosVel(referenceDistances.get(transforms.GEI_D_MEAN()).get * Re, Vector3D.ZERO)
+      new PosVel(referenceDistances.get(transforms.GEI_D_MEAN()).get * Re, Vector3D.ZERO, null)
     )
     val pos_true = referenceDistances.get(transforms.GEI_D_TRUE()).get
     assert(pos_true.equals(pos_calc.toPosVel.position / Re, 1E-3 * Re))
@@ -75,7 +75,7 @@ class TestHeliosphericCoordinateFrames extends FlatSpec with ShouldMatchers {
 
   "GEI_J2000" should "transform to HAE_J2000" in {
     val pos_calc = transforms.transform_GEI_J2000_To_HAE_J2000.transform(referenceEpoch).transform(
-      new PosVel(referenceDistances.get(transforms.GEI_J2000()).get * Re, Vector3D.ZERO)
+      new PosVel(referenceDistances.get(transforms.GEI_J2000()).get * Re, Vector3D.ZERO, null)
     )
     val pos_true = referenceDistances.get(transforms.HAE_J2000()).get
     assert(pos_true.equals(pos_calc.toPosVel.position / Re, 1E-6 * Re))
@@ -83,7 +83,7 @@ class TestHeliosphericCoordinateFrames extends FlatSpec with ShouldMatchers {
 
   "HAE_J2000" should "transform to HAE_D" in {
     val pos_calc = transforms.transform_HAE_J2000_To_HAE_D.transform(referenceEpoch).transform(
-      new PosVel(referenceDistances.get(transforms.HAE_J2000()).get * Re, Vector3D.ZERO)
+      new PosVel(referenceDistances.get(transforms.HAE_J2000()).get * Re, Vector3D.ZERO, null)
     )
     val pos_true = referenceDistances.get(transforms.HAE_D()).get
     assert(pos_true.equals(pos_calc.toPosVel.position / Re, 1E-3 * Re))
@@ -91,7 +91,7 @@ class TestHeliosphericCoordinateFrames extends FlatSpec with ShouldMatchers {
 
   "GEI_D_MEAN" should "transform to HAE_D" in {
     val pos_calc = transforms.transform_GEI_D_MEAN_To_HAE_D.transform(referenceEpoch).transform(
-      new PosVel(referenceDistances.get(transforms.GEI_D_MEAN()).get * Re, Vector3D.ZERO)
+      new PosVel(referenceDistances.get(transforms.GEI_D_MEAN()).get * Re, Vector3D.ZERO, null)
     )
     val pos_true = referenceDistances.get(transforms.HAE_D()).get
     assert(pos_true.equals(pos_calc.toPosVel.position / Re, 1E-3 * Re))

@@ -23,7 +23,7 @@ import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.frameGraph._
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
-import be.angelcorp.celest.frameGraph.transformations.KinematicTransformationFactory
+import be.angelcorp.celest.frameGraph.transformations.{TransformationParameters, KinematicTransformationFactory}
 
 /**
  * Defines transfromations over the following reference frameGraph;
@@ -67,16 +67,21 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    */
   def transform(omega: Double, theta: Double, phi: Double) = RotationMatrix.rotateZXZ(omega, theta, phi)
 
-  def transformFactory(trans: Epoch => IRotation) = new KinematicTransformationFactory[ReferenceSystem, ReferenceSystem] {
-    protected def calculateParameters(date: Epoch): TransformationParameters = {
-      new TransformationParameters(date,
-        Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO,
-        trans(date), Vector3D.ZERO, Vector3D.ZERO
-      )
-    }
+  def transformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem](trans: Epoch => IRotation, from: F0, to: F1) =
+    new KinematicTransformationFactory[ReferenceSystem, ReferenceSystem] {
+      def calculateParameters(date: Epoch): TransformationParameters = {
+        new TransformationParameters(date,
+          Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO,
+          trans(date), Vector3D.ZERO, Vector3D.ZERO
+        )
+      }
 
-    def cost(epoch: Epoch) = 0
-  }
+      def cost(epoch: Epoch) = 0
+
+      def fromFrame: ReferenceSystem = from
+
+      def toFrame: ReferenceSystem = to
+    }
 
   /**
    * The epoch day number. This is defined as the fractional number of julian days of 86400 seconds from the J2000 epoch.
@@ -276,7 +281,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
     RotationMatrix(
       RotationMatrix.rotateX(-εD) !* RotationMatrix.rotateZ(-longitudinalNutation(date)) !* RotationMatrix.rotateX(ε0D)
     )
-  })
+  }, null, null)
 
   /**
    * Transformation from Heliocentric Aries Ecliptic at J2000 (HAE_J2000) to Heliocentric Aries Ecliptic of date (HAE_D).
@@ -287,7 +292,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
     val (inc, ascNode, ang) = ecliptic(j2000, date)
     // See P(HAE_J2000, HAE_D), equation 9 of [1]
     transform(ascNode, inc, -ang - ascNode)
-  })
+  }, null, null)
 
   /**
    * Transformation from Geocentric Earth Equatorial at J2000 (GEI_J2000) to Mean Geocentric Earth Equatorial
@@ -300,7 +305,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
     val (θA, ζA, zA) = equator(date)
     // See P(εF, εD), equation 10 of [1]
     transform(Pi / 2 - ζA, θA, -zA - Pi / 2)
-  })
+  }, null, null)
 
   /**
    * Transformation from Geocentric Earth Equatorial at J2000 (GEI_J2000) to Heliocentric Aries Ecliptic (HAE_J2000).
@@ -311,7 +316,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
     // See section "Heliocentric Aries Ecliptic HAE_J2000" of [1]
     transform(0, obliquityAtJ2000, 0)
     // TODO: take into account solar position and velocity
-  })
+  }, null, null)
 
   /**
    * Transformation from Mean Geocentric Earth Equatorial (GEI_D_MEAN, MOD) to Heliocentric Aries Ecliptic of date
@@ -322,7 +327,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
     val εD = obliquityTrue(date)
     // See section "Heliocentric Aries Ecliptic HAE_D" of [1]
     transform(0, εD, 0)
-  })
+  }, null, null)
 
 
 }

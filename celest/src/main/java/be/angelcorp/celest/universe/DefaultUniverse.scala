@@ -24,6 +24,7 @@ class DefaultUniverse extends Universe {
 
   def configurationModules: Iterable[Module] = Seq(
     new modules.DefaultAether,
+    new modules.DefaultFrames,
     new modules.DefaultTime,
     new modules.DefaultJplEphemeris(430, "gov.nasa.jpl.ssd.pub.eph.planets.linux", "de430"),
     new modules.JplEphemerisBodies,

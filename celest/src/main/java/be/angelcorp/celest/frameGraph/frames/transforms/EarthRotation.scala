@@ -24,7 +24,7 @@ import be.angelcorp.celest.universe.Universe
 import be.angelcorp.libs.math.rotation.RotationMatrix
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.data.ExcessLengthOfDay
-import be.angelcorp.celest.frameGraph.transformations.KinematicTransformationFactory
+import be.angelcorp.celest.frameGraph.transformations.{TransformationParameters, KinematicTransformationFactory}
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
 
 /**
@@ -74,7 +74,8 @@ object EarthRotation {
  *                    2) G. Petit, B. Luzum (eds.).,<b>"IERS Conventions (2010)"</b>, IERS Technical Note 36, Frankfurt am Main: Verlag des Bundesamts für Kartographie und Geodäsie, 2010. 179 pp., ISBN 3-89888-989-6<br/>
  *                    3) G. H. Kaplan, <b>"The IAU Resolutions on Astronomical Reference Systems, Time Scales, and Earth Rotation Models"</b>, 2005, U.S. Naval Observatory Circular No. 179, [online] http://arxiv.org/abs/astro-ph/0602086
  */
-class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLengthOfDay)(implicit universe: Universe) extends KinematicTransformationFactory[ReferenceSystem, ReferenceSystem] {
+class EarthRotationGAST[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
+(val nutation: IAU2000Nutation[F0, F1], val lodProvider: ExcessLengthOfDay)(implicit universe: Universe) extends KinematicTransformationFactory[F0, F1] {
 
   /**
    * The equation of the equinoxes, used to account for the motion of the equinox due to nutation (the difference
@@ -161,8 +162,12 @@ class EarthRotationGAST(val nutation: IAU2000Nutation, val lodProvider: ExcessLe
     θ_GMST2000(epoch, t) + equationOfEquinoxes(t)
   }
 
-  protected def calculateParameters(epoch: Epoch) = {
+  def calculateParameters(epoch: Epoch) = {
     val (r, ω) = rotationAngle(epoch)
     new TransformationParameters(epoch, Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO, r, ω, Vector3D.ZERO)
   }
+
+  def fromFrame: F0 = nutation.fromFrame
+
+  def toFrame: F1 = nutation.toFrame
 }

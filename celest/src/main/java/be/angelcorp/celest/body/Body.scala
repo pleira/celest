@@ -3,13 +3,14 @@ package be.angelcorp.celest.body
 import be.angelcorp.celest.constants.Constants
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.Orbit
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * Create a CelestialBody, based on its standard gravitational parameter μ, and its time-varying orbit.
  *
  * @author Simon Billemont
  */
-trait Body extends CelestialBody {
+trait Body[F <: ReferenceSystem] extends CelestialBody {
 
   /**
    * Get the total mass of the celestial body.
@@ -25,6 +26,6 @@ trait Body extends CelestialBody {
    * @param epoch Epoch on which to retrieve the epoch.
    * @return The orbital elements for the body on the given epoch.
    */
-  def orbit( epoch: Epoch ): Orbit
+  def orbit(epoch: Epoch): Orbit[F]
 
 }

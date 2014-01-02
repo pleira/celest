@@ -17,7 +17,7 @@ package be.angelcorp.celest.state
 
 import math._
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * Spherical elements are basically the length of the radius r and velocity vector v, and its orientation
@@ -43,13 +43,14 @@ import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
  *
  * @author Simon Billemont
  */
-class Spherical(val r: Double,
-                val α: Double,
-                val δ: Double,
-                val v: Double,
-                val γ: Double,
-                val ψ: Double,
-                val frame: Option[BodyCenteredSystem] = None) extends Orbit {
+class Spherical[F <: ReferenceSystem]
+(val r: Double,
+ val α: Double,
+ val δ: Double,
+ val v: Double,
+ val γ: Double,
+ val ψ: Double,
+ val frame: F) extends Orbit[F] {
 
   def radius = r
 
@@ -97,8 +98,8 @@ object Spherical {
    *
    * @param orbit Orbit to convert
    */
-  def apply(orbit: Orbit): Spherical = orbit match {
-    case s: Spherical => s
+  def apply[F <: ReferenceSystem](orbit: Orbit[F]): Spherical[F] = orbit match {
+    case s: Spherical[F] => s
     case o => Spherical(o.toPosVel)
   }
 
@@ -107,7 +108,7 @@ object Spherical {
    *
    * @param posvel Cartesian elements to convert [m] and [m/s]
    */
-  def apply(posvel: PosVel): Spherical = {
+  def apply[F <: ReferenceSystem](posvel: PosVel[F]): Spherical[F] = {
     // See http://www.cdeagle.com/omnum/pdf/csystems.pdf
     // Orbital Mechanics with Numerit: Astrodynamic Coordinates
     val R = posvel.position

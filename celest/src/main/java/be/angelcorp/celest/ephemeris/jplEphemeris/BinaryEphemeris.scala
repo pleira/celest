@@ -21,8 +21,11 @@ import java.nio.ByteOrder
 import java.nio.channels.FileChannel.MapMode
 import com.google.common.cache.{LoadingCache, CacheLoader, CacheBuilder}
 import be.angelcorp.celest.universe.Universe
+import be.angelcorp.celest.frameGraph.frames.ICRS
 
-class BinaryEphemeris(val metadata: Metadata, val file: RandomAccessFile, val endianness: ByteOrder)(implicit val universe: Universe) extends JplEphemeris {
+class BinaryEphemeris(val metadata: Metadata, val file: RandomAccessFile, val endianness: ByteOrder)(implicit val universe: Universe) extends JplEphemeris[ICRS] {
+
+  val frame = universe.instance[ICRS]
 
   val recordSize = metadata.recordEntries * 8
 

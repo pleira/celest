@@ -63,7 +63,7 @@ trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
    * @param positionState Position to transform.
    * @return A new orbit which is equivalent to given orbit, but in the new ReferenceFrame.
    */
-  def transform(positionState: Orbit): Orbit
+  def transform(positionState: Orbit[F0]): Orbit[F1]
 
 
   ///**

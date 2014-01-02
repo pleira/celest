@@ -16,6 +16,7 @@
 package be.angelcorp.celest.trajectory
 
 import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * This is a trajectory that is split in discrete trajectory segments, effectively patches several trajectories together.
@@ -27,12 +28,14 @@ import be.angelcorp.celest.time.Epoch
  *
  * @author Simon Billemont
  */
-class CompositeTrajectory(val trajectories: java.util.TreeMap[Epoch, Trajectory]) extends Trajectory {
+class CompositeTrajectory[F <: ReferenceSystem](val trajectories: java.util.TreeMap[Epoch, Trajectory[F]]) {
 
   /**
    * Construct an empty CompositeTrajectory
    */
-  def this() = this(new java.util.TreeMap[Epoch, Trajectory]())
+  def this() = this(new java.util.TreeMap[Epoch, Trajectory[F]]())
+
+  def this(frame: F) = this(new java.util.TreeMap[Epoch, Trajectory[F]]())
 
   def apply(epoch: Epoch) = {
     val entry = trajectories.floorEntry(epoch)

@@ -26,16 +26,15 @@ import be.angelcorp.celest.state._
 import be.angelcorp.celest.unit.CelestTest._
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.TrueAnomaly
-import scala.Some
 
 
 @RunWith(classOf[JUnitRunner])
 class TestSphericalElements extends FlatSpec with ShouldMatchers {
 
-  val jplEarthFrame = frames.BodyCenteredSystem(new Body() {
+  val jplEarthFrame = frames.BodyCenteredSystem(new Body[Null]() {
     def μ: Double = 398600.440E9
 
-    def orbit(epoch: Epoch): Orbit = ???
+    def orbit(epoch: Epoch) = ???
   })
 
   "Spherical" should "convert the Cartesian elements from/to Spherical for geostationairy orbits" in {
@@ -43,10 +42,9 @@ class TestSphericalElements extends FlatSpec with ShouldMatchers {
     val rGEO = pow(jplEarthFrame.centerBody.μ / pow((2.0 * Pi) / (3600.0 * 24.0), 2), 1.0 / 3.0)
     val vc = sqrt(jplEarthFrame.centerBody.μ / rGEO)
 
-    val pv = PosVel(rGEO, 0, 0,
-      0, vc, 0, Some(jplEarthFrame))
+    val pv = PosVel(rGEO, 0, 0, 0, vc, 0, jplEarthFrame)
 
-    val s_expected = new Spherical(rGEO, 0, 0, vc, 0, Pi / 2.0, Some(jplEarthFrame))
+    val s_expected = new Spherical(rGEO, 0, 0, vc, 0, Pi / 2.0, jplEarthFrame)
     val s_actual = Spherical(pv)
 
     assertEquals(s_expected, s_actual, rGEO * 1E-16, 1E-16, 1E-16, vc * 1E-16, 1E-16, 1E-16)
@@ -62,16 +60,16 @@ class TestSphericalElements extends FlatSpec with ShouldMatchers {
     // X =-1.947136151107762E+05 Y =-3.249790482942117E+05 Z =-1.934593293850985E+04 [km]
     // VX= 8.680230862574665E-01 VY=-5.629777269508974E-01 VZ= 7.784227958608481E-02 [km/s]
     val k = Keplerian(3.903213584163071E+08, 4.074916709908236E-002, 9.218093894982124E-2,
-      4.850831512485626E+00, 4.757761494574442E+00, TrueAnomaly(1.079822859502195E00), Some(jplEarthFrame))
+      4.850831512485626E+00, 4.757761494574442E+00, TrueAnomaly(1.079822859502195E00), jplEarthFrame)
     val s_expected = new Spherical(3.823277207168130E+08, -1.876578287892178E00, -3.178799710706510E-2,
-      1.0315839033233294E+03, Pi / 2.0 - 1.535552685601132E00, 1.484255164403220E00, Some(jplEarthFrame))
+      1.0315839033233294E+03, Pi / 2.0 - 1.535552685601132E00, 1.484255164403220E00, jplEarthFrame)
 
     assertEquals(s_expected, Spherical(k), 3.823277207168130E+08 * 1E-16, 1E-15, 5E-16, 0.2, 1E-16, 1E-15)
   }
 
   "Spherical" should "return itself when cloned" in {
     val s_expected = new Spherical(3.823277207168130E+08, -1.876578287892178E00, -3.178799710706510E-2,
-      1.031461835283901E+03, Pi / 2.0 - 1.535552685601132E00, 1.484255164403220E00, Some(jplEarthFrame))
+      1.031461835283901E+03, Pi / 2.0 - 1.535552685601132E00, 1.484255164403220E00, jplEarthFrame)
     assertEquals(s_expected, Spherical(s_expected), 3.823277207168130E+08 * 1E-16, 1E-16, 1E-16, 1.0315839033233294E+03 * 1E-16, 1E-16, 1E-16)
   }
 

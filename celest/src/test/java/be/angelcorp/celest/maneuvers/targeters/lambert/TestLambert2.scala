@@ -46,10 +46,10 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val N = 0
     val mu = 3986004418E5 // m^3/s^2
 
-    val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu)))
+    val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu), null))
 
-    val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
-    val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
+    val s0 = new PosVel(r1, Vector3D.ZERO, centerFrame)
+    val s1 = new PosVel(r2, Vector3D.ZERO, centerFrame)
     val t0 = Epochs.J2000
     val te = t0 + tf
 
@@ -58,23 +58,23 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val v1_retrograde_true = Vector3D(1315.7261324536535000, -10735.1341404250650000, 1892.8937904815141000) // m/s
     val v2_retrograde_true = Vector3D(5601.4255704605439000, -8298.3753483701657000, 1463.2274699636678000) // m/s
 
-    val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true)
-    val trajectoryProLeft = lambertProLeft.getTrajectory
+    val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame, N, true, true)
+    val trajectoryProLeft = lambertProLeft.trajectory
     assertEquals(trajectoryProLeft.origin.toPosVel.velocity, v1_prograde_true, 2E-6)
     assertEquals(trajectoryProLeft.destination.toPosVel.velocity, v2_prograde_true, 2E-6)
 
-    val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, false)
-    val trajectoryProRight = lambertProRight.getTrajectory
+    val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame, N, true, false)
+    val trajectoryProRight = lambertProRight.trajectory
     assertEquals(trajectoryProRight.origin.toPosVel.velocity, v1_prograde_true, 2E-6)
     assertEquals(trajectoryProRight.destination.toPosVel.velocity, v2_prograde_true, 2E-6)
 
-    val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, true)
-    val trajectoryRetLeft = lambertRetLeft.getTrajectory
+    val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame, N, false, true)
+    val trajectoryRetLeft = lambertRetLeft.trajectory
     assertEquals(trajectoryRetLeft.origin.toPosVel.velocity, v1_retrograde_true, 2E-6)
     assertEquals(trajectoryRetLeft.destination.toPosVel.velocity, v2_retrograde_true, 2E-6)
 
-    val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, false)
-    val trajectoryRetRight = lambertRetRight.getTrajectory
+    val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame, N, false, false)
+    val trajectoryRetRight = lambertRetRight.trajectory
     assertEquals(trajectoryRetRight.origin.toPosVel.velocity, v1_retrograde_true, 2E-6)
     assertEquals(trajectoryRetRight.destination.toPosVel.velocity, v2_retrograde_true, 2E-6)
   }
@@ -86,10 +86,10 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val N = 1
     val mu = 3986004418E5 // m^3/s^2
 
-    val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu)))
+    val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu), null))
 
-    val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
-    val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
+    val s0 = new PosVel(r1, Vector3D.ZERO, centerFrame)
+    val s1 = new PosVel(r2, Vector3D.ZERO, centerFrame)
     val t0 = Epochs.J2000
     val te = t0 + tf
 
@@ -102,23 +102,23 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val v1_retrograde_right = Vector3D(629.8861440442892700, -9747.3484276097843000, 1718.7205181538370000) //m/s
     val v2_retrograde_right = Vector3D(5396.8566431760819000, -7036.9490066396938000, 1240.8039717402089000) //m/s
 
-    val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true)
-    val trajectoryProLeft = lambertProLeft.getTrajectory
+    val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame, N, true, true)
+    val trajectoryProLeft = lambertProLeft.trajectory
     assertEquals(trajectoryProLeft.origin.toPosVel.velocity, v1_prograde_left, 3E-6)
     assertEquals(trajectoryProLeft.destination.toPosVel.velocity, v2_prograde_left, 3E-6)
 
-    val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, false)
-    val trajectoryProRight = lambertProRight.getTrajectory
+    val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame, N, true, false)
+    val trajectoryProRight = lambertProRight.trajectory
     assertEquals(trajectoryProRight.origin.toPosVel.velocity, v1_prograde_right, 4E-6)
     assertEquals(trajectoryProRight.destination.toPosVel.velocity, v2_prograde_right, 4E-6)
 
-    val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, true)
-    val trajectoryRetLeft = lambertRetLeft.getTrajectory
+    val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame, N, false, true)
+    val trajectoryRetLeft = lambertRetLeft.trajectory
     assertEquals(trajectoryRetLeft.origin.toPosVel.velocity, v1_retrograde_left, 3E-6)
     assertEquals(trajectoryRetLeft.destination.toPosVel.velocity, v2_retrograde_left, 3E-6)
 
-    val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, false)
-    val trajectoryRetRight = lambertRetRight.getTrajectory
+    val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame, N, false, false)
+    val trajectoryRetRight = lambertRetRight.trajectory
     assertEquals(trajectoryRetRight.origin.toPosVel.velocity, v1_retrograde_right, 4E-6)
     assertEquals(trajectoryRetRight.destination.toPosVel.velocity, v2_retrograde_right, 4E-6)
   }
@@ -130,10 +130,10 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val N = 4
     val mu = 3986004418E5 // m^3/s^2
 
-    val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu)))
+    val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu), null))
 
-    val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
-    val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
+    val s0 = new PosVel(r1, Vector3D.ZERO, centerFrame)
+    val s1 = new PosVel(r2, Vector3D.ZERO, centerFrame)
     val t0 = Epochs.J2000
     val te = t0 + tf
 
@@ -146,23 +146,23 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
     val v1_retrograde_right = Vector3D(-2546.0418701126791000, -6488.7220023867440000, 1144.1367593374396000) //m/s
     val v2_retrograde_right = Vector3D(5224.7179917529947000, -2070.4309653571795000, 365.0728408867440200) //m/s
 
-    val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true)
-    val trajectoryProLeft = lambertProLeft.getTrajectory
+    val lambertProLeft = new Lambert2(s0, s1, t0, te, centerFrame, N, true, true)
+    val trajectoryProLeft = lambertProLeft.trajectory
     assertEquals(trajectoryProLeft.origin.toPosVel.velocity, v1_prograde_left, 2E-5)
     assertEquals(trajectoryProLeft.destination.toPosVel.velocity, v2_prograde_left, 2E-5)
 
-    val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, false)
-    val trajectoryProRight = lambertProRight.getTrajectory
+    val lambertProRight = new Lambert2(s0, s1, t0, te, centerFrame, N, true, false)
+    val trajectoryProRight = lambertProRight.trajectory
     assertEquals(trajectoryProRight.origin.toPosVel.velocity, v1_prograde_right, 2E-5)
     assertEquals(trajectoryProRight.destination.toPosVel.velocity, v2_prograde_right, 2E-5)
 
-    val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, true)
-    val trajectoryRetLeft = lambertRetLeft.getTrajectory
+    val lambertRetLeft = new Lambert2(s0, s1, t0, te, centerFrame, N, false, true)
+    val trajectoryRetLeft = lambertRetLeft.trajectory
     assertEquals(trajectoryRetLeft.origin.toPosVel.velocity, v1_retrograde_left, 3E-5)
     assertEquals(trajectoryRetLeft.destination.toPosVel.velocity, v2_retrograde_left, 3E-5)
 
-    val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, false, false)
-    val trajectoryRetRight = lambertRetRight.getTrajectory
+    val lambertRetRight = new Lambert2(s0, s1, t0, te, centerFrame, N, false, false)
+    val trajectoryRetRight = lambertRetRight.trajectory
     assertEquals(trajectoryRetRight.origin.toPosVel.velocity, v1_retrograde_right, 2E-5)
     assertEquals(trajectoryRetRight.destination.toPosVel.velocity, v2_retrograde_right, 3E-5)
   }
@@ -175,14 +175,14 @@ class TestLambert2 extends FlatSpec with ShouldMatchers {
       val N = 5
       val mu = 3986004418E5 // m^3/s^2
 
-      val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu)))
+      val centerFrame = frames.BodyCenteredSystem(new Satellite(mu2mass(mu), null))
 
-      val s0 = new PosVel(r1, Vector3D.ZERO, Some(centerFrame))
-      val s1 = new PosVel(r2, Vector3D.ZERO, Some(centerFrame))
+      val s0 = new PosVel(r1, Vector3D.ZERO, centerFrame)
+      val s1 = new PosVel(r2, Vector3D.ZERO, centerFrame)
       val t0 = Epochs.J2000
       val te = t0 + tf
 
-      new Lambert2(s0, s1, t0, te, centerFrame.centerBody, N, true, true).getTrajectory
+      new Lambert2(s0, s1, t0, te, centerFrame, N, true, true).trajectory
       fail("The case of N=5 should not be solvable")
     } catch {
       case e: GenericRuntimeException =>

@@ -21,8 +21,8 @@ import org.apache.commons.math3.util.FastMath
 import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.body.CelestialBody
 import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 /**
  * This function solves the high-thrust Lambert problem. It does this using an algorithm developed by
@@ -41,17 +41,18 @@ import be.angelcorp.celest.state.PosVel
  *
  * @param r1 Initial position.
  * @param r2 Required target position.
- * @param departure Departure date.
- * @param arrival Required arrival date.
- * @param center Center body around which the transfer motion takes place.
+ * @param departureEpoch Departure date.
+ * @param arrivalEpoch Required arrival date.
+ * @param frame Body centered frame in which the transfer motion takes place.
  * @param N Amount of complete revolutions around the center body to perform before arriving at the target destination.
  * @param prograde True if the transfer motion is prograde around the center body [default].
  * @param leftBranch  True returns the left branch solution [default].
  */
-class Lambert2(r1: PosVel, r2: PosVel,
-               departure: Epoch, arrival: Epoch,
-               val center: CelestialBody, val N: Double = 0,
-               val prograde: Boolean = true, val leftBranch: Boolean = true) extends TPBVP(r1, r2, departure, arrival) {
+class Lambert2[F <: BodyCenteredSystem]
+(val r1: PosVel[F], val r2: PosVel[F],
+ val departureEpoch: Epoch, val arrivalEpoch: Epoch,
+ val frame: F, val N: Double = 0,
+ val prograde: Boolean = true, val leftBranch: Boolean = true) extends TPBVP[F] {
 
   val longWay = {
     val r1 = this.r1.position
@@ -65,7 +66,7 @@ class Lambert2(r1: PosVel, r2: PosVel,
     def map[R](f: Double => Double) = (f(t._1), f(t._2))
   }
 
-  override lazy val getTrajectory = {
+  override lazy val trajectory = {
     val origin = this.r1.position
     val destination = this.r2.position
 
@@ -73,7 +74,7 @@ class Lambert2(r1: PosVel, r2: PosVel,
     val r1 = origin.norm
     val r1vec = origin / r1
     val r2vec = destination / r1
-    val V = sqrt(center.μ / r1)
+    val V = sqrt(frame.centerBody.μ / r1)
     val T = r1 / V
     val tf = abs(arrivalEpoch.relativeToS(departureEpoch) / T)
 
@@ -228,7 +229,7 @@ class Lambert2(r1: PosVel, r2: PosVel,
 
       new LambertTrajectory2(new PosVel(origin, V1, this.r1.frame),
         new PosVel(destination, V2, this.r1.frame),
-        departure, arrival, center)
+        departureEpoch, arrivalEpoch, frame)
     }
   }
 

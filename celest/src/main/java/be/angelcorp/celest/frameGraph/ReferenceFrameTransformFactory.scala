@@ -73,4 +73,10 @@ trait ReferenceFrameTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSyste
    * @return An inverse transformation of this ReferenceFrameTransform
    */
   def inverse: ReferenceFrameTransformFactory[F1, F0]
+
+  /** Instance of the reference base frame from which the transformation takes place. */
+  def fromFrame: F0
+
+  /** Instance of the reference base frame to which the transformation transforms. */
+  def toFrame: F1
 }

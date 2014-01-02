@@ -16,10 +16,10 @@
 package be.angelcorp.celest.body
 
 import be.angelcorp.celest.constants.{Constants, SolarConstants}
-import be.angelcorp.celest.potential.{GravitationalPotential, PointMassPotential}
 import be.angelcorp.celest.state.{Orbit, PosVel}
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * Representation of a small celestial body.
@@ -32,7 +32,7 @@ import be.angelcorp.celest.universe.Universe
  *
  * @author Simon Billemont
  */
-class Satellite(val epoch: Epoch, val mass: Double, val state: Orbit) extends CelestialBody {
+class Satellite[F <: ReferenceSystem](val epoch: Epoch, val mass: Double, val state: Orbit[F]) extends CelestialBody {
 
   /**
    * Construct a celestial body, based only on its mass.
@@ -41,13 +41,13 @@ class Satellite(val epoch: Epoch, val mass: Double, val state: Orbit) extends Ce
    *
    * @param mass  Body mass [kg].
    */
-  def this( mass: Double )(implicit universe: Universe) =
-    this( Epochs.J2000, mass, PosVel() )
+  def this(mass: Double, frame: F)(implicit universe: Universe) =
+    this(Epochs.J2000, mass, PosVel(frame))
 
   /**
    * Generic stationary body ( position and velocity zero) and with mass of our sun (one solar mass), at the J2000 epoch.
    */
-  def this()(implicit universe: Universe) = this(SolarConstants.mass)
+  def this(frame: F)(implicit universe: Universe) = this(SolarConstants.mass, frame)
 
   override def μ: Double = Constants.mass2mu(mass)
 

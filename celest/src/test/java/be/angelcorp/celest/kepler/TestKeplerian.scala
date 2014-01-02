@@ -25,10 +25,10 @@ import be.angelcorp.celest.state.Keplerian
 class TestKeplerian extends FlatSpec with ShouldMatchers {
 
   "KeplerElements" should "return the correct equations type" in {
-    assert(new Keplerian(1E3, 0, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerCircular])
-    assert(new Keplerian(1E3, 0.5, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerEllipse])
-    assert(new Keplerian(1E3, 1, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerParabola])
-    assert(new Keplerian(1E3, 2, 1, 0.9, 0.8, 0.7).quantities.isInstanceOf[KeplerHyperbola])
+    assert(new Keplerian(1E3, 0, 1, 0.9, 0.8, 0.7, null).quantities.isInstanceOf[KeplerCircular[Null]])
+    assert(new Keplerian(1E3, 0.5, 1, 0.9, 0.8, 0.7, null).quantities.isInstanceOf[KeplerEllipse[Null]])
+    assert(new Keplerian(1E3, 1, 1, 0.9, 0.8, 0.7, null).quantities.isInstanceOf[KeplerParabola[Null]])
+    assert(new Keplerian(1E3, 2, 1, 0.9, 0.8, 0.7, null).quantities.isInstanceOf[KeplerHyperbola[Null]])
   }
 
 }

@@ -20,17 +20,15 @@ import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.math.CelestialRotate
 import be.angelcorp.celest.kepler
 import be.angelcorp.celest.state.{Keplerian, PosVel}
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 
-abstract class KeplerEquations(k: Keplerian) {
+abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
 
   /**
    * Standard gravitational parameter μ [m³/s²], of the body at the center of the Keplerian orbit.
    */
-  lazy val μ = {
-    val frame = k.frame.getOrElse(throw new Exception("Cannot derive mu from Keplerian when no frame has been set!"))
-    frame.centerBody.μ
-  }
+  lazy val μ = k.frame.centerBody.μ
 
   /**
    * Get the Eccentric (E), Parabolic(B) or Hyperbolic(H) anomaly (Depends on which exact orbit which is returned)

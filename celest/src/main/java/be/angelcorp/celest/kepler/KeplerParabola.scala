@@ -22,8 +22,9 @@ import org.apache.commons.math3.analysis.{UnivariateFunction, DifferentiableUniv
 import org.apache.commons.math3.analysis.solvers.NewtonSolver
 import be.angelcorp.libs.math.MathUtils2
 import be.angelcorp.celest.state.Keplerian
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
-class KeplerParabola(k: Keplerian) extends KeplerEquations(k) {
+class KeplerParabola[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEquations(k) {
 
   lazy val anomaly = KeplerParabola.anomalyFromMean(k.meanAnomaly)
 

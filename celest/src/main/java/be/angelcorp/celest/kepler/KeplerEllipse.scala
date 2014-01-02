@@ -18,8 +18,9 @@ package be.angelcorp.celest.kepler
 import scala.math._
 import be.angelcorp.libs.math.MathUtils2
 import be.angelcorp.celest.state.Keplerian
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
-class KeplerEllipse(k: Keplerian) extends KeplerEquations(k) {
+class KeplerEllipse[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEquations(k) {
 
   lazy val anomaly = KeplerEllipse.eccentricAnomalyFromMean(k.meanAnomaly, k.eccentricity)
 

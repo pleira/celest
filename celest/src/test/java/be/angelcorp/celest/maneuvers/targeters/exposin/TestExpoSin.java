@@ -15,9 +15,9 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin;
 
-import be.angelcorp.celest.body.Satellite;
 import be.angelcorp.celest.constants.Constants;
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem;
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem$;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
 import be.angelcorp.celest.time.Epochs;
@@ -58,14 +58,14 @@ public class TestExpoSin extends CelestTest {
         Epoch t1 = Epochs.J2000(universe);
         Epoch t2 = Epochs.J2000(universe).addS(dt);
 
-        final scala.Option<BodyCenteredSystem> none = scala.Option.apply(null);
-        PosVel s1 = new PosVel(
-                new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO(), none);
-        PosVel s2 = new PosVel(
-                Vector3D$.MODULE$.apply(dTheta, 0).multiply(r2), Vector3D$.MODULE$.ZERO(), none);
+        PosVel s1 = new PosVel<>(
+                new ImmutableVector3D(r1, 0, 0), Vector3D$.MODULE$.ZERO(), null);
+        PosVel s2 = new PosVel<>(
+                Vector3D$.MODULE$.apply(dTheta, 0).multiply(r2), Vector3D$.MODULE$.ZERO(), null);
 
-        ExpoSin exposin = new ExpoSin(s1, s2, t1, t2, new Satellite(1.9891E30, universe));
-        exposin.assumeK2(k2);
+        BodyCenteredSystem frame = BodyCenteredSystem$.MODULE$.apply(Constants.mass2mu(1.9891E30));
+        ExpoSin exposin = new ExpoSin(s1, s2, t1, t2, frame);
+        exposin.assumeK2_$eq(k2);
 
         // Results as computed by the Matlab routine:
         Vector3D ml_V1 = new ImmutableVector3D(-2.951216831366131e+002, +3.310652568212942e+004, 0);
@@ -81,18 +81,18 @@ public class TestExpoSin extends CelestTest {
         double ml_gamma_m = -6.505324139843980e-001;
         double ml_gamma_M = 7.999869059004543e-001;
 
-        ExpoSinSolutionSet solutionSet = exposin.getSolutionSet();
+        ExpoSinSolutionSet solutionSet = exposin.solutionSet();
         assertEquals(ml_gamma_m, solutionSet.getDomain().lowerBound, 1E-1);
         assertEquals(ml_gamma_M, solutionSet.getDomain().upperBound, 1E-1);
 
-        ExpoSinTrajectory trajectory = exposin.getTrajectory();
-        ExponentialSinusoid shape = trajectory.getExposin();
+        ExpoSinTrajectory trajectory = exposin.trajectory();
+        ExponentialSinusoid shape = trajectory.exposin();
         assertEquals(ml_k0, shape.getK0(), ml_k0 * 1E-8);
         assertEquals(ml_k1, shape.getK1(), 1E-8);
         assertEquals(ml_k2, shape.getK2(), 1E-8);
         assertEqualsAngle(ml_phi, shape.getPhi(), 1E-8);
         assertEquals(0, shape.getQ0(), 1E-16);
-        assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-8);
+        assertEqualsAngle(ml_gamma1, trajectory.gamma(), 1E-8);
 
         PosVel c1 = trajectory.apply(t1);
         PosVel c2 = trajectory.apply(t2);
@@ -110,16 +110,16 @@ public class TestExpoSin extends CelestTest {
         double k2 = 1. / 12.;
         double dt = Time.convert(1E-3, Time.day);
         int N = 3;
-        final scala.Option<BodyCenteredSystem> none = scala.Option.apply(null);
-        PosVel r1 = new PosVel(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO(), none);
-        PosVel r2 = new PosVel(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO(), none);
+        PosVel r1 = new PosVel(new ImmutableVector3D(2, 0, 0), Vector3D$.MODULE$.ZERO(), null);
+        PosVel r2 = new PosVel(new ImmutableVector3D(0.2, -1, 0), Vector3D$.MODULE$.ZERO(), null);
 
         Epoch t1 = Epochs.J2000(universe);
         Epoch t2 = Epochs.J2000(universe).addS(dt);
 
-        ExpoSin exposin = new ExpoSin(r1, r2, t1, t2, new Satellite(Constants.mu2mass(1E4), universe));
-        exposin.setN(N);
-        exposin.assumeK2(k2);
+        BodyCenteredSystem frame = BodyCenteredSystem$.MODULE$.apply(1E4);
+        ExpoSin exposin = new ExpoSin(r1, r2, t1, t2, frame);
+        exposin.N_$eq(N);
+        exposin.assumeK2_$eq(k2);
 
         // Results as computed by the Matlab routine:
         Vector3D ml_V1 = new ImmutableVector3D(+4.279665287258510e+001, +5.461017978436156e+001, 0);
@@ -135,18 +135,18 @@ public class TestExpoSin extends CelestTest {
         double ml_gamma_m = -1.459915193676833e+000;
         double ml_gamma_M = 1.459299027659339e+000;
 
-        ExpoSinSolutionSet solutionSet = exposin.getSolutionSet();
+        ExpoSinSolutionSet solutionSet = exposin.solutionSet();
         assertEquals(ml_gamma_m, solutionSet.getDomain().lowerBound, 1E-1);
         assertEquals(ml_gamma_M, solutionSet.getDomain().upperBound, 1E-1);
 
-        ExpoSinTrajectory trajectory = exposin.getTrajectory();
-        ExponentialSinusoid shape = trajectory.getExposin();
+        ExpoSinTrajectory trajectory = exposin.trajectory();
+        ExponentialSinusoid shape = trajectory.exposin();
         assertEquals(ml_k0, shape.getK0(), ml_k0 * 1E-2);
         assertEquals(ml_k1, shape.getK1(), 1E-2);
         assertEquals(ml_k2, shape.getK2(), 1E-8);
         assertEqualsAngle(ml_phi, shape.getPhi(), 1E-2);
         assertEquals(0, shape.getQ0(), 1E-16);
-        assertEqualsAngle(ml_gamma1, trajectory.getGamma(), 1E-2);
+        assertEqualsAngle(ml_gamma1, trajectory.gamma(), 1E-2);
 
         PosVel c1 = trajectory.apply(t1);
         PosVel c2 = trajectory.apply(t2);

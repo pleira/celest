@@ -17,6 +17,7 @@ package be.angelcorp.celest.trajectory
 
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.Orbit
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * Create a trajectory based on a set of known states at known epochs. Then upon evaluation, the state
@@ -28,12 +29,12 @@ import be.angelcorp.celest.state.Orbit
  *
  * @author Simon Billemont
  */
-class DiscreteTrajectory(val states: java.util.TreeMap[Epoch, Orbit]) extends Trajectory {
+class DiscreteTrajectory[F <: ReferenceSystem](val states: java.util.TreeMap[Epoch, Orbit[F]]) {
 
   /**
    * Construct an empty DiscreteTrajectory
    */
-  def this() = this(new java.util.TreeMap[Epoch, Orbit]())
+  def this() = this(new java.util.TreeMap[Epoch, Orbit[F]]())
 
   def apply(epoch: Epoch) = {
     val entry = states.floorEntry(epoch)

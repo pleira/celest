@@ -37,7 +37,8 @@ import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
  *
  * @author Simon Billemont
  */
-class IAU2006Precession(implicit universe: Universe) extends ConstantRotationTransformFactory[ReferenceSystem, ReferenceSystem] {
+class IAU2006Precession[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fromFrame: F0, val toFrame: F1)(implicit universe: Universe)
+  extends ConstantRotationTransformFactory[F0, F1] {
 
   /**
    * Finds the precession matrix at a given date according to the IAU 2006 Precession model.

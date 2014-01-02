@@ -17,8 +17,8 @@ package be.angelcorp.celest.maneuvers.targeters.lambert
 
 import be.angelcorp.celest.trajectory.KeplerTrajectory
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.body.CelestialBody
 import be.angelcorp.celest.state.{Keplerian, PosVel}
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 /**
  * The solution trajectory from a basic lambert problem (TPBVP). It consists of the full state vector at the
@@ -29,10 +29,11 @@ import be.angelcorp.celest.state.{Keplerian, PosVel}
  * @param destination State vector at the destination.
  * @param departure Departure time from the origin.
  * @param arrival Arrival time at the destination.
- * @param center Center body around which the trajectory takes place.
+ * @param frame Frame in which the trajectory takes place.
  */
-class LambertTrajectory2(val origin: PosVel,
-                         val destination: PosVel,
-                         val departure: Epoch,
-                         val arrival: Epoch,
-                         val center: CelestialBody) extends KeplerTrajectory(departure, Keplerian(origin));
+class LambertTrajectory2[F <: BodyCenteredSystem]
+(val origin: PosVel[F],
+ val destination: PosVel[F],
+ val departure: Epoch,
+ val arrival: Epoch,
+ val frame: F) extends KeplerTrajectory(departure, Keplerian(origin))

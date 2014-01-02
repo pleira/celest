@@ -34,12 +34,12 @@ import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFr
  * @tparam F1 Resulting frame after this transformation.
  * @tparam T  Factory that produced this transformation.
  */
-class ConstantRotationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val M: RotationMatrix, epoch: Epoch, factory: T)
-  extends BasicReferenceFrameTransform[F0, F1, T](factory, epoch) {
+class ConstantRotationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val M: RotationMatrix, val epoch: Epoch, val factory: T)
+  extends BasicReferenceFrameTransform[F0, F1, T] {
 
-  def transform(positionState: Orbit): Orbit = {
+  def transform(positionState: Orbit[F0]): Orbit[F1] = {
     val pv = positionState.toPosVel
-    new PosVel(M !* pv.position, M !* pv.velocity)
+    new PosVel(M !* pv.position, M !* pv.velocity, factory.toFrame)
   }
 
   def transformOrientation(orientation: IRotation): IRotation =

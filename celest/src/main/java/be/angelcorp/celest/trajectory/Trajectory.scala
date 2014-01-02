@@ -17,6 +17,7 @@ package be.angelcorp.celest.trajectory
 
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.Orbit
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * A trajectory is a function of time which results in a state for that given time. Evaluating a
@@ -24,7 +25,7 @@ import be.angelcorp.celest.state.Orbit
  *
  * @author Simon Billemont
  */
-trait Trajectory {
+trait Trajectory[F <: ReferenceSystem] {
 
   /**
    * Find the state of a body at a given time.
@@ -32,6 +33,6 @@ trait Trajectory {
    * @param t Get the orbit at this epoch.
    * @return The state at the given epoch
    */
-  def apply(t: Epoch): Orbit
+  def apply(t: Epoch): Orbit[F]
 
 }

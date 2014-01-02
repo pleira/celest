@@ -17,6 +17,7 @@ package be.angelcorp.celest.maneuvers.targeters.lambert;
 
 import be.angelcorp.celest.body.Satellite;
 import be.angelcorp.celest.constants.Constants;
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem$;
 import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.time.Epoch;
 import be.angelcorp.celest.time.Epochs;
@@ -45,19 +46,19 @@ public class TestLambertUV extends CelestTest {
         // V1 = 27.4408 -14.0438 0.5468 (km/s)
         // V2 = -24.5242 18.6776 -0.4856 (km/s)
 
-        Satellite center = new Satellite(Constants.mu2mass(1.32712428E20), universe);
+        Satellite center = new Satellite(Constants.mu2mass(1.32712428E20), null, universe);
 
         Vector3D r1 = new ImmutableVector3D(1.364377463519496E11, 6.129036612130551E10, 2.784835397959758E09);
         Vector3D r2 = new ImmutableVector3D(3.730051396741382E09, -1.495513611895726E11, 0.);
 
         Epoch departure = Epochs.J2000(universe);
         Epoch arrival = Epochs.J2000(universe).addS(300);
-        LambertUV lambert = new LambertUV(
+        LambertUV<?> lambert = new LambertUV(
                 new PosVel(r1, Vector3D$.MODULE$.ZERO(), null),
                 new PosVel(r2, Vector3D$.MODULE$.ZERO(), null),
-                center, departure, arrival, false);
+                BodyCenteredSystem$.MODULE$.apply(center), departure, arrival, false);
 
-        Trajectory trajectory = lambert.getTrajectory();
+        Trajectory trajectory = lambert.trajectory();
         Vector3D v1Expected = new ImmutableVector3D(2.744082030955964E04, -1.404383002109151E04, 5.468193199081889e+002);
         Vector3D v2Expected = new ImmutableVector3D(-2.452424882838209E04, 1.867758520103548E04, -4.856158493467824e+002);
 

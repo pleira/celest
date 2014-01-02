@@ -56,7 +56,7 @@ class TestJ2000FrameBias extends FlatSpec with ShouldMatchers {
       -8.056217380986972E-8, -3.306040883980552E-8, 0.9999999999999962
     )
 
-    val j2000bias = new J2000FrameBias()
+    val j2000bias = new J2000FrameBias(null, null)
     val transform = j2000bias.transform(epoch)
 
     val error = CelestTest.matrixError(transform.M, sofaRotation)

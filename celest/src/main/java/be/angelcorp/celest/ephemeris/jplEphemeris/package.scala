@@ -16,6 +16,7 @@ import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.util._
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
+import be.angelcorp.celest.frameGraph.frames.ICRS
 
 package object jplEphemeris {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -30,7 +31,7 @@ package object jplEphemeris {
    * @param header    Path to the ephemeris header file.
    * @param dataFiles Path to any supplementary data files.
    */
-  def fromAscii(header: Path, dataFiles: Seq[Path])(implicit universe: Universe): AsciiEphemeris =
+  def fromAscii(header: Path, dataFiles: Seq[Path])(implicit universe: Universe): AsciiEphemeris[ICRS] =
     fromAscii(new FileReader(header.toFile), dataFiles.map(x => new FileReader(x.toFile)))
 
   /**
@@ -43,7 +44,7 @@ package object jplEphemeris {
    * @param header    The ephemeris header file reader.
    * @param dataFiles Any supplementary data file readers.
    */
-  def fromAscii(header: Reader, dataFiles: Seq[Reader])(implicit universe: Universe): AsciiEphemeris = {
+  def fromAscii(header: Reader, dataFiles: Seq[Reader])(implicit universe: Universe): AsciiEphemeris[ICRS] = {
     val parser = new AsciiParser()
     // Create the ephemeris object from the header
     val ephemeris = parser.ephemeris(header)
@@ -173,7 +174,7 @@ package object jplEphemeris {
    * @param ephemeris Ephemeris object to serialze.
    * @return String containing the ascii header of the given ephemeris.
    */
-  def toAsciiHeader(ephemeris: JplEphemeris) = {
+  def toAsciiHeader(ephemeris: JplEphemeris[_]) = {
     val metadata = ephemeris.metadata
     val step = if (metadata.range.step % 1.0 == 0) f"${metadata.range.step}%11.0f." else f"${metadata.range.step}%12f"
     f"""KSIZE=${metadata.recordEntries * 2}%6d    NCOEFF=${metadata.recordEntries}%6d
@@ -226,7 +227,7 @@ package object jplEphemeris {
    * @param recordRange Optional, range of indices of the records to serialize (default: all records)
    * @return String containing the ascii form of the selected records.
    */
-  def toAsciiData(ephemeris: JplEphemeris, recordRange: Option[Range]): String = {
+  def toAsciiData(ephemeris: JplEphemeris[_], recordRange: Option[Range]): String = {
     toAsciiData(recordRange match {
       case Some(range) => range.map(index => (ephemeris.getRecord(index), index))
       case _ => ephemeris.records.zipWithIndex.toSeq
@@ -242,7 +243,7 @@ package object jplEphemeris {
    * @param endianness Optional, endianness to use while saving (byte order).
    * @param alignment  Optional, alignment to use while saving (alignment/padding).
    */
-  def toBinary(ephmeris: JplEphemeris, file: Path, endianness: ByteOrder = ByteOrder.LITTLE_ENDIAN, alignment: AlignmentStrategy = PackedAlignment.instance) {
+  def toBinary(ephmeris: JplEphemeris[_], file: Path, endianness: ByteOrder = ByteOrder.LITTLE_ENDIAN, alignment: AlignmentStrategy = PackedAlignment.instance) {
     val writeChannel = Files.newByteChannel(file, WRITE, CREATE)
 
     // Shorthand for the metadata
@@ -367,7 +368,7 @@ package object jplEphemeris {
    *         - {de_number, calender_date, Julian_Date, target_body, center_body, coordinate_id, coordinate_value}
    *         - Expected value, computed value [AU|AU/s|rad|rad/s]
    */
-  def test(ephemeris: JplEphemeris, testFile: Source, maximumTests: Option[Int] = None)(implicit universe: Universe) = {
+  def test(ephemeris: JplEphemeris[_], testFile: Source, maximumTests: Option[Int] = None)(implicit universe: Universe) = {
     // Ephemeris AU is in [km] not in [m]
     val AU = ephemeris.metadata.AU * 1E3
     // Read header of file, up to and including the EOT line

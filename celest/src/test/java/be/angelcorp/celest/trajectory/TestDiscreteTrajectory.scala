@@ -29,12 +29,12 @@ class TestDiscreteTrajectory extends FlatSpec with ShouldMatchers {
   implicit val universe = new DefaultUniverse
 
   "DiscreteTrajectory" should "correctly query the embedded states" in {
-    val trajectory = new DiscreteTrajectory()
+    val trajectory = new DiscreteTrajectory[Null]()
 
     // Add various states at various times
-    val s1 = PosVel()
-    val s2 = PosVel()
-    val s3 = PosVel()
+    val s1 = PosVel(null)
+    val s2 = PosVel(null)
+    val s3 = PosVel(null)
     trajectory.states.put(new JulianDate(0), s1)
     trajectory.states.put(new JulianDate(10), s2)
     trajectory.states.put(new JulianDate(20), s3)
@@ -57,10 +57,10 @@ class TestDiscreteTrajectory extends FlatSpec with ShouldMatchers {
   }
 
   it should "fail when queried for an epoch before the first state" in {
-    val trajectory = new DiscreteTrajectory()
+    val trajectory = new DiscreteTrajectory[Null]()
 
     // Add a state a t=0
-    trajectory.states.put(new JulianDate(0), PosVel())
+    trajectory.states.put(new JulianDate(0), PosVel(null))
 
     intercept[ArithmeticException] {
       trajectory(new JulianDate(-1)) // There is no state on or before -1 so exception

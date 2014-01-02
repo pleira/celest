@@ -108,5 +108,5 @@ object SolarConstants {
   val volume = 1.412E27
 
   /** Celestial body representation of the sun. */
-  def body(implicit universe: Universe) = new Satellite(mass)
+  def body(implicit universe: Universe) = new Satellite(mass, null)
 }

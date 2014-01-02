@@ -17,6 +17,7 @@ package be.angelcorp.celest.potential
 
 import be.angelcorp.celest.body.Satellite
 import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 
 /**
@@ -29,7 +30,7 @@ import be.angelcorp.libs.math.linear.Vector3D
  *
  * @author Simon Billemont
  */
-class ThinShellPotential(body: Satellite, val radius: Double) extends PointMassPotential(body) {
+class ThinShellPotential[F <: ReferenceSystem](body: Satellite[F], val radius: Double) extends PointMassPotential(body) {
 
   val radiusSq = radius * radius
 

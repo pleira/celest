@@ -53,7 +53,7 @@ class TestIAU2006Precession extends FlatSpec with ShouldMatchers {
   "IAU2006Precession" should "calculate the correct precession matrix" in {
     val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
 
-    val iau2006 = new IAU2006Precession()
+    val iau2006 = new IAU2006Precession(null, null)
     val transform = iau2006.transform(epoch)
 
     val sofaRotation = Matrix3D(

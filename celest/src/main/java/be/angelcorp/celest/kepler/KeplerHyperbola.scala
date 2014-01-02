@@ -18,8 +18,9 @@ package be.angelcorp.celest.kepler
 import math._
 import org.apache.commons.math3.util.FastMath
 import be.angelcorp.celest.state.Keplerian
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
-class KeplerHyperbola(k: Keplerian) extends KeplerEquations(k) {
+class KeplerHyperbola[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEquations(k) {
 
   lazy val anomaly = KeplerHyperbola.hyperbolicAnomalyFromMean(k.meanAnomaly, k.eccentricity)
 

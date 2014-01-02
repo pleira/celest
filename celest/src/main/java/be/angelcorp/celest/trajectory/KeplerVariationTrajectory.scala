@@ -18,6 +18,7 @@ package be.angelcorp.celest.trajectory
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.NonSingular
 import be.angelcorp.celest.state.positionState.NonSingularDerivative
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 /**
  * A trajectory that computes the instantaneous [[be.angelcorp.celest.state.Keplerian]] elements based
@@ -29,9 +30,10 @@ import be.angelcorp.celest.state.positionState.NonSingularDerivative
  *
  * @author Simon Billemont
  */
-class KeplerVariationTrajectory(val referenceEpoch: Epoch,
-                                val referenceElements: NonSingular,
-                                val referenceDerivatives: NonSingularDerivative) extends Trajectory {
+class KeplerVariationTrajectory[F <: BodyCenteredSystem]
+(val referenceEpoch: Epoch,
+ val referenceElements: NonSingular[F],
+ val referenceDerivatives: NonSingularDerivative) extends Trajectory[F] {
 
   def apply(epoch: Epoch) = {
     val dT = epoch.relativeToS(referenceEpoch)

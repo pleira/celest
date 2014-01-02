@@ -17,6 +17,7 @@ package be.angelcorp.celest.trajectory
 
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.Keplerian
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 /**
  * Create a trajectory based on the ideal 2 body equations of motion as derived by Kepler.
@@ -28,7 +29,7 @@ import be.angelcorp.celest.state.Keplerian
  * @author Simon Billemont
  * @see IKeplerTrajectory
  */
-class KeplerTrajectory(referenceEpoch: Epoch, referenceElements: Keplerian) extends Trajectory {
+class KeplerTrajectory[F <: BodyCenteredSystem](referenceEpoch: Epoch, referenceElements: Keplerian[F]) extends Trajectory[F] {
 
   def apply(epoch: Epoch) = {
     val n = referenceElements.quantities.meanMotion

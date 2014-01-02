@@ -45,9 +45,10 @@ import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
  *
  * @author Simon Billemont
  */
-class IAU2000Nutation(coefficients: List[IAU2000NutationEntry],
-                      IAU2006Corrections: Boolean = true)(implicit universe: Universe)
-  extends ConstantRotationTransformFactory[ReferenceSystem, ReferenceSystem] {
+class IAU2000Nutation[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
+(val fromFrame: F0, val toFrame: F1,
+ coefficients: List[IAU2000NutationEntry], IAU2006Corrections: Boolean = true)(implicit universe: Universe)
+  extends ConstantRotationTransformFactory[F0, F1] {
 
   def cost(epoch: Epoch): Double = 100.0
 

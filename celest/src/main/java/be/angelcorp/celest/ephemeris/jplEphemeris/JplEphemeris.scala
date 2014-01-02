@@ -1,15 +1,18 @@
 package be.angelcorp.celest.ephemeris.jplEphemeris
 
 import be.angelcorp.celest.time.{TimeRange, Epoch}
-import be.angelcorp.celest.state.{Orbit, PosVel}
+import be.angelcorp.celest.state.PosVel
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 import be.angelcorp.celest.body.Body
 import be.angelcorp.celest.physics.Units
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
-trait JplEphemeris {
+trait JplEphemeris[F <: ReferenceSystem] {
+
+  def frame: F
 
   def records: Iterator[DataRecord]
 
@@ -59,7 +62,7 @@ trait JplEphemeris {
    * @param body  Solar system body for which position is desired
    * @return State of the body at the time.
    */
-  def interpolateState(epoch: Epoch, body: JDEBody): PosVel =
+  def interpolateState(epoch: Epoch, body: JDEBody): PosVel[F] =
     if (body == Earth()) {
       val emb = interpolateState(epoch, EMB())
       val moon = interpolateState(epoch, MoonGEO())
@@ -69,7 +72,7 @@ trait JplEphemeris {
       val p = emb.position - moon.position / s
       val v = emb.velocity - moon.velocity / s
 
-      new PosVel(p, v)
+      new PosVel(p, v, frame)
     } else if (body == Moon()) {
       val emb = interpolateState(epoch, EMB())
       val moon = interpolateState(epoch, MoonGEO())
@@ -78,12 +81,12 @@ trait JplEphemeris {
       val s = 1.0 + metadata.EMRAT
       val p = emb.position + moon.position * (1.0 - 1.0 / s)
       val v = emb.velocity + moon.velocity * (1.0 - 1.0 / s)
-      new PosVel(p, v)
+      new PosVel(p, v, frame)
     } else if (body == SSB()) {
-      PosVel(0, 0, 0, 0, 0, 0)
+      PosVel(0, 0, 0, 0, 0, 0, frame)
     } else {
       val (p, v) = interpolate(epoch, body) // Results in [km] and [km/s]
-      new PosVel(Vector3D(p) * 1000.0, Vector3D(v) * 1000.0)
+      new PosVel(Vector3D(p) * 1000.0, Vector3D(v) * 1000.0, frame)
     }
 
   /**
@@ -147,7 +150,7 @@ trait JplEphemeris {
    *
    * @param body Body for which to generate the ephemeris.
    */
-  def body(body: JDEBody) = new Body {
+  def body(body: JDEBody) = new Body[F] {
     val μ: Double = {
       val gm = body match {
         case Mercury() => metadata.tags.getOrElse("GM1", throw JplConstantException("GM1"))
@@ -170,7 +173,7 @@ trait JplEphemeris {
       gm * math.pow(metadata.AU * 1E3, 3) / math.pow(Units.julianDay, 2)
     }
 
-    def orbit(epoch: Epoch): Orbit = interpolateState(epoch, body)
+    def orbit(epoch: Epoch): PosVel[F] = interpolateState(epoch, body)
   }
 
   /**

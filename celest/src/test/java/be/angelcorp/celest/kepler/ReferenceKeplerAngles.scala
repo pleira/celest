@@ -258,6 +258,6 @@ object ReferenceKeplerAngles {
     checkEqual(v, v.getEntry(1), computedValue)
 
   def createKeplerElements(v: ArrayRealVector) =
-    new Keplerian(Double.NaN, v.getEntry(0), Double.NaN, Double.NaN, Double.NaN, v.getEntry(2))
+    new Keplerian(Double.NaN, v.getEntry(0), Double.NaN, Double.NaN, Double.NaN, v.getEntry(2), null)
 
 }

@@ -145,7 +145,7 @@ public abstract class CelestTest extends TestCase {
         );
     }
 
-    public static void assertEquals(PosVel expected, PosVel actual, double positionError, double velocityError) {
+    public static void assertEquals(PosVel<?> expected, PosVel<?> actual, double positionError, double velocityError) {
         assertEquals(expected.position().norm(), actual.position().norm(), positionError);
         assertEquals(expected.position().x(), actual.position().x(), positionError);
         assertEquals(expected.position().y(), actual.position().y(), positionError);
@@ -157,7 +157,7 @@ public abstract class CelestTest extends TestCase {
         assertEquals(expected.velocity().z(), actual.velocity().z(), velocityError);
     }
 
-    public static void assertEquals(Keplerian expected, Keplerian actual,
+    public static void assertEquals(Keplerian<?> expected, Keplerian<?> actual,
                                     double deltaSemiMajorAxis, double deltaEccentricity, double deltaInclination,
                                     double deltaPericenter, double deltaRightAscension, double deltaMeanAnomaly) {
         assertEquals(expected.semiMajorAxis(), actual.semiMajorAxis(), deltaSemiMajorAxis);
@@ -168,7 +168,7 @@ public abstract class CelestTest extends TestCase {
         angleEquals(expected.meanAnomaly(), actual.meanAnomaly(), deltaMeanAnomaly);
     }
 
-    public static void assertEquals(Spherical expected, Spherical actual,
+    public static void assertEquals(Spherical<?> expected, Spherical<?> actual,
                                     double deltaRadius, double deltaRightAscension, double deltaDeclination,
                                     double deltaVelocity, double deltaFlightPathAngle, double deltaFlightPathAzimuth) {
         assertEquals(expected.radius(), actual.radius(), deltaRadius);

@@ -97,4 +97,13 @@ public class CompositeFrameTransformFactory<F0 extends ReferenceSystem,
         return inverseFactory;
     }
 
+    @Override
+    public F2 toFrame() {
+        return factory1.toFrame();
+    }
+
+    @Override
+    public F0 fromFrame() {
+        return factory0.fromFrame();
+    }
 }

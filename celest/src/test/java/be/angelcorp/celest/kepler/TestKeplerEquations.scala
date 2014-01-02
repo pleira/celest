@@ -82,12 +82,12 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
 
   it should "compute the correct cartesian to kepler conversion" in {
     val frame = new BodyCenteredSystem {
-      val centerBody = new Satellite(5.9736E24)
+      val centerBody = new Satellite(5.9736E24, null)
     }
     val c = new PosVel(
       Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
       Vector3D(1099.2953996, 3455.105924, 4355.0978095),
-      Some(frame)
+      frame
     )
 
     val k = kepler.cartesian2kepler(c, frame.centerBody.μ)
@@ -99,12 +99,12 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
 
   it should "compute the correct cartesian to kepler (2d) conversion" in {
     val frame = new BodyCenteredSystem {
-      val centerBody = new Satellite(5.9736E24)
+      val centerBody = new Satellite(5.9736E24, null)
     }
     val c = new PosVel(
       Vector3D(10157768.1264, -6475997.0091, 2421205.9518),
       Vector3D(1099.2953996, 3455.105924, 4355.0978095),
-      Some(frame)
+      frame
     )
 
     val k = kepler.cartesian2kepler2D(c, frame.centerBody.μ)
@@ -135,7 +135,8 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
     val c = kepler.kepler2cartesian(1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560, mass2mu(5.9736E24))
     val c_true = new PosVel(
       Vector3D(1.092882447232868e+007, -5.619415989750504e+006, -1.715953308630781e+005),
-      Vector3D(1.466941526515634e+003, +3.108913288555892e+003, -4.504368922790057e+003)
+      Vector3D(1.466941526515634e+003, +3.108913288555892e+003, -4.504368922790057e+003),
+      null
     )
 
     CelestTest.assertEquals(c._1.toArray, c_true.position.toArray, c_true.position.toArray.map(v => abs(v * 1E-12)))

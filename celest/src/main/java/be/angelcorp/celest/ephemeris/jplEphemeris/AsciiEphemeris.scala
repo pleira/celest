@@ -24,8 +24,10 @@ import scala.collection.immutable.ListMap
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
+import be.angelcorp.celest.frameGraph.ReferenceSystem
+import be.angelcorp.celest.frameGraph.frames.ICRS
 
-class AsciiEphemeris(val metadata: Metadata, private val recordsList: ListBuffer[DataRecord]) extends JplEphemeris {
+class AsciiEphemeris[F <: ReferenceSystem](val metadata: Metadata, private val recordsList: ListBuffer[DataRecord], val frame: F) extends JplEphemeris[F] {
 
   def records = recordsList.iterator
 
@@ -51,17 +53,17 @@ class AsciiEphemeris(val metadata: Metadata, private val recordsList: ListBuffer
 class AsciiParser(implicit universe: Universe) extends JavaTokenParsers {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  def ephemeris(input: Reader[Char]): AsciiEphemeris = parseAll(ephemeris, input) match {
+  def ephemeris(input: Reader[Char]): AsciiEphemeris[ICRS] = parseAll(ephemeris, input) match {
     case Success(jde, _) => jde
     case NoSuccess(err, in) => throw new java.util.InputMismatchException(err + s" (at ${in.pos}):\n" + in.pos.longString)
   }
 
-  def ephemeris(input: java.io.Reader): AsciiEphemeris = parseAll(ephemeris, input) match {
+  def ephemeris(input: java.io.Reader): AsciiEphemeris[ICRS] = parseAll(ephemeris, input) match {
     case Success(jde, _) => jde
     case NoSuccess(err, in) => throw new java.util.InputMismatchException(err + s" (at ${in.pos}):\n" + in.pos.longString)
   }
 
-  def ephemeris(input: java.lang.CharSequence): AsciiEphemeris = parseAll(ephemeris, input) match {
+  def ephemeris(input: java.lang.CharSequence): AsciiEphemeris[ICRS] = parseAll(ephemeris, input) match {
     case Success(jde, _) => jde
     case NoSuccess(err, in) => throw new java.util.InputMismatchException(err + s" (at ${in.pos}):\n" + in.pos.longString)
   }
@@ -83,7 +85,7 @@ class AsciiParser(implicit universe: Universe) extends JavaTokenParsers {
   }
 
   /** Parser pattern to parse and convert the header file followed by (optional) data records into a ephemeris object */
-  private def ephemeris: Parser[AsciiEphemeris] = {
+  private def ephemeris: Parser[AsciiEphemeris[ICRS]] = {
     (((size ~ group101 ~ group103 ~ group104 ~ group105) ^^ {
       case x =>
         // TODO: this is a bit silly
@@ -100,7 +102,11 @@ class AsciiParser(implicit universe: Universe) extends JavaTokenParsers {
           tags, range, tags.get("AU").get, tags.get("EMRAT").get,
           coefficientInfo, tags.get("DENUM").get.toInt)
     }) ~ group107 <~ rep(textLine)) ^^ {
-      case x => new AsciiEphemeris(x._1, ListBuffer() ++= x._2.map(y => new DataRecord(x._1, y._3.toArray.take(x._1.recordEntries))))
+      case x => new AsciiEphemeris(
+        x._1,
+        ListBuffer() ++= x._2.map(y => new DataRecord(x._1, y._3.toArray.take(x._1.recordEntries))),
+        universe.instance[ICRS]
+      )
     }
   }
 

@@ -18,6 +18,7 @@ package be.angelcorp.celest.potential
 import be.angelcorp.celest.body.Satellite
 import be.angelcorp.libs.math.linear.Vector3D
 import scala.math._
+import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * Create an ideal gravitational potential of a point mass, homogeneous sphere or body with a spherically
@@ -28,7 +29,7 @@ import scala.math._
  * @author Simon Billemont
  * @see IPointMassPotential
  */
-class PointMassPotential(val body: Satellite) extends GravitationalPotential {
+class PointMassPotential[F <: ReferenceSystem](val body: Satellite[F]) extends GravitationalPotential {
 
   override def apply(point: Vector3D) =
     point.negate * (body.μ / pow(point.norm, 3))

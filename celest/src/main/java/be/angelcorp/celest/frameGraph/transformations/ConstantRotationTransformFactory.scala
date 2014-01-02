@@ -24,11 +24,16 @@ trait ConstantRotationTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSys
       new ConstantRotationTransform[F1, F0, InverseConstantRotationTransformFactory](rotationMatrix(epoch).transpose(), epoch, this)
 
     def inverse = ConstantRotationTransformFactory.this
+
+    def fromFrame: F1 = ConstantRotationTransformFactory.this.toFrame
+
+    def toFrame: F0 = ConstantRotationTransformFactory.this.fromFrame
   }
 
   def inverse = new InverseConstantRotationTransformFactory
 
   def transform(epoch: Epoch) =
     new ConstantRotationTransform[F0, F1, ConstantRotationTransformFactory[F0, F1]](rotationMatrix(epoch), epoch, this)
+
 
 }

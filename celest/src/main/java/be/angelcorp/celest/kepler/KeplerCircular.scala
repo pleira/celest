@@ -17,8 +17,9 @@ package be.angelcorp.celest.kepler
 
 import math._
 import be.angelcorp.celest.state.Keplerian
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
-class KeplerCircular(k: Keplerian) extends KeplerEllipse(k) {
+class KeplerCircular[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEllipse(k) {
 
   override def arealVel = sqrt(μ * k.semiMajorAxis) / 2
 

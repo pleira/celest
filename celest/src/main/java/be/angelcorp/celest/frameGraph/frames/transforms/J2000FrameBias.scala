@@ -30,7 +30,8 @@ import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformF
  * 2) G. Petit, B. Luzum (eds.).,<b>"IERS Conventions (2010)"</b>, IERS Technical Note 36, Frankfurt am Main: Verlag des Bundesamts für Kartographie und Geodäsie, 2010. 179 pp., ISBN 3-89888-989-6<br/>
  * 3) G. H. Kaplan, <b>"The IAU Resolutions on Astronomical Reference Systems, Time Scales, and Earth Rotation Models"</b>, 2005, U.S. Naval Observatory Circular No. 179, [online] http://arxiv.org/abs/astro-ph/0602086
  */
-class J2000FrameBias(val preciseForm: Boolean = true) extends ConstantRotationTransformFactory[ReferenceSystem, ReferenceSystem] {
+class J2000FrameBias[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fromFrame: F0, val toFrame: F1, val preciseForm: Boolean = true)
+  extends ConstantRotationTransformFactory[F0, F1] {
 
   /**
    * The offset in the ICRS right ascension origin with respect to the dynamical equinox of J2000.0,

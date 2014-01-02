@@ -49,13 +49,14 @@ import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
  * @author Simon Billemont
  * @see IKeplerElements
  */
-class NonSingular(val a: Double,
-                  val e: Double,
-                  val i: Double,
-                  val ω_true: Double,
-                  val Ω: Double,
-                  val λ_mean: Double,
-                  val frame: Option[BodyCenteredSystem] = None) extends Orbit {
+class NonSingular[F <: BodyCenteredSystem]
+(val a: Double,
+ val e: Double,
+ val i: Double,
+ val ω_true: Double,
+ val Ω: Double,
+ val λ_mean: Double,
+ val frame: F) extends Orbit[F] {
 
   /** A more verbose name for a [m] */
   def semiMajorAxis = a
@@ -95,6 +96,6 @@ class NonSingular(val a: Double,
 
   def toKeplerian = new Keplerian(a, e, i, ω, Ω, meanAnomaly, frame)
 
-  def toPosVel: PosVel = toKeplerian.toPosVel
+  def toPosVel: PosVel[F] = toKeplerian.toPosVel
 
 }

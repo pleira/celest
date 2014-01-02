@@ -203,17 +203,17 @@ object EarthConstants {
 
   /** Kepler state vector of the earth, around the sun at the J2000 epoch */
   lazy val solarOrbit =
-    new Keplerian(semiMajorAxis, eccentricity, inclination, argPerigee, raan, mean_anomaly, None) // TODO: set correct frame
+    new Keplerian(semiMajorAxis, eccentricity, inclination, argPerigee, raan, mean_anomaly, null) // TODO: set correct frame
 
   /** Celestial body representation of the earth around the sun at the J2000 epoch. */
-  def body(implicit universe: Universe) = new Satellite(mass)
+  def body(implicit universe: Universe) = new Satellite(mass, null)
 
   def orbit(implicit universe: Universe) = {
     // Values based on
     // Simon, J., Bretagnon, P., Chapront, J., Chapront-Touzé, M., Francou, G., Laskar, J., 1994. Numerical expressions
     // for precession formulas and mean elements for the moon and the planets. Astron. Astrophys. 282 (2), 663–683.
 
-    val jpl_sun = new Satellite(mu2mass(1.32712440018E20))
+    val jpl_sun = new Satellite(mu2mass(1.32712440018E20), null)
 
     val a0 = astronomicalUnit(1.0000010)
     val e0 = 0.0167086
@@ -221,10 +221,10 @@ object EarthConstants {
     val w_bar0 = degrees(102.9373481)
     val W0 = degrees(174.8731758)
     val L0 = degrees(100.4664568)
-    val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, Some(new BodyCenteredSystem {
+    val keplerAtJ2000 = new NonSingular(a0, e0, i0, w_bar0, W0, L0, new BodyCenteredSystem {
       //TODO: Use an actual frame
       def centerBody = jpl_sun
-    }))
+    })
 
     val centuryToS = julianCentury
     val da0 = 0.0 / centuryToS

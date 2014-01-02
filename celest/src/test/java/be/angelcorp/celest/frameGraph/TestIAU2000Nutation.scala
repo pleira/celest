@@ -37,7 +37,7 @@ class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
     val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
-    val iau2000a = new IAU2000Nutation(sofaCoefficients, false)
+    val iau2000a = new IAU2000Nutation(null, null, sofaCoefficients, false)
 
     val (δψ, δε) = iau2000a.nutationParameters(epoch)
     ArcSecond.convert(δψ) should be(5.602459903893027e-005 plusOrMinus ArcSecond.convert(1E-3))
@@ -57,7 +57,7 @@ class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
     val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
-    val iau2000a = new IAU2000Nutation(sofaCoefficients, true)
+    val iau2000a = new IAU2000Nutation(null, null, sofaCoefficients, true)
 
     val (δψ, δε) = iau2000a.nutationParameters(epoch)
     ArcSecond.convert(δψ) should be(5.6024604627857253e-005 plusOrMinus ArcSecond.convert(1E-3))

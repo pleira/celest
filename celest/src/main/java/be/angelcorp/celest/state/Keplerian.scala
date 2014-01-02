@@ -93,13 +93,14 @@ case class Anomaly(anomaly: Double) extends FastAngle
  *
  * @author Simon Billemont
  */
-class Keplerian(val a: Double,
-                val e: Double,
-                val i: Double,
-                val ω: Double,
-                val Ω: Double,
-                val meanAnomaly: Double,
-                val frame: Option[BodyCenteredSystem] = None) extends Orbit {
+class Keplerian[F <: BodyCenteredSystem]
+(val a: Double,
+ val e: Double,
+ val i: Double,
+ val ω: Double,
+ val Ω: Double,
+ val meanAnomaly: Double,
+ val frame: F) extends Orbit[F] {
 
   /** A more verbose name for a */
   def semiMajorAxis = a
@@ -150,7 +151,7 @@ class Keplerian(val a: Double,
 
   def isEquatorial = math.abs(inclination) < KeplerEquations.angleTolarance
 
-  def toPosVel: PosVel = quantities.cartesian
+  def toPosVel: PosVel[F] = quantities.cartesian
 
   def propagateFor(seconds: Double) = {
     val Mnew = meanAnomaly + seconds * quantities.meanMotion
@@ -171,12 +172,11 @@ object Keplerian {
    *
    * @param orbit Orbit to convert to Keplerian elements.
    */
-  def apply(orbit: Orbit): Keplerian = orbit match {
-    case k: Keplerian => k
-    case s: Spherical =>
+  def apply[F <: BodyCenteredSystem](orbit: Orbit[F]): Keplerian[F] = orbit match {
+    case k: Keplerian[F] => k
+    case s: Spherical[F] =>
       // See Fundamentals of astrodynamics - II , K.F. Wakker, p 16-4, eqn 16.1-16.7
-      val frame = s.frame.getOrElse(throw new Exception("Cannot determine the standard gravitational parameter if not frame was set"))
-      val μ = frame.centerBody.μ
+      val μ = s.frame.centerBody.μ
 
       val rv2m = s.r * s.v * s.v / μ
       val a = s.r / (2 - rv2m)
@@ -189,13 +189,8 @@ object Keplerian {
 
       Keplerian(a, e, i, ω, Ω, TrueAnomaly(trueA), s.frame)
     case orbit =>
-      val frame = orbit.frame match {
-        case Some(f) if f.isInstanceOf[BodyCenteredSystem] => f.asInstanceOf[BodyCenteredSystem]
-        case _ => throw new Exception("Cannot convert state to keplerian elements, no body centered frame has been set.")
-      }
-      val k = kepler.cartesian2kepler(orbit.toPosVel, frame.centerBody.μ)
-
-      new Keplerian(k._1, k._2, k._3, k._4, k._5, kepler.meanAnomalyFromTrue(k._6, k._2), Some(frame))
+      val k = kepler.cartesian2kepler(orbit.toPosVel, orbit.frame.centerBody.μ)
+      new Keplerian(k._1, k._2, k._3, k._4, k._5, kepler.meanAnomalyFromTrue(k._6, k._2), orbit.frame)
   }
 
   /**
@@ -209,7 +204,7 @@ object Keplerian {
    * @param fast Fast angle (position of the satellite) [rad]
    * @param frame Frame in which this set of elements is defined.
    */
-  def apply(a: Double, e: Double, i: Double, ω: Double, Ω: Double, fast: FastAngle, frame: Option[BodyCenteredSystem]): Keplerian = {
+  def apply[F <: BodyCenteredSystem](a: Double, e: Double, i: Double, ω: Double, Ω: Double, fast: FastAngle, frame: F): Keplerian[F] = {
     val ma = fast match {
       case MeanAnomaly(ma) => ma
       case TrueAnomaly(ta) => kepler.meanAnomalyFromTrue(ta, e)
@@ -224,7 +219,7 @@ object Keplerian {
    * @param elements Tuple with the respective Kepler elements.
    * @param frame Frame in which this set of elements is defined.
    */
-  def apply(elements: (Double, Double, Double, Double, Double, Double), frame: Option[BodyCenteredSystem]): Keplerian =
+  def apply[F <: BodyCenteredSystem](elements: (Double, Double, Double, Double, Double, Double), frame: F): Keplerian[F] =
     new Keplerian(elements._1, elements._2, elements._3, elements._4, elements._5, elements._6, frame)
 
 }
