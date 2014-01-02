@@ -13,4 +13,4 @@ val dataFiles = Seq("ascp1600.405", "ascp1620.405").map(file => {
   scala.io.Source.fromURL(java.net.URI.create(urlBase + file).toURL).bufferedReader()
 })
 // Read the actual ephemeris
-val ephemeris: JplEphemeris = jplEphemeris.fromAscii(headerFile, dataFiles)
+val ephemeris: JplEphemeris[_] = jplEphemeris.fromAscii(headerFile, dataFiles)

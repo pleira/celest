@@ -88,14 +88,14 @@ class QuickStart {
     // Original orbit
     val Rp = EarthConstants.radiusMean + 190E3
     val Ra = 50000E3
-    val k = new Keplerian((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, Some(earthFrame))
+    val k = new Keplerian((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, earthFrame)
 
     // The satellite that will perform the specific maneuver
     val satelliteT0 = MySatellite(Epochs.J2000, k)
 
     /* This is the trajectory that will store the different trajectory segments */
     /* You can add trajectory and a time from where this trajectory should be evaluated */
-    val trajectory = new CompositeTrajectory
+    val trajectory = new CompositeTrajectory(earthFrame)
 
     /* First leg of the trajectory, the orbit as it was injected by the atlas launcher */
     /* Without any intervention, it would keep this orbit */

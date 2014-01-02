@@ -14,4 +14,4 @@ val start: Epoch = new JulianDate(2451545.0)
 val end: Epoch = new JulianDate(2451600.0)
 
 // Create a subset ranging from 2451545jd to 2451600jd
-val subEphemeris: JplEphemeris = jplEphemeris.SubsetEphemeris(ephemeris, start, end)
+val subEphemeris: JplEphemeris[_] = jplEphemeris.SubsetEphemeris(ephemeris, start, end)

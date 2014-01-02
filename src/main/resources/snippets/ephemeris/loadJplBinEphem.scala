@@ -11,7 +11,7 @@ val stream = java.net.URI.create(urlBase).toURL.openStream()
 java.nio.file.Files.copy(stream, path, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
 
 // Read in the downloaded ephemeris file
-val ephemeris: JplEphemeris = jplEphemeris.fromBinary(path, 405)
+val ephemeris: JplEphemeris[_] = jplEphemeris.fromBinary(path, 405)
 
 // Read in the downloaded ephemeris file using a specified alignment and padding
 val ephemeris2 = jplEphemeris.fromBinary(path, 405,

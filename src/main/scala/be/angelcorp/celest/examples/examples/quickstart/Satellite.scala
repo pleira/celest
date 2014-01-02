@@ -18,11 +18,13 @@ package be.angelcorp.celest.examples.examples.quickstart
 import be.angelcorp.celest.body.{Propellant, BiPropellant, Satellite, MonoPropellant}
 import be.angelcorp.celest.state.{Keplerian, PosVel, Orbit}
 import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
-class MySatellite(e: Epoch, s: Orbit,
-                  val hydrazine: Propellant,
-                  val nitrogenTetroxide: Propellant,
-                  val xenon: Propellant) extends Satellite(e, 0, s) {
+class MySatellite[F <: BodyCenteredSystem]
+(e: Epoch, s: Orbit[F],
+ val hydrazine: Propellant,
+ val nitrogenTetroxide: Propellant,
+ val xenon: Propellant) extends Satellite(e, 0, s) {
 
   /**
    * Get the propellant view for the bipropellant LAE engine.
@@ -66,7 +68,7 @@ class MySatellite(e: Epoch, s: Orbit,
 
 object MySatellite {
 
-  def apply(epoch: Epoch, state: Orbit) = {
+  def apply[F <: BodyCenteredSystem](epoch: Epoch, state: Orbit[F]) = {
     /* Initial propellant quantities */
     val hydrazine = new MonoPropellant(225, 1550)
     val nitrogenTetroxide = new MonoPropellant(0, 1200)
