@@ -3,6 +3,7 @@
 
 #include "../utilities.h"
 #include <iomanip>
+#include "sofam.h"
 
 void printMatrix(double m[3][3]) {
     for (int row=0; row<3; ++row) {
@@ -15,6 +16,7 @@ void printMatrix(double m[3][3]) {
 
 /**
  * Generates the results used in the following test cases;
+ * - TestPolarMotion
  * - TestEarthRotation
  * - TestIAU2000Nutation
  * - TestIAU2000NutationEntry
@@ -117,4 +119,17 @@ void testFrames() {
     iauRz(-gst, r_gst);
     std::cout << "R_GST matrix:" << std::endl;
     printMatrix(r_gst);
+
+    /************************************************************************/
+    /* Polar motion                                                         */
+    /************************************************************************/
+
+    double W[3][3];
+    double xp = 100 * DMAS2R; // = 100 [mas]
+    double yp = 200 * DMAS2R; // = 200 [mas]
+    iauPom00( xp, yp, 0.0, W );
+
+    std::cout << "W (polar motion xp=100mas yp=200mas) matrix:" << std::endl;
+    printMatrix(W);
+
 }

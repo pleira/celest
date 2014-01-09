@@ -13,23 +13,30 @@ import be.angelcorp.celest.universe.Universe
 
 class DefaultFrames extends ScalaModule {
 
-  def configure {
+  def configure() {
+    // Required eop data provider
     bind[EarthOrientationData].toProvider[DefaultEarthOrientationDataProvider].in(classOf[Singleton])
     bind[ExcessLengthOfDay].to[EarthOrientationData].in(classOf[Singleton])
     bind[UT1Provider].to[EarthOrientationData].in(classOf[Singleton])
 
-    // Some more loose frames:
-    bind[ICRS] toInstance ICRF2()
-    bind[GCRS] toInstance GCRF()
+    // Bind systems to their correct frame implementations
     bind[ITRS] toInstance ITRF()
+    bind[TIRS] toInstance TIRF()
+    bind[ERS] toInstance ERF()
+    bind[MODSystem] toInstance MOD()
+    bind[J2000System] toInstance J2000()
+    bind[GCRS] toInstance GCRF()
+    bind[ICRS] toInstance ICRF2()
 
     // Create the reference frame graph
     bind[ReferenceFrameGraph].toProvider[GuiceReferenceFrameGraphProvider].in(classOf[Singleton])
 
     // Create the reference frame graph transformations
-    bind[EarthRotationGAST[TIRF, ERF]].toProvider[EarthRotationGASTProvider]
-    bind[IAU2000Nutation[ERF, MOD]].toProvider[IAU2000NutationProvider]
-    bind[IAU2006Precession[MOD, J2000]].toProvider[IAU2006PrecessionProvider]
+    bind[PolarMotion[ITRS, TIRS]].toProvider[PolarMotionProvider].in(classOf[Singleton])
+    bind[EarthRotationGAST[TIRS, ERS]].toProvider[EarthRotationGASTProvider].in(classOf[Singleton])
+    bind[IAU2000Nutation[ERS, MODSystem]].toProvider[IAU2000NutationProvider].in(classOf[Singleton])
+    bind[IAU2006Precession[MODSystem, J2000System]].toProvider[IAU2006PrecessionProvider].in(classOf[Singleton])
+    bind[J2000FrameBias[J2000System, GCRS]].toProvider[J2000FrameBiasProvider].in(classOf[Singleton])
   }
 
 }
@@ -38,24 +45,47 @@ class DefaultEarthOrientationDataProvider @Inject()(implicit val universe: Unive
   def get() = new DefaultEarthOrientationData()
 }
 
-class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRF, ERF]] {
+class PolarMotionProvider extends Provider[PolarMotion[ITRS, TIRS]] {
   @Inject implicit var universe: Universe = null
-  @Inject var nutation: IAU2000Nutation[ERF, MOD] = null
   @Inject var eop: EarthOrientationData = null
+  @Inject var itrs: ITRS = null
+  @Inject var tirs: TIRS = null
 
-  def get = new EarthRotationGAST(TIRF(), ERF(), nutation, eop)
+  def get = new PolarMotion(itrs, tirs, eop)
 }
 
-class IAU2000NutationProvider extends Provider[IAU2000Nutation[ERF, MOD]] {
+class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRS, ERS]] {
   @Inject implicit var universe: Universe = null
+  @Inject var nutation: IAU2000Nutation[ERS, MODSystem] = null
+  @Inject var eop: EarthOrientationData = null
+  @Inject var tirs: TIRS = null
+  @Inject var ers: ERS = null
 
-  def get(): IAU2000Nutation[ERF, MOD] = new IAU2000Nutation(ERF(), MOD(), IAU2000NutationLoader.IERS2010)
+  def get = new EarthRotationGAST(tirs, ers, nutation, eop)
 }
 
-class IAU2006PrecessionProvider extends Provider[IAU2006Precession[MOD, J2000]] {
+class IAU2000NutationProvider extends Provider[IAU2000Nutation[ERS, MODSystem]] {
   @Inject implicit var universe: Universe = null
+  @Inject implicit var ers: ERS = null
+  @Inject implicit var mod: MODSystem = null
 
-  def get(): IAU2006Precession[MOD, J2000] = new IAU2006Precession[MOD, J2000](MOD(), J2000())
+  def get(): IAU2000Nutation[ERS, MODSystem] = new IAU2000Nutation(ers, mod, IAU2000NutationLoader.IERS2010)
+}
+
+class IAU2006PrecessionProvider extends Provider[IAU2006Precession[MODSystem, J2000System]] {
+  @Inject implicit var universe: Universe = null
+  @Inject implicit var j2000: J2000System = null
+  @Inject implicit var mod: MODSystem = null
+
+  def get(): IAU2006Precession[MODSystem, J2000System] = new IAU2006Precession(mod, j2000)
+}
+
+class J2000FrameBiasProvider extends Provider[J2000FrameBias[J2000System, GCRS]] {
+  @Inject implicit var universe: Universe = null
+  @Inject implicit var j2000: J2000System = null
+  @Inject implicit var gcrs: GCRS = null
+
+  def get(): J2000FrameBias[J2000System, GCRS] = new J2000FrameBias[J2000System, GCRS](j2000, gcrs)
 }
 
 /**
