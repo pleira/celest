@@ -64,7 +64,7 @@ trait TIRS extends GeocentricSystem
  *
  * @author Simon Billemont
  */
-trait ERS extends GeocentricSystem with PseudoInertialSystem
+trait ERS extends GeocentricSystem
 
 /**
  * The Mean Of Date system (MODs).
@@ -76,7 +76,7 @@ trait ERS extends GeocentricSystem with PseudoInertialSystem
  *
  * @author Simon Billemont
  */
-trait MODSystem extends GeocentricSystem with PseudoInertialSystem
+trait MODSystem extends GeocentricSystem
 
 /**
  * The J2000 or EME2000 reference system (J2000s).
@@ -85,7 +85,7 @@ trait MODSystem extends GeocentricSystem with PseudoInertialSystem
  *
  * @author Simon Billemont
  */
-trait J2000System extends GeocentricSystem with PseudoInertialSystem
+trait J2000System extends GeocentricSystem
 
 /**
  * The Geocentric Celestial Reference System (TIRS).
@@ -94,4 +94,4 @@ trait J2000System extends GeocentricSystem with PseudoInertialSystem
  *
  * @author Simon Billemont
  */
-trait GCRS extends ReferenceSystem with PseudoInertialSystem
+trait GCRS extends ReferenceSystem

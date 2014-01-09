@@ -16,11 +16,11 @@
 
 package be.angelcorp.celest.data
 
+import java.util
+import scala.Some
+import org.slf4j.LoggerFactory
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.Epoch
-import java.util
-import org.slf4j.LoggerFactory
-import scala.Some
 
 class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrientationData(new util.TreeMap()) {
   private val logger = LoggerFactory.getLogger(getClass)
