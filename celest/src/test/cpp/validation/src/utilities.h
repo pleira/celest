@@ -37,4 +37,13 @@ inline std::string base_directory() {
     return "src/test/resources/";
 }
 
+void printMatrix(double m[3][3]) {
+    for (int row=0; row<3; ++row) {
+        std::cout << "[\t";
+        for (int col=0; col<3; ++col)
+            std::cout << m[row][col] << "\t";
+        std::cout << "]" << std::endl;
+    }
+}
+
 #endif

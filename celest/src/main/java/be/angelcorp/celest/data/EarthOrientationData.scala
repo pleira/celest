@@ -24,9 +24,11 @@ import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.dateStandard.DateStandards
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
 import be.angelcorp.celest.time.timeStandard.TimeStandards.UTC
+import be.angelcorp.celest.time.timeStandard.TimeStandard
 
-class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEntry])(implicit universe: Universe)
+class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEntry], @UTC val utc: TimeStandard)
   extends UT1Provider with ExcessLengthOfDay with PolarOrientationData {
 
   def epochRange = if (data.isEmpty) (Double.NaN, Double.NaN) else (data.firstKey() - 0.5, data.lastKey() + 0.5)
@@ -40,7 +42,7 @@ class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEn
    * @return Optionally the closest eop entry to the given epoch.
    */
   def findEntry(epoch: Epoch, Δt_max: Double = 1.0) = {
-    val mjd_utc = DateStandards.MJD.fromJD(epoch.inTimeStandard(UTC).jd)
+    val mjd_utc = DateStandards.MJD.fromJD(epoch.inTimeStandard(utc).jd)
     val low = data.floorEntry(mjd_utc)
     val high = data.ceilingEntry(mjd_utc)
 
@@ -90,7 +92,7 @@ class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEn
   // See [[PolarOrientationData]]
   def polarCoordinatesOn(epoch: Epoch): (Double, Double) = {
     val entry = getEntry(epoch)
-    (entry.dx, entry.dy)
+    (entry.x, entry.y)
   }
 }
 
@@ -124,7 +126,7 @@ object EarthOrientationData {
 
     val dataMap = new util.TreeMap[Double, EarthOrientationDataEntry]
     dataMap.putAll(dataEntries.map(x => (x.mjd.toDouble, x)).toMap.asJava)
-    new EarthOrientationData(dataMap)
+    new EarthOrientationData(dataMap, universe.instance[TimeStandard, UTC])
   }
 
 }

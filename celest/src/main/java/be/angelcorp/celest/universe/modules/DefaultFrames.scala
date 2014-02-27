@@ -13,13 +13,20 @@ import be.angelcorp.celest.universe.Universe
 
 class DefaultFrames extends ScalaModule {
 
-  def configure() {
-    // Required eop data provider
+  /**
+   * Create the bindings that load any data files required for the frames/tranformations
+   */
+  def configureData() {
     bind[EarthOrientationData].toProvider[DefaultEarthOrientationDataProvider].in(classOf[Singleton])
     bind[ExcessLengthOfDay].to[EarthOrientationData].in(classOf[Singleton])
     bind[UT1Provider].to[EarthOrientationData].in(classOf[Singleton])
+    bind[PolarOrientationData].to[EarthOrientationData].in(classOf[Singleton])
+  }
 
-    // Bind systems to their correct frame implementations
+  /**
+   * Create the bindings that bind the reference systems to their correct frame implementations
+   */
+  def configureSystems() {
     bind[ITRS] toInstance ITRF()
     bind[TIRS] toInstance TIRF()
     bind[ERS] toInstance ERF()
@@ -27,16 +34,27 @@ class DefaultFrames extends ScalaModule {
     bind[J2000System] toInstance J2000()
     bind[GCRS] toInstance GCRF()
     bind[ICRS] toInstance ICRF2()
+  }
+
+  /**
+   * Create the bindings for the reference frame graph transformations
+   */
+  def configureTransformations() {
+    bind[PolarMotion[TIRS, ITRS]].toProvider[PolarMotionProvider].in(classOf[Singleton])
+    bind[EarthRotationGAST[TIRS, ERS]].toProvider[EarthRotationGASTProvider].in(classOf[Singleton])
+    bind[IAU2000Nutation[MODSystem, ERS]].toProvider[IAU2000NutationProvider].in(classOf[Singleton])
+    bind[IAU2006Precession[MODSystem, J2000System]].toProvider[IAU2006PrecessionProvider].in(classOf[Singleton])
+    bind[J2000FrameBias[J2000System, GCRS]].toProvider[J2000FrameBiasProvider].in(classOf[Singleton])
+  }
+
+  def configure() {
+    configureData()
+    configureSystems()
 
     // Create the reference frame graph
     bind[ReferenceFrameGraph].toProvider[GuiceReferenceFrameGraphProvider].in(classOf[Singleton])
 
-    // Create the reference frame graph transformations
-    bind[PolarMotion[ITRS, TIRS]].toProvider[PolarMotionProvider].in(classOf[Singleton])
-    bind[EarthRotationGAST[TIRS, ERS]].toProvider[EarthRotationGASTProvider].in(classOf[Singleton])
-    bind[IAU2000Nutation[ERS, MODSystem]].toProvider[IAU2000NutationProvider].in(classOf[Singleton])
-    bind[IAU2006Precession[MODSystem, J2000System]].toProvider[IAU2006PrecessionProvider].in(classOf[Singleton])
-    bind[J2000FrameBias[J2000System, GCRS]].toProvider[J2000FrameBiasProvider].in(classOf[Singleton])
+    configureTransformations()
   }
 
 }
@@ -45,18 +63,18 @@ class DefaultEarthOrientationDataProvider @Inject()(implicit val universe: Unive
   def get() = new DefaultEarthOrientationData()
 }
 
-class PolarMotionProvider extends Provider[PolarMotion[ITRS, TIRS]] {
+class PolarMotionProvider extends Provider[PolarMotion[TIRS, ITRS]] {
   @Inject implicit var universe: Universe = null
   @Inject var eop: EarthOrientationData = null
   @Inject var itrs: ITRS = null
   @Inject var tirs: TIRS = null
 
-  def get = new PolarMotion(itrs, tirs, eop)
+  def get = new PolarMotion(tirs, itrs, eop)
 }
 
 class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRS, ERS]] {
   @Inject implicit var universe: Universe = null
-  @Inject var nutation: IAU2000Nutation[ERS, MODSystem] = null
+  @Inject var nutation: IAU2000Nutation[MODSystem, ERS] = null
   @Inject var eop: EarthOrientationData = null
   @Inject var tirs: TIRS = null
   @Inject var ers: ERS = null
@@ -64,12 +82,12 @@ class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRS, ERS]] {
   def get = new EarthRotationGAST(tirs, ers, nutation, eop)
 }
 
-class IAU2000NutationProvider extends Provider[IAU2000Nutation[ERS, MODSystem]] {
+class IAU2000NutationProvider extends Provider[IAU2000Nutation[MODSystem, ERS]] {
   @Inject implicit var universe: Universe = null
   @Inject implicit var ers: ERS = null
   @Inject implicit var mod: MODSystem = null
 
-  def get(): IAU2000Nutation[ERS, MODSystem] = new IAU2000Nutation(ers, mod, IAU2000NutationLoader.IERS2010)
+  def get() = new IAU2000Nutation(mod, ers, IAU2000NutationLoader.IERS2010)
 }
 
 class IAU2006PrecessionProvider extends Provider[IAU2006Precession[MODSystem, J2000System]] {
@@ -100,7 +118,6 @@ class GuiceReferenceFrameGraphProvider extends Provider[ReferenceFrameGraphImpl]
     // Obtain a list of all bound transformations, together with there starting and ending frame.
     val transformations = injector.getAllBindings.keySet().asScala.map(key => {
       val thatClazz = key.getTypeLiteral.getRawType
-      println(thatClazz.getSimpleName)
       if (classOf[ReferenceFrameTransformFactory[_, _]].isAssignableFrom(thatClazz))
         Some(injector.getInstance(key).asInstanceOf[ReferenceFrameTransformFactory[ReferenceSystem, ReferenceSystem]])
       else

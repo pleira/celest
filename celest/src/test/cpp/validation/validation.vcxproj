@@ -82,7 +82,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\frames\IAU2000a.cpp" />
+    <ClCompile Include="src\frames\iauFrames.cpp" />
+    <ClCompile Include="src\frames\precessionNutationPolarMotion.cpp" />
     <ClCompile Include="src\time\timestandards.cpp" />
     <ClCompile Include="src\validation.cpp" />
   </ItemGroup>

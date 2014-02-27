@@ -21,7 +21,10 @@
     <ClCompile Include="src\validation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\frames\IAU2000a.cpp">
+    <ClCompile Include="src\frames\precessionNutationPolarMotion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frames\iauFrames.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

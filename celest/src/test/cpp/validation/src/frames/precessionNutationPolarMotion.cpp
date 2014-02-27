@@ -5,15 +5,6 @@
 #include <iomanip>
 #include "sofam.h"
 
-void printMatrix(double m[3][3]) {
-    for (int row=0; row<3; ++row) {
-        std::cout << "[\t";
-        for (int col=0; col<3; ++col)
-            std::cout << m[row][col] << "\t";
-        std::cout << "]" << std::endl;
-    }
-}
-
 /**
  * Generates the results used in the following test cases;
  * - TestPolarMotion
@@ -23,7 +14,7 @@ void printMatrix(double m[3][3]) {
  * - TestJ2000FrameBias
  * - TestIAU2006Precession
  */
-void testFrames() {
+void precessionNutationPolarMotion() {
     std::cout << std::setprecision(16);
 
     double epoch_jd, epoch_fraction;         // TT

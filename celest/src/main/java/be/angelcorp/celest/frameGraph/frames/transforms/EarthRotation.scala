@@ -75,7 +75,7 @@ object EarthRotation {
  *                    3) G. H. Kaplan, <b>"The IAU Resolutions on Astronomical Reference Systems, Time Scales, and Earth Rotation Models"</b>, 2005, U.S. Naval Observatory Circular No. 179, [online] http://arxiv.org/abs/astro-ph/0602086
  */
 class EarthRotationGAST[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
-(val fromFrame: F0, val toFrame: F1, val nutation: IAU2000Nutation[F1, _], val lodProvider: ExcessLengthOfDay)(implicit universe: Universe) extends KinematicTransformationFactory[F0, F1] {
+(val fromFrame: F0, val toFrame: F1, val nutation: IAU2000Nutation[_, _], val lodProvider: ExcessLengthOfDay)(implicit universe: Universe) extends KinematicTransformationFactory[F0, F1] {
 
   /**
    * The equation of the equinoxes, used to account for the motion of the equinox due to nutation (the difference

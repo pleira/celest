@@ -21,8 +21,10 @@ import scala.Some
 import org.slf4j.LoggerFactory
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.timeStandard.TimeStandard
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
 
-class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrientationData(new util.TreeMap()) {
+class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrientationData(new util.TreeMap(), universe.instance[TimeStandard, UTC]) {
   private val logger = LoggerFactory.getLogger(getClass)
 
   /**
