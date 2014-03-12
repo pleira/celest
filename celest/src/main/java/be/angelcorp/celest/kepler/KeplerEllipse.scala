@@ -24,17 +24,17 @@ class KeplerEllipse[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEqua
 
   lazy val anomaly = KeplerEllipse.eccentricAnomalyFromMean(k.meanAnomaly, k.eccentricity)
 
-  def arealVel = sqrt(k.a * μ * (1 - k.e * k.e)) / 2
+  val arealVel = sqrt(k.a * μ * (1 - k.e * k.e)) / 2
 
-  def apocenter = k.semiMajorAxis * (1 + k.eccentricity)
+  val apocenter = k.semiMajorAxis * (1 + k.eccentricity)
 
-  def pericenter = k.semiMajorAxis * (1 - k.eccentricity)
+  val pericenter = k.semiMajorAxis * (1 - k.eccentricity)
 
-  def period = 2 * Pi / meanMotion
+  val period = 2 * Pi / meanMotion
 
-  def semiLatusRectum = k.semiMajorAxis * (1 - k.eccentricity * k.eccentricity)
+  val semiLatusRectum = k.semiMajorAxis * (1 - k.e * k.e)
 
-  def totEnergyPerMass = -μ / (2 * k.semiMajorAxis)
+  val totEnergyPerMass = -μ / (2 * k.semiMajorAxis)
 
   lazy val trueAnomaly = KeplerEllipse.trueAnomalyFromEccentric(anomaly, k.eccentricity)
 

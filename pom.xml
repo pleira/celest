@@ -80,6 +80,15 @@
                 <module>console</module>
             </modules>
         </profile>
+        <profile>
+            <id>orekit</id>
+            <activation>
+                <file> <exists>celest-orekit/pom.xml</exists> </file>
+            </activation>
+            <modules>
+                <module>celest-orekit</module>
+            </modules>
+        </profile>
     </profiles>
 
     <build>

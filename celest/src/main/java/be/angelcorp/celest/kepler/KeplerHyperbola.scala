@@ -32,7 +32,7 @@ class KeplerHyperbola[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEq
 
   lazy val period = Double.PositiveInfinity
 
-  lazy val semiLatusRectum = k.semiMajorAxis * (1 - k.eccentricity * k.eccentricity)
+  lazy val semiLatusRectum = k.semiMajorAxis * (1 - k.e * k.e)
 
   lazy val totEnergyPerMass = μ / (2 * k.semiMajorAxis)
 

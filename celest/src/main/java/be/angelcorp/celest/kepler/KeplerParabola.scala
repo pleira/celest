@@ -44,7 +44,7 @@ class KeplerParabola[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEqu
 
   override def visViva(r: Double) = 2 * μ / r
 
-  def trueAnomaly: Double = KeplerParabola.trueAnomalyFromAnomaly(anomaly)
+  lazy val trueAnomaly: Double = KeplerParabola.trueAnomalyFromAnomaly(anomaly)
 }
 
 object KeplerParabola {

@@ -25,6 +25,27 @@ import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
 
+  /** Cached value for sin(i) */
+  lazy val sini = sin( k.i )
+  /** Cached value for cos(i) */
+  lazy val cosi = cos( k.i )
+  /** Cached value for sin(ω) */
+  lazy val sinω = sin( k.ω )
+  /** Cached value for cos(ω) */
+  lazy val cosω = cos( k.ω )
+  /** Cached value for sin(Ω) */
+  lazy val sinΩ = sin( k.Ω )
+  /** Cached value for cos(Ω) */
+  lazy val cosΩ = cos( k.Ω )
+  /** Cached value for sin(ν) */
+  lazy val sinν = sin( k.ν )
+  /** Cached value for cos(ν) */
+  lazy val cosν = cos( k.ν )
+  /** Cached value for sin(u) = sin(ν + ω) */
+  lazy val sinu = sin( k.ν + k.ω )
+  /** Cached value for cos(u) = cos(ν + ω) */
+  lazy val cosu = cos( k.ν + k.ω )
+
   /**
    * Standard gravitational parameter μ [m³/s²], of the body at the center of the Keplerian orbit.
    */
@@ -107,9 +128,12 @@ abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
   def period: Double
 
   /*
-	 * @return current radius [r]
+	 * @return current radius r [m]
 	 */
-  lazy val radius = semiLatusRectum / (1 + k.eccentricity * cos(trueAnomaly))
+  lazy val radius = semiLatusRectum / (1 + k.eccentricity * cosν )
+
+  /** Shorthand notation for radius [m] */
+  def r = radius
 
   /**
    * Compute the semi-latus rectum (focal parameter) of the orbit
@@ -118,6 +142,9 @@ abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
    */
   def semiLatusRectum: Double
 
+  /** Short-hand notation for `semiLatusRectum` */
+  def p = semiLatusRectum
+
   /**
    * Compute the total energy per unit mass for the orbit
    *
@@ -125,13 +152,16 @@ abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
    */
   def totEnergyPerMass: Double
 
+  /** Short-hand notation for `totEnergyPerMass` */
+  def h = totEnergyPerMass
+
   /**
    * @see KeplerEquations#trueLongitude(Vector3D)
    */
   lazy val trueLongitude = {
     val ν = trueAnomaly
     val p = semiLatusRectum
-    val R_pqw = Vector3D(p * cos(ν) / (1 + k.e * cos(ν)), p * sin(ν) / (1 + k.e * cos(ν)), 0)
+    val R_pqw = Vector3D(p * cosν / (1 + k.e * cosν), p * sinν / (1 + k.e * cosν), 0)
     val R = CelestialRotate.PQW2ECI(k.argumentOfPeriapsis, k.rightAscension, k.inclination) !* R_pqw
     kepler.trueLongitude(R)
   }
@@ -141,9 +171,9 @@ abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
    */
   lazy val trueLongitudeOfPeriapse = {
     val e_unit_vec = Vector3D(
-      cos(k.Ω) * cos(k.ω) - cos(k.i) * sin(k.Ω) * sin(k.ω),
-      sin(k.Ω) * cos(k.ω) + cos(k.i) * cos(k.Ω) * sin(k.ω),
-      sin(k.i) * sin(k.ω))
+      cosΩ * cosω - cosi * sinΩ * sinω,
+      sinΩ * cosω + cosi * cosΩ * sinω,
+      sini * sinω)
     kepler.trueLongitudeOfPeriapse(e_unit_vec * k.eccentricity)
   }
 

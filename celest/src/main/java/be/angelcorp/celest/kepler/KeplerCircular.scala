@@ -21,15 +21,15 @@ import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 class KeplerCircular[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEllipse(k) {
 
-  override def arealVel = sqrt(μ * k.semiMajorAxis) / 2
+  override val arealVel = sqrt(μ * k.semiMajorAxis) / 2
 
-  override def semiLatusRectum = k.semiMajorAxis
+  override val semiLatusRectum = k.semiMajorAxis
 
-  override def apocenter = k.semiMajorAxis
+  override val apocenter = k.semiMajorAxis
 
-  override def pericenter = k.semiMajorAxis
+  override val pericenter = k.semiMajorAxis
 
-  override def totEnergyPerMass = -μ / (2 * k.semiMajorAxis)
+  override val totEnergyPerMass = -μ / (2 * k.semiMajorAxis)
 
   override def visViva(r: Double) = μ / r
 

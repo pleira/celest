@@ -94,4 +94,4 @@ trait J2000System extends GeocentricSystem
  *
  * @author Simon Billemont
  */
-trait GCRS extends ReferenceSystem
+trait GCRS extends GeocentricSystem

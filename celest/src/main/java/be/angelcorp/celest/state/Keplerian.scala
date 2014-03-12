@@ -31,7 +31,9 @@ sealed abstract class FastAngle
  *
  * @param trueAnomaly True anomaly [rad]
  */
-case class TrueAnomaly(trueAnomaly: Double) extends FastAngle
+case class TrueAnomaly(trueAnomaly: Double) extends FastAngle {
+
+}
 
 /**
  * Mean anomaly.
@@ -124,6 +126,9 @@ class Keplerian[F <: BodyCenteredSystem]
    */
   def trueAnomaly = quantities.trueAnomaly
 
+  /** A shorthand notation for `trueAnomaly` */
+  def ν = trueAnomaly
+
   /**
    * Finds the satellite position in the orbit using the generic anomaly (eccentric/hyperbolic/parabolic).
    *
@@ -161,6 +166,8 @@ class Keplerian[F <: BodyCenteredSystem]
   def propagateTo(meanAnomaly: Double) = new Keplerian(a, e, i, ω, Ω, meanAnomaly, frame)
 
   def propagateTo(angle: FastAngle) = Keplerian(a, e, i, ω, Ω, angle, frame)
+
+  def μ = frame.centerBody.μ
 
 }
 
@@ -221,5 +228,8 @@ object Keplerian {
    */
   def apply[F <: BodyCenteredSystem](elements: (Double, Double, Double, Double, Double, Double), frame: F): Keplerian[F] =
     new Keplerian(elements._1, elements._2, elements._3, elements._4, elements._5, elements._6, frame)
+
+  def unapply[F <: BodyCenteredSystem]( k: Keplerian[F] ): (Double, Double, Double, Double, Double, Double, F) =
+    (k.a, k.e, k.i, k.ω, k.Ω, k.meanAnomaly, k.frame)
 
 }
