@@ -18,9 +18,8 @@ package be.angelcorp.celest.examples.examples.quickstart
 import be.angelcorp.celest.body.{Propellant, BiPropellant, Satellite, MonoPropellant}
 import be.angelcorp.celest.state.{Keplerian, PosVel, Orbit}
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
-class MySatellite[F <: BodyCenteredSystem]
+class MySatellite[F <: BodyCenteredFrame]
 (e: Epoch, s: Orbit[F],
  val hydrazine: Propellant,
  val nitrogenTetroxide: Propellant,
@@ -68,7 +67,7 @@ class MySatellite[F <: BodyCenteredSystem]
 
 object MySatellite {
 
-  def apply[F <: BodyCenteredSystem](epoch: Epoch, state: Orbit[F]) = {
+  def apply[F <: BodyCenteredFrame](epoch: Epoch, state: Orbit[F]) = {
     /* Initial propellant quantities */
     val hydrazine = new MonoPropellant(225, 1550)
     val nitrogenTetroxide = new MonoPropellant(0, 1200)
