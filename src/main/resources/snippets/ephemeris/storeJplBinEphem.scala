@@ -22,3 +22,6 @@ jplEphemeris.toBinary(
   endianness = java.nio.ByteOrder.LITTLE_ENDIAN,
   alignment = PackedAlignment.instance
 )
+
+// Cleanup the ehemeris after the example
+java.nio.file.Files.deleteIfExists(path)

@@ -15,7 +15,8 @@
  */
 package be.angelcorp.celest.examples.examples.quickstart
 
-import math._
+import java.io.FileWriter
+import scala.math._
 import org.slf4j.LoggerFactory
 import be.angelcorp.celest.examples.gui.{Services, CelestExample}
 import be.angelcorp.celest.universe.DefaultUniverse
@@ -25,7 +26,7 @@ import be.angelcorp.celest.time.Epochs
 import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.constants.EarthConstants
 import be.angelcorp.celest.state.Keplerian
-import java.io.FileWriter
+import be.angelcorp.celest.frameGraph.frames.GCRS
 
 @CelestExample(
   name = "Quickstart example",
@@ -36,10 +37,10 @@ class QuickStart {
   /** Create the default universe (defines time standards and reference frameGraph) */
   implicit val universe = new DefaultUniverse
 
-  /** Create the earth based frame of a generic template, with the earth having the state <0,0,0,0,0,0> (R,V) */
-  val earthFrame = new BodyCenteredFrame {
-    def centerBody = EarthConstants.body
-  }
+  // Get the earth based frame used for our example
+  // This is a implementation of the Geccentric Celestial Reference System
+  // A frame with Earth in it's center and aligned with the celestial reference frame (approximately equal to the J2000 or EME2000 frame)
+  val earthFrame = universe.instance[GCRS]
 
   try {
     /* Compute the trajectory of the AEHF satellite for the first three kicks by the LAE engine */

@@ -3,7 +3,9 @@ import be.angelcorp.celest.ephemeris.jplEphemeris
 
 implicit val universe = new be.angelcorp.celest.universe.DefaultUniverse
 def toFile(fname: String, content: String) {
-  new java.io.FileWriter(java.nio.file.Paths.get(fname).toFile).write(content)
+  val path = java.nio.file.Paths.get(fname)           // File in which to save the content
+  new java.io.FileWriter(path.toFile).write(content)  // Save the actual content
+  path.toFile.deleteOnExit()                          // Ask the JVM to remove the file after the example is run
 }
 
 // Load/create any existing ephemeris.
@@ -34,3 +36,4 @@ batches.foreach {
 val headerString: String = jplEphemeris.toAsciiHeader(ephemeris)
 val dataString: String = jplEphemeris.toAsciiData(ephemeris.records.zipWithIndex.toSeq)
 toFile("ephemeris.txt", headerString + dataString)
+
