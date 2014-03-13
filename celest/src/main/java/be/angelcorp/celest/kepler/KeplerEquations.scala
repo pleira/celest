@@ -148,12 +148,19 @@ abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
   /**
    * Compute the total energy per unit mass for the orbit
    *
-   * @return Total energy per unit mass [m^2/s^2]
+   * @return Total energy per unit mass [m^2^/s^2^]
    */
   def totEnergyPerMass: Double
 
-  /** Short-hand notation for `totEnergyPerMass` */
-  def h = totEnergyPerMass
+  /**
+   * Compute the specific relative angular momentum of the orbiting body.
+   *
+   * @return Specific relative angular momentum [m^2^/s]
+   */
+  def specificAngularMomentum = sqrt( p * μ )
+
+  /** Short-hand notation for `specificAngularMomentum` [m^2^/s] */
+  def h = specificAngularMomentum
 
   /**
    * @see KeplerEquations#trueLongitude(Vector3D)

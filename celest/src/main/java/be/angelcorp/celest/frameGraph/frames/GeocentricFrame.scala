@@ -15,7 +15,9 @@
  */
 package be.angelcorp.celest.frameGraph.frames
 
-import be.angelcorp.celest.frameGraph.ReferenceSystem
+import javax.inject.Inject
+import be.angelcorp.celest.universe.Universe
+import be.angelcorp.celest.body.CelestialBodies._
 
 /**
  * The ITRF (International Terrestrial Reference Frame) is the default implementation of the
@@ -38,38 +40,36 @@ import be.angelcorp.celest.frameGraph.ReferenceSystem
  *
  * @author Simon
  */
-case class ITRF(year: Int = 2008) extends ITRS {
-
-  override def toString = "ICRF" + year
-
+class ITRF @Inject()(val year: Int = 2008)(implicit universe: Universe) extends ITRS {
+  override lazy val centerBody = earth
+  override val toString = "ICRF" + year
 }
 
-object ITRF {
-
-  /**
-   * Create a predicate that is capable of identifying a specific ITRF frame in a collection of ReferenceFrames.
-   *
-   * @param year Year of the ITRF frame to search for.
-   * @return A Predicate to identify the ITRF frameGraph of a specific year.
-   */
-  def itrfPreficate(year: Int): ReferenceSystem => Boolean = {
-    case ITRF(`year`) => true
-    case _ => false
-  }
-
+class ITRF2000 @Inject()(implicit universe: Universe) extends ITRF(2000) {
+  override val year = 2000
 }
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.TIRS]] reference system. */
-case class TIRF() extends TIRS
+class TIRF @Inject()(implicit universe: Universe) extends TIRS {
+  override lazy val centerBody = earth
+}
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.ERS]] reference system. */
-case class ERF() extends ERS
+class ERF @Inject()(implicit universe: Universe) extends ERS {
+  override lazy val centerBody = earth
+}
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.MODSystem]] reference system. */
-case class MOD() extends MODSystem
+class MOD @Inject()(implicit universe: Universe) extends MODSystem {
+  override lazy val centerBody = earth
+}
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.J2000System]] reference system. */
-case class J2000() extends J2000System
+/** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.EME2000System]] reference system. */
+class EME2000 @Inject()(implicit universe: Universe) extends EME2000System {
+  override lazy val centerBody = earth
+}
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.GCRS]] reference system. */
-case class GCRF() extends GCRS
+class GCRF @Inject()(implicit universe: Universe) extends GCRS {
+  override lazy val centerBody = earth
+}

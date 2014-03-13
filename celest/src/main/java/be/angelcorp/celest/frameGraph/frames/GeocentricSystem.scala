@@ -15,12 +15,11 @@
  */
 package be.angelcorp.celest.frameGraph.frames
 
-import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
  * A reference system that is centered at te Earth center of mass.
  */
-trait GeocentricSystem extends ReferenceSystem
+trait GeocentricSystem extends BodyCenteredSystem
 
 /**
  * The International Terrestrial Reference System (ITRS) is a world spatial reference system co-rotating with the
@@ -43,7 +42,9 @@ trait GeocentricSystem extends ReferenceSystem
  *
  * @author Simon Billemont
  */
-trait ITRS extends GeocentricSystem
+trait ITRS extends GeocentricSystem {
+  def year: Int
+}
 
 /**
  * The Terrestrial Intermediate Reference System (TIRS).
@@ -85,7 +86,7 @@ trait MODSystem extends GeocentricSystem
  *
  * @author Simon Billemont
  */
-trait J2000System extends GeocentricSystem
+trait EME2000System extends GeocentricSystem
 
 /**
  * The Geocentric Celestial Reference System (TIRS).
