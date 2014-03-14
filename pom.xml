@@ -89,6 +89,15 @@
                 <module>celest-orekit</module>
             </modules>
         </profile>
+        <profile>
+            <id>sofa</id>
+            <activation>
+                <file> <exists>celest-sofa/pom.xml</exists> </file>
+            </activation>
+            <modules>
+                <module>celest-sofa</module>
+            </modules>
+        </profile>
     </profiles>
 
     <build>
