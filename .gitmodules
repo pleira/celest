@@ -6,4 +6,4 @@
 	url = http://scm.angelcorp.be/git/be.angelcorp.celest.console.git
 [submodule "celest-sofa"]
 	path = celest-sofa
-	url = ssh+git://angelcorp.be/usr/local/scm/git/be.angelcorp/be.angelcorp.celest.celest-sofa.git
+	url = http://scm.angelcorp.be/git/be.angelcorp.celest.celest-sofa.git
