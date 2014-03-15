@@ -75,7 +75,7 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
     pvERF.velocity.y should be(0.786077104E3 +- 1E-3)
     pvERF.velocity.z should be(5.531931288E3 +- 1E-3)
 
-    val pvMOD_corr = framegraph.getTransform(itrf, universe.instance[MODSystem], epoch).get.transform(pv).toPosVel
+    val pvMOD_corr = framegraph.getTransform(itrf, universe.instance[MOD], epoch).get.transform(pv).toPosVel
     pvMOD_corr.position.x should be(5094.0283745E3 +- 1E0)
     pvMOD_corr.position.y should be(6127.8708164E3 +- 1E0)
     pvMOD_corr.position.z should be(6380.2485164E3 +- 1E0)

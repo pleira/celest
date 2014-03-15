@@ -56,10 +56,19 @@ trait ITRS extends GeocentricSystem {
 trait TIRS extends GeocentricSystem
 
 /**
+ * The Celestial Intermediate Reference System (CIRS).
+ *
+ * See frame graph documentation.
+ *
+ * @author Simon Billemont
+ */
+trait CIRS extends GeocentricSystem
+
+/**
  * The Earth Reference System (ERS).
  *
  * This frame is linked to the Terestrial Intermediate Reference System ([[be.angelcorp.celest.frameGraph.frames.TIRS]]) through the Earth rotation.
- * This frame is also linked to the Mean Of Date system ([[be.angelcorp.celest.frameGraph.frames.MODSystem]]) through nutation of the Earth rotation axis.
+ * This frame is also linked to the Mean Of Date system ([[be.angelcorp.celest.frameGraph.frames.MOD]]) through nutation of the Earth rotation axis.
  *
  * See frame graph documentation.
  *
@@ -77,7 +86,7 @@ trait ERS extends GeocentricSystem
  *
  * @author Simon Billemont
  */
-trait MODSystem extends GeocentricSystem
+trait MOD extends GeocentricSystem
 
 /**
  * The J2000 or EME2000 reference system (J2000s).
@@ -86,7 +95,7 @@ trait MODSystem extends GeocentricSystem
  *
  * @author Simon Billemont
  */
-trait EME2000System extends GeocentricSystem
+trait EME2000 extends GeocentricSystem
 
 /**
  * The Geocentric Celestial Reference System (TIRS).

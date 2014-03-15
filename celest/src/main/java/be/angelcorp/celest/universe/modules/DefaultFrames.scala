@@ -30,8 +30,8 @@ class DefaultFrames extends ScalaModule {
     bind[ITRS].to[ITRF2000].in[Singleton]
     bind[TIRS].to[TIRF].in[Singleton]
     bind[ERS].to[ERF].in[Singleton]
-    bind[MODSystem].to[MOD].in[Singleton]
-    bind[EME2000System].to[EME2000].in[Singleton]
+    bind[MOD].to[MODFrame].in[Singleton]
+    bind[EME2000].to[EME2000Frame].in[Singleton]
     bind[GCRS].to[GCRF].in[Singleton]
     bind[ICRS].to[ICRF2].in[Singleton]
   }
@@ -42,9 +42,9 @@ class DefaultFrames extends ScalaModule {
   def configureTransformations() {
     bind[PolarMotion[TIRS, ITRS]].toProvider[PolarMotionProvider].in[Singleton]
     bind[EarthRotationGAST[TIRS, ERS]].toProvider[EarthRotationGASTProvider].in[Singleton]
-    bind[IAU2000Nutation[MODSystem, ERS]].toProvider[IAU2000NutationProvider].in[Singleton]
-    bind[IAU2006Precession[MODSystem, EME2000System]].toProvider[IAU2006PrecessionProvider].in[Singleton]
-    bind[J2000FrameBias[EME2000System, GCRS]].toProvider[J2000FrameBiasProvider].in[Singleton]
+    bind[IAU2000Nutation[MOD, ERS]].toProvider[IAU2000NutationProvider].in[Singleton]
+    bind[IAU2006Precession[MOD, EME2000]].toProvider[IAU2006PrecessionProvider].in[Singleton]
+    bind[J2000FrameBias[EME2000, GCRS]].toProvider[J2000FrameBiasProvider].in[Singleton]
   }
 
   def configure() {
@@ -74,7 +74,7 @@ class PolarMotionProvider extends Provider[PolarMotion[TIRS, ITRS]] {
 
 class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRS, ERS]] {
   @Inject implicit var universe: Universe = null
-  @Inject var nutation: IAU2000Nutation[MODSystem, ERS] = null
+  @Inject var nutation: IAU2000Nutation[MOD, ERS] = null
   @Inject var eop: EarthOrientationData = null
   @Inject var tirs: TIRS = null
   @Inject var ers: ERS = null
@@ -82,28 +82,28 @@ class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRS, ERS]] {
   def get = new EarthRotationGAST(tirs, ers, nutation, eop)
 }
 
-class IAU2000NutationProvider extends Provider[IAU2000Nutation[MODSystem, ERS]] {
+class IAU2000NutationProvider extends Provider[IAU2000Nutation[MOD, ERS]] {
   @Inject implicit var universe: Universe = null
   @Inject implicit var ers: ERS = null
-  @Inject implicit var mod: MODSystem = null
+  @Inject implicit var mod: MOD = null
 
   def get() = new IAU2000Nutation(mod, ers, IAU2000NutationLoader.IERS2010)
 }
 
-class IAU2006PrecessionProvider extends Provider[IAU2006Precession[MODSystem, EME2000System]] {
+class IAU2006PrecessionProvider extends Provider[IAU2006Precession[MOD, EME2000]] {
   @Inject implicit var universe: Universe = null
-  @Inject implicit var j2000: EME2000System = null
-  @Inject implicit var mod: MODSystem = null
+  @Inject implicit var j2000: EME2000 = null
+  @Inject implicit var mod: MOD = null
 
-  def get(): IAU2006Precession[MODSystem, EME2000System] = new IAU2006Precession(mod, j2000)
+  def get(): IAU2006Precession[MOD, EME2000] = new IAU2006Precession(mod, j2000)
 }
 
-class J2000FrameBiasProvider extends Provider[J2000FrameBias[EME2000System, GCRS]] {
+class J2000FrameBiasProvider extends Provider[J2000FrameBias[EME2000, GCRS]] {
   @Inject implicit var universe: Universe = null
-  @Inject implicit var j2000: EME2000System = null
+  @Inject implicit var j2000: EME2000 = null
   @Inject implicit var gcrs: GCRS = null
 
-  def get(): J2000FrameBias[EME2000System, GCRS] = new J2000FrameBias[EME2000System, GCRS](j2000, gcrs)
+  def get(): J2000FrameBias[EME2000, GCRS] = new J2000FrameBias[EME2000, GCRS](j2000, gcrs)
 }
 
 /**

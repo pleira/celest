@@ -54,18 +54,23 @@ class TIRF @Inject()(implicit universe: Universe) extends TIRS {
   override lazy val centerBody = earth
 }
 
+/** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.CIRS]] reference system.  */
+class CIRF @Inject()(implicit universe: Universe) extends CIRS {
+  override lazy val centerBody = earth
+}
+
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.ERS]] reference system. */
 class ERF @Inject()(implicit universe: Universe) extends ERS {
   override lazy val centerBody = earth
 }
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.MODSystem]] reference system. */
-class MOD @Inject()(implicit universe: Universe) extends MODSystem {
+/** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.MOD]] reference system. */
+class MODFrame @Inject()(implicit universe: Universe) extends MOD {
   override lazy val centerBody = earth
 }
 
-/** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.EME2000System]] reference system. */
-class EME2000 @Inject()(implicit universe: Universe) extends EME2000System {
+/** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.EME2000]] reference system. */
+class EME2000Frame @Inject()(implicit universe: Universe) extends EME2000 {
   override lazy val centerBody = earth
 }
 

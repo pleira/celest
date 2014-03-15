@@ -89,7 +89,7 @@ trait QLawMath[F <: BodyCenteredSystem] {
     // The error is about 1E-6% for 0 <= e < 0.8
     // The error rises to about 1% at e = 0.95
     // The error drop back to 0% at e = 1
-    1.6985935414010897e-6
+    (1.6985935414010897e-6
       + e * (  -0.6667378326783717
       + e * (   0.0013875799759697537
       + e * (  -0.2389146179769917
@@ -102,7 +102,7 @@ trait QLawMath[F <: BodyCenteredSystem] {
       + e * ( 113.8996983750523
       + e * (-129.71843243037767
       + e * ( 102.65916156482882
-      + e * ( -50.74254293851554 + 11.91197713650763 * e)))))))))))))
+      + e * ( -50.74254293851554 + 11.91197713650763 * e))))))))))))))
   }
 
   lazy val rxx = (a * ( 1 - e*e )) / ( 1 + e * cosνxx )
