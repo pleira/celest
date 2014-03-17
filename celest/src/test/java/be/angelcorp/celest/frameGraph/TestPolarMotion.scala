@@ -26,7 +26,7 @@ import be.angelcorp.celest.frameGraph.frames.transforms.PolarMotion
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
-import be.angelcorp.celest.data.PolarOrientationData
+import be.angelcorp.celest.data.PoleProvider
 import be.angelcorp.celest.physics.Units._
 
 /**
@@ -57,7 +57,7 @@ class TestPolarMotion extends FlatSpec with Matchers {
       -4.848136811092892e-007, 9.696273622189201e-007, 0.9999999999994124
     )
 
-    val pole = new PolarOrientationData {
+    val pole = new PoleProvider {
       val xp = arcSeconds(100E-3)
       // = 100 mas
       val yp = arcSeconds(200E-3)

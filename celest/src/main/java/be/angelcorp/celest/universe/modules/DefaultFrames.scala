@@ -20,7 +20,7 @@ class DefaultFrames extends ScalaModule {
     bind[EarthOrientationData].toProvider[DefaultEarthOrientationDataProvider].in(classOf[Singleton])
     bind[ExcessLengthOfDay].to[EarthOrientationData].in(classOf[Singleton])
     bind[UT1Provider].to[EarthOrientationData].in(classOf[Singleton])
-    bind[PolarOrientationData].to[EarthOrientationData].in(classOf[Singleton])
+    bind[PoleProvider].to[EarthOrientationData].in(classOf[Singleton])
   }
 
   /**

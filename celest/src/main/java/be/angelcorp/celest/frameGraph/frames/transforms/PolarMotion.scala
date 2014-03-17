@@ -1,6 +1,6 @@
 package be.angelcorp.celest.frameGraph.frames.transforms
 
-import be.angelcorp.celest.data.PolarOrientationData
+import be.angelcorp.celest.data.PoleProvider
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
 import be.angelcorp.celest.time.Epoch
@@ -18,7 +18,7 @@ import be.angelcorp.libs.math.rotation.RotationMatrix._
  *
  * @author Simon Billemont
  */
-class PolarMotion[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fromFrame: F0, val toFrame: F1, val eop: PolarOrientationData)
+class PolarMotion[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fromFrame: F0, val toFrame: F1, val eop: PoleProvider)
   extends ConstantRotationTransformFactory[F0, F1] {
 
   def cost(epoch: Epoch) = 0

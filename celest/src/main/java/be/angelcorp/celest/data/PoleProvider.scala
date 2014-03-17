@@ -2,7 +2,7 @@ package be.angelcorp.celest.data
 
 import be.angelcorp.celest.time.Epoch
 
-trait PolarOrientationData {
+trait PoleProvider {
 
   /**
    * Return the pole coordinates on a specified epoch.

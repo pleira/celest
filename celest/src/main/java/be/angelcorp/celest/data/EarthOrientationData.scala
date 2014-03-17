@@ -29,7 +29,7 @@ import be.angelcorp.celest.time.timeStandard.TimeStandards.UTC
 import be.angelcorp.celest.time.timeStandard.TimeStandard
 
 class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEntry], @UTC val utc: TimeStandard)
-  extends UT1Provider with ExcessLengthOfDay with PolarOrientationData {
+  extends UT1Provider with ExcessLengthOfDay with PoleProvider {
 
   def epochRange = if (data.isEmpty) (Double.NaN, Double.NaN) else (data.firstKey() - 0.5, data.lastKey() + 0.5)
 

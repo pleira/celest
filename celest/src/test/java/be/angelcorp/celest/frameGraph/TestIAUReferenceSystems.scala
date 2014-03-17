@@ -36,7 +36,7 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
           })
           bind[ExcessLengthOfDay].to[EarthOrientationData].in(classOf[Singleton])
           bind[UT1Provider].to[EarthOrientationData].in(classOf[Singleton])
-          bind[PolarOrientationData].to[EarthOrientationData].in(classOf[Singleton])
+          bind[PoleProvider].to[EarthOrientationData].in(classOf[Singleton])
         }
       },
       new modules.DefaultTime,
