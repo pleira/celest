@@ -1,19 +1,23 @@
 package be.angelcorp.celest.frameGraph
 
 import javax.inject.Singleton
+import org.eclipse.aether.repository.RemoteRepository
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, FlatSpec}
-import com.google.inject.Module
+import net.codingwell.scalaguice.ScalaModule
+import com.google.inject.Provides
+import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.data._
-import be.angelcorp.celest.time.{JulianDate, Epoch}
+import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
-import be.angelcorp.celest.universe.{modules, DefaultUniverse}
+import be.angelcorp.celest.universe.DefaultUniverseBuilder
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.frameGraph.frames._
-import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.time.timeStandard.TimeStandard
 import be.angelcorp.celest.physics.Units._
+import be.angelcorp.celest.universe.modules._
+import be.angelcorp.celest.time.JulianDate
 
 /**
  * Test IAU reference systems, based on:
@@ -22,14 +26,12 @@ import be.angelcorp.celest.physics.Units._
 @RunWith(classOf[JUnitRunner])
 class TestIAUReferenceSystems extends FlatSpec with Matchers {
 
-  def makeUniverse(eop: EarthOrientationDataEntry) = new DefaultUniverse {
-    override def configurationModules: Iterable[Module] = Seq(
-      new modules.DefaultAether,
-      new modules.DefaultFrames {
-        override def configureData() {
+  def makeUniverse(eop: EarthOrientationDataEntry) = new DefaultUniverseBuilder {
+    modules += new DefaultAether
+    modules += new DefaultFrames {
+      override def configureData() {
           bind[EarthOrientationData].toInstance(new EarthOrientationData(null, new TimeStandard {
             def offsetToTT(JD_this: Epoch): Double = 32 + 32.184
-
             def offsetFromTT(JD_tt: Epoch): Double = -offsetToTT(JD_tt)
           }) {
             override def getEntry(epoch: Epoch, Δt_max: Double) = eop
@@ -38,14 +40,20 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
           bind[UT1Provider].to[EarthOrientationData].in(classOf[Singleton])
           bind[PoleProvider].to[EarthOrientationData].in(classOf[Singleton])
         }
-      },
-      new modules.DefaultTime,
-      new modules.DefaultJplEphemeris(430, "gov.nasa.jpl.ssd.pub.eph.planets.linux", "de430"),
-      new modules.JplEphemerisBodies,
-      thisUniverseModule,
-      repositoriesModule
-    )
-  }
+    }
+    modules += new DefaultTime
+    modules += new DefaultJplEphemeris(430, "gov.nasa.jpl.ssd.pub.eph.planets.linux", "de430")
+    modules += new JplEphemerisBodies()
+    modules += new ScalaModule {
+      override def configure() {}
+
+      @Provides
+      @Singleton
+      def provideRemoteRepositories = Seq(
+        new RemoteRepository.Builder("resources", "default", "http://angelcorp.be/celest/resources").build()
+      )
+    }
+  }.result
 
   "The framegraph" should "operate correctly on the default IAU frames" in {
     implicit val universe = makeUniverse(new EarthOrientationDataEntry(2004, 4, 6, 53101, arcSeconds(-0.140682), arcSeconds(0.333309), -0.439962, 0.001556, arcSeconds(-0.000199), arcSeconds(-0.000252)))

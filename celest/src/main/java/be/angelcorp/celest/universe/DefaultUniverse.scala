@@ -22,24 +22,14 @@ import org.eclipse.aether.repository.RemoteRepository
 
 class DefaultUniverse extends Universe {
 
-  def configurationModules: Iterable[Module] = Seq(
+  def configurationModules: Seq[Module] = Seq(
     new modules.DefaultAether,
     new modules.DefaultFrames,
     new modules.DefaultTime,
     new modules.DefaultJplEphemeris(430, "gov.nasa.jpl.ssd.pub.eph.planets.linux", "de430"),
     new modules.JplEphemerisBodies,
-    thisUniverseModule,
     repositoriesModule
   )
-
-  val injector = Guice.createInjector(configurationModules.toArray: _*)
-
-  def thisUniverseModule = {
-    val universe = this
-    new AbstractModule {
-      def configure() = bind(classOf[Universe]).toInstance(universe)
-    }
-  }
 
   def repositoriesModule = new AbstractModule {
     def configure() {}
@@ -51,5 +41,6 @@ class DefaultUniverse extends Universe {
     )
   }
 
-}
+  val injector = new DefaultUniverseBuilder(configurationModules).result.injector
 
+}
