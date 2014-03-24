@@ -26,8 +26,8 @@ import be.angelcorp.celest.frameGraph.frames.transforms.PolarMotion
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
-import be.angelcorp.celest.data.PoleProvider
 import be.angelcorp.celest.physics.Units._
+import be.angelcorp.celest.data.eop.PoleProvider
 
 /**
  * The numerical values in these test cases where obtained from SOFA using the Microsoft visual studio 2012 debugger,

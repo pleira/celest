@@ -8,16 +8,15 @@ import org.scalatest.{Matchers, FlatSpec}
 import net.codingwell.scalaguice.ScalaModule
 import com.google.inject.Provides
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.celest.data._
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
 import be.angelcorp.celest.universe.DefaultUniverseBuilder
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.frameGraph.frames._
-import be.angelcorp.celest.time.timeStandard.TimeStandard
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.universe.modules._
 import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.data.eop.{EarthOrientationDataEntry, ExcessLengthOfDay, UT1Provider, PoleProvider}
 
 /**
  * Test IAU reference systems, based on:
@@ -28,18 +27,18 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
 
   def makeUniverse(eop: EarthOrientationDataEntry) = new DefaultUniverseBuilder {
     modules += new DefaultAether
-    modules += new DefaultFrames {
-      override def configureData() {
-          bind[EarthOrientationData].toInstance(new EarthOrientationData(null, new TimeStandard {
-            def offsetToTT(JD_this: Epoch): Double = 32 + 32.184
-            def offsetFromTT(JD_tt: Epoch): Double = -offsetToTT(JD_tt)
-          }) {
-            override def getEntry(epoch: Epoch, Δt_max: Double) = eop
-          })
-          bind[ExcessLengthOfDay].to[EarthOrientationData].in(classOf[Singleton])
-          bind[UT1Provider].to[EarthOrientationData].in(classOf[Singleton])
-          bind[PoleProvider].to[EarthOrientationData].in(classOf[Singleton])
-        }
+    modules += new ScalaModule {
+      override def configure() {
+        bind[ExcessLengthOfDay].toInstance(new ExcessLengthOfDay {
+          override def lod(epoch: Epoch): Double = eop.lod
+        })
+        bind[UT1Provider].toInstance(new UT1Provider {
+          override def UT1_UTC(jd_utc: Epoch): Double = eop.ut1_utc
+        })
+        bind[PoleProvider].toInstance(new PoleProvider {
+          override def polarCoordinatesOn(epoch: Epoch): (Double, Double) = (eop.x, eop.y)
+        })
+      }
     }
     modules += new DefaultTime
     modules += new DefaultJplEphemeris(430, "gov.nasa.jpl.ssd.pub.eph.planets.linux", "de430")

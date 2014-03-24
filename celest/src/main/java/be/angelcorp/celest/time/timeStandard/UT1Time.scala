@@ -28,6 +28,7 @@ import be.angelcorp.celest.time.dateStandard.DateStandards._
 import be.angelcorp.celest.data._
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
+import be.angelcorp.celest.data.eop.{EarthOrientationData, UT1Provider}
 
 
 /**
@@ -72,7 +73,7 @@ class UT1Time(utc: TimeStandard, val containers: mutable.Map[(Double, Double), U
     getZipEntrySource("org.iers.products.eop.long-term.c04_08", "iau2000", filename) match {
       case Some(source) =>
         val container = EarthOrientationData(source)
-        containers.put(container.epochRange, container)
+        containers.put(container.epochRange, container.ut1_utc)
       case _ =>
         logger.warn(s"Could not find file $filename in artifact org.iers.products.eop.long-term.c04_08:iau2000 for Earth orientation data (UT1) on $jd_utc")
     }

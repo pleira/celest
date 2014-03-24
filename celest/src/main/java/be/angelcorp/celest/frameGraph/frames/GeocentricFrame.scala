@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.frameGraph.frames
 
-import javax.inject.Inject
+import javax.inject.{Singleton, Inject}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.body.CelestialBodies._
 
@@ -42,19 +42,22 @@ import be.angelcorp.celest.body.CelestialBodies._
  */
 class ITRF @Inject()(val year: Int = 2008)(implicit universe: Universe) extends ITRS {
   override lazy val centerBody = earth
-  override val toString = "ICRF" + year
+  override val toString = "ITRF" + year
 }
 
+@Singleton
 class ITRF2000 @Inject()(implicit universe: Universe) extends ITRF(2000) {
   override val year = 2000
 }
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.TIRS]] reference system. */
+@Singleton
 class TIRF @Inject()(implicit universe: Universe) extends TIRS {
   override lazy val centerBody = earth
 }
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.CIRS]] reference system.  */
+@Singleton
 class CIRF @Inject()(implicit universe: Universe) extends CIRS {
   override lazy val centerBody = earth
 }
@@ -65,16 +68,19 @@ class ERF @Inject()(implicit universe: Universe) extends ERS {
 }
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.MOD]] reference system. */
+@Singleton
 class MODFrame @Inject()(implicit universe: Universe) extends MOD {
   override lazy val centerBody = earth
 }
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.EME2000]] reference system. */
+@Singleton
 class EME2000Frame @Inject()(implicit universe: Universe) extends EME2000 {
   override lazy val centerBody = earth
 }
 
 /** Default implementation of the [[be.angelcorp.celest.frameGraph.frames.GCRS]] reference system. */
+@Singleton
 class GCRF @Inject()(implicit universe: Universe) extends GCRS {
   override lazy val centerBody = earth
 }

@@ -23,9 +23,9 @@ import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.libs.math.rotation.RotationMatrix
 import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.celest.data.ExcessLengthOfDay
 import be.angelcorp.celest.frameGraph.transformations.{TransformationParameters, KinematicTransformationFactory}
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
+import be.angelcorp.celest.data.eop.ExcessLengthOfDay
 
 /**
  * Generic earth rotation equations

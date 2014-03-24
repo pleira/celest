@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package be.angelcorp.celest.data
+package be.angelcorp.celest.data.eop
 
 import be.angelcorp.celest.time.Epoch
 
 /**
- * Container for the excess of length of day (LOD).
+ * Container for the UT1 offset from UTC (UT1-UTC).
  * <p>
- * The excess of length of day is the difference between the astronomically determined duration of the day and
- * (86400 SI seconds). You can get the correct values from the IERS data products (Earth Orientation Data)
- * at [[http://www.iers.org/‎]].
+ * You can get the correct values from the IERS data products (Earth Orientation Data) at [[http://www.iers.org/‎]].
  * </p>
  */
-trait ExcessLengthOfDay {
+trait UT1Provider {
 
   /**
-   * Excess of length of day (LOD) is the difference between the astronomically determined duration of the day and (86400 SI seconds).
+   * Get the UT1 - UTC offset in seconds at the specific UTC epoch.
    *
-   * @param epoch Epoch day from which to retrieve the lod.
-   * @return Excess length of day on the considered epoch [s].
+   * @param jd_utc UTC epoch on which to get the UT1 - UTC difference
+   * @return Seconds between the UTC and UT11 timestandard (UT1 - UTC).
    */
-  def lod(epoch: Epoch): Double
+  def UT1_UTC(jd_utc: Epoch): Double
 
 }

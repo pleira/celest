@@ -1,4 +1,4 @@
-package be.angelcorp.celest.data
+package be.angelcorp.celest.data.eop
 
 import be.angelcorp.celest.time.Epoch
 

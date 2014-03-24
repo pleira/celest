@@ -19,6 +19,7 @@ package be.angelcorp.celest.universe
 import javax.inject.Singleton
 import com.google.inject._
 import org.eclipse.aether.repository.RemoteRepository
+import be.angelcorp.celest.universe.modules.DefaultEarthOrientationData
 
 class DefaultUniverse extends Universe {
 
@@ -28,6 +29,7 @@ class DefaultUniverse extends Universe {
     new modules.DefaultTime,
     new modules.DefaultJplEphemeris(430, "gov.nasa.jpl.ssd.pub.eph.planets.linux", "de430"),
     new modules.JplEphemerisBodies,
+    DefaultEarthOrientationData.module,
     repositoriesModule
   )
 

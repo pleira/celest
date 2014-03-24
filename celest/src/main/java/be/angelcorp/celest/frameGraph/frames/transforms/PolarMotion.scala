@@ -1,10 +1,10 @@
 package be.angelcorp.celest.frameGraph.frames.transforms
 
-import be.angelcorp.celest.data.PoleProvider
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.libs.math.rotation.RotationMatrix._
+import be.angelcorp.celest.data.eop.PoleProvider
 
 /**
  * Applies a polar motion transformation.

@@ -22,9 +22,9 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.dateStandard.DateStandards._
-import be.angelcorp.celest.data.UT1Provider
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
 import com.google.inject.AbstractModule
+import be.angelcorp.celest.data.eop.UT1Provider
 
 @RunWith(classOf[JUnitRunner])
 class TestUT1 extends FlatSpec with ShouldMatchers {

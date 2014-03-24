@@ -6,6 +6,8 @@ import net.codingwell.scalaguice.ScalaModule
 import javax.inject.Singleton
 
 trait UniverseBuilder {
+  def modules: mutable.ListBuffer[Module]
+
   def result: Universe
 }
 

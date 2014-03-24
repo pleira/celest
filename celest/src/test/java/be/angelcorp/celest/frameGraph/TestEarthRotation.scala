@@ -26,8 +26,8 @@ import be.angelcorp.celest.frameGraph.frames.transforms._
 import be.angelcorp.libs.util.physics.Angle._
 import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.celest.unit.CelestTest
-import be.angelcorp.celest.data.ExcessLengthOfDay
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
+import be.angelcorp.celest.data.eop.ExcessLengthOfDay
 
 @RunWith(classOf[JUnitRunner])
 class TestEarthRotation extends FlatSpec with ShouldMatchers {

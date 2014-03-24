@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.angelcorp.celest.data
+package be.angelcorp.celest.data.eop
 
 import java.util
 import scala.math._
@@ -25,11 +25,13 @@ import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.dateStandard.DateStandards
 import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
-import be.angelcorp.celest.time.timeStandard.TimeStandards.UTC
 import be.angelcorp.celest.time.timeStandard.TimeStandard
+import javax.inject.Inject
 
-class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEntry], @UTC val utc: TimeStandard)
-  extends UT1Provider with ExcessLengthOfDay with PoleProvider {
+class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEntry], @UTC val utc: TimeStandard) {
+
+  @Inject
+  def this(@UTC utc: TimeStandard) = this(new util.TreeMap[Double, EarthOrientationDataEntry](), utc)
 
   def epochRange = if (data.isEmpty) (Double.NaN, Double.NaN) else (data.firstKey() - 0.5, data.lastKey() + 0.5)
 
@@ -83,23 +85,38 @@ class EarthOrientationData(val data: util.TreeMap[Double, EarthOrientationDataEn
   def onFail(epoch: Epoch, Δt_max: Double): EarthOrientationDataEntry =
     throw new RuntimeException("Failed to locate EOP data for date " + epoch)
 
-  // See [[ExcessLengthOfDay]]
-  def lod(epoch: Epoch) = getEntry(epoch).lod
-
-  // See [[UT1Provider]]
-  def UT1_UTC(epoch: Epoch) = getEntry(epoch).ut1_utc
-
-  // See [[PolarOrientationData]]
-  def polarCoordinatesOn(epoch: Epoch): (Double, Double) = {
-    val entry = getEntry(epoch)
-    (entry.x, entry.y)
+  /** Provider for the excess length of of day. */
+  def lod = new ExcessLengthOfDay {
+    override def lod(epoch: Epoch) = getEntry(epoch).lod
   }
+
+  /** Provider for the UT1-UTC data. */
+  def ut1_utc = new UT1Provider {
+    override def UT1_UTC(epoch: Epoch): Double = getEntry(epoch inTimeStandard utc).ut1_utc
+  }
+
+  /** Provider for the position of the CIP (celestial intermediate pole) wrt ITRS (x,y) */
+  def cip = new PoleProvider {
+    override def polarCoordinatesOn(epoch: Epoch) = {
+      val eopEntry = getEntry(epoch)
+      (eopEntry.x, eopEntry.y)
+    }
+  }
+
+  /** Provider for the IERS CIP offsets wrt IAU 2006/2000A (dx, dy) */
+  def cipOffset = new PoleProvider {
+    override def polarCoordinatesOn(epoch: Epoch) = {
+      val eopEntry = getEntry(epoch)
+      (eopEntry.dx, eopEntry.dy)
+    }
+  }
+
 }
 
 object EarthOrientationData {
 
   /**
-   * Load an IERS data file with EOP data into a new [[be.angelcorp.celest.data.EarthOrientationData]] object.
+   * Load an IERS data file with EOP data into a new [[eop.EarthOrientationData]] object.
    *
    * <p>Build for the IERS EOP C04 yearly file text format.</p>
    *

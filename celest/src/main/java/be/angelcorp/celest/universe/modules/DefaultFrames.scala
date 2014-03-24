@@ -5,23 +5,13 @@ import scala.Some
 import scala.collection.JavaConverters._
 import net.codingwell.scalaguice.ScalaModule
 import com.google.inject.{Injector, Provider}
-import be.angelcorp.celest.data._
 import be.angelcorp.celest.frameGraph._
 import be.angelcorp.celest.frameGraph.frames._
 import be.angelcorp.celest.frameGraph.frames.transforms._
 import be.angelcorp.celest.universe.Universe
+import be.angelcorp.celest.data.eop.EarthOrientationData
 
 class DefaultFrames extends ScalaModule {
-
-  /**
-   * Create the bindings that load any data files required for the frames/tranformations
-   */
-  def configureData() {
-    bind[EarthOrientationData].toProvider[DefaultEarthOrientationDataProvider].in(classOf[Singleton])
-    bind[ExcessLengthOfDay].to[EarthOrientationData].in(classOf[Singleton])
-    bind[UT1Provider].to[EarthOrientationData].in(classOf[Singleton])
-    bind[PoleProvider].to[EarthOrientationData].in(classOf[Singleton])
-  }
 
   /**
    * Create the bindings that bind the reference systems to their correct frame implementations
@@ -48,7 +38,6 @@ class DefaultFrames extends ScalaModule {
   }
 
   def configure() {
-    configureData()
     configureSystems()
 
     // Create the reference frame graph
@@ -59,17 +48,13 @@ class DefaultFrames extends ScalaModule {
 
 }
 
-class DefaultEarthOrientationDataProvider @Inject()(implicit val universe: Universe) extends Provider[DefaultEarthOrientationData] {
-  def get() = new DefaultEarthOrientationData()
-}
-
 class PolarMotionProvider extends Provider[PolarMotion[TIRS, ITRS]] {
   @Inject implicit var universe: Universe = null
   @Inject var eop: EarthOrientationData = null
   @Inject var itrs: ITRS = null
   @Inject var tirs: TIRS = null
 
-  def get = new PolarMotion(tirs, itrs, eop)
+  def get = new PolarMotion(tirs, itrs, eop.cip)
 }
 
 class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRS, ERS]] {
@@ -79,7 +64,7 @@ class EarthRotationGASTProvider extends Provider[EarthRotationGAST[TIRS, ERS]] {
   @Inject var tirs: TIRS = null
   @Inject var ers: ERS = null
 
-  def get = new EarthRotationGAST(tirs, ers, nutation, eop)
+  def get = new EarthRotationGAST(tirs, ers, nutation, eop.lod)
 }
 
 class IAU2000NutationProvider extends Provider[IAU2000Nutation[MOD, ERS]] {

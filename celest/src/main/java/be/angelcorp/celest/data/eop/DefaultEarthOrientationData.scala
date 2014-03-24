@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package be.angelcorp.celest.data
+package be.angelcorp.celest.data.eop
 
 import java.util
-import scala.Some
+import javax.inject.Inject
 import org.slf4j.LoggerFactory
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.timeStandard.TimeStandard
 import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
+import be.angelcorp.celest.data._
+import scala.Some
 
-class DefaultEarthOrientationData(implicit universe: Universe) extends EarthOrientationData(new util.TreeMap(), universe.instance[TimeStandard, UTC]) {
+class DefaultEarthOrientationData @Inject()(implicit universe: Universe) extends EarthOrientationData(new util.TreeMap(), universe.instance[TimeStandard, UTC]) {
   private val logger = LoggerFactory.getLogger(getClass)
 
   /**
