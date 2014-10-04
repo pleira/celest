@@ -1,10 +1,13 @@
 package be.angelcorp.celest.sofa.time
 
-import be.angelcorp.celest.time.timeStandard.TimeStandard
-import be.angelcorp.celest.time.Epoch
-import be.angelcorp.sofa.SofaLibrary._
-import be.angelcorp.sofa.SofaLibrary
+import javax.inject.Inject
+
 import be.angelcorp.celest.sofa.time.SofaEpoch.SofaEpochBuilder
+import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.timeStandard.TimeStandard
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TT
+import be.angelcorp.sofa.SofaLibrary
+import be.angelcorp.sofa.SofaLibrary._
 
 /**
  * Sofa representation of the International Atomic Time (TAI).
@@ -13,7 +16,7 @@ import be.angelcorp.celest.sofa.time.SofaEpoch.SofaEpochBuilder
  *
  * @see [[be.angelcorp.celest.time.timeStandard.TAITime]]
  */
-class SofaTAI(val tt: TimeStandard) extends TimeStandard {
+class SofaTAI@Inject()(@TT val tt: TimeStandard) extends TimeStandard {
 
   /** Convert a TAI epoch to TT (note does not use the embedded TimeStandard). */
   def toTAI( tt: SofaEpoch ) = {
@@ -29,8 +32,8 @@ class SofaTAI(val tt: TimeStandard) extends TimeStandard {
     tt.result
   }
 
-  override def offsetToTT(JD_this: Epoch) = TTMTAI/DAYSEC
+  override def offsetToTT(JD_this: Epoch) = TTMTAI
 
-  override def offsetFromTT(JD_tt: Epoch) = - TTMTAI/DAYSEC
+  override def offsetFromTT(JD_tt: Epoch) = - TTMTAI
 
 }

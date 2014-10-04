@@ -1,16 +1,19 @@
 package be.angelcorp.celest.sofa.time
 
-import be.angelcorp.sofa.SofaLibrary
+import javax.inject.Inject
+
+import be.angelcorp.celest.sofa.time.SofaEpoch.SofaEpochBuilder
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.timeStandard.TimeStandard
-import be.angelcorp.celest.sofa.time.SofaEpoch.SofaEpochBuilder
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TT
+import be.angelcorp.sofa.SofaLibrary
 
 /**
  * Sofa representation of the Barycentric Dynamical Time (TDB).
  *
  * @see [[be.angelcorp.celest.time.timeStandard.TDBTime]]
  */
-class SofaTDB(tt: TimeStandard) extends TimeStandard {
+class SofaTDB@Inject()(@TT tt: TimeStandard) extends TimeStandard {
 
   def dtr(tdb_tt: SofaEpoch) = {
     // Note: topocentric terms based on lon=0 & lat=0

@@ -1,17 +1,19 @@
 package be.angelcorp.celest.sofa.time
 
 import javax.inject.Inject
-import be.angelcorp.sofa.SofaLibrary
-import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.time.timeStandard.{TimeStandard, UTCTime}
+
 import be.angelcorp.celest.sofa.time.SofaEpoch.SofaEpochBuilder
+import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.{TAI, TT}
+import be.angelcorp.celest.time.timeStandard.{TimeStandard, UTCTime}
+import be.angelcorp.sofa.SofaLibrary
 
 /**
  * Sofa representation of Coordinated Universal Time (UTC).
  *
  * @see [[be.angelcorp.celest.time.timeStandard.UTCTime]]
  */
-class SofaUTC@Inject()(val tt: TimeStandard, val tai: SofaTAI) extends UTCTime(tai) {
+class SofaUTC@Inject()(@TT val tt: TimeStandard, @TAI val tai: SofaTAI) extends UTCTime(tai) {
 
   /** Convert a UTC epoch to TT (note does not use the embedded TimeStandard). */
   def toTT( utc: SofaEpoch ) = {

@@ -1,13 +1,13 @@
 package be.angelcorp.celest.sofa.time
 
 import java.util.Date
-import scala.math._
-import org.bridj.Pointer
+
 import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.timeStandard.{TimeStandard, UTCTime}
 import be.angelcorp.sofa.SofaLibrary
-import be.angelcorp.celest.time.timeStandard.{UTCTime, TimeStandard}
-import be.angelcorp.celest.time.timeStandard.TimeStandards._
-import be.angelcorp.celest.universe.Universe
+import org.bridj.Pointer
+
+import scala.math._
 
 /**
  * An epoch based on the Sofa epoch format.
@@ -36,7 +36,7 @@ class SofaEpoch(val dj1: Double, val dj2: Double, val timeStandard: TimeStandard
     new SofaEpoch(t1, t2, timeStandard)
   }
 
-  override def inTimeStandard(timeStandard: TimeStandard) = {
+  override def inTimeStandard(timeStandard: TimeStandard): SofaEpoch = {
     if (this.timeStandard.equals(timeStandard))
       this
     else {

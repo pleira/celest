@@ -1,16 +1,19 @@
 package be.angelcorp.celest.sofa.time
 
-import be.angelcorp.sofa.SofaLibrary
+import javax.inject.Inject
+
+import be.angelcorp.celest.sofa.time.SofaEpoch.SofaEpochBuilder
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.timeStandard.TimeStandard
-import be.angelcorp.celest.sofa.time.SofaEpoch.SofaEpochBuilder
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TT
+import be.angelcorp.sofa.SofaLibrary
 
 /**
   * Sofa representation of the Geocentric Coordinate Time (TCG).
   *
   * @see [[be.angelcorp.celest.time.timeStandard.TCGTime]]
   */
-class SofaTCG(tt: TimeStandard) extends TimeStandard {
+class SofaTCG@Inject()(@TT tt: TimeStandard) extends TimeStandard {
 
    /** Convert a TCG epoch to TT (note does not use the embedded TimeStandard). */
    def toTT( tcg: SofaEpoch ) = {
