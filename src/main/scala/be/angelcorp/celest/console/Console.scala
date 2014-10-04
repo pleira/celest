@@ -17,13 +17,9 @@ object Console extends App {
 
 class ConsoleLoop extends ILoop {
 
-  addThunk {
-    val stream = this.getClass.getClassLoader.getResourceAsStream("init.scala")
-    intp.beQuietDuring {
-      for (line <- scala.io.Source.fromInputStream(stream).getLines())
-        intp.interpret(line)
-    }
-  }
+  val filename = this.getClass.getClassLoader.getResource("init.scala")
+  val cmd = ":load " + filename
+  command(cmd)
 
   override def printWelcome() {
     echo(
