@@ -16,26 +16,22 @@
 
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
-import org.scalatest._
-import junit.JUnitRunner
-import org.scalatest.matchers.ShouldMatchers
-import org.junit.runner.RunWith
-import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.body.Satellite
 import be.angelcorp.celest.constants.Constants._
-import be.angelcorp.libs.util.exceptions.GenericRuntimeException
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.unit.CelestTest._
-import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.frameGraph.frames
+import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.Epochs
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.celest.universe.DefaultUniverse
+import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.libs.util.exceptions.GenericRuntimeException
+import org.scalatest._
 
 /**
  * All reference values computed with:
  * Robust solver for Lambert's orbital-boundary value problem [matlab data] by Rody Oldenhuis
  */
-@RunWith(classOf[JUnitRunner])
-class TestLambert2 extends FlatSpec with ShouldMatchers {
+class TestLambert2 extends FlatSpec with Matchers with CelestTest {
 
   implicit val universe = new DefaultUniverse()
 

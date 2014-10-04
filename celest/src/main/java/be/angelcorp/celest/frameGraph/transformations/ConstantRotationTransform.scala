@@ -16,11 +16,11 @@
 
 package be.angelcorp.celest.frameGraph.transformations
 
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.math.rotation.{RotationMatrix, IRotation}
-import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.state.{Orbit, PosVel}
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
+import be.angelcorp.celest.state.{Orbit, PosVel}
+import be.angelcorp.celest.time.Epoch
+import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
 
 /**
  * Transformation that consists only of a single rotation between the two respective frameGraph. This transformation neglects
@@ -53,5 +53,8 @@ class ConstantRotationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T 
 
   def transformPosVelAcc(position: Vector3D, velocity: Vector3D, acceleration: Vector3D): (Vector3D, Vector3D, Vector3D) =
     (M !* position, M !* velocity, M !* acceleration)
+
+  override def transformVector(vector: Vector3D): Vector3D =
+    M !* vector
 
 }

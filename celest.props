@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- 
+       Visual studio configuration properties for all celest related projects 
+	   
+	   Note: You can override settings with a condition in the form of 
+			Condition="'$(Variable)' == ''"
+	   either by defining them as environmental variables or changing the macro line
+    -->
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <!-- BridJ PlatformID -->
+    <PlatformID Condition="'$(Platform)' == 'Win32'">win32</PlatformID>
+    <PlatformID Condition="'$(Platform)' == 'x64'">win64</PlatformID>
+    <!-- Location of IAU SOFA project, source and library -->
+    <SofaDir Condition="'$(SofaDir)'    == ''">W:\sofa\sofa-platform\src\main\cpp</SofaDir>
+    <SofaSrcDir Condition="'$(SofaSrcDir)' == ''">$(SofaDir)\src</SofaSrcDir>
+    <SofaLibDir Condition="'$(SofaLibDir)' == ''">$(SofaDir)\..\resources\lib\$(PlatformID)</SofaLibDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)bin/$(Configuration)/$(Platform)/</OutDir>
+    <IntDir>$(SolutionDir)objs/$(Configuration)/$(Platform)/$(ProjectName)/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SofaSrcDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SofaLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+		if exist "$(SofaLibDir)" xcopy "$(SofaLibDir)" "$(TargetDir)" /s /d
+	  </Command>
+      <Outputs>always;%(Outputs)</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

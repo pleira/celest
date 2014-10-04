@@ -15,15 +15,12 @@
  */
 package be.angelcorp.celest.trajectory
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
+import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.universe.DefaultUniverse
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.time.JulianDate
-import be.angelcorp.celest.state.PosVel
 
-@RunWith(classOf[JUnitRunner])
 class TestDiscreteTrajectory extends FlatSpec with ShouldMatchers {
 
   implicit val universe = new DefaultUniverse

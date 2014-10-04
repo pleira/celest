@@ -77,6 +77,14 @@ trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
   //def transform(positionState: Orbit, positionStateDerivative: IPositionStateDerivative): IPositionStateDerivative
 
   /**
+   * Transform a vector into the new ReferenceFrame.
+   *
+   * @param vector A vector to transform.
+   * @return A vector which is equivalent to given vector, but in the new ReferenceFrame (only rotation is applied).
+   */
+  def transformVector(vector: Vector3D): Vector3D
+
+  /**
    * Transform only the rotation of a body into a new ReferenceFrame.
    *
    * @param orientation Orientation to transform.

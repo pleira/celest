@@ -1,28 +1,25 @@
 package be.angelcorp.celest.frameGraph
 
 import javax.inject.Singleton
-import org.eclipse.aether.repository.RemoteRepository
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, FlatSpec}
-import net.codingwell.scalaguice.ScalaModule
-import com.google.inject.Provides
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.time.timeStandard.TimeStandards._
-import be.angelcorp.celest.universe.DefaultUniverseBuilder
-import be.angelcorp.celest.state.PosVel
+
+import be.angelcorp.celest.data.eop.{EarthOrientationDataEntry, ExcessLengthOfDay, PoleProvider, UT1Provider}
 import be.angelcorp.celest.frameGraph.frames._
 import be.angelcorp.celest.physics.Units._
+import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.time.{Epoch, JulianDate}
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
+import be.angelcorp.celest.universe.DefaultUniverseBuilder
 import be.angelcorp.celest.universe.modules._
-import be.angelcorp.celest.time.JulianDate
-import be.angelcorp.celest.data.eop.{EarthOrientationDataEntry, ExcessLengthOfDay, UT1Provider, PoleProvider}
+import be.angelcorp.libs.math.linear.Vector3D
+import com.google.inject.Provides
+import net.codingwell.scalaguice.ScalaModule
+import org.eclipse.aether.repository.RemoteRepository
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  * Test IAU reference systems, based on:
  * D. Vallado et al. ,<b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006<br/>
  */
-@RunWith(classOf[JUnitRunner])
 class TestIAUReferenceSystems extends FlatSpec with Matchers {
 
   def makeUniverse(eop: EarthOrientationDataEntry) = new DefaultUniverseBuilder {
@@ -45,7 +42,6 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
     modules += new JplEphemerisBodies()
     modules += new ScalaModule {
       override def configure() {}
-
       @Provides
       @Singleton
       def provideRemoteRepositories = Seq(

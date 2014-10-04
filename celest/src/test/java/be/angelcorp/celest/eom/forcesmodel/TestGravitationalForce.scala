@@ -15,13 +15,10 @@
  */
 package be.angelcorp.celest.eom.forcesmodel
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 ;
 
-@RunWith(classOf[JUnitRunner])
 class TestGravitationalForce extends FlatSpec with ShouldMatchers {
 
   /*

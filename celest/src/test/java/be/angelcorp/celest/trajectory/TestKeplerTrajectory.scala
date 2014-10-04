@@ -15,20 +15,17 @@
  */
 package be.angelcorp.celest.trajectory
 
-import math._
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.constants.EarthConstants
-import be.angelcorp.celest.state.{TrueAnomaly, Keplerian}
-import be.angelcorp.celest.unit.CelestTest._
 import be.angelcorp.celest.frameGraph.frames
+import be.angelcorp.celest.state.{Keplerian, TrueAnomaly}
 import be.angelcorp.celest.time.Epochs
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.celest.universe.DefaultUniverse
+import org.scalatest.{FlatSpec, Matchers}
 
-@RunWith(classOf[JUnitRunner])
-class TestKeplerTrajectory extends FlatSpec with ShouldMatchers {
+import scala.math._
+
+class TestKeplerTrajectory extends FlatSpec with Matchers with CelestTest {
 
   implicit val universe = new DefaultUniverse
 

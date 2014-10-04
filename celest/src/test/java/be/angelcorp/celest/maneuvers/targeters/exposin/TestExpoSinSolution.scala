@@ -15,19 +15,17 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin
 
-import scala.math._
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, FlatSpec}
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.physics.Units
 import be.angelcorp.celest.constants.SolarConstants
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.physics.Units
 import be.angelcorp.celest.time.Epochs
 import be.angelcorp.celest.unit.CelestTest
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.universe.DefaultUniverse
+import org.scalatest.{FlatSpec, Matchers}
 
-@RunWith(classOf[JUnitRunner])
-class TestExpoSinSolution extends FlatSpec with Matchers {
+import scala.math._
+
+class TestExpoSinSolution extends FlatSpec with Matchers with CelestTest {
 
   implicit val universe = new DefaultUniverse()
 
@@ -70,7 +68,7 @@ class TestExpoSinSolution extends FlatSpec with Matchers {
     val c1 = trajectory.apply(t1)
     val c2 = trajectory.apply(t2)
     // Equal R
-    CelestTest.assertEqualsAngle(dTheta, c1.position.angle(c2.position), 1e-3)
+    assertEqualsAngle(dTheta, c1.position.angle(c2.position), 1e-3)
     c1.position.norm should equal(r1 +- R_tol)
     c2.position.norm should equal(r2 +- R_tol)
     // Equal V
@@ -118,7 +116,7 @@ class TestExpoSinSolution extends FlatSpec with Matchers {
     val c2 = trajectory.apply(t2)
 
     // Equal R
-    CelestTest.assertEqualsAngle(dTheta, c1.position.angle(c2.position), 1e-3)
+    assertEqualsAngle(dTheta, c1.position.angle(c2.position), 1e-3)
     c1.position.norm should equal(r1 +- R_tol)
     c2.position.norm should equal(r2 +- R_tol)
     // Equal V
@@ -166,7 +164,7 @@ class TestExpoSinSolution extends FlatSpec with Matchers {
     val c2 = trajectory.apply(t2)
 
     // Equal R
-    CelestTest.assertEqualsAngle(dTheta, c1.position.angle(c2.position), 1e-3)
+    assertEqualsAngle(dTheta, c1.position.angle(c2.position), 1e-3)
     c1.position.norm should equal(r1 +- R_tol)
     c2.position.norm should equal(r2 +- R_tol)
     // Equal V

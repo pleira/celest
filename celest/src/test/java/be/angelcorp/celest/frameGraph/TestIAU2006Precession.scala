@@ -16,25 +16,21 @@
 
 package be.angelcorp.celest.frameGraph
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.celest.time.{Epochs, JulianDate}
-import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.frameGraph.frames.transforms.IAU2006Precession
-import be.angelcorp.libs.math.linear.Matrix3D
-import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
+import be.angelcorp.celest.time.{Epochs, JulianDate}
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.celest.universe.DefaultUniverse
+import be.angelcorp.libs.math.linear.Matrix3D
+import be.angelcorp.libs.util.physics.Angle._
+import org.scalatest.{FlatSpec, Matchers}
 
-@RunWith(classOf[JUnitRunner])
-class TestIAU2006Precession extends FlatSpec with ShouldMatchers {
+class TestIAU2006Precession extends FlatSpec with Matchers with CelestTest {
 
   implicit val universe = new DefaultUniverse
 
   "IAU2006Precession" should "calculate the correct precession angles" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val epoch = new JulianDate(2013,  4, 27, 12, 33, 18.1938271, TT)
     val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
 
     ArcSecond.convert(IAU2006Precession.ε0) should be(0.4090926006005829 plusOrMinus ArcSecond.convert(1E-3))
@@ -51,7 +47,7 @@ class TestIAU2006Precession extends FlatSpec with ShouldMatchers {
   }
 
   "IAU2006Precession" should "calculate the correct precession matrix" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val epoch = new JulianDate(2013,  4, 27, 12, 33, 18.1938271, TT)
 
     val iau2006 = new IAU2006Precession(null, null)
     val transform = iau2006.transform(epoch)
@@ -64,7 +60,7 @@ class TestIAU2006Precession extends FlatSpec with ShouldMatchers {
 
     println(transform.M)
 
-    val error = CelestTest.matrixError(transform.M, sofaRotation)
+    val error = matrixError(transform.M, sofaRotation)
     error should be(0.0 plusOrMinus ArcSecond.convert(1E-2))
   }
 

@@ -16,19 +16,16 @@
 
 package be.angelcorp.celest.time.timeStandard
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
+import be.angelcorp.celest.universe.DefaultUniverse
+import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
 
 /**
  * TT is very hard to test, as it is the time reference to which all other time streams are referenced.
  */
-@RunWith(classOf[JUnitRunner])
 class TestTT extends FlatSpec with ShouldMatchers {
 
   "TT" should "select transform symmetrically" in {

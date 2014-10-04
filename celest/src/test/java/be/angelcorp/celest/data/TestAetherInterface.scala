@@ -1,20 +1,18 @@
 package be.angelcorp.celest.data
 
 import java.nio.file.Files
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, FlatSpec}
-import org.eclipse.aether.repository.RemoteRepository
-import org.eclipse.aether.transport.http.HttpTransporterFactory
-import org.eclipse.aether.transport.file.FileTransporterFactory
-import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory
-import org.eclipse.aether.spi.connector.RepositoryConnectorFactory
-import org.eclipse.aether.spi.connector.transport.TransporterFactory
+
+import org.apache.maven.repository.internal.MavenRepositorySystemUtils
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.artifact.DefaultArtifact
-import org.apache.maven.repository.internal.MavenRepositorySystemUtils
+import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory
+import org.eclipse.aether.repository.RemoteRepository
+import org.eclipse.aether.spi.connector.RepositoryConnectorFactory
+import org.eclipse.aether.spi.connector.transport.TransporterFactory
+import org.eclipse.aether.transport.file.FileTransporterFactory
+import org.eclipse.aether.transport.http.HttpTransporterFactory
+import org.scalatest.{FlatSpec, Matchers}
 
-@RunWith(classOf[JUnitRunner])
 class TestAetherInterface extends FlatSpec with Matchers {
 
   "AetherInterface" should "find and load artifacts successfully" in {
@@ -35,7 +33,7 @@ class TestAetherInterface extends FlatSpec with Matchers {
     results.size should be(1)
     val result = results.head
     val zipfile = new java.util.zip.ZipFile(result.getFile)
-    import collection.JavaConverters._
+    import scala.collection.JavaConverters._
     val entries = zipfile.entries.asScala.toList
     entries.size should be(2)
     entries.map(_.getName) should contain("file1.txt")

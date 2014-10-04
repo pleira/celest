@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.angelcorp.celest.maneuvers.targeters.exposin;
+package be.angelcorp.celest.maneuvers.targeters.exposin
 
-import be.angelcorp.celest.unit.CelestTest;
-import be.angelcorp.libs.math.functions.ExponentialSinusoid;
-import be.angelcorp.libs.math.linear.ImmutableVector3D;
-import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.libs.math.functions.ExponentialSinusoid
+import be.angelcorp.libs.math.linear.Vector3D
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  * Validation of the Exposin angular rate equations
@@ -57,36 +57,36 @@ import be.angelcorp.libs.math.linear.Vector3D;
  *
  * @author Simon Billemont
  */
-public class TestExpoSinAngularRate extends CelestTest {
+class TestExpoSinAngularRate extends FlatSpec with Matchers with CelestTest {
 
-    public void testFunction() {
-        double k0 = 1.5;
-        double k1 = -0.1;
-        double k2 = 1. / 2;
-        double q0 = 0;
-        double phi = 2.5;
-        double dTheta = 5;
-        double mu = 1;
-        Vector3D r1 = new ImmutableVector3D(1.412862648939526, 0., 0.);
-        Vector3D r2 = new ImmutableVector3D(0.468315202078896, -1.58314656828111, 0.);
+  "ExpoSinAngularRate" should "be equal to the calculated reference value" in {
+    val k0 = 1.5
+    val k1 = -0.1
+    val k2 = 1.0 / 2
+    val q0 = 0
+    val phi = 2.5
+    val dTheta = 5
+    val mu = 1
+    val r1 = Vector3D(1.412862648939526, 0.0, 0.0)
+    val r2 = Vector3D(0.468315202078896, -1.58314656828111, 0.0)
 
-        ExpoSinAngularRate angularRate = new ExpoSinAngularRate(new ExponentialSinusoid(k0, k1, k2, q0, phi), mu);
+    val angularRate = new ExpoSinAngularRate(new ExponentialSinusoid(k0, k1, k2, q0, phi), mu)
 
-        // Matlab results;
-        assertEquals(5.994736717283741e-001, angularRate.value(0.), 1E-14);
-        assertEquals(5.562761270281725e-001, angularRate.value(1.), 1E-14);
-        assertEquals(5.136227141636941e-001, angularRate.value(2.), 1E-14);
-        assertEquals(4.811320282409562e-001, angularRate.value(3.), 1E-14);
-        assertEquals(4.644257403076331e-001, angularRate.value(4.), 1E-14);
-        assertEquals(4.658089763181780e-001, angularRate.value(5.), 1E-14);
+    // Matlab results;
+    assertEquals(5.994736717283741e-001, angularRate.value(0.0), 1E-14)
+    assertEquals(5.562761270281725e-001, angularRate.value(1.0), 1E-14)
+    assertEquals(5.136227141636941e-001, angularRate.value(2.0), 1E-14)
+    assertEquals(4.811320282409562e-001, angularRate.value(3.0), 1E-14)
+    assertEquals(4.644257403076331e-001, angularRate.value(4.0), 1E-14)
+    assertEquals(4.658089763181780e-001, angularRate.value(5.0), 1E-14)
 
-        // Matematica results;
-        // Basically the same as the matlab output, gives confidence that the equation is typed correctly
-        assertEquals(0.599473671728374, angularRate.value(0.), 1E-14);
-        assertEquals(0.5562761270281725, angularRate.value(1.), 1E-14);
-        assertEquals(0.5136227141636941, angularRate.value(2.), 1E-14);
-        assertEquals(0.4811320282409562, angularRate.value(3.), 1E-14);
-        assertEquals(0.4644257403076332, angularRate.value(4.), 1E-14);
-        assertEquals(0.4658089763181781, angularRate.value(5.), 1E-14);
-    }
+    // Matematica results;
+    // Basically the same as the matlab output, gives confidence that the equation is typed correctly
+    assertEquals(0.599473671728374,  angularRate.value(0.0), 1E-14)
+    assertEquals(0.5562761270281725, angularRate.value(1.0), 1E-14)
+    assertEquals(0.5136227141636941, angularRate.value(2.0), 1E-14)
+    assertEquals(0.4811320282409562, angularRate.value(3.0), 1E-14)
+    assertEquals(0.4644257403076332, angularRate.value(4.0), 1E-14)
+    assertEquals(0.4658089763181781, angularRate.value(5.0), 1E-14)
+  }
 }

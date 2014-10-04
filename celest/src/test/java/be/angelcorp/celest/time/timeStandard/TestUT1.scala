@@ -16,17 +16,14 @@
 
 package be.angelcorp.celest.time.timeStandard
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
+import be.angelcorp.celest.data.eop.UT1Provider
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.dateStandard.DateStandards._
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
 import com.google.inject.AbstractModule
-import be.angelcorp.celest.data.eop.UT1Provider
+import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
 
-@RunWith(classOf[JUnitRunner])
 class TestUT1 extends FlatSpec with ShouldMatchers {
 
   implicit val universe = new MockTimeUniverse {
@@ -112,7 +109,7 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
   it should "select correctly apply the UT1-UTC offset" in {
     val ut1 = new UT1Time(UTC)
 
-    val date_utc = new JulianDate(2012, 03, 04, 00, 00, 0.0, UTC)
+    val date_utc = new JulianDate(2012,  3,  4,  0,  0, 0.0, UTC)
     val date_ut1 = date_utc.inTimeStandard(ut1)
 
     ((date_ut1.jd + 0.5) - JULIAN_DAY_NUMBER.fromJD(date_ut1.jd)) * 86400 should be(86399.52600540 plusOrMinus 1E-4) // 1E-4 due to the doule accuracy in JulianDate
@@ -128,7 +125,7 @@ class TestUT1 extends FlatSpec with ShouldMatchers {
   it should "conform to the 'Fundamentals of Astrodynamics and Applications' validation data" in {
     // Reference epoch in the book are for April 6, 2004, 16:43:00.0000 UTC or 16:44:04.1840 TT (not May 14)
     implicit val universe = new MockTimeUniverse()
-    val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, TT)
+    val jd_tt = new JulianDate(2004, 4,  6, 16, 44,  4.1840, TT)
 
     val ut1 = new UT1Time(new MockTime(-64.184 /* UTC => TT offset at the test epoch */), // <= UTC
       Map((0.0, Double.PositiveInfinity) -> // UT1-UTC offset

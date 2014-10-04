@@ -15,9 +15,7 @@
  */
 package be.angelcorp.celest.constants
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-
+import be.angelcorp.celest.state.{PosVel, Spherical}
 import be.angelcorp.celest.time.{Epochs, JulianDate}
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.libs.math.linear.ImmutableVector3D
@@ -26,9 +24,7 @@ import be.angelcorp.libs.util.physics.Length._
 import be.angelcorp.libs.util.physics.Time._
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.state.{PosVel, Spherical}
 
-@RunWith(classOf[JUnitRunner])
 class TestEarthConstants extends FlatSpec with ShouldMatchers {
 
   implicit val universe = new DefaultUniverse

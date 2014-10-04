@@ -15,12 +15,9 @@
  */
 package be.angelcorp.celest.time
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
-@RunWith(classOf[JUnitRunner])
 class TestTimeUtils extends FlatSpec with ShouldMatchers {
 
   "TimeUtils" should "compute the correct day of the week" in {

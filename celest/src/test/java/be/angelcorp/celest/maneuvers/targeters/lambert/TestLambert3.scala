@@ -1,7 +1,5 @@
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
@@ -9,7 +7,6 @@ import org.scalatest.matchers.ShouldMatchers
  * All reference values computed with:
  * Robust solver for Lambert's orbital-boundary value problem [matlab package] by Rody Oldenhuis
  */
-@RunWith(classOf[JUnitRunner])
 class TestLambert3 extends FlatSpec with ShouldMatchers {
 
   /**

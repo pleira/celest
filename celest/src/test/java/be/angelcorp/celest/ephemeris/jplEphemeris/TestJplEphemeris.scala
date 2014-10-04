@@ -16,18 +16,18 @@
 
 package be.angelcorp.celest.ephemeris.jplEphemeris
 
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, FlatSpec}
-import java.nio.file.{Files, Paths}
-import org.junit.runner.RunWith
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.ephemeris.jplEphemeris
-import be.angelcorp.celest.data._
-import be.angelcorp.celest.util.MsvcX86Alignment
-import java.nio.ByteOrder
-import com.google.common.hash.Hashing
-import java.math.BigInteger
 import java.io.InputStreamReader
+import java.math.BigInteger
+import java.nio.ByteOrder
+import java.nio.file.{Files, Paths}
+
+import be.angelcorp.celest.data._
+import be.angelcorp.celest.ephemeris.jplEphemeris
+import be.angelcorp.celest.universe.DefaultUniverse
+import be.angelcorp.celest.util.MsvcX86Alignment
+import com.google.common.hash.Hashing
+import org.scalatest.{FlatSpec, Matchers}
+
 import scala.io.Source
 
 
@@ -36,7 +36,6 @@ import scala.io.Source
  *
  * This is done using the DE405 ephemeris, with a subset between 1980 and 2040
  */
-@RunWith(classOf[JUnitRunner])
 class TestJplEphemeris extends FlatSpec with Matchers {
 
   implicit val universe = new DefaultUniverse

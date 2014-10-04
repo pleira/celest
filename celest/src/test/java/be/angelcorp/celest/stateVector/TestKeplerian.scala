@@ -15,21 +15,16 @@
  */
 package be.angelcorp.celest.stateVector
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.body.Body
-import be.angelcorp.celest.state._
-import be.angelcorp.libs.util.physics.Length._
-import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.celest.unit.CelestTest._
 import be.angelcorp.celest.frameGraph.frames
+import be.angelcorp.celest.state.{TrueAnomaly, _}
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.state.TrueAnomaly
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.libs.util.physics.Length._
+import org.scalatest.{FlatSpec, Matchers}
 
-@RunWith(classOf[JUnitRunner])
-class TestKeplerian extends FlatSpec with ShouldMatchers {
+class TestKeplerian extends FlatSpec with Matchers with CelestTest {
 
   val sunFrame = frames.BodyCenteredSystem(new Body[Null]() {
     def μ: Double = 132712440040.944000E9

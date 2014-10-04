@@ -15,10 +15,10 @@
  */
 package be.angelcorp.celest.frameGraph
 
-import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.Orbit
-import be.angelcorp.libs.math.rotation.IRotation
+import be.angelcorp.celest.time.Epoch
 import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.libs.math.rotation.IRotation
 
 /**
  * An {@link ReferenceFrameTransform} that sequentially applies two other {@link ReferenceFrameTransform}'s:
@@ -73,4 +73,10 @@ class CompositeFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, F2 <
     val acceleration_f1 = pva_f1._3
     transform1.transformPosVelAcc(position_f1, velocity_f1, acceleration_f1)
   }
+
+  override def transformVector(vector: Vector3D): Vector3D = {
+    val vector0 = transform0.transformVector( vector )
+    transform1.transformVector( vector0 )
+  }
+
 }

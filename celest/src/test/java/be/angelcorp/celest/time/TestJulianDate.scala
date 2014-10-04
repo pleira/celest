@@ -15,17 +15,15 @@
  */
 package be.angelcorp.celest.time
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
+import java.util.{Calendar, GregorianCalendar}
+
+import be.angelcorp.celest.physics.Units._
+import be.angelcorp.celest.time.dateStandard.DateStandards
+import be.angelcorp.celest.time.timeStandard.TimeStandards._
+import be.angelcorp.celest.universe.DefaultUniverse
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
-import java.util.{Calendar, GregorianCalendar}
-import be.angelcorp.celest.time.dateStandard.DateStandards
-import be.angelcorp.celest.physics.Units._
-import be.angelcorp.celest.time.timeStandard.TimeStandards._
 
-@RunWith(classOf[JUnitRunner])
 class TestJulianDate extends FlatSpec with ShouldMatchers {
 
   implicit val universe = new DefaultUniverse

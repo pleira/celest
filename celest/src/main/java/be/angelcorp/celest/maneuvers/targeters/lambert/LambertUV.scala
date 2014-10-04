@@ -15,17 +15,16 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
-import scala.math._
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.Epoch
-import org.apache.commons.math3.analysis.FunctionUtils
-import org.apache.commons.math3.analysis.UnivariateFunction
-import org.apache.commons.math3.analysis.function.Add
-import org.apache.commons.math3.analysis.function.Constant
+import org.apache.commons.math3.analysis.{FunctionUtils, UnivariateFunction}
+import org.apache.commons.math3.analysis.function.{Add, Constant}
 import org.apache.commons.math3.analysis.solvers.BrentSolver
 import org.apache.commons.math3.util.Precision
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+
+import scala.math._
 
 
 /**
@@ -107,7 +106,7 @@ class LambertUV[F <: BodyCenteredSystem]
 
     val func = new LambertFunctionUV(A, r1norm, r2norm)
     val solver = new BrentSolver(1e-12)
-    val z = solver.solve(100, FunctionUtils.combine(new Add(), new Constant(-travelTime), func), -4d * Pi, 5.* Pi * Pi, 0)
+    val z = solver.solve(100, FunctionUtils.combine(new Add(), new Constant(-travelTime), func), -4d * Pi, 5.0 * Pi * Pi, 0)
 
     val y = func.computeY(z)
     val f = 1d - y / r1norm

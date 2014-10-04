@@ -15,21 +15,16 @@
  */
 package be.angelcorp.celest.stateVector
 
-import math._
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.body.Body
 import be.angelcorp.celest.frameGraph.frames
-import be.angelcorp.celest.state._
-import be.angelcorp.celest.unit.CelestTest._
+import be.angelcorp.celest.state.{TrueAnomaly, _}
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.state.TrueAnomaly
+import be.angelcorp.celest.unit.CelestTest
+import org.scalatest.{FlatSpec, Matchers}
 
+import scala.math._
 
-@RunWith(classOf[JUnitRunner])
-class TestSphericalElements extends FlatSpec with ShouldMatchers {
+class TestSphericalElements extends FlatSpec with Matchers with CelestTest {
 
   val jplEarthFrame = frames.BodyCenteredSystem(new Body[Null]() {
     def μ: Double = 398600.440E9

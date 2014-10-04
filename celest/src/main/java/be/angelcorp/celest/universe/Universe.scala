@@ -16,10 +16,11 @@
 
 package be.angelcorp.celest.universe
 
-import com.google.inject._
 import java.lang.annotation.Annotation
+
+import com.google.inject._
+import net.codingwell.scalaguice.KeyExtensions.ScalaTypeLiteral
 import net.codingwell.scalaguice._
-import net.codingwell.scalaguice.KeyExtensions._
 
 /**
  * Contains all the context information regarding a simulation, such as the reference frame/time data.
@@ -89,7 +90,7 @@ trait Universe {
    * When feasible, avoid using this method, in favor of having Guice inject your dependencies ahead of time.
    * @see com.google.inject.Injector#getInstance
    */
-  def instance[T: Manifest, A <: java.lang.annotation.Annotation](implicit evidence: scala.Predef.Manifest[A]): T =
-    injector.getInstance(enrichTypeLiteral(typeLiteral[T]).annotatedWith(evidence))
+  def instance[T: Manifest, A <: java.lang.annotation.Annotation : Manifest]: T =
+    injector.getInstance( new ScalaTypeLiteral(typeLiteral[T]).annotatedWith[A])
 
 }

@@ -15,26 +15,22 @@
  */
 package be.angelcorp.celest.kepler
 
-import scala.math._
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
+import be.angelcorp.celest.body.Satellite
+import be.angelcorp.celest.constants.Constants._
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.kepler
+import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.celest.universe.DefaultUniverse
+import be.angelcorp.libs.math.MathUtils2._
+import be.angelcorp.libs.math.linear.Vector3D
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
-import be.angelcorp.celest.constants.Constants._
-import be.angelcorp.celest.kepler
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.celest.unit.CelestTest._
-import be.angelcorp.celest.body.Satellite
-import be.angelcorp.libs.math.MathUtils2._
-import be.angelcorp.celest.unit.CelestTest
-import be.angelcorp.celest.state.PosVel
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
-import be.angelcorp.celest.universe.DefaultUniverse
+import scala.math._
 
 
-@RunWith(classOf[JUnitRunner])
-class TestKeplerEquations extends FlatSpec with ShouldMatchers {
+class TestKeplerEquations extends FlatSpec with ShouldMatchers with CelestTest {
 
   implicit val universe = new DefaultUniverse
 
@@ -139,8 +135,8 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers {
       null
     )
 
-    CelestTest.assertEquals(c._1.toArray, c_true.position.toArray, c_true.position.toArray.map(v => abs(v * 1E-12)))
-    CelestTest.assertEquals(c._2.toArray, c_true.velocity.toArray, c_true.velocity.toArray.map(v => abs(v * 1E-12)))
+    assertEquals(c._1.toArray, c_true.position.toArray, c_true.position.toArray.map(v => abs(v * 1E-12)))
+    assertEquals(c._2.toArray, c_true.velocity.toArray, c_true.velocity.toArray.map(v => abs(v * 1E-12)))
   }
 
 }

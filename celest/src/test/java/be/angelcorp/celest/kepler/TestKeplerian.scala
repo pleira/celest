@@ -15,13 +15,10 @@
  */
 package be.angelcorp.celest.kepler
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
+import be.angelcorp.celest.state.Keplerian
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.state.Keplerian
 
-@RunWith(classOf[JUnitRunner])
 class TestKeplerian extends FlatSpec with ShouldMatchers {
 
   "KeplerElements" should "return the correct equations type" in {

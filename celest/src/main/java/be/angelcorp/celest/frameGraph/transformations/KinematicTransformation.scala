@@ -15,11 +15,11 @@
  */
 package be.angelcorp.celest.frameGraph.transformations
 
-import be.angelcorp.celest.frameGraph.{ReferenceFrameTransformFactory, BasicReferenceFrameTransform, ReferenceSystem}
+import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
+import be.angelcorp.celest.state.{Orbit, PosVel}
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.celest.state.{PosVel, Orbit}
-import be.angelcorp.libs.math.rotation.IRotation
 import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.libs.math.rotation.IRotation
 
 /**
  * The default implementation for a reference frame transformation, including kinematic effects:
@@ -184,4 +184,9 @@ class KinematicTransformation[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val 
 
     (p_f1, v_f1, a_f1)
   }
+
+  override def transformVector(vector: Vector3D): Vector3D = {
+    parameters.rotation.applyTo(vector)
+  }
+
 }

@@ -16,17 +16,14 @@
 
 package be.angelcorp.celest.frameGraph
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.time.JulianDate
-import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.celest.frameGraph.frames.transforms.J2000FrameBias
-import be.angelcorp.celest.unit.CelestTest
-import be.angelcorp.libs.util.physics.Angle._
+import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.celest.universe.DefaultUniverse
+import be.angelcorp.libs.math.linear.Matrix3D
+import be.angelcorp.libs.util.physics.Angle._
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  * The numerical values in these test cases where obtained from SOFA using the Microsoft visual studio 2012 debugger,
@@ -42,13 +39,12 @@ import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
  * iauNum00a(epoch_jd, epoch_fraction, N);
  * </pre>
  */
-@RunWith(classOf[JUnitRunner])
-class TestJ2000FrameBias extends FlatSpec with ShouldMatchers {
+class TestJ2000FrameBias extends FlatSpec with Matchers with CelestTest {
 
   implicit val universe = new DefaultUniverse
 
   "J2000FrameBias" should "conform to the sofa library" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val epoch = new JulianDate(2013,  4, 27, 12, 33, 18.1938271, TT)
 
     val sofaRotation = Matrix3D(
       0.9999999999999942, -7.078279744199198E-8, 8.056217146976134E-8,
@@ -59,7 +55,7 @@ class TestJ2000FrameBias extends FlatSpec with ShouldMatchers {
     val j2000bias = new J2000FrameBias(null, null)
     val transform = j2000bias.transform(epoch)
 
-    val error = CelestTest.matrixError(transform.M, sofaRotation)
+    val error = matrixError(transform.M, sofaRotation)
     error should be(0.0 plusOrMinus ArcSecond.convert(1E-6))
   }
 

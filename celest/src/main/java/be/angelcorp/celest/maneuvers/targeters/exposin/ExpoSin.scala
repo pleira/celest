@@ -15,12 +15,13 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin
 
-import scala.math._
-import org.slf4j.LoggerFactory
-import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.Epoch
+import org.slf4j.LoggerFactory
+
+import scala.math._
 
 /**
  * Exponential sinusoid solution (low thrust solution) to the Lambert problem ( a two-point boundary
@@ -56,7 +57,7 @@ class ExpoSin[F <: BodyCenteredSystem](val r1: PosVel[F], val r2: PosVel[F], val
    * <b>Unit: [-]</b>
    * </p>
    */
-  var assumeK2 = 1./ 12
+  var assumeK2 = 1.0 / 12.0
 
   /**
    * Set the k2 parameter (winding parameter) used in the exposin solution by inferring it from

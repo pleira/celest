@@ -15,16 +15,12 @@
  */
 package be.angelcorp.celest.trajectory
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
+import be.angelcorp.celest.state.Orbit
+import be.angelcorp.celest.time.{Epoch, JulianDate}
+import be.angelcorp.celest.universe.DefaultUniverse
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.state.Orbit
-import be.angelcorp.celest.time.{JulianDate, Epoch}
 
-
-@RunWith(classOf[JUnitRunner])
 class TestCompositeTrajectory extends FlatSpec with ShouldMatchers {
 
   implicit val universe = new DefaultUniverse

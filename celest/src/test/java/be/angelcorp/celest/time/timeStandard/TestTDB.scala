@@ -16,22 +16,19 @@
 
 package be.angelcorp.celest.time.timeStandard
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
 import be.angelcorp.celest.time.TimeUtils._
 import be.angelcorp.celest.time._
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
+import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
 
-@RunWith(classOf[JUnitRunner])
 class TestTDB extends FlatSpec with ShouldMatchers {
 
   "TDB" should "select transform symmetrically" in {
     implicit val universe = new MockTimeUniverse()
     val J2000_EPOCH = new JulianDate(2451545.0, TT)
     val tdb = new TDBTime(J2000_EPOCH)
-    val base_date = new JulianDate(2012, 04, 15, 12, 03, 06.24, tdb)
+    val base_date = new JulianDate(2012,  4, 15, 12,  3, 06.24, tdb)
 
     expect(base_date.jd) {
       base_date.inTimeStandard(TT).inTimeStandard(tdb).jd
@@ -51,7 +48,7 @@ class TestTDB extends FlatSpec with ShouldMatchers {
     // dut1 -0.439962 s dat 32 s
     implicit val universe = new MockTimeUniverse()
     val J2000_EPOCH = new JulianDate(2451545.0, TT)
-    val date = new JulianDate(2004, 04, 06, 00, 00, 28352.5700090000, TT) // Test epoch in TT, see paper.
+    val date = new JulianDate(2004,  4,  6,  0,  0, 28352.5700090000, TT) // Test epoch in TT, see paper.
 
     // Reference seconds in the current day TDB
     val tdb_seconds = 28352.5716651154
@@ -72,7 +69,7 @@ class TestTDB extends FlatSpec with ShouldMatchers {
     // Reference epoch in the book are for April 6, 2004, 16:43:00.0000 UTC or 16:44:04.1840 TT (not May 14)
     implicit val universe = new MockTimeUniverse()
     val J2000_EPOCH = new JulianDate(2451545.0, TT)
-    val jd_tt = new JulianDate(2004, 4, 06, 16, 44, 04.1840, TT)
+    val jd_tt = new JulianDate(2004, 4,  6, 16, 44,  4.1840, TT)
 
     val tdb = new TDBTime(J2000_EPOCH)
     tdb.offsetFromTT(jd_tt) should be(0.00164 plusOrMinus 1E-5)

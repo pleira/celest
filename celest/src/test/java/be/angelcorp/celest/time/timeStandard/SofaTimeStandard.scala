@@ -16,18 +16,17 @@
 
 package be.angelcorp.celest.time.timeStandard
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
-import scala.Predef._
-import scala.io.Source
 import java.io.File
+
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
+import be.angelcorp.celest.universe.DefaultUniverse
+import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
 
-@RunWith(classOf[JUnitRunner])
+import scala.Predef._
+import scala.io.Source
+
 class SofaTimeStandard extends FlatSpec with ShouldMatchers {
 
   implicit val universe = new DefaultUniverse()

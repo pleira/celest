@@ -16,25 +16,21 @@
 
 package be.angelcorp.celest.frameGraph
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.frameGraph.frames.transforms._
+import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
+import be.angelcorp.celest.unit.CelestTest
+import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.celest.unit.CelestTest
-import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
+import org.scalatest.{FlatSpec, Matchers}
 
-@RunWith(classOf[JUnitRunner])
-class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
+class TestIAU2000Nutation extends FlatSpec with Matchers with CelestTest {
 
   implicit val universe = new DefaultUniverse
 
   "IAU2000Nutation" should "match the IAU2000A SOFA values" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val epoch = new JulianDate(2013,  4, 27, 12, 33, 18.1938271, TT)
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
     val iau2000a = new IAU2000Nutation(null, null, sofaCoefficients, false)
@@ -49,12 +45,12 @@ class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
       5.14029004140582E-5, 0.9999999982379326, 2.969640782823912E-5,
       2.228222437754798E-5, -2.969755323106726E-5, 0.9999999993107789)
 
-    val error = CelestTest.matrixError(transform.M, sofaRotation)
+    val error = matrixError(transform.M, sofaRotation)
     error should be(0.0 plusOrMinus ArcSecond.convert(1E-3))
   }
 
   it should "match the IAU2006A SOFA values" in {
-    val epoch = new JulianDate(2013, 04, 27, 12, 33, 18.1938271, TT)
+    val epoch = new JulianDate(2013,  4, 27, 12, 33, 18.1938271, TT)
 
     val sofaCoefficients = IAU2000NutationLoader.MHB2000_2000A
     val iau2000a = new IAU2000Nutation(null, null, sofaCoefficients, true)
@@ -70,7 +66,7 @@ class TestIAU2000Nutation extends FlatSpec with ShouldMatchers {
       2.2282216251329819E-5, -2.9697542244855324E-5, 0.99999999931077943
     )
 
-    val error = CelestTest.matrixError(transform.M, sofaRotation)
+    val error = matrixError(transform.M, sofaRotation)
     error should be(0.0 plusOrMinus ArcSecond.convert(1E-3))
   }
 
