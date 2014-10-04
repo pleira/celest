@@ -16,17 +16,19 @@
 package be.angelcorp.celest.examples.examples.quickstart
 
 import java.io.FileWriter
-import scala.math._
-import org.slf4j.LoggerFactory
-import be.angelcorp.celest.examples.gui.{Services, CelestExample}
-import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.kepler._
-import be.angelcorp.celest.trajectory.{KeplerTrajectory, CompositeTrajectory}
-import be.angelcorp.celest.time.Epochs
-import be.angelcorp.libs.math.linear.Vector3D
+
 import be.angelcorp.celest.constants.EarthConstants
-import be.angelcorp.celest.state.Keplerian
+import be.angelcorp.celest.examples.gui.{CelestExample, Services}
 import be.angelcorp.celest.frameGraph.frames.GCRS
+import be.angelcorp.celest.kepler._
+import be.angelcorp.celest.state.Keplerian
+import be.angelcorp.celest.time.Epochs
+import be.angelcorp.celest.trajectory.{CompositeTrajectory, KeplerTrajectory}
+import be.angelcorp.celest.universe.DefaultUniverse
+import be.angelcorp.libs.math.linear.Vector3D
+import org.slf4j.LoggerFactory
+
+import scala.math._
 
 @CelestExample(
   name = "Quickstart example",
@@ -60,7 +62,7 @@ class QuickStart {
       val time = t0.addS(t)
       val state = trajectory(time).toPosVel
 
-      logger.debug("At jd={} the state is: {}", time, state)
+      logger.debug(s"At jd=$time the state is: $state")
       ephemerisFile.write(s"$t, ${state.position.x}, ${state.position.y}, ${state.position.z}, ${state.velocity.x}, ${state.velocity.y}, ${state.velocity.z}")
       state
     }

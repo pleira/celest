@@ -1,17 +1,14 @@
 package be.angelcorp.celest.examples.snippets
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, FlatSpec}
+import org.reflections.Reflections
+import org.reflections.scanners.ResourcesScanner
+import org.reflections.util.{ClasspathHelper, ConfigurationBuilder}
+import org.scalatest.{FlatSpec, Matchers}
+
 import scala.collection.JavaConverters._
 import scala.tools.nsc.GenericRunnerSettings
-import org.reflections.Reflections
-import scala.io.Source
 import scala.tools.nsc.interpreter.Results
-import org.reflections.util.{ClasspathHelper, ConfigurationBuilder}
-import org.reflections.scanners.ResourcesScanner
 
-@RunWith(classOf[JUnitRunner])
 class TestSnippets extends FlatSpec with Matchers {
   val flusher = new java.io.PrintWriter(System.out)
 
@@ -28,9 +25,9 @@ class TestSnippets extends FlatSpec with Matchers {
       new scala.tools.nsc.interpreter.IMain(settings, flusher)
     }
 
-    val source = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(snippet)).getLines().mkString("\n")
+    val source = getClass.getClassLoader.getResource(snippet)
     interpreter.beQuietDuring {
-      interpreter.interpret(source)
+      interpreter.interpret(s":load $source" )
     } match {
       case Results.Error => fail(s"Error while running script '$snippet'")
       case _ =>
