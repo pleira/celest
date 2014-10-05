@@ -1,9 +1,0 @@
-[submodule "examples"]
-	path = examples
-	url = http://scm.angelcorp.be/git/be.angelcorp.celest.examples.git
-[submodule "console"]
-	path = console
-	url = http://scm.angelcorp.be/git/be.angelcorp.celest.console.git
-[submodule "celest-sofa"]
-	path = celest-sofa
-	url = http://scm.angelcorp.be/git/be.angelcorp.celest.celest-sofa.git

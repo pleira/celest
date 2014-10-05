@@ -1,0 +1,12 @@
+target
+distribution
+eclipse
+.svn
+bin
+classes
+
+*.opensdf
+*.iml
+.settings
+.classpath
+.project
