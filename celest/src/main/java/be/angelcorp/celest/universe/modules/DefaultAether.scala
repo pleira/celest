@@ -1,6 +1,8 @@
 package be.angelcorp.celest.universe.modules
 
 import javax.inject.{Named, Singleton}
+import be.angelcorp.celest.resources.ResourceResolver
+import be.angelcorp.celest.resources.aether.AetherResolver
 import com.google.inject.{Provides, AbstractModule}
 import com.google.inject.name.Names
 import org.apache.maven.repository.internal.MavenAetherModule
@@ -24,6 +26,7 @@ class DefaultAether extends AbstractModule {
     bind(classOf[RepositoryConnectorFactory]).annotatedWith(Names.named("basic")).to(classOf[BasicRepositoryConnectorFactory])
     bind(classOf[TransporterFactory]).annotatedWith(Names.named("file")).to(classOf[FileTransporterFactory])
     bind(classOf[TransporterFactory]).annotatedWith(Names.named("http")).to(classOf[HttpTransporterFactory])
+    bind(classOf[ResourceResolver]).to(classOf[AetherResolver])
   }
 
   @Provides

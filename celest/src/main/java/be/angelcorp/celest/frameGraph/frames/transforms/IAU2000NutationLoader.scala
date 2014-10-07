@@ -16,8 +16,9 @@
 
 package be.angelcorp.celest.frameGraph.frames.transforms
 
+import be.angelcorp.celest.resources.{ResourceDescription, Resources}
+
 import scala.io.Source
-import be.angelcorp.celest.data._
 import be.angelcorp.celest.universe.Universe
 
 object IAU2000NutationLoader {
@@ -141,5 +142,9 @@ object IAU2000NutationLoader {
   def MHB2000_2000B(implicit universe: Universe): List[IAU2000NutationEntry] = {
     parseMHB2000(getZipEntrySource("org.iers", "MHB2000", "iau00b_nutation.tab").getOrElse(Source.fromString("")))
   }
+
+  @Deprecated
+  def getZipEntrySource( groupId: String, artifactId: String, filename: String )(implicit universe: Universe): Option[Source] =
+    Resources.findArchive( ResourceDescription(groupId, artifactId, extension = "zip") ).flatMap( _.findEntry(filename) ).map( _.openSource() ).toOption
 
 }

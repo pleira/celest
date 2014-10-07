@@ -1,4 +1,4 @@
-import be.angelcorp.celest.data._
+import be.angelcorp.celest.resources._
 import be.angelcorp.celest.ephemeris.jplEphemeris
 
 implicit val universe = new be.angelcorp.celest.universe.DefaultUniverse
@@ -10,7 +10,8 @@ def toFile(fname: String, content: String) {
 
 // Load/create any existing ephemeris.
 // Here it is binary, but it can be any type
-val ephemerisFile = getPath("be.angelcorp.celest.test.ephemeris", "DE405-1980-2020", "bin")
+val ephemerisResource = Resources.find( ResourceDescription("be.angelcorp.celest.test.ephemeris", "DE405-1980-2020", extension = "bin") ).get
+val ephemerisFile = PathResource( ephemerisResource ).path // Make sure that the resource is mapped to a file, and is not eg. a stream
 val ephemeris = jplEphemeris.fromBinary(ephemerisFile, 405)
 
 // Save the ephemeris header

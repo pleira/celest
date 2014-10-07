@@ -23,12 +23,14 @@ import java.nio.file.{Files, Paths}
 
 import be.angelcorp.celest.data._
 import be.angelcorp.celest.ephemeris.jplEphemeris
+import be.angelcorp.celest.resources.{PathResource, ResourceDescription, Resources}
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.util.MsvcX86Alignment
 import com.google.common.hash.Hashing
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ParallelTestExecution, FlatSpec, Matchers}
 
 import scala.io.Source
+import scala.util.{Failure, Success}
 
 
 /**
@@ -36,9 +38,29 @@ import scala.io.Source
  *
  * This is done using the DE405 ephemeris, with a subset between 1980 and 2040
  */
-class TestJplEphemeris extends FlatSpec with Matchers {
+class TestJplEphemeris extends FlatSpec with Matchers with ParallelTestExecution {
 
   implicit val universe = new DefaultUniverse
+
+  // The test data files
+  lazy val de405Binary = PathResource( { Resources.find( ResourceDescription("be.angelcorp.celest.test.ephemeris", "DE405-1980-2020", "20131119", "bin") ) match {
+    case Success( res ) => res
+    case Failure( ex  ) => fail( "Could not retrieve binary de405 date file", ex )
+  } } )
+  lazy val de405AsciiHeader = Resources.findArchive( ResourceDescription("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "20070705", "zip") ).flatMap( _.findEntry( "header.405" ) ) match {
+    case Success( res ) => res
+    case Failure( ex  ) => fail( "Could not retrieve de405 test header file", ex )
+  }
+  lazy val de405AsciiData = Seq("ascp1980.405", "ascp2000.405", "ascp2020.405").map(name => {
+    Resources.findArchive( ResourceDescription("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "20070705", "zip") ).flatMap( _.findEntry( name ) )  match {
+      case Success( res ) => res
+      case Failure( ex  ) => fail( "Could not retrieve de405 ascii def file " + name, ex )
+    }
+  })
+  lazy val de405Testpo = Resources.findArchive( ResourceDescription("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "20070705", "zip") ).flatMap( _.findEntry( "testpo.405" ) ) match {
+    case Success( res ) => res
+    case Failure( ex  ) => fail( "Could not retrieve de405 expected test results file", ex )
+  }
 
   def testEphemeris(ephemeris: JplEphemeris[_], testFile: Source) {
     jplEphemeris.test(ephemeris, testFile).drop(1).map(entry => {
@@ -60,18 +82,15 @@ class TestJplEphemeris extends FlatSpec with Matchers {
   }
 
   "BinaryEphemeris" should "pass the testpo.405 test" in {
-    val ephemerisFile = getPath("be.angelcorp.celest.test.ephemeris", "DE405-1980-2020", "bin", "20131119")
-    val testFile = getZipEntrySource("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "testpo.405").get
-
-    val ephemeris = jplEphemeris.fromBinary(ephemerisFile, 405)
-    testEphemeris(ephemeris, testFile)
+    val ephemeris = jplEphemeris.fromBinary(de405Binary.path, 405)
+    testEphemeris(ephemeris, de405Testpo.openSource())
   }
 
   it should "generate the correct binary ephemeris" in {
-    val ephemerisFile = getPath("be.angelcorp.celest.test.ephemeris", "DE405-1980-2020", "bin", "20131119")
-    val ephemeris = jplEphemeris.fromBinary(ephemerisFile, 405)
+    val ephemeris = jplEphemeris.fromBinary(de405Binary.path, 405)
 
-    val result = Paths.get("generated.bin")
+    val result = Files.createTempFile("testephemeris", ".bin")
+    result.toFile.deleteOnExit()
     jplEphemeris.toBinary(ephemeris, result, ByteOrder.LITTLE_ENDIAN, MsvcX86Alignment.instance)
 
     val hash = com.google.common.io.Files.hash(result.toFile, Hashing.sha1())
@@ -80,54 +99,43 @@ class TestJplEphemeris extends FlatSpec with Matchers {
     // Note this is not exactly equal the result as if the ascii was parsed and converted
     // The only difference is that in record 1, the range of the ephemeris has been autodetected (shruck to what records exist), and is no longer the full range of DE 405
     hashString should be("69b885966ed49586a4d7b8eb024ff3d3bcddf8a5")
-
-    Files.delete(result)
   }
 
   "AsciiEphemeris" should "pass the testpo.405 test" in {
-    val headerFile = new InputStreamReader(getZipEntryStream("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "header.405").get)
-    val dataFiles = Seq("ascp1980.405", "ascp2000.405", "ascp2020.405").map(name => {
-      new InputStreamReader(getZipEntryStream("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", name).get)
-    })
-    val testFile = getZipEntrySource("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "testpo.405").get
+    val header = de405AsciiHeader.openReader()
+    val dataFiles = de405AsciiData.map( _.openReader() )
 
-    val ephemeris = jplEphemeris.fromAscii(headerFile, dataFiles)
-    testEphemeris(ephemeris, testFile)
+    val ephemeris = jplEphemeris.fromAscii(header, dataFiles)
+    testEphemeris(ephemeris, de405Testpo.openSource())
   }
 
   it should "generate the correct binary ephemeris" in {
-    val headerFile = new InputStreamReader(getZipEntryStream("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "header.405").get)
-    val dataFiles = Seq("ascp1980.405", "ascp2000.405", "ascp2020.405").map(name => {
-      new InputStreamReader(getZipEntryStream("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", name).get)
-    })
+    val headerFile = de405AsciiHeader.openReader()
+    val dataFiles = de405AsciiData.map( _.openReader() )
     val ephemeris = jplEphemeris.fromAscii(headerFile, dataFiles)
 
-    val result = Paths.get("generated.bin")
+    val result = Files.createTempFile("testephemeris", ".bin")
+    result.toFile.deleteOnExit()
     jplEphemeris.toBinary(ephemeris, result, ByteOrder.LITTLE_ENDIAN, MsvcX86Alignment.instance)
 
     val hash = com.google.common.io.Files.hash(result.toFile, Hashing.sha1())
     val hashString = bytesToHexString(hash.asBytes())
 
     hashString should be("d84a034385836bf150e9646a93392db4f2da2697")
-
-    Files.delete(result)
   }
 
   "JPL ascii ephemeris" should "be convertable into binary form" in {
-    val headerFile = new InputStreamReader(getZipEntryStream("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", "header.405").get)
-    val dataFiles = Seq("ascp1980.405", "ascp2000.405", "ascp2020.405").map(name => {
-      new InputStreamReader(getZipEntryStream("gov.nasa.jpl.ssd.pub.eph.planets.ascii", "de405", name).get)
-    })
+    val headerFile = de405AsciiHeader.openReader()
+    val dataFiles = de405AsciiData.map( _.openReader() )
 
-    val result = Paths.get("generated.bin")
+    val result = Files.createTempFile("testephemeris", ".bin")
+    result.toFile.deleteOnExit()
     jplEphemeris.asciiReader2binary(headerFile, dataFiles, result, ByteOrder.LITTLE_ENDIAN, MsvcX86Alignment.instance)
 
     val hash = com.google.common.io.Files.hash(result.toFile, Hashing.sha1())
     val hashString = bytesToHexString(hash.asBytes())
 
     hashString should be("d84a034385836bf150e9646a93392db4f2da2697")
-
-    Files.delete(result)
   }
 
   private def bytesToHexString(bytes: Array[Byte]) = {

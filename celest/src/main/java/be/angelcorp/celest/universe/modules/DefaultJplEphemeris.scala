@@ -1,11 +1,11 @@
 package be.angelcorp.celest.universe.modules
 
 import javax.inject.Singleton
+import be.angelcorp.celest.resources.aether.AetherInterface
 import com.google.inject.{Provides, AbstractModule}
 import org.eclipse.aether.artifact.DefaultArtifact
 import be.angelcorp.celest.ephemeris.jplEphemeris.JplEphemeris
 import be.angelcorp.celest.ephemeris.jplEphemeris
-import be.angelcorp.celest.data.AetherInterface
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph.frames.ICRS
 

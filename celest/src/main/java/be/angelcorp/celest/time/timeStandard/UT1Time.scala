@@ -17,18 +17,20 @@
 package be.angelcorp.celest.time.timeStandard
 
 import java.util
+import be.angelcorp.celest.resources.{ResourceDescription, Resources}
+
 import scala.math._
-import scala.Some
 import scala.collection.mutable
 import scala.collection.JavaConverters._
 import com.google.inject.Inject
 import org.slf4j.LoggerFactory
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.dateStandard.DateStandards._
-import be.angelcorp.celest.data._
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
 import be.angelcorp.celest.data.eop.{EarthOrientationData, UT1Provider}
+
+import scala.util.Success
 
 
 /**
@@ -70,9 +72,9 @@ class UT1Time(utc: TimeStandard, val containers: mutable.Map[(Double, Double), U
     val year = jd_utc.date.getYear.toString
     val filename = "eopc04_08_IAU2000.%s".format(year takeRight 2)
 
-    getZipEntrySource("org.iers.products.eop.long-term.c04_08", "iau2000", filename) match {
-      case Some(source) =>
-        val container = EarthOrientationData(source)
+    Resources.findArchive(ResourceDescription("org.iers.products.eop.long-term.c04_08", "iau2000", extension = "zip")).flatMap(_.findEntry(filename)) match {
+      case Success(source) =>
+        val container = EarthOrientationData(source.openSource())
         containers.put(container.epochRange, container.ut1_utc)
       case _ =>
         logger.warn(s"Could not find file $filename in artifact org.iers.products.eop.long-term.c04_08:iau2000 for Earth orientation data (UT1) on $jd_utc")

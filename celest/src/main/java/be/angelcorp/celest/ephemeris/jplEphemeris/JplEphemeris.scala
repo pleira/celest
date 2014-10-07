@@ -2,13 +2,13 @@ package be.angelcorp.celest.ephemeris.jplEphemeris
 
 import be.angelcorp.celest.time.{TimeRange, Epoch}
 import be.angelcorp.celest.state.PosVel
-import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 import be.angelcorp.celest.body.Body
 import be.angelcorp.celest.physics.Units
 import be.angelcorp.celest.frameGraph.ReferenceSystem
+import be.angelcorp.libs.math.linear.Vector3D
 
 trait JplEphemeris[F <: ReferenceSystem] {
 

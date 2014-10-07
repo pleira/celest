@@ -1,19 +1,21 @@
-package be.angelcorp.celest.data
+package be.angelcorp.celest.resources.aether
 
 import java.nio.file.Path
-import scala.collection.JavaConverters._
 import javax.inject.Named
+
 import com.google.inject.Inject
-import org.eclipse.aether.repository.{LocalRepository, RemoteRepository}
-import org.eclipse.aether.{RepositoryException, RepositorySystemSession, RepositorySystem}
-import org.eclipse.aether.artifact.Artifact
-import org.eclipse.aether.util.filter.DependencyFilterUtils
-import org.eclipse.aether.graph.{Dependency, DependencyFilter}
-import org.eclipse.aether.resolution._
-import org.eclipse.aether.collection.CollectRequest
-import org.eclipse.aether.util.artifact.JavaScopes
-import org.slf4j.LoggerFactory
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils
+import org.eclipse.aether.artifact.Artifact
+import org.eclipse.aether.collection.CollectRequest
+import org.eclipse.aether.graph.{Dependency, DependencyFilter}
+import org.eclipse.aether.repository.{LocalRepository, RemoteRepository}
+import org.eclipse.aether.resolution._
+import org.eclipse.aether.util.artifact.JavaScopes
+import org.eclipse.aether.util.filter.DependencyFilterUtils
+import org.eclipse.aether.{RepositoryException, RepositorySystem, RepositorySystemSession}
+import org.slf4j.LoggerFactory
+
+import scala.collection.JavaConverters._
 
 /**
  * Resolves and fetches resources artifacts from remote repositories and downloads the required artifacts and its

@@ -2,6 +2,7 @@ package be.angelcorp.celest.data
 
 import java.nio.file.Files
 
+import be.angelcorp.celest.resources.aether.AetherInterface
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.artifact.DefaultArtifact

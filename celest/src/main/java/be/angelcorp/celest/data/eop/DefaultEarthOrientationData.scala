@@ -18,13 +18,14 @@ package be.angelcorp.celest.data.eop
 
 import java.util
 import javax.inject.Inject
+import be.angelcorp.celest.resources.{ResourceDescription, Resources}
 import org.slf4j.LoggerFactory
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.timeStandard.TimeStandard
 import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
-import be.angelcorp.celest.data._
-import scala.Some
+
+import scala.util.Success
 
 class DefaultEarthOrientationData @Inject()(implicit universe: Universe) extends EarthOrientationData(new util.TreeMap(), universe.instance[TimeStandard, UTC]) {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -47,9 +48,11 @@ class DefaultEarthOrientationData @Inject()(implicit universe: Universe) extends
     val year = epoch.date.getYear.toString
     val filename = "eopc04_IAU2000.%s".format(year takeRight 2)
 
-    getZipEntrySource("org.iers.products.eop.long-term.c04_08", "iau2000", filename) match {
-      case Some(source) =>
-        val newData = EarthOrientationData(source)
+    Resources.findArchive(ResourceDescription("be.angelcorp.celest.resources.test.data", "testdata", extension = "zip")).flatMap( res => {
+      res.findEntry( filename )
+    } ) match {
+      case Success(source) =>
+        val newData = EarthOrientationData(source.openSource())
         data.putAll(newData.data)
       case _ =>
         logger.warn(s"Could not find file $filename in artifact org.iers.products.eop.long-term.c04_08:iau2000 for Earth orientation data on $epoch")
