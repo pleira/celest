@@ -1,6 +1,9 @@
 package be.angelcorp.celest.universe.modules
 
 import javax.inject.{Inject, Singleton}
+import be.angelcorp.celest.body.Body
+import be.angelcorp.celest.body.CelestialBodyAnnotations.Earth
+
 import scala.Some
 import scala.collection.JavaConverters._
 import net.codingwell.scalaguice.ScalaModule
@@ -35,6 +38,7 @@ class DefaultFrames extends ScalaModule {
     bind[IAU2000Nutation[MOD, ERS]].toProvider[IAU2000NutationProvider].in[Singleton]
     bind[IAU2006Precession[MOD, EME2000]].toProvider[IAU2006PrecessionProvider].in[Singleton]
     bind[J2000FrameBias[EME2000, GCRS]].toProvider[J2000FrameBiasProvider].in[Singleton]
+    bind[SolarSystemBodyOffset[ICRS, GCRS]].toProvider[EarthOffsetProvider].in[Singleton]
   }
 
   def configure() {
@@ -89,6 +93,15 @@ class J2000FrameBiasProvider extends Provider[J2000FrameBias[EME2000, GCRS]] {
   @Inject implicit var gcrs: GCRS = null
 
   def get(): J2000FrameBias[EME2000, GCRS] = new J2000FrameBias[EME2000, GCRS](j2000, gcrs)
+}
+
+class EarthOffsetProvider extends Provider[SolarSystemBodyOffset[ICRS, GCRS]] {
+  @Inject implicit var universe: Universe = null
+  @Inject implicit var icrs: ICRS = null
+  @Inject implicit var gcrs: GCRS = null
+  @Inject @Earth implicit var earth: Body[ICRS] = null
+
+  def get(): SolarSystemBodyOffset[ICRS, GCRS] = new SolarSystemBodyOffset[ICRS, GCRS](icrs, gcrs, earth)
 }
 
 /**
