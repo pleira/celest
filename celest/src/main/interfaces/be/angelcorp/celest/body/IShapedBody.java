@@ -16,7 +16,7 @@
 
 package be.angelcorp.celest.body;
 
-import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.celest.math.geometry.Vec3;
 
 /**
  * Representation of a celestial body with a surface geometry.
@@ -31,6 +31,6 @@ public interface IShapedBody extends CelestialBody {
      * @param direction Observation direction (vector observer -> body).
      * @return The cross-sectional area of this body [m^2].
      */
-    double crossSection(Vector3D direction);
+    double crossSection(Vec3 direction);
 
 }

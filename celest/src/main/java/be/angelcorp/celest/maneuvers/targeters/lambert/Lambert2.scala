@@ -18,7 +18,6 @@ package be.angelcorp.celest.maneuvers.targeters.lambert
 
 import math._
 import org.apache.commons.math3.util.FastMath
-import be.angelcorp.libs.util.exceptions.GenericRuntimeException
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.PosVel
@@ -57,7 +56,7 @@ class Lambert2[F <: BodyCenteredSystem]
   val longWay = {
     val r1 = this.r1.position
     val r2 = this.r1.position
-    val progradeIsLong = (r1.x * r2.y - r2.x * r1.y < 0.0)
+    val progradeIsLong = r1.x * r2.y - r2.x * r1.y < 0.0
     if (prograde) progradeIsLong else !progradeIsLong
   }
 
@@ -88,7 +87,7 @@ class Lambert2[F <: BodyCenteredSystem]
     val s = (1 + mr2vec + c) / 2 // non-dimensional semi-perimeter
     val a_min = s / 2 // minimum energy ellipse semi major axis
     val Lambda = sqrt(mr2vec) * cos(dth / 2) / s // lambda parameter (from BATTIN's book)
-    val planeNormal = (r1vec !* r2vec).normalize // orbit plane unit vector
+    val planeNormal = (r1vec cross r2vec).normalized // orbit plane unit vector
 
     // Initial values
     val logt = log(tf); // avoid re-computing the same value
@@ -170,7 +169,7 @@ class Lambert2[F <: BodyCenteredSystem]
 
     // If the Newton-Raphson scheme failed, try to solve the problem with the other Lambert targeter.
     if (bad) {
-      throw new GenericRuntimeException("Lambert2 failed to converge to a solution, use an alternative targeter instead eg. Lambert3")
+      throw new ArithmeticException("Lambert2 failed to converge to a solution, use an alternative targeter instead eg. Lambert3")
     } else {
       // convert converged value of x
       val x = if (N == 0) exp(xnew) - 1 else atan(xnew) * 2 / Pi
@@ -212,8 +211,8 @@ class Lambert2[F <: BodyCenteredSystem]
       val r2n = r2vec / mr2vec
 
       // cross-products
-      val crsprd1 = ih !* r1vec
-      val crsprd2 = ih !* r2n
+      val crsprd1 = ih cross r1vec
+      val crsprd2 = ih cross r2n
 
       // radial and tangential directions for departure velocity
       val Vr1 = 1 / eta / sqrt(a_min) * (2 * Lambda * a_min - Lambda - x * eta)
@@ -224,8 +223,8 @@ class Lambert2[F <: BodyCenteredSystem]
       val Vr2 = (Vt1 - Vt2) / tan(dth / 2) - Vr1
 
       // terminal velocities
-      val V1 = (r1vec * Vr1 + crsprd1 * Vt1) * V
-      val V2 = (r2n * Vr2 + crsprd2 * Vt2) * V
+      val V1 = ((r1vec * Vr1) + (crsprd1 * Vt1)) * V
+      val V2 = ((r2n   * Vr2) + (crsprd2 * Vt2)) * V
 
       new LambertTrajectory2(new PosVel(origin, V1, this.r1.frame),
         new PosVel(destination, V2, this.r1.frame),

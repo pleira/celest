@@ -16,9 +16,10 @@
 
 package be.angelcorp.celest.frameGraph.frames.transforms
 
+import be.angelcorp.celest.math.geometry.Mat3
+
 import scala.math._
 import be.angelcorp.celest.physics.Units._
-import be.angelcorp.libs.math.rotation.RotationMatrix._
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
@@ -63,7 +64,7 @@ class IAU2000Nutation[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
     val ε_ = IAU2000Nutation.ε_(t)
 
     // Compute the nutation matrix
-    rotateX(arcSeconds(-(ε_ + dε2000))) !* rotateZ(arcSeconds(-dψ2000)) !* rotateX(arcSeconds(ε_))
+    Mat3.rotateX(arcSeconds(-(ε_ + dε2000))) dot Mat3.rotateZ(arcSeconds(-dψ2000)) dot Mat3.rotateX(arcSeconds(ε_))
   }
 
   /**

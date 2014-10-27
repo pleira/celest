@@ -15,13 +15,11 @@
  */
 package be.angelcorp.celest.constants
 
+import be.angelcorp.celest.math.geometry.Vec3
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.state.{PosVel, Spherical}
 import be.angelcorp.celest.time.{Epochs, JulianDate}
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.libs.math.linear.ImmutableVector3D
-import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.libs.util.physics.Length._
-import be.angelcorp.libs.util.physics.Time._
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
@@ -41,16 +39,25 @@ class TestEarthConstants extends FlatSpec with ShouldMatchers {
     val state_actual_s = Spherical(state_actual_c)
 
     val state_true_c = new PosVel(
-      new ImmutableVector3D(-1.771351029694605E-01, 9.672416861070041E-01, -4.092421117973204E-06) * AU.getScaleFactor,
-      new ImmutableVector3D(-1.720762505701730E-02, -3.158782207802509E-03, 1.050630211603302E-07) * (AU.getScaleFactor / day_julian.getScaleFactor),
+      new Vec3(-1.771351029694605E-01, 9.672416861070041E-01, -4.092421117973204E-06) * AU,
+      new Vec3(-1.720762505701730E-02, -3.158782207802509E-03, 1.050630211603302E-07) * (AU / julianDay),
       state_actual_k.frame
     )
     val state_true_s = Spherical(state_true_c)
 
+    println( state_actual_k.a )
+    println( state_actual_k.e )
+    println( state_actual_k.i )
+    println( state_actual_k.ω )
+    println( state_actual_k.Ω )
+    println( state_actual_k.meanAnomaly )
+    println( state_actual_c )
+    println( state_true_c )
+
     // error see http://ssd.jpl.nasa.gov/?planet_pos
-    state_actual_c.position.norm should be(state_true_c.position.norm plusOrMinus 15E6) // R
-    state_actual_s.rightAscension should be(state_true_s.rightAscension plusOrMinus ArcSecond.convert(40)) // RA
-    state_actual_s.declination should be(state_true_s.declination plusOrMinus ArcSecond.convert(15)) // DEC
+    state_actual_c.position.norm should be(state_true_c.position.norm +- 15E6) // R
+    state_actual_s.rightAscension should be(state_true_s.rightAscension +- arcSecond(40)) // RA
+    state_actual_s.declination should be(state_true_s.declination +- arcSecond(15)) // DEC
   }
 
   it should "define the correct heliocentric kepler orbit at the 2452000jd epoch" in {
@@ -61,16 +68,16 @@ class TestEarthConstants extends FlatSpec with ShouldMatchers {
     val state_actual_s = Spherical(state_actual_c)
 
     val state_true_c = new PosVel(
-      new ImmutableVector3D(-9.813457035727633E-01, -1.876731681458192E-01, 1.832964606032273E-06) * AU.getScaleFactor,
-      new ImmutableVector3D(2.958686601622319E-03, -1.696218721190317E-02, -5.609085586954323E-07) * (AU.getScaleFactor / day.getScaleFactor),
+      new Vec3(-9.813457035727633E-01, -1.876731681458192E-01, 1.832964606032273E-06) * AU,
+      new Vec3(2.958686601622319E-03, -1.696218721190317E-02, -5.609085586954323E-07) * (AU / julianDay),
       state_actual_k.frame
     )
     val state_true_s = Spherical(state_true_c)
 
     // error see http://ssd.jpl.nasa.gov/?planet_pos
-    state_actual_c.position.norm should be(state_true_c.position.norm plusOrMinus 15E6) // R
+    state_actual_c.position.norm should be(state_true_c.position.norm +- 15E6) // R
     // TODO; why arcminute accuracy here ?
-    state_actual_s.rightAscension should be(state_true_s.rightAscension plusOrMinus ArcMinute.convert(40)) // RA
-    state_actual_s.declination should be(state_true_s.declination plusOrMinus ArcSecond.convert(15)) // DEC
+    state_actual_s.rightAscension should be(state_true_s.rightAscension +- arcMinute(40)) // RA
+    state_actual_s.declination should be(state_true_s.declination +- arcSecond(15)) // DEC
   }
 }

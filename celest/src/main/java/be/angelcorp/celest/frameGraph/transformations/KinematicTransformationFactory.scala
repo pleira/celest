@@ -18,9 +18,9 @@ package be.angelcorp.celest.frameGraph.transformations
 import be.angelcorp.celest.frameGraph.BasicReferenceFrameTransformFactory
 import be.angelcorp.celest.frameGraph.ReferenceFrameTransform
 import be.angelcorp.celest.frameGraph.ReferenceSystem
+import be.angelcorp.celest.math.geometry.Vec3
+import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.math.rotation.IRotation
 
 /**
  * Abstract factory that can produce transforms, once the [[be.angelcorp.celest.frameGraph.ReferenceFrameTransformFactory# c a l c u l a t e P a r a m e t e r s ( b e.a n g e l c o r p.c e l e s t.t i m e.E p o c h )]] is implemented.
@@ -83,18 +83,18 @@ class ReferenceFrameTransformInverseFactory[F0 <: ReferenceSystem, F1 <: Referen
     // r* - R dr = R r
     // iR r* - dr = r
     // iR (r* - R dr) = r
-    val inverse_translation = param.rotation.applyTo(param.translation).negate
+    val inverse_translation = -param.rotation.applyTo(param.translation)
     val inverse_orientation = param.rotation.inverse()
 
     // v* = R [ (v + dv) + w x (r + dr) ]
     // iR v* = (v + dv) + w x (r + dr)
     // iR v* - dv - w x (r + dr) = v
     // iR [ (v* - R dV) - R w x (r + dr) ] = v
-    val inverse_velocity = param.rotation.applyTo(param.velocity).negate
-    val inverse_orientationRate = param.rotation.applyInverseTo(param.rotationRate.negate)
+    val inverse_velocity = -param.rotation.applyTo(param.velocity)
+    val inverse_orientationRate = param.rotation.applyInverseTo(-param.rotationRate)
 
-    val inverse_accelleration = param.rotation.applyTo(param.acceleration).negate
-    val inverse_orientationAcelleration = param.rotation.applyInverseTo(param.rotationAcceleration.negate)
+    val inverse_accelleration = -param.rotation.applyTo(param.acceleration)
+    val inverse_orientationAcelleration = param.rotation.applyInverseTo(-param.rotationAcceleration)
 
     // Wrap the inverted parameters in a TransformationParameters
     val inverted_param = new TransformationParameters(epoch,
@@ -132,9 +132,9 @@ class ReferenceFrameTransformInverseFactory[F0 <: ReferenceSystem, F1 <: Referen
  * @author Simon Billemont
  */
 case class TransformationParameters(epoch: Epoch,
-                                    translation: Vector3D,
-                                    velocity: Vector3D,
-                                    acceleration: Vector3D,
-                                    rotation: IRotation,
-                                    rotationRate: Vector3D,
-                                    rotationAcceleration: Vector3D)
+                                    translation: Vec3,
+                                    velocity: Vec3,
+                                    acceleration: Vec3,
+                                    rotation: Rotation,
+                                    rotationRate: Vec3,
+                                    rotationAcceleration: Vec3)

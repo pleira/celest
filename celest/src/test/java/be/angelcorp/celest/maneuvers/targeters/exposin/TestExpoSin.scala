@@ -17,12 +17,12 @@ package be.angelcorp.celest.maneuvers.targeters.exposin
 
 import be.angelcorp.celest.constants.Constants
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.Epochs
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.libs.math.linear.{ImmutableVector3D, Vector3D}
-import be.angelcorp.libs.util.physics.Time
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.math._
@@ -48,21 +48,21 @@ class TestExpoSin extends FlatSpec with Matchers with CelestTest {
     val r2 = 206953872.627E3
     val dTheta = 1.9532 + 0 * (2 * Pi)
     val k2 = 0.7013
-    val dt = Time.convert(130, Time.day)
+    val dt = days(130)
 
     val t1 = Epochs.J2000(universe)
     val t2 = Epochs.J2000(universe).addS(dt)
 
-    val s1 = new PosVel[BodyCenteredSystem]( Vector3D(r1, 0, 0), Vector3D.ZERO, null)
-    val s2 = new PosVel[BodyCenteredSystem]( Vector3D(dTheta, 0).multiply(r2), Vector3D.ZERO, null)
+    val s1 = new PosVel[BodyCenteredSystem]( Vec3(r1, 0, 0), Vec3.zero, null)
+    val s2 = new PosVel[BodyCenteredSystem]( Vec3.spherical(dTheta, 0) * r2, Vec3.zero, null)
 
     val frame = BodyCenteredSystem(Constants.mass2mu(1.9891E30))
     val exposin = new ExpoSin(s1, s2, t1, t2, frame)
     exposin.assumeK2 = k2
 
     // Results as computed by the Matlab routine:
-    val ml_V1 = new ImmutableVector3D(-2.951216831366131e+002, +3.310652568212942e+004, 0)
-    val ml_V2 = new ImmutableVector3D(-2.572543389259841e+004, -2.886383731363452e+003, 0)
+    val ml_V1 = Vec3(-2.951216831366131e+002, +3.310652568212942e+004, 0)
+    val ml_V2 = Vec3(-2.572543389259841e+004, -2.886383731363452e+003, 0)
     val ml_k0 = 2.272595936284008e+011
     val ml_k1 = -4.065864323385938e-001
     val ml_k2 = 7.013000000000000e-001
@@ -101,10 +101,10 @@ class TestExpoSin extends FlatSpec with Matchers with CelestTest {
 
   it should "generate the correct trajectory for n=3" in {
     val k2 = 1.0 / 12.0
-    val dt = Time.convert(1E-3, Time.day)
+    val dt = days(1E-3)
     val N = 3
-    val r1 = new PosVel[BodyCenteredSystem](new ImmutableVector3D(2, 0, 0), Vector3D.ZERO, null)
-    val r2 = new PosVel[BodyCenteredSystem](new ImmutableVector3D(0.2, -1, 0), Vector3D.ZERO, null)
+    val r1 = new PosVel[BodyCenteredSystem](Vec3(2, 0, 0), Vec3.zero, null)
+    val r2 = new PosVel[BodyCenteredSystem](Vec3(0.2, -1, 0), Vec3.zero, null)
 
     val t1 = Epochs.J2000(universe)
     val t2 = Epochs.J2000(universe).addS(dt)
@@ -115,8 +115,8 @@ class TestExpoSin extends FlatSpec with Matchers with CelestTest {
     exposin.assumeK2 = k2
 
     // Results as computed by the Matlab routine:
-    val ml_V1 = new ImmutableVector3D(+4.279665287258510e+001, +5.461017978436156e+001, 0)
-    val ml_V2 = new ImmutableVector3D(-8.557155856649688e+001, -4.647847748181721e+001, 0)
+    val ml_V1 = Vec3(+4.279665287258510e+001, +5.461017978436156e+001, 0)
+    val ml_V2 = Vec3(-8.557155856649688e+001, -4.647847748181721e+001, 0)
     val ml_k0 = 2.494219696832175e-004
     val ml_k1 = 1.300955416481242e+001
     val ml_k2 = 8.333333333333333e-002

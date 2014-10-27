@@ -44,8 +44,9 @@ class SofaTimeStandard extends FlatSpec with ShouldMatchers {
 
   println(new File(".").getAbsolutePath)
 
-  val referenceData: List[(TimeStandard, Double, Double, TimeStandard, Double, Double)] =
-    Source.fromFile(new File("celest/src/test/resources/time/timestandards.csv")).getLines().filterNot(_.startsWith("#")).map(s => {
+  val referenceData: List[(TimeStandard, Double, Double, TimeStandard, Double, Double)] = {
+    val reference = getClass.getClassLoader.getResourceAsStream("time/timestandards.csv")
+    Source.fromInputStream(reference).getLines().filterNot(_.startsWith("#")).map(s => {
       val entries = s.split(",")
       (
         toTimeStandard(entries(0)), entries(1).toDouble, entries(2).toDouble,
@@ -53,6 +54,7 @@ class SofaTimeStandard extends FlatSpec with ShouldMatchers {
 
         )
     }).toList
+  }
 
   referenceData.foreach {
     entry => {

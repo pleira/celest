@@ -15,8 +15,9 @@
  */
 package be.angelcorp.celest.state
 
+import be.angelcorp.celest.math.geometry.Vec3
+
 import math._
-import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 /**
@@ -76,11 +77,11 @@ class Spherical[F <: ReferenceSystem]
     val cosG = cos(γ)
     val sinG = sin(γ)
 
-    val R = Vector3D(
+    val R = Vec3(
       r * cosD * cosAl,
       r * cosD * sinAl,
       r * sinD)
-    val V = Vector3D(
+    val V = Vec3(
       v * (cosAl * (-cosA * cosG * sinD + sinG * cosD) - sinA * cosG * sinAl),
       v * (sinAl * (-cosA * cosG * sinD + sinG * cosD) + sinA * cosG * cosAl),
       v * (cosA * cosG * cosD + sinG * cosD))
@@ -116,7 +117,7 @@ object Spherical {
 
     val r = R.norm
     val v = V.norm
-    val α = R.azimuth
+    val α = atan2(R.y, R.x)
     val δ = atan2(R.z, sqrt(pow(R.x, 2) + pow(R.y, 2)))
     val γ = Pi / 2.0 - R.angle(V) // TODO: Quadrant corrections ?
     val ψ = atan2(r * (R.x * V.y - R.y * V.x), R.y * (R.y * V.z - R.z * V.y) - R.x * (R.z * V.x - R.x * V.z))

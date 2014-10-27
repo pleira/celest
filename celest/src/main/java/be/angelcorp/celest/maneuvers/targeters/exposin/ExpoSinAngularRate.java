@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin;
 
-import be.angelcorp.libs.math.functions.ExponentialSinusoid;
+import be.angelcorp.celest.math.functions.ExponentialSinusoid;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 
 import static org.apache.commons.math3.util.FastMath.*;

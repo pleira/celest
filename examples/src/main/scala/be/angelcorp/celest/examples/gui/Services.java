@@ -15,10 +15,6 @@
  */
 package be.angelcorp.celest.examples.gui;
 
-import be.angelcorp.libs.math.plot.IPlot2;
-import be.angelcorp.libs.util.exceptions.GenericRuntimeException;
-import be.angelcorp.libs.util.gui.config.Config;
-import com.google.inject.Injector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,31 +24,18 @@ public abstract class Services {
 
     private static final Logger logger = LoggerFactory.getLogger(Services.class);
 
-    private static Settings getSettings() {
-        Injector injector = Config.getInjector();
-        Settings settings = injector.getInstance(Settings.class);
-        return settings;
-    }
-
     public static File newFile(String relativePath) {
-        String output = getSettings().outputDir;
+        String output = new File(".").getAbsolutePath();
         File outputDir = new File(output);
         if (!outputDir.exists()) {
             logger.info("Creating non existent output directory: {}", outputDir);
             boolean success = outputDir.mkdirs();
             if (!success)
-                throw new GenericRuntimeException("Could not create output directory: %s", outputDir);
+                throw new RuntimeException("Could not create output directory: " + outputDir);
         }
         File f = new File(output, relativePath);
         logger.debug("Created new output file reference: {}", f);
         return f;
     }
 
-    public static IPlot2 newPlot() {
-        Injector injector = Config.getInjector();
-        logger.debug("Creating new plot");
-        IPlot2 plot = injector.getInstance(IPlot2.class);
-        logger.debug("Created plot: {}", plot);
-        return plot;
-    }
 }

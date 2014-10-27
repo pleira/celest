@@ -20,5 +20,5 @@ val earthEphem: IndexedSeq[(Epoch, PosVel[ICRS])] =
 //println( earthEphem )
 
 // You can also compute the Lunar librations angles, and the Earth nutation angles:
-val (l, dl)        = ephemeris.interpolateLibration( start )
-val (ψ, ε, dψ, dε) = ephemeris.interpolateNutation( start )
+val (l, dl) = ephemeris.interpolateLibration( start )
+val (psi, epsilon, dpsi, depsilon) = ephemeris.interpolateNutation( start )

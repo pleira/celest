@@ -16,8 +16,7 @@
 package be.angelcorp.celest.maneuvers.targeters.exposin;
 
 import be.angelcorp.celest.maneuvers.targeters.TPBVP;
-import be.angelcorp.libs.math.functions.ExponentialSinusoid;
-import be.angelcorp.libs.math.functions.domain.Domain;
+import be.angelcorp.celest.math.functions.ExponentialSinusoid;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.integration.RombergIntegrator;
 import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
@@ -210,6 +209,15 @@ public class ExpoSinSolutionSet implements UnivariateFunction {
         double timeOfFlight = integrator.integrate(4096, tof, 0, theta);
 
         return timeOfFlight;
+    }
+
+    class Domain {
+        public final double lowerBound;
+        public final double upperBound;
+        public Domain( double lowerBound, double upperBound ) {
+            this.lowerBound = lowerBound;
+            this.upperBound = upperBound;
+        }
     }
 
 }

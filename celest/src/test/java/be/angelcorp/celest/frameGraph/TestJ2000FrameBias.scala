@@ -17,12 +17,12 @@
 package be.angelcorp.celest.frameGraph
 
 import be.angelcorp.celest.frameGraph.frames.transforms.J2000FrameBias
+import be.angelcorp.celest.math.geometry.Mat3
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.libs.math.linear.Matrix3D
-import be.angelcorp.libs.util.physics.Angle._
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
@@ -46,7 +46,7 @@ class TestJ2000FrameBias extends FlatSpec with Matchers with CelestTest {
   "J2000FrameBias" should "conform to the sofa library" in {
     val epoch = new JulianDate(2013,  4, 27, 12, 33, 18.1938271, TT)
 
-    val sofaRotation = Matrix3D(
+    val sofaRotation = Mat3(
       0.9999999999999942, -7.078279744199198E-8, 8.056217146976134E-8,
       7.078279477857338E-8, 0.9999999999999969, 3.306041454222136E-8,
       -8.056217380986972E-8, -3.306040883980552E-8, 0.9999999999999962
@@ -55,8 +55,7 @@ class TestJ2000FrameBias extends FlatSpec with Matchers with CelestTest {
     val j2000bias = new J2000FrameBias(null, null)
     val transform = j2000bias.transform(epoch)
 
-    val error = matrixError(transform.M, sofaRotation)
-    error should be(0.0 plusOrMinus ArcSecond.convert(1E-6))
+    transform.M should be rotation (sofaRotation +- arcSecond(1E-6))
   }
 
 

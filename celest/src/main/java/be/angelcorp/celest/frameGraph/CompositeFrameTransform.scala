@@ -15,10 +15,10 @@
  */
 package be.angelcorp.celest.frameGraph
 
+import be.angelcorp.celest.math.geometry.Vec3
+import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.state.Orbit
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.math.rotation.IRotation
 
 /**
  * An {@link ReferenceFrameTransform} that sequentially applies two other {@link ReferenceFrameTransform}'s:
@@ -49,24 +49,24 @@ class CompositeFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, F2 <
     transform1.transform(positionState_f1)
   }
 
-  override def transformOrientation(orientation: IRotation): IRotation = {
+  override def transformOrientation(orientation: Rotation): Rotation = {
     val orientation_f1 = transform0.transformOrientation(orientation)
     transform1.transformOrientation(orientation_f1)
   }
 
-  override def transformPos(position: Vector3D): Vector3D = {
+  override def transformPos(position: Vec3): Vec3 = {
     val position_f1 = transform0.transformPos(position)
     transform1.transformPos(position_f1)
   }
 
-  override def transformPosVel(position: Vector3D, velocity: Vector3D): (Vector3D, Vector3D) = {
+  override def transformPosVel(position: Vec3, velocity: Vec3): (Vec3, Vec3) = {
     val pv_f1 = transform0.transformPosVel(position, velocity)
     val position_f1 = pv_f1._1
     val velocity_f1 = pv_f1._2
     transform1.transformPosVel(position_f1, velocity_f1)
   }
 
-  override def transformPosVelAcc(position: Vector3D, velocity: Vector3D, acceleration: Vector3D): (Vector3D, Vector3D, Vector3D) = {
+  override def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3) = {
     val pva_f1 = transform0.transformPosVelAcc(position, velocity, acceleration)
     val position_f1 = pva_f1._1
     val velocity_f1 = pva_f1._2
@@ -74,7 +74,7 @@ class CompositeFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, F2 <
     transform1.transformPosVelAcc(position_f1, velocity_f1, acceleration_f1)
   }
 
-  override def transformVector(vector: Vector3D): Vector3D = {
+  override def transformVector(vector: Vec3): Vec3 = {
     val vector0 = transform0.transformVector( vector )
     transform1.transformVector( vector0 )
   }

@@ -18,7 +18,6 @@ package be.angelcorp.celest.state
 import scala.math._
 import be.angelcorp.celest.kepler
 import be.angelcorp.celest.kepler._
-import be.angelcorp.libs.math.MathUtils2._
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 sealed abstract class FastAngle
@@ -189,13 +188,13 @@ object Keplerian {
       val a = s.r / (2 - rv2m)
       val e = sqrt(1 - rv2m * (2 - rv2m) * pow(cos(s.γ), 2))
       val E = atan2(sqrt(a / μ) * s.r * s.v * sin(s.γ), a - s.r)
-      val trueA = quadrantFix(2 * atan(sqrt((1 + e) / (1 - e)) * tan(E / 2)), E)
+      val trueA = be.angelcorp.celest.math.quadrantFix(2 * atan(sqrt((1 + e) / (1 - e)) * tan(E / 2)), E)
       val i = acos(cos(s.δ) * sin(s.ψ))
       val ω = atan2(sin(s.δ) / sin(i), cos(s.δ) * cos(s.ψ) / sin(i)) - trueA
       val Ω = s.α - atan2(tan(s.δ) / tan(i), cos(s.ψ) / sin(i))
 
       Keplerian(a, e, i, ω, Ω, TrueAnomaly(trueA), s.frame)
-    case orbit =>
+    case _ =>
       val k = kepler.cartesian2kepler(orbit.toPosVel, orbit.frame.centerBody.μ)
       new Keplerian(k._1, k._2, k._3, k._4, k._5, kepler.meanAnomalyFromTrue(k._6, k._2), orbit.frame)
   }

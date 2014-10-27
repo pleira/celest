@@ -17,7 +17,7 @@
 package be.angelcorp.celest.frameGraph.frames.transforms
 
 import math._
-import be.angelcorp.libs.math.MathUtils2._
+import be.angelcorp.celest.math._
 import be.angelcorp.celest.physics.Units._
 
 /**

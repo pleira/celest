@@ -17,10 +17,9 @@ package be.angelcorp.celest.eom.forcesmodel;
 
 import be.angelcorp.celest.body.CelestialBody;
 import be.angelcorp.celest.constants.Constants;
+import be.angelcorp.celest.math.geometry.Vec3;
 import be.angelcorp.celest.physics.EM.IEMspectrum;
-import be.angelcorp.celest.physics.quantities.ObjectForce;
 import be.angelcorp.celest.state.Orbit;
-import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
  * Force created by a stars radiation pressure on a satellite. Internally uses cartesian form.
@@ -81,8 +80,8 @@ public class SolarRadiationPressure {
      * @param satellite      Satellite the force acts upon.
      * @param satelliteOrbit Orbit of the satellite on which the force acts?
      */
-    public Vector3D getForce(Orbit starOrbit, CelestialBody satellite, Orbit satelliteOrbit) {
-        return toAcceleration(starOrbit, satellite, satelliteOrbit).multiply(satellite.mass());
+    public Vec3 getForce(Orbit starOrbit, CelestialBody satellite, Orbit satelliteOrbit) {
+        return toAcceleration(starOrbit, satellite, satelliteOrbit).$times(satellite.mass());
     }
 
     /**
@@ -118,9 +117,9 @@ public class SolarRadiationPressure {
      * @param satellite      Satellite the force acts upon.
      * @param satelliteOrbit Orbit of the satellite on which the force acts?
      */
-    public Vector3D toAcceleration(Orbit starOrbit, CelestialBody satellite, Orbit satelliteOrbit) {
+    public Vec3 toAcceleration(Orbit starOrbit, CelestialBody satellite, Orbit satelliteOrbit) {
         // Relative position vector of spacecraft w.r.t. Sun (from the sun to s/c)
-        Vector3D d = satelliteOrbit.toPosVel().position().$minus(starOrbit.toPosVel().position());
+        Vec3 d = satelliteOrbit.toPosVel().position().$minus(starOrbit.toPosVel().position());
 
         double dnorm = d.norm();
         double dcube = dnorm * dnorm * dnorm;
@@ -129,7 +128,7 @@ public class SolarRadiationPressure {
 
         double factor = CR * (area / satellite.mass()) * Ls / (4 * Math.PI * Constants.SPEED_LIGHT() * dcube);
 
-        return d.multiply(factor);
+        return d.$times(factor);
     }
 
 }

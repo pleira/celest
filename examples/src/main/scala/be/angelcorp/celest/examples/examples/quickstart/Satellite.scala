@@ -44,7 +44,7 @@ class MySatellite[F <: BodyCenteredSystem]
   def kickLAE(ΔV: Double) = {
     val HLAE = getHydrazineLAE.consumeDV(this, ΔV)
     val currentState = s.toPosVel
-    val newState = new PosVel(currentState.position, currentState.velocity + s.toPosVel.velocity.normalize * ΔV, currentState.frame)
+    val newState = new PosVel(currentState.position, currentState.velocity + (s.toPosVel.velocity.normalized * ΔV), currentState.frame)
     new MySatellite(e, newState, HLAE.primairy, HLAE.secondairy, xenon)
   }
 

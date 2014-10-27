@@ -1,5 +1,6 @@
 package be.angelcorp.celest.ephemeris.jplEphemeris
 
+import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.time.{TimeRange, Epoch}
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.universe.Universe
@@ -8,7 +9,6 @@ import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 import be.angelcorp.celest.body.Body
 import be.angelcorp.celest.physics.Units
 import be.angelcorp.celest.frameGraph.ReferenceSystem
-import be.angelcorp.libs.math.linear.Vector3D
 
 trait JplEphemeris[F <: ReferenceSystem] {
 
@@ -36,7 +36,7 @@ trait JplEphemeris[F <: ReferenceSystem] {
    */
   def interpolateLibration(epoch: Epoch) = {
     val (l, lDot) = interpolate(epoch, 12)
-    (Vector3D(l), Vector3D(lDot))
+    (Vec3(l), Vec3(lDot))
   }
 
   /**
@@ -86,7 +86,7 @@ trait JplEphemeris[F <: ReferenceSystem] {
       PosVel(0, 0, 0, 0, 0, 0, frame)
     } else {
       val (p, v) = interpolate(epoch, body) // Results in [km] and [km/s]
-      new PosVel(Vector3D(p) * 1000.0, Vector3D(v) * 1000.0, frame)
+      new PosVel(Vec3(p) * 1000.0, Vec3(v) * 1000.0, frame)
     }
 
   /**

@@ -16,14 +16,16 @@
 
 package be.angelcorp.celest.frameGraph.frames
 
-import math._
-import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
-import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.celest.math.geometry.{Vec3, Mat3}
+import be.angelcorp.celest.math.rotation.Rotation
+import be.angelcorp.celest.math.rotation.RotationMatrix._
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.frameGraph._
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph.transformations.{TransformationParameters, KinematicTransformationFactory}
+
+import scala.math._
 
 /**
  * Defines transfromations over the following reference frameGraph;
@@ -65,14 +67,14 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
    * @param phi Thrid Z rotation [rad]
    * @return Rotation matrix.
    */
-  def transform(omega: Double, theta: Double, phi: Double) = RotationMatrix.rotateZXZ(omega, theta, phi)
+  def transform(omega: Double, theta: Double, phi: Double) = Mat3.rotateZXZ(omega, theta, phi)
 
-  def transformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem](trans: Epoch => IRotation, from: F0, to: F1) =
+  def transformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem](trans: Epoch => Rotation, from: F0, to: F1) =
     new KinematicTransformationFactory[ReferenceSystem, ReferenceSystem] {
       def calculateParameters(date: Epoch): TransformationParameters = {
         new TransformationParameters(date,
-          Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO,
-          trans(date), Vector3D.ZERO, Vector3D.ZERO
+          Vec3.zero, Vec3.zero, Vec3.zero,
+          trans(date), Vec3.zero, Vec3.zero
         )
       }
 
@@ -278,9 +280,7 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
     val εD = obliquityTrue(date)
     val ε0D = obliquityMean(date)
     // See N(GEI_D, GEI_T), equation 7 of [1]
-    RotationMatrix(
-      RotationMatrix.rotateX(-εD) !* RotationMatrix.rotateZ(-longitudinalNutation(date)) !* RotationMatrix.rotateX(ε0D)
-    )
+    Mat3.rotateX(-εD) dot Mat3.rotateZ(-longitudinalNutation(date)) dot Mat3.rotateX(ε0D)
   }, null, null)
 
   /**

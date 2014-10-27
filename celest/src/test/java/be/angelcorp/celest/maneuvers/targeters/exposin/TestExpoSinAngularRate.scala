@@ -15,9 +15,9 @@
  */
 package be.angelcorp.celest.maneuvers.targeters.exposin
 
+import be.angelcorp.celest.math.functions.ExponentialSinusoid
+import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.unit.CelestTest
-import be.angelcorp.libs.math.functions.ExponentialSinusoid
-import be.angelcorp.libs.math.linear.Vector3D
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
@@ -67,8 +67,8 @@ class TestExpoSinAngularRate extends FlatSpec with Matchers with CelestTest {
     val phi = 2.5
     val dTheta = 5
     val mu = 1
-    val r1 = Vector3D(1.412862648939526, 0.0, 0.0)
-    val r2 = Vector3D(0.468315202078896, -1.58314656828111, 0.0)
+    val r1 = Vec3(1.412862648939526, 0.0, 0.0)
+    val r2 = Vec3(0.468315202078896, -1.58314656828111, 0.0)
 
     val angularRate = new ExpoSinAngularRate(new ExponentialSinusoid(k0, k1, k2, q0, phi), mu)
 

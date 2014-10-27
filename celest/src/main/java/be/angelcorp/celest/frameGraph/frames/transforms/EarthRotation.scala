@@ -16,16 +16,17 @@
 
 package be.angelcorp.celest.frameGraph.frames.transforms
 
-import math._
+import be.angelcorp.celest.math.geometry.{Vec3, Mat3}
+import be.angelcorp.celest.math.rotation.RotationMatrix._
 import be.angelcorp.celest.frameGraph._
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
-import be.angelcorp.libs.math.rotation.RotationMatrix
-import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.frameGraph.transformations.{TransformationParameters, KinematicTransformationFactory}
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
 import be.angelcorp.celest.data.eop.ExcessLengthOfDay
+
+import scala.math._
 
 /**
  * Generic earth rotation equations
@@ -118,7 +119,7 @@ class EarthRotationGAST[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
     val ω = 7.292115146706979E-5 * (1 - lodProvider.lod(epoch) / 86400.0)
 
     // Rotation matrix,                             Angular velocity [rad]
-    (RotationMatrix.rotateZ(-θ_GAST2000(epoch)), Vector3D(0, 0, ω))
+    (Mat3.rotateZ(-θ_GAST2000(epoch)), Vec3(0, 0, ω))
   }
 
   /**
@@ -164,7 +165,7 @@ class EarthRotationGAST[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
 
   def calculateParameters(epoch: Epoch) = {
     val (r, ω) = rotationAngle(epoch)
-    new TransformationParameters(epoch, Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO, r, ω, Vector3D.ZERO)
+    new TransformationParameters(epoch, Vec3.zero, Vec3.zero, Vec3.zero, r, ω, Vec3.zero)
   }
 
 }

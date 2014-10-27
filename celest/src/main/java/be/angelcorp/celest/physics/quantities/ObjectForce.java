@@ -16,8 +16,8 @@
 package be.angelcorp.celest.physics.quantities;
 
 import be.angelcorp.celest.body.CelestialBody;
-import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3D$;
+import be.angelcorp.celest.math.geometry.Vec3;
+import be.angelcorp.celest.math.geometry.Vec3$;
 
 /**
  * A generic force that is linked to a specific body. It contains a force on the object and an offset to
@@ -34,7 +34,7 @@ public class ObjectForce extends Force {
     /**
      * Offset with respect to its center of gravity
      */
-    private Vector3D offset;
+    private Vec3 offset;
 
     /**
      * Create a new force on a specific object F: <0,0,0> and R: <0,0,0>
@@ -42,7 +42,7 @@ public class ObjectForce extends Force {
      * @param object Object where the force acts on
      */
     public ObjectForce(CelestialBody object) {
-        this(object, Vector3D$.MODULE$.ZERO());
+        this(object, Vec3$.MODULE$.zero());
     }
 
     /**
@@ -51,7 +51,7 @@ public class ObjectForce extends Force {
      * @param object Object where the force acts on
      * @param force  Force vector
      */
-    public ObjectForce(CelestialBody object, Vector3D force) {
+    public ObjectForce(CelestialBody object, Vec3 force) {
         setObject(object);
         setForce(force);
     }
@@ -61,7 +61,7 @@ public class ObjectForce extends Force {
      */
     @Override
     public ObjectForce clone() {
-        return new ObjectForce(getObject(), getForce().clone());
+        return new ObjectForce(getObject(), Vec3$.MODULE$.apply(getForce()));
     }
 
     /**
@@ -75,7 +75,7 @@ public class ObjectForce extends Force {
      * @see ObjectForce#offset
      */
     @Override
-    public Vector3D getOffset() {
+    public Vec3 getOffset() {
         return offset;
     }
 
@@ -89,7 +89,7 @@ public class ObjectForce extends Force {
     /**
      * @see ObjectForce#offset
      */
-    public void setOffset(Vector3D offset) {
+    public void setOffset(Vec3 offset) {
         this.offset = offset;
     }
 
@@ -98,9 +98,9 @@ public class ObjectForce extends Force {
      *
      * @return Acceleration vector a = F/m
      */
-    public Vector3D toAcceleration() {
+    public Vec3 toAcceleration() {
         // F = m a
         // a = F/m
-        return getForce().divide(getObject().mass());
+        return getForce().$div(getObject().mass());
     }
 }

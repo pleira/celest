@@ -10,7 +10,6 @@ object BuildSettings {
     version := "1.0.0-SNAPSHOT",
     scalacOptions ++= Seq(),
     scalaVersion := "2.11.2",
-    crossScalaVersions := Seq("2.11.0", "2.11.1", "2.11.2"),
 
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
@@ -18,6 +17,7 @@ object BuildSettings {
     resolvers += "Angelcorp Repository" at "http://repository.angelcorp.be",
 
     libraryDependencies ++= List(scalaLogging, logbackClassic, scalaTest),
+    testOptions in Test += Tests.Argument("-oF"), // show full stack traces for scalatest
 
     publishMavenStyle := true,
     publishArtifact in Test := false,
@@ -31,8 +31,8 @@ object BuildSettings {
   )
   val forkedRun = Seq(
     // Do not run in the same JVM (native libraries can only be loaded once in sbt, running again requires a restart of sbt)
-    fork in run := true,
-    javaOptions in run ++= List("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005")
+    javaOptions ++= List("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"),
+    fork := true
   )
 
 }
@@ -53,7 +53,7 @@ object MyBuild extends Build {
     settings = buildSettings ++ forkedRun ++ Seq(
       unmanagedSourceDirectories in Compile += baseDirectory.value / "src/main/interfaces",
       // Add dependencies
-      libraryDependencies ++= Seq( angelcorpMath, jgrapht, scalaGuice, scalaParser ),
+      libraryDependencies ++= Seq( commonsMath, jgrapht, scalaGuice, scalaParser ),
       libraryDependencies ++= indexerAll,
       libraryDependencies ++= aetherAll
     ) /* ++ assemblySettings */
@@ -80,7 +80,7 @@ object MyBuild extends Build {
     "console",
     file("console"),
     settings = buildSettings ++ forkedRun ++ Seq(
-      libraryDependencies ++= Seq( )
+      libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value
     ) ++ assemblySettings
   ) dependsOn celest_core
 
@@ -88,16 +88,17 @@ object MyBuild extends Build {
     "examples",
     file("examples"),
     settings = buildSettings ++ forkedRun ++ Seq(
-      libraryDependencies ++= Seq( miglayout, reflections, servletApi )
+      libraryDependencies ++= Seq( miglayout, reflections, servletApi ),
+      libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value
     )
   ) dependsOn celest_core
 
-//  lazy val celest_simulation: Project = Project(
-//    "simulation",
-//    file("simulation"),
-//    settings = buildSettings ++ forkedRun ++ Seq(
-//      libraryDependencies ++= Seq( )
-//    )
-//  ) dependsOn celest_core
+  lazy val celest_simulation: Project = Project(
+    "simulation",
+    file("simulation"),
+    settings = buildSettings ++ forkedRun ++ Seq(
+      libraryDependencies ++= Seq( )
+    )
+  ) dependsOn celest_core
 
 }

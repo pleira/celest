@@ -21,11 +21,11 @@ import be.angelcorp.celest.constants.EarthConstants
 import be.angelcorp.celest.examples.gui.{CelestExample, Services}
 import be.angelcorp.celest.frameGraph.frames.GCRS
 import be.angelcorp.celest.kepler._
+import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.time.Epochs
 import be.angelcorp.celest.trajectory.{CompositeTrajectory, KeplerTrajectory}
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.libs.math.linear.Vector3D
 import org.slf4j.LoggerFactory
 
 import scala.math._
@@ -74,14 +74,12 @@ class QuickStart {
       val state = entry._1
       val index = entry._2
 
-      val n = Vector3D.K
+      val n = Vec3.z
       val r = state.position
       val projected = r - (n * (r dot n))
       x(index) = projected.x
       y(index) = projected.y
     })
-
-    Services.newPlot().addData(x, y).makeFrame()
   } catch {
     case e: Throwable => logger.error("Unexpected exception when trying to solve the quickstart example: ", e)
   }

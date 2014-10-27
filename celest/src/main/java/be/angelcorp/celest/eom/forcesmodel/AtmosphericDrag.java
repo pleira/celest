@@ -16,9 +16,9 @@
 package be.angelcorp.celest.eom.forcesmodel;
 
 import be.angelcorp.celest.body.CelestialBody;
+import be.angelcorp.celest.math.geometry.Vec3;
 import be.angelcorp.celest.physics.atmosphere.IAtmosphere;
 import be.angelcorp.celest.state.Orbit;
-import be.angelcorp.libs.math.linear.Vector3D;
 
 /**
  * The AtmosphericDrag class computes the acceleration due to drag on a satellite using atmospheric model
@@ -98,8 +98,8 @@ abstract public class AtmosphericDrag {
      * @param body      The body traveling through the atmosphere.
      * @param bodyOrbit State of the body traveling through the atmosphere.
      */
-    public Vector3D getForce(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
-        return toAcceleration(planet, body, bodyOrbit).multiply(body.mass());
+    public Vec3 getForce(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
+        return toAcceleration(planet, body, bodyOrbit).$times(body.mass());
     }
 
     /**
@@ -128,18 +128,18 @@ abstract public class AtmosphericDrag {
      * @param body      The body traveling through the atmosphere.
      * @param bodyOrbit State of the body traveling through the atmosphere.
      */
-    public Vector3D toAcceleration(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
-        Vector3D r = bodyOrbit.toPosVel().position().$minus(
+    public Vec3 toAcceleration(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
+        Vec3 r = bodyOrbit.toPosVel().position().$minus(
                 planet.toPosVel().position());
-        Vector3D v = bodyOrbit.toPosVel().velocity().$minus(
+        Vec3 v = bodyOrbit.toPosVel().velocity().$minus(
                 planet.toPosVel().velocity());
 
         // compute the atmospheric density
         double rho = atmosphere.computeDensity(r); // [kg/m^3]
 
         // compute the relative speed
-        Vector3D vAtm = atmosphere.computeV(r); // [m/s]
-        Vector3D vr = v.$minus(vAtm);
+        Vec3 vAtm = atmosphere.computeV(r); // [m/s]
+        Vec3 vr = v.$minus(vAtm);
         double vrmag = vr.norm();
 
         // form -1/2 (Cd*A/m) rho
@@ -148,7 +148,7 @@ abstract public class AtmosphericDrag {
         double coeff2 = coeff * vrmag;
 
         // compute the acceleration in inertial frame (m/s^2)
-        Vector3D drag = vr.multiply(coeff2);
+        Vec3 drag = vr.$times(coeff2);
         return drag;
     }
 

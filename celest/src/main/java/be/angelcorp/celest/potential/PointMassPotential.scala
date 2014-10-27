@@ -16,7 +16,7 @@
 package be.angelcorp.celest.potential
 
 import be.angelcorp.celest.body.Satellite
-import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.celest.math.geometry.Vec3
 import scala.math._
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 
@@ -31,7 +31,7 @@ import be.angelcorp.celest.frameGraph.ReferenceSystem
  */
 class PointMassPotential[F <: ReferenceSystem](val body: Satellite[F]) extends GravitationalPotential {
 
-  override def apply(point: Vector3D) =
-    point.negate * (body.μ / pow(point.norm, 3))
+  override def apply(point: Vec3) =
+    -point * (body.μ / pow(point.norm, 3))
 
 }

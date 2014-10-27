@@ -16,6 +16,8 @@
 package be.angelcorp.celest.eom.forcesmodel;
 
 import be.angelcorp.celest.body.CelestialBody;
+import be.angelcorp.celest.math.geometry.Vec3;
+import be.angelcorp.celest.math.geometry.Vec3$;
 import be.angelcorp.celest.physics.quantities.ObjectForce;
 import be.angelcorp.celest.physics.quantities.Torque;
 import be.angelcorp.celest.state.IStateEquation;
@@ -23,8 +25,6 @@ import be.angelcorp.celest.state.PosVel;
 import be.angelcorp.celest.state.positionState.CartesianDerivative;
 import be.angelcorp.celest.state.positionState.ICartesianDerivative;
 import be.angelcorp.celest.time.Epoch;
-import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3D$;
 import com.google.common.collect.Lists;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -81,10 +81,10 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
 
     @Override
     public ICartesianDerivative calculateDerivatives(Epoch t, PosVel y) {
-        Vector3D a = Vector3D$.MODULE$.ZERO();
+        Vec3 a = Vec3$.MODULE$.zero();
         for (ObjectForce f : getForcesList()) {
-            Vector3D dA = f.toAcceleration();
-            a = a.add(dA);
+            Vec3 dA = f.toAcceleration();
+            a = a.$plus(dA);
         }
         return new CartesianDerivative(y.velocity(), a);
     }

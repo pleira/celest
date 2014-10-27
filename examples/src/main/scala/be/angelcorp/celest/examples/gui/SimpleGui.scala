@@ -25,8 +25,6 @@ import net.miginfocom.swing.MigLayout
 
 import org.slf4j.LoggerFactory
 
-import be.angelcorp.libs.util.gui.config.confgGui.ConfigGui
-
 class SimpleGui(examples: Seq[Example]) extends JFrame {
   val logger = LoggerFactory.getLogger(classOf[SimpleGui])
 
@@ -65,9 +63,7 @@ class SimpleGui(examples: Seq[Example]) extends JFrame {
   val settings = new JButton("Settings")
   settings.addActionListener(new ActionListener() {
     override def actionPerformed(e: ActionEvent) {
-      val gui = new ConfigGui()
-      gui.setVisible(true)
-      gui.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+      // TODO
     }
   })
   add(settings, "")

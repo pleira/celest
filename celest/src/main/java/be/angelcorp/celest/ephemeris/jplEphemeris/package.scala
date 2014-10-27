@@ -433,13 +433,27 @@ package object jplEphemeris {
             }
           case 15 => // Libration
             val precession = ephemeris.interpolateLibration(epoch)
-            (precession._1 ++ precession._2).toList.apply(coord - 1)
+            coord match {
+              case 1 => precession._1.x
+              case 2 => precession._1.y
+              case 3 => precession._1.z
+              case 4 => precession._2.x
+              case 5 => precession._2.y
+              case _ => precession._2.z
+            }
           case target => // Planetairy state
             val bodyState = ephemeris.interpolateState(epoch, correctBody(target))
             val centerState = ephemeris.interpolateState(epoch, correctBody(cent))
             val resultPosition = (bodyState.position - centerState.position) / AU // in [AU]
-          val resultVelocity = (bodyState.velocity - centerState.velocity) * 86400.0 / AU // in [AY/day]
-            (resultPosition ++ resultVelocity).toList.apply(coord - 1)
+            val resultVelocity = (bodyState.velocity - centerState.velocity) * 86400.0 / AU // in [AY/day]
+            coord match {
+              case 1 => resultPosition.x
+              case 2 => resultPosition.y
+              case 3 => resultPosition.z
+              case 4 => resultVelocity.x
+              case 5 => resultVelocity.y
+              case _ => resultVelocity.z
+            }
         }
       } catch {
         case e: Throwable => Double.NaN

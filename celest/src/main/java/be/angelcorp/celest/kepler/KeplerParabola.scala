@@ -15,12 +15,11 @@
  */
 package be.angelcorp.celest.kepler
 
-;
+import org.apache.commons.math3.analysis.solvers.NewtonSolver
+import org.apache.commons.math3.analysis.{UnivariateFunction, DifferentiableUnivariateFunction}
 
 import math._
-import org.apache.commons.math3.analysis.{UnivariateFunction, DifferentiableUnivariateFunction}
-import org.apache.commons.math3.analysis.solvers.NewtonSolver
-import be.angelcorp.libs.math.MathUtils2
+import be.angelcorp.celest.math._
 import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
@@ -67,7 +66,7 @@ object KeplerParabola {
   }
 
   def anomalyFromTrue(trueA: Double) = {
-    val nu = MathUtils2.mod(trueA, 2 * Pi)
+    val nu = mod(trueA, 2 * Pi)
     if (nu > Pi)
       tan(nu - 2 * Pi)
     else

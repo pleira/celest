@@ -16,7 +16,7 @@
 package be.angelcorp.celest.potential
 
 import be.angelcorp.celest.body.Satellite
-import be.angelcorp.libs.math.linear.Vector3D
+import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 
 
@@ -34,11 +34,11 @@ class ThinShellPotential[F <: ReferenceSystem](body: Satellite[F], val radius: D
 
   val radiusSq = radius * radius
 
-  override def apply(point: Vector3D) =
+  override def apply(point: Vec3) =
     if (point.normSq < radiusSq)
     // Valid where R is outside the shell, R >= R2
     // U = Constants.GRAVITATIONAL_CONSTANT / r and is constant, so dU/dr = 0
-      Vector3D.ZERO
+      Vec3.zero
     else
     // Valid where R is inside the shell, R <= R1
     // U = GM/r = spherically symmetric

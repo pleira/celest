@@ -2,8 +2,8 @@ package be.angelcorp.celest.frameGraph.frames.transforms
 
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
+import be.angelcorp.celest.math.geometry.Mat3
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.rotation.RotationMatrix._
 import be.angelcorp.celest.data.eop.PoleProvider
 
 /**
@@ -25,7 +25,7 @@ class PolarMotion[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fromFrame: F
 
   def rotationMatrix(epoch: Epoch) = {
     val (x_p, y_p) = eop.polarCoordinatesOn(epoch)
-    rotateX(-y_p) !* rotateY(-x_p)
+    Mat3.rotateX(-y_p) dot Mat3.rotateY(-x_p)
   }
 
 }

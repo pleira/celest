@@ -17,10 +17,11 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
+import be.angelcorp.celest.math.geometry.{Vec3, Mat3}
+import be.angelcorp.celest.math.rotation.Rotation
+import be.angelcorp.celest.math.rotation.RotationMatrix._
 import be.angelcorp.celest.state.{Orbit, PosVel}
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
 
 /**
  * Transformation that consists only of a single rotation between the two respective frameGraph. This transformation neglects
@@ -34,27 +35,27 @@ import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
  * @tparam F1 Resulting frame after this transformation.
  * @tparam T  Factory that produced this transformation.
  */
-class ConstantRotationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val M: RotationMatrix, val epoch: Epoch, val factory: T)
+class ConstantRotationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val M: Mat3, val epoch: Epoch, val factory: T)
   extends BasicReferenceFrameTransform[F0, F1, T] {
 
   def transform(positionState: Orbit[F0]): Orbit[F1] = {
     val pv = positionState.toPosVel
-    new PosVel(M !* pv.position, M !* pv.velocity, factory.toFrame)
+    new PosVel(M * pv.position, M * pv.velocity, factory.toFrame)
   }
 
-  def transformOrientation(orientation: IRotation): IRotation =
+  def transformOrientation(orientation: Rotation): Rotation =
     orientation.applyTo(M)
 
-  def transformPos(position: Vector3D): Vector3D =
-    M !* position
+  def transformPos(position: Vec3): Vec3 =
+    M * position
 
-  def transformPosVel(position: Vector3D, velocity: Vector3D): (Vector3D, Vector3D) =
-    (M !* position, M !* velocity)
+  def transformPosVel(position: Vec3, velocity: Vec3): (Vec3, Vec3) =
+    (M * position, M * velocity)
 
-  def transformPosVelAcc(position: Vector3D, velocity: Vector3D, acceleration: Vector3D): (Vector3D, Vector3D, Vector3D) =
-    (M !* position, M !* velocity, M !* acceleration)
+  def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3) =
+    (M * position, M * velocity, M * acceleration)
 
-  override def transformVector(vector: Vector3D): Vector3D =
-    M !* vector
+  override def transformVector(vector: Vec3): Vec3 =
+    M * vector
 
 }

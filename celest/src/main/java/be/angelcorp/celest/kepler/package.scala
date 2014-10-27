@@ -16,9 +16,10 @@
 
 package be.angelcorp.celest
 
+import be.angelcorp.celest.math.geometry.{Mat3, Vec3}
+
 import scala.math._
 import math.CelestialRotate
-import be.angelcorp.libs.math.linear.{Matrix3D, Vector3D}
 import be.angelcorp.celest.state.PosVel
 
 package object kepler {
@@ -51,7 +52,7 @@ package object kepler {
    * @param radius Vector pointing to the satellite
    * @return Argument of latitude [rad]
    */
-  def arguementOfLatitude(nodalVector: Vector3D, radius: Vector3D) = {
+  def arguementOfLatitude(nodalVector: Vec3, radius: Vec3) = {
     val u = acos(nodalVector.dot(radius) / (nodalVector.norm * radius.norm))
     if (radius.z < 0) // Checking for quadrant
       2 * Pi - u
@@ -77,15 +78,15 @@ package object kepler {
     val R = state.position
     val V = state.velocity
 
-    val h = R !* V // Specific angular momentum vector
-    val N = Vector3D.K !* h
+    val h = R cross V // Specific angular momentum vector
+    val N = Vec3.z cross h
 
     val rNorm = R.norm
     val vNorm2 = V.normSq
     val nNorm = N.norm
 
     // Eccentricity vector
-    val e_vec = (R * (vNorm2 - µ / rNorm) - V * R.dot(V)) / µ
+    val e_vec = ((R * (vNorm2 - µ / rNorm)) - (V * R.dot(V))) / µ
     val ecc = e_vec.norm // Magnitude of eccentricity vector
 
     val zeta = vNorm2 / 2 - µ / rNorm; // Specific mechanical energy of orbit
@@ -105,7 +106,7 @@ package object kepler {
     if (e_vec.z < 0) // Checking for quadrant
       w = 2 * Pi - w
 
-    var nu = e_vec.angle(R); // True anomaly
+    var nu = e_vec angle R // True anomaly
     if (R.dot(V) < 0) // Checking for quadrant
       nu = 2 * Pi - nu
 
@@ -166,14 +167,14 @@ package object kepler {
    *
    * @return angular momentum vector
    */
-  def getH(R: Vector3D, V: Vector3D) = R !* V
+  def getH(R: Vec3, V: Vec3) = R * V
 
   /**
    * Compute the gravity gradient matrix (dg/dr).
    *
    * @return Gravity gradient matrix.
    */
-  def gravityGradient(R: Vector3D, µ: Double) = {
+  def gravityGradient(R: Vec3, µ: Double) = {
     val rmag = R.norm
     val r2 = rmag * rmag
     val muor3 = µ / (r2 * rmag)
@@ -195,7 +196,7 @@ package object kepler {
     val gg21 = gg12
     val gg22 = jk * zz * zz - muor3
 
-    Matrix3D(gg00, gg01, gg02, gg10, gg11, gg12, gg20, gg21, gg22)
+    Mat3(gg00, gg01, gg02, gg10, gg11, gg12, gg20, gg21, gg22)
   }
 
   /**
@@ -226,20 +227,21 @@ package object kepler {
     val p = a * (1 - ecc * ecc)
 
     // CREATING THE R VECTOR IN THE pqw COORDINATE FRAME
-    val R_pqw = Vector3D(
+    val R_pqw = Vec3(
       p * cos(nu) / (1 + ecc * cos(nu)),
       p * sin(nu) / (1 + ecc * cos(nu)),
       0)
 
     // CREATING THE V VECTOR IN THE pqw COORDINATE FRAME
-    val V_pqw = Vector3D(
+    val V_pqw = Vec3(
       -sqrt(µ / p) * sin(nu),
       sqrt(µ / p) * (ecc + cos(nu)),
       0)
 
     // ROTATING THE pqw VECOTRS INTO THE ECI FRAME (ijk)
-    val R = CelestialRotate.PQW2ECI(w, Omega, inc) !* R_pqw
-    val V = CelestialRotate.PQW2ECI(w, Omega, inc) !* V_pqw
+    val rotation = CelestialRotate.PQW2ECI(w, Omega, inc)
+    val R = rotation * R_pqw
+    val V = rotation * V_pqw
     (R, V)
   }
 
@@ -248,7 +250,7 @@ package object kepler {
    *
    * @return g vector
    */
-  def localGravity(r: Vector3D, µ: Double) = {
+  def localGravity(r: Vec3, µ: Double) = {
     val rmag = r.norm
     val muor3 = µ / pow(rmag, 3)
     r * -muor3
@@ -277,7 +279,7 @@ package object kepler {
    * @param radius Satellite position vector
    * @return The true longitude
    */
-  def trueLongitude(radius: Vector3D) = {
+  def trueLongitude(radius: Vec3) = {
     val lambda_true = acos(radius.x / radius.norm)
     if (radius.y < 0) // Checking for quadrant
       2 * Pi - lambda_true
@@ -314,7 +316,7 @@ package object kepler {
    *
    * @return True longitude of periapse [RAD]
    */
-  def trueLongitudeOfPeriapse(eccentricityVector: Vector3D) = {
+  def trueLongitudeOfPeriapse(eccentricityVector: Vec3) = {
     val w_true = acos(eccentricityVector.x / eccentricityVector.norm)
     if (eccentricityVector.y < 0) // Checking for quadrant
       2 * Pi - w_true

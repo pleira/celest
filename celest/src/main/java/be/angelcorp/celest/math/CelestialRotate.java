@@ -15,10 +15,9 @@
  */
 package be.angelcorp.celest.math;
 
-import be.angelcorp.libs.math.linear.ImmutableMatrix3D;
-import be.angelcorp.libs.math.linear.Matrix3D;
-import be.angelcorp.libs.math.linear.Matrix3D$;
-import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.celest.math.geometry.Mat3;
+import be.angelcorp.celest.math.geometry.Mat3$;
+import be.angelcorp.celest.math.geometry.Vec3;
 
 /**
  * A set of common rotations that are performed in celestial mechanics
@@ -33,7 +32,7 @@ public abstract class CelestialRotate {
      * @return Matrix containing the transformation.
      */
 
-    public static Matrix3D PQW2ECI(double w, double raan, double i) {
+    public static Mat3 PQW2ECI(double w, double raan, double i) {
         double cw = Math.cos(w);
         double sw = Math.sin(w);
         double craan = Math.cos(raan);
@@ -51,7 +50,7 @@ public abstract class CelestialRotate {
         double m21 = cw * si;
         double m22 = ci;
 
-        return new ImmutableMatrix3D(m00, m01, m02, m10, m11, m12, m20, m21, m22);
+        return new Mat3(m00, m01, m02, m10, m11, m12, m20, m21, m22);
     }
 
     /**
@@ -60,12 +59,12 @@ public abstract class CelestialRotate {
      * @return Matrix containing the transformation.
      */
 
-    public static Matrix3D RSW2ECI(Vector3D r, Vector3D v, Vector3D h) {
-        Vector3D rhat = r.normalize();
-        Vector3D what = h.normalize();
-        Vector3D s = what.cross(rhat);
-        Vector3D shat = s.normalize();
+    public static Mat3 RSW2ECI(Vec3 r, Vec3 v, Vec3 h) {
+        Vec3 rhat = r.normalized();
+        Vec3 what = h.normalized();
+        Vec3 s = what.cross(rhat);
+        Vec3 shat = s.normalized();
 
-        return Matrix3D$.MODULE$.columns(rhat, shat, what);
+        return Mat3$.MODULE$.columns(rhat, shat, what);
     }
 }

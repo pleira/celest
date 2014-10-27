@@ -20,8 +20,7 @@ import be.angelcorp.celest.frameGraph.frames
 import be.angelcorp.celest.state.{TrueAnomaly, _}
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.unit.CelestTest
-import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.libs.util.physics.Length._
+import be.angelcorp.celest.physics.Units._
 import org.scalatest.{FlatSpec, Matchers}
 
 class TestKeplerian extends FlatSpec with Matchers with CelestTest {
@@ -36,13 +35,13 @@ class TestKeplerian extends FlatSpec with Matchers with CelestTest {
     /* (2002 TZ300) (TransNeptunian Object) see http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=2002%20TZ300 */
     // mu = 132712440040.944000E9; AU = 149597870700; degree = pi/180
     // [R,V] = randv(43.69 * AU, 0, 3.58*degree, 55.46*degree,334.67*degree, 1.25*degree, mu)
-    val k_true = Keplerian(AU.convert(43.69), 0.0, Deg.convert(3.58), Deg.convert(334.67),
-      Deg.convert(55.46), TrueAnomaly(Deg.convert(1.25)), sunFrame)
+    val k_true = Keplerian(AU(43.69), 0.0, degrees(3.58), degrees(334.67),
+      degrees(55.46), TrueAnomaly(degrees(1.25)), sunFrame)
 
     val pv = PosVel(5.575650800580360E12, 3.406285950357226E12, -0.166516757517559E12,
       -2.339772644074335E3, 3.842463945033625E3, 0.256885464567324E3, sunFrame)
 
-    assertEquals(k_true, Keplerian(pv), AU.convert(43.69 * 1E-10), 1E-15, 1E-15, 0.3, 1E-15, 0.3) // ω + M is correct
+    assertEquals(k_true, Keplerian(pv), AU(43.69 * 1E-10), 1E-15, 1E-15, 0.3, 1E-15, 0.3) // ω + M is correct
     assertEquals(pv, k_true.toPosVel, pv.position.norm * 1E-10, pv.velocity.norm * 1E-10)
   }
 
@@ -50,13 +49,13 @@ class TestKeplerian extends FlatSpec with Matchers with CelestTest {
     /* (2000 QF226) (TransNeptunian Object) see http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=2000%20QF226 */
     // mu = 132712440040.944000E9; AU = 149597870700; degree = pi/180
     // [R,V] = randv(46.49 * AU, 0, 2.25*degree, 41.00*degree, 296.90*degree, 5.75*degree, mu)
-    val k_true = Keplerian(AU.convert(46.49), 0, Deg.convert(2.25), Deg.convert(296.90),
-      Deg.convert(41.00), TrueAnomaly(Deg.convert(5.75)), sunFrame)
+    val k_true = Keplerian(AU(46.49), 0, degrees(2.25), degrees(296.90),
+      degrees(41.00), TrueAnomaly(degrees(5.75)), sunFrame)
 
     val pv = PosVel(6.670590824266868E12, -1.954399520371328E12, -0.229898414537091E12,
       1.230889276648774E3, 4.190283177829139E3, 0.092524698681849E3, sunFrame)
 
-    assertEquals(k_true, Keplerian(pv), AU.convert(46.49 * 1E-10), 1E-15, 2E-15, 2 * math.Pi, 5E-15, 2 * math.Pi) // ω and M are ill defined for circular orbits
+    assertEquals(k_true, Keplerian(pv), AU(46.49 * 1E-10), 1E-15, 2E-15, 2 * math.Pi, 5E-15, 2 * math.Pi) // ω and M are ill defined for circular orbits
     assertEquals(pv, k_true.toPosVel, pv.position.norm * 1E-10, pv.velocity.norm * 1E-10)
   }
 
@@ -75,10 +74,10 @@ class TestKeplerian extends FlatSpec with Matchers with CelestTest {
     val pv = PosVel(-2.973349749957259E10, -4.462450401546170E10, -0.524103964859935E10,
       5.567204076586791E4, -3.568386116822244E4, -1.201095262393990E4, sunFrame)
 
-    val k_true = new Keplerian(AU.convert(2.167001873), 0.8338, Deg.convert(11.74),
-      Deg.convert(208.56), Deg.convert(28.27), 0, sunFrame)
+    val k_true = new Keplerian(AU(2.167001873), 0.8338, degrees(11.74),
+      degrees(208.56), degrees(28.27), 0, sunFrame)
 
-    assertEquals(k_true, Keplerian(pv), AU.convert(2.167 * 1E-10), 1E-15, 1E-16, 1E-15, 1E-15, 1E-16)
+    assertEquals(k_true, Keplerian(pv), AU(2.167 * 1E-10), 1E-15, 1E-16, 1E-15, 1E-15, 1E-16)
     assertEquals(pv, k_true.toPosVel, pv.position.norm * 1E-10, pv.velocity.norm * 1E-10)
   }
 
@@ -86,10 +85,10 @@ class TestKeplerian extends FlatSpec with Matchers with CelestTest {
     /* 105140 (2000 NL10) (Aten [NEO]), see http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=105140 */
     val pv = PosVel(1.568729987733919E11, 0.236439228464126E11, 0.761836182030944E11,
       -1.634472864086562E4, 1.073863544602837E4, -1.246760056449113E4, sunFrame)
-    val k_true = Keplerian(AU.convert(0.9143), 0.8171, Deg.convert(32.52),
-      Deg.convert(281.56), Deg.convert(237.44), TrueAnomaly(3.57456), sunFrame)
+    val k_true = Keplerian(AU(0.9143), 0.8171, degrees(32.52),
+      degrees(281.56), degrees(237.44), TrueAnomaly(3.57456), sunFrame)
 
-    assertEquals(k_true, Keplerian(pv), AU.convert(0.9143 * 1E-10), 1E-5, 1E-5, 1E-5, 1E-5, 1E-5)
+    assertEquals(k_true, Keplerian(pv), AU(0.9143 * 1E-10), 1E-5, 1E-5, 1E-5, 1E-5, 1E-5)
     assertEquals(pv, k_true.toPosVel, pv.position.norm * 1E-10, pv.velocity.norm * 1E-10)
   }
 
@@ -111,12 +110,12 @@ class TestKeplerian extends FlatSpec with Matchers with CelestTest {
     val pv = PosVel(-1.15037391547548e+008, -3.64408052048568e+008, -1.21513857899935e+007,
       +9.67536480042629e+002, -3.46497896859408e+002, +8.78970130662041e+001, jplEarthFrame)
 
-    assertEquals(kMoon, Keplerian(pv), AU.convert(3.903213584163071E+08 * 1E-15), 1E-15, 2E-15, 5E-14, 1E-15, 5E-14)
+    assertEquals(kMoon, Keplerian(pv), AU(3.903213584163071E+08 * 1E-15), 1E-15, 2E-15, 5E-14, 1E-15, 5E-14)
     assertEquals(pv, kMoon.toPosVel, pv.position.norm * 1E-14, pv.velocity.norm * 1E-14)
 
     val s = new Spherical(3.823277207168130E+08, -1.876578287892178E00, -3.178799710706510E-2, 1.031461835283901E+03,
       math.Pi / 2.0 - 1.535552685601132E00, 1.484255164403220E00, jplEarthFrame)
-    assertEquals(kMoon, Keplerian(s), AU.convert(3.903213584163071E+08 * 1E-15), 1E-15, 2E-15, 5E-14, 1E-15, 5E-14)
+    assertEquals(kMoon, Keplerian(s), AU(3.903213584163071E+08 * 1E-15), 1E-15, 2E-15, 5E-14, 1E-15, 5E-14)
   }
 
 }

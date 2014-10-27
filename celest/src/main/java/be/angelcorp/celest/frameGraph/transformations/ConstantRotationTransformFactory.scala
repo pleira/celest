@@ -1,8 +1,8 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransformFactory, ReferenceSystem}
+import be.angelcorp.celest.math.geometry.Mat3
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.linear.Matrix3D
 
 trait ConstantRotationTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
   extends BasicReferenceFrameTransformFactory[F0, F1] {
@@ -12,7 +12,7 @@ trait ConstantRotationTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSys
    * @param epoch Epoch for the frame transformation.
    * @return Rotation matrix to transform from F0 to F1.
    */
-  def rotationMatrix(epoch: Epoch): Matrix3D
+  def rotationMatrix(epoch: Epoch): Mat3
 
   /**
    * Factory that generates the inverse transformation from F1 => F0 by inverting the rotation matrix (= transpose)
@@ -21,7 +21,7 @@ trait ConstantRotationTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSys
     def cost(epoch: Epoch) = ConstantRotationTransformFactory.this.cost(epoch)
 
     def transform(epoch: Epoch) =
-      new ConstantRotationTransform[F1, F0, InverseConstantRotationTransformFactory](rotationMatrix(epoch).transpose(), epoch, this)
+      new ConstantRotationTransform[F1, F0, InverseConstantRotationTransformFactory](rotationMatrix(epoch).transpose, epoch, this)
 
     def inverse = ConstantRotationTransformFactory.this
 

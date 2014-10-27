@@ -15,39 +15,39 @@
  */
 package be.angelcorp.celest.physics.quantities;
 
-import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3D$;
+import be.angelcorp.celest.math.geometry.Vec3;
+import be.angelcorp.celest.math.geometry.Vec3$;
 
 public class Torque implements Cloneable {
 
-    private Vector3D torque;
+    private Vec3 torque;
 
     public Torque() {
-        this(Vector3D$.MODULE$.ZERO());
+        this(Vec3$.MODULE$.zero());
     }
 
-    public Torque(Force f, Vector3D arm) {
+    public Torque(Force f, Vec3 arm) {
         setTorque(arm.cross(f.getForce()));
     }
 
     public Torque(Torque torque2) {
-        setTorque(torque2.getTorque().clone());
+        setTorque(Vec3$.MODULE$.apply(torque2.getTorque()));
     }
 
-    public Torque(Vector3D torque) {
+    public Torque(Vec3 torque) {
         setTorque(torque);
     }
 
-    public Torque(Vector3D force, Vector3D arm) {
+    public Torque(Vec3 force, Vec3 arm) {
         setTorque(arm.cross(force));
     }
 
     public void add(Torque torque2) {
-        torque = torque.add(torque2.getTorque());
+        torque = torque.$plus(torque2.getTorque());
     }
 
-    public void add(Vector3D term) {
-        torque = torque.add(term);
+    public void add(Vec3 term) {
+        torque = torque.$plus(term);
     }
 
     @Override
@@ -55,11 +55,11 @@ public class Torque implements Cloneable {
         return new Torque(this);
     }
 
-    public Vector3D getTorque() {
+    public Vec3 getTorque() {
         return torque;
     }
 
-    public void setTorque(Vector3D torque) {
+    public void setTorque(Vec3 torque) {
         this.torque = torque;
     }
 

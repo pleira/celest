@@ -15,8 +15,8 @@
  */
 package be.angelcorp.celest.state
 
-import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.frameGraph.ReferenceSystem
+import be.angelcorp.celest.math.geometry.Vec3
 
 /**
  * [[be.angelcorp.celest.state.Orbit]] in the form of the Cartesian position (x,y,z) and velocity (&#7819;,
@@ -33,13 +33,14 @@ import be.angelcorp.celest.frameGraph.ReferenceSystem
  *
  * @author Simon Billemont
  */
-class PosVel[F <: ReferenceSystem](val position: Vector3D, val velocity: Vector3D, val frame: F) extends Orbit[F] {
+class PosVel[F <: ReferenceSystem](val position: Vec3, val velocity: Vec3, val frame: F) extends Orbit[F] {
 
   /**
    * {@inheritDoc}
    */
   def toPosVel = this
 
+  override def toString: String = s"PosVel(position=$position, velocity=$velocity, frame=$frame)"
 }
 
 object PosVel {
@@ -51,7 +52,7 @@ object PosVel {
    * V = [0, 0, 0]
    * </pre>
    */
-  def apply[F <: ReferenceSystem](frame: F): PosVel[F] = new PosVel(Vector3D.ZERO, Vector3D.ZERO, frame)
+  def apply[F <: ReferenceSystem](frame: F): PosVel[F] = new PosVel(Vec3.zero, Vec3.zero, frame)
 
   /**
    * Create a pair of position/velocity, both equal to zero:
@@ -67,7 +68,7 @@ object PosVel {
    * @param vz Instantaneous z velocity [m/s].
    */
   def apply[F <: ReferenceSystem](x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double, frame: F): PosVel[F] =
-    new PosVel(Vector3D(x, y, z), Vector3D(vx, vy, vz), frame)
+    new PosVel(Vec3(x, y, z), Vec3(vx, vy, vz), frame)
 
   /**
    * Create from a 6 dimensional array.

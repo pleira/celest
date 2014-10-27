@@ -16,7 +16,7 @@
 package be.angelcorp.celest.kepler
 
 import scala.math._
-import be.angelcorp.libs.math.MathUtils2
+import be.angelcorp.celest.math._
 import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
@@ -52,7 +52,7 @@ object KeplerEllipse {
    * @return The eccentric anomaly [rad]
    */
   def eccentricAnomalyFromMean(MA: Double, e: Double) = {
-    val M = MathUtils2.mod(MA, 2 * Pi)
+    val M = mod(MA, 2 * Pi)
 
     var E = if ((M > -Pi && M < 0) || M > Pi) M - e else M + e
     var Etemp = E + (M - E + e * sin(E)) / (1 - e * cos(E))

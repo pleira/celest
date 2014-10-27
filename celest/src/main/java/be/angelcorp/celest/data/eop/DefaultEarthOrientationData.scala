@@ -17,6 +17,7 @@
 package be.angelcorp.celest.data.eop
 
 import java.util
+import java.util.{GregorianCalendar, Calendar}
 import javax.inject.Inject
 import be.angelcorp.celest.resources.{ResourceDescription, Resources}
 import org.slf4j.LoggerFactory
@@ -45,10 +46,12 @@ class DefaultEarthOrientationData @Inject()(implicit universe: Universe) extends
     // Load a IERS EOP 08 C04 (IAU2000A) - yearly file
 
     // Year data to retrieve
-    val year = epoch.date.getYear.toString
+    val cal = new GregorianCalendar()
+    cal.setTime(epoch.date)
+    val year = cal.get(Calendar.YEAR).toString
     val filename = "eopc04_IAU2000.%s".format(year takeRight 2)
 
-    Resources.findArchive(ResourceDescription("be.angelcorp.celest.resources.test.data", "testdata", extension = "zip")).flatMap( res => {
+    Resources.findArchive(ResourceDescription("org.iers.products.eop.long-term.c04_08", "iau2000", extension = "zip")).flatMap( res => {
       res.findEntry( filename )
     } ) match {
       case Success(source) =>

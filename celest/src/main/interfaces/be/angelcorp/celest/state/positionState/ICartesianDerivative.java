@@ -15,7 +15,7 @@
  */
 package be.angelcorp.celest.state.positionState;
 
-import be.angelcorp.libs.math.linear.Vector3D;
+import be.angelcorp.celest.math.geometry.Vec3;
 
 /**
  * Stores the state derivatives of an object state (usually {@link be.angelcorp.celest.state.PosVel}). This is done
@@ -63,7 +63,7 @@ public interface ICartesianDerivative extends IPositionStateDerivative {
      *
      * @return The acceleration vector [m/s<sup>2</sup>]
      */
-    public abstract Vector3D getA();
+    public abstract Vec3 getA();
 
     /**
      * Get the velocity vector (the derivative of the position vector of the {@link be.angelcorp.celest.state.PosVel},
@@ -71,7 +71,7 @@ public interface ICartesianDerivative extends IPositionStateDerivative {
      *
      * @return The velocity vector [m/s]
      */
-    public abstract Vector3D getV();
+    public abstract Vec3 getV();
 
     /**
      * Set the acceleration vector (the derivative of the velocity vector of the
@@ -79,7 +79,7 @@ public interface ICartesianDerivative extends IPositionStateDerivative {
      *
      * @param a The acceleration vector [m/s<sup>2</sup>]
      */
-    public abstract void setA(Vector3D a);
+    public abstract void setA(Vec3 a);
 
     /**
      * Set the velocity vector (the derivative of the position vector of the {@link be.angelcorp.celest.state.PosVel},
@@ -87,6 +87,6 @@ public interface ICartesianDerivative extends IPositionStateDerivative {
      *
      * @param v The velocity vector [m/s]
      */
-    public abstract void setV(Vector3D v);
+    public abstract void setV(Vec3 v);
 
 }

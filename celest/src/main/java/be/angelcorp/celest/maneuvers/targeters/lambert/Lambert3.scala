@@ -17,8 +17,7 @@
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
 import math._
-import be.angelcorp.libs.math.MathUtils2._
-import be.angelcorp.libs.util.exceptions.GenericRuntimeException
+import be.angelcorp.celest.math._
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.state.PosVel
@@ -49,10 +48,10 @@ class Lambert3[F <: BodyCenteredSystem]
     val r2 = r2vec.norm // magnitude of r2vec
     val r1unit = r1vec / r1 // unit vector of r1vec
     val r2unit = r2vec / r2 // unit vector of r2vec
-    val crsprod = r1vec !* r2vec // cross product of r1vec and r2vec
+    val crsprod = r1vec * r2vec // cross product of r1vec and r2vec
     val mcrsprd = crsprod.norm // magnitude of that cross product
-    val th1unit = (crsprod / mcrsprd) !* r1unit // unit vectors in the tangential-directions
-    val th2unit = (crsprod / mcrsprd) !* r2unit
+    val th1unit = (crsprod / mcrsprd) * r1unit // unit vectors in the tangential-directions
+    val th2unit = (crsprod / mcrsprd) * r2unit
     val tf = abs(arrivalEpoch.relativeToS(departureEpoch))
 
     val dth = if (longWay) 2 * Pi - r1vec.angle(r2vec) else r1vec.angle(r2vec)
@@ -88,7 +87,7 @@ class Lambert3[F <: BodyCenteredSystem]
 
       // this estimate might not give a solution
       if (x0 < -1)
-        throw new GenericRuntimeException("Lambert targeter cannot find a good initial guess")
+        throw new ArithmeticException("Lambert targeter cannot find a good initial guess")
       else x0
       // multi-revolution case
     } else {
@@ -120,13 +119,13 @@ class Lambert3[F <: BodyCenteredSystem]
         if (mod(iterations, 7) != 0) xM = (xMp + xM) / 2
         // the method might fail. Exit in that case
         if (iterations > 25)
-          throw new GenericRuntimeException("Lambert targeter did not converge with 25 iterations")
+          throw new ArithmeticException("Lambert targeter did not converge with 25 iterations")
       }
 
       // xM should be elliptic (-1 < x < 1)
       // (this should be impossible to go wrong)
       if ((xM < -1) || (xM > 1))
-        throw new GenericRuntimeException("Lambert targeter solution should be elliptical")
+        throw new ArithmeticException("Lambert targeter solution should be elliptical")
 
       // corresponding time
       val (a_, b_, c_, d_) = Lambert3.LancasterBlanchard(xM, q, N)
@@ -134,7 +133,7 @@ class Lambert3[F <: BodyCenteredSystem]
 
       // T should lie above the minimum T
       if (TM > T)
-        throw new GenericRuntimeException("Lambert targeter solution time of flight should be higher than the minimally allowed")
+        throw new ArithmeticException("Lambert targeter solution time of flight should be higher than the minimally allowed")
 
       // find two initial values for second solution (again with lambda-type patch)
 
@@ -155,7 +154,7 @@ class Lambert3[F <: BodyCenteredSystem]
 
         // first estimate might not be able to yield possible solution
         if (x0 > 1)
-          throw new GenericRuntimeException("Lambert targeter first estimate might not be able to yield possible solution")
+          throw new ArithmeticException("Lambert targeter first estimate might not be able to yield possible solution")
         else x0
         // second estimate (only if m > 0)
       } else {
@@ -172,7 +171,7 @@ class Lambert3[F <: BodyCenteredSystem]
 
         // estimate might not give solutions
         if (x0 < -1)
-          throw new GenericRuntimeException("Lambert targeter first estimate might not be able to yield possible solution")
+          throw new ArithmeticException("Lambert targeter first estimate might not be able to yield possible solution")
         else x0
       }
     }
@@ -197,7 +196,7 @@ class Lambert3[F <: BodyCenteredSystem]
       if (mod(iterations, 7) != 0) x = (xp + x) / 2
       // Halley's method might fail
       if (iterations > 25)
-        throw new GenericRuntimeException("Lambert targeter did not converge with 25 iterations")
+        throw new ArithmeticException("Lambert targeter did not converge with 25 iterations")
     }
 
     // calculate terminal velocities

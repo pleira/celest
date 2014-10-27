@@ -17,11 +17,11 @@
 package be.angelcorp.celest.frameGraph
 
 import be.angelcorp.celest.frameGraph.frames.transforms.{IAU2000NutationEntry, IAU2000NutationLoader}
+import be.angelcorp.celest.math._
+import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 import be.angelcorp.celest.time.{Epochs, JulianDate}
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.libs.math.MathUtils2._
-import be.angelcorp.libs.util.physics.Angle._
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
@@ -51,23 +51,23 @@ class TestIAU2000NutationEntry extends FlatSpec with ShouldMatchers {
 
     // Check luni-solar arguments
     val (f1, f2, f3, f4, f5) = IAU2000NutationEntry.fundamentalArguments(t)
-    f1 should be(5.8722724388468013 plusOrMinus ArcSecond.convert(1E-3))
-    f2 should be(1.9634477857018902 plusOrMinus ArcSecond.convert(1E-3))
-    f3 should be(0.25074963882766854 plusOrMinus ArcSecond.convert(1E-3))
-    f4 should be(3.5975869706222894 plusOrMinus ArcSecond.convert(1E-3))
-    f5 should be(-2.3138999079361473 plusOrMinus ArcSecond.convert(1E-3))
+    f1 should be(5.8722724388468013 +- arcSecond(1E-3))
+    f2 should be(1.9634477857018902 +- arcSecond(1E-3))
+    f3 should be(0.25074963882766854 +- arcSecond(1E-3))
+    f4 should be(3.5975869706222894 +- arcSecond(1E-3))
+    f5 should be(-2.3138999079361473 +- arcSecond(1E-3))
 
     // Check planetary arguments
     val (f6, f7, f8, f9, f10, f11, f12, f13, f14) = IAU2000NutationEntry.planetaryArguments(t)
-    f6 should be(0.027468121921231159 plusOrMinus ArcSecond.convert(1E-3))
-    f7 should be(0.98404499026592873 plusOrMinus ArcSecond.convert(1E-3))
-    f8 should be(3.7607932041164602 plusOrMinus ArcSecond.convert(1E-3))
-    f9 should be(0.43397851046295699 plusOrMinus ArcSecond.convert(1E-3))
-    f10 should be(1.3716898237431217 plusOrMinus ArcSecond.convert(1E-3))
-    f11 should be(3.7150984233948283 plusOrMinus ArcSecond.convert(1E-3))
-    f12 should be(0.19417757651291101 plusOrMinus ArcSecond.convert(1E-3))
-    // f13 should be ( 5.8290097934300027    plusOrMinus ArcSecond.convert(1E-3) )  <= Sofa uses MHB2000 expression for the longitude of Neptune not the same as IERS
-    f14 should be(0.0032476733302456303 plusOrMinus ArcSecond.convert(1E-3))
+    f6 should be(0.027468121921231159 +- arcSecond(1E-3))
+    f7 should be(0.98404499026592873 +- arcSecond(1E-3))
+    f8 should be(3.7607932041164602 +- arcSecond(1E-3))
+    f9 should be(0.43397851046295699 +- arcSecond(1E-3))
+    f10 should be(1.3716898237431217 +- arcSecond(1E-3))
+    f11 should be(3.7150984233948283 +- arcSecond(1E-3))
+    f12 should be(0.19417757651291101 +- arcSecond(1E-3))
+    // f13 should be ( 5.8290097934300027    +- arcSecond(1E-3) )  <= Sofa uses MHB2000 expression for the longitude of Neptune not the same as IERS
+    f14 should be(0.0032476733302456303 +- arcSecond(1E-3))
   }
 
   it should "calculate the same luni-solar nutation contributions as SOFA" in {
@@ -83,15 +83,15 @@ class TestIAU2000NutationEntry extends FlatSpec with ShouldMatchers {
     val coef1 = sofaCoefficients(5)
     val coef2 = sofaCoefficients(6)
 
-    mod(coef1.argument(t), 2 * Pi) should be((-3.0748413865800597 + 2 * Pi) plusOrMinus ArcSecond.convert(1E-3))
+    mod(coef1.argument(t), 2 * Pi) should be((-3.0748413865800597 + 2 * Pi) +- arcSecond(1E-3))
     val (δψ1, δε1) = coef1.nutationContribution(t)
-    δψ1 should be(34984.783632262654E-7 plusOrMinus 1E-3) // Arcseconds
-    δε1 should be(-223784.70399657678E-7 plusOrMinus 1E-3) // Arcseconds
+    δψ1 should be(34984.783632262654E-7 +- 1E-3) // Arcseconds
+    δε1 should be(-223784.70399657678E-7 +- 1E-3) // Arcseconds
 
-    mod(coef2.argument(t), 2 * Pi) should be(5.8722724388468013 plusOrMinus ArcSecond.convert(1E-3))
+    mod(coef2.argument(t), 2 * Pi) should be(5.8722724388468013 +- arcSecond(1E-3))
     val (δψ2, δε2) = coef2.nutationContribution(t)
-    δψ2 should be(-284873.17840005737E-7 plusOrMinus 1E-3) // Arcseconds
-    δε2 should be(-6331.1086008923703E-7 plusOrMinus 1E-3) // Arcseconds
+    δψ2 should be(-284873.17840005737E-7 +- 1E-3) // Arcseconds
+    δε2 should be(-6331.1086008923703E-7 +- 1E-3) // Arcseconds
   }
 
   it should "calculate the same planetary nutation contributions as SOFA" in {
@@ -113,26 +113,26 @@ class TestIAU2000NutationEntry extends FlatSpec with ShouldMatchers {
     val coef3 = sofaCoefficients(678 + 188)
     val coef4 = sofaCoefficients(678 + 223)
 
-    mod(coef1.argument(t), 2 * Pi) should be(3.2226437272138995 plusOrMinus ArcSecond.convert(1))
+    mod(coef1.argument(t), 2 * Pi) should be(3.2226437272138995 +- arcSecond(1))
     val (δψ1, δε1) = coef1.nutationContribution(t)
-    δψ1 should be(-116.58580072576588E-7 plusOrMinus 1E-3) // Arcseconds
-    δε1 should be(-0.0 plusOrMinus 1E-3) // Arcseconds
+    δψ1 should be(-116.58580072576588E-7 +- 1E-3) // Arcseconds
+    δε1 should be(-0.0 +- 1E-3) // Arcseconds
 
     // A bit less accurate due to the non-IAU equation for neptune
-    // mod(coef2.argument(t), 2*Pi) should be ( 5.1871520498279988 plusOrMinus ArcSecond.convert(1) ) <= equation for Neptune
+    // mod(coef2.argument(t), 2*Pi) should be ( 5.1871520498279988 +- arcSecond(1) ) <= equation for Neptune
     val (δψ2, δε2) = coef2.nutationContribution(t)
-    δψ2 should be(2.2856386686236778E-7 plusOrMinus 2E-1) // Arcseconds
-    δε2 should be(0.0 plusOrMinus 2E-1) // Arcseconds
+    δψ2 should be(2.2856386686236778E-7 +- 2E-1) // Arcseconds
+    δε2 should be(0.0 +- 2E-1) // Arcseconds
 
-    mod(coef3.argument(t), 2 * Pi) should be((-1.5134557005745162 + 2 * Pi) plusOrMinus ArcSecond.convert(1))
+    mod(coef3.argument(t), 2 * Pi) should be((-1.5134557005745162 + 2 * Pi) +- arcSecond(1))
     val (δψ3, δε3) = coef3.nutationContribution(t)
-    δψ3 should be(0.45847367380053916E-7 plusOrMinus 1E-3) // Arcseconds
-    δε3 should be(-3.9361166975131505E-7 plusOrMinus 1E-3) // Arcseconds
+    δψ3 should be(0.45847367380053916E-7 +- 1E-3) // Arcseconds
+    δε3 should be(-3.9361166975131505E-7 +- 1E-3) // Arcseconds
 
-    mod(coef4.argument(t), 2 * Pi) should be(3.1782196595204670 plusOrMinus ArcSecond.convert(1))
+    mod(coef4.argument(t), 2 * Pi) should be(3.1782196595204670 +- arcSecond(1))
     val (δψ4, δε4) = coef4.nutationContribution(t)
-    δψ4 should be(-32.108525656254621E-7 plusOrMinus 1E-3) // Arcseconds
-    δε4 should be(74.437034526377445E-7 plusOrMinus 1E-3) // Arcseconds
+    δψ4 should be(-32.108525656254621E-7 +- 1E-3) // Arcseconds
+    δε4 should be(74.437034526377445E-7 +- 1E-3) // Arcseconds
   }
 
 }

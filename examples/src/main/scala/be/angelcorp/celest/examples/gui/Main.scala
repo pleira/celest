@@ -18,20 +18,11 @@ package be.angelcorp.celest.examples.gui
 import scala.collection.JavaConverters._
 import org.slf4j.LoggerFactory
 import org.reflections.Reflections
-import be.angelcorp.libs.util.gui.config.Config
-import be.angelcorp.libs.util.gui.objectGuiSerializer.ObjectGuiSerializer
-import be.angelcorp.libs.util.gui.objectGuiSerializer.selectableList.SelectableListSerializer
 
 object Main extends App {
   val logger = LoggerFactory.getLogger("Main")
 
   val examplesPackage = "be.angelcorp.celest.examples"
-
-  val config = new Config()
-  config.addSettings(new Settings())
-  Config.setInstance(config)
-
-  ObjectGuiSerializer.getInstance().addGuiSerializer(new SelectableListSerializer())
 
   val examples = discoverExamples()
   new SimpleGui(examples)

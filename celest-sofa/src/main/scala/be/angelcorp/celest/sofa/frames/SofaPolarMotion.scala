@@ -5,12 +5,12 @@ import javax.inject.Inject
 import be.angelcorp.celest.data.eop.{EarthOrientationData, PoleProvider}
 import be.angelcorp.celest.frameGraph.frames.{ITRS, TIRS}
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
+import be.angelcorp.celest.math.geometry.Mat3
 import be.angelcorp.celest.sofa.SofaMatrix
 import be.angelcorp.celest.sofa.time.SofaEpoch
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.timeStandard.TimeStandard
 import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.TT
-import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.sofa.SofaLibrary._
 
 /**
@@ -31,7 +31,7 @@ class SofaPolarMotion(val tirf: TIRS, val itrf: ITRS, val pole: PoleProvider, @T
   @Inject
   def this(tirf: TIRS, itrf: ITRS, eop: EarthOrientationData, @TT tt: TimeStandard) = this(tirf, itrf, eop.cip, tt)
 
-  override def rotationMatrix(epoch: Epoch): Matrix3D = {
+  override def rotationMatrix(epoch: Epoch): Mat3 = {
     // The transformation epoch, in TT
     val epoch_tt = SofaEpoch( epoch.inTimeStandard(tt) )
 

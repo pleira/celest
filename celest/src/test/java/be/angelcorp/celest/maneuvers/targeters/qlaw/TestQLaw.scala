@@ -1,5 +1,7 @@
 package be.angelcorp.celest.maneuvers.targeters.qlaw
 
+import be.angelcorp.celest.math.geometry.Vec3
+
 import scala.math._
 import be.angelcorp.celest.state.{TrueAnomaly, Keplerian}
 import be.angelcorp.celest.universe.DefaultUniverse
@@ -7,10 +9,7 @@ import be.angelcorp.celest.frameGraph.frames.{BodyCenteredSystem, GCRF}
 import org.apache.commons.math3.ode.nonstiff.ClassicalRungeKuttaIntegrator
 import org.apache.commons.math3.ode.{ContinuousOutputModel, FirstOrderDifferentialEquations}
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.linear.Vector3D
 import be.angelcorp.celest.time.EpochAnnotations.J2000
-import be.angelcorp.celest.frameGraph.ReferenceSystem
-import org.apache.commons.math3.ode.sampling.{StepInterpolator, StepHandler}
 
 object TestQLaw extends App {
 
@@ -31,7 +30,7 @@ object TestQLaw extends App {
   } )
 
 
-  def integrate[F <: BodyCenteredSystem]( acceleration: ((Epoch, Keplerian[F], Double) => Vector3D), t0: Epoch, k0: Keplerian[F], m0: Double, tf: Epoch, Isp: Double = 300 ) = {
+  def integrate[F <: BodyCenteredSystem]( acceleration: ((Epoch, Keplerian[F], Double) => Vec3), t0: Epoch, k0: Keplerian[F], m0: Double, tf: Epoch, Isp: Double = 300 ) = {
     val g0 = 9.80665
     def toArray( k: Keplerian[F], m: Double, array: Array[Double] = null ) = {
       val y = if (array == null) Array.ofDim[Double](7) else array

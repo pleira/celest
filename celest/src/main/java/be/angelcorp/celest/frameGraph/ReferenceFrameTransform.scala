@@ -15,9 +15,9 @@
  */
 package be.angelcorp.celest.frameGraph
 
+import be.angelcorp.celest.math.geometry.Vec3
+import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.state.Orbit
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.math.rotation.IRotation
 
 /**
  * Transform between different ReferenceFrames.
@@ -82,7 +82,7 @@ trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
    * @param vector A vector to transform.
    * @return A vector which is equivalent to given vector, but in the new ReferenceFrame (only rotation is applied).
    */
-  def transformVector(vector: Vector3D): Vector3D
+  def transformVector(vector: Vec3): Vec3
 
   /**
    * Transform only the rotation of a body into a new ReferenceFrame.
@@ -90,7 +90,7 @@ trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
    * @param orientation Orientation to transform.
    * @return A new orientation which is equivalent to given provided orientation, but in the new ReferenceFrame.
    */
-  def transformOrientation(orientation: IRotation): IRotation
+  def transformOrientation(orientation: Rotation): Rotation
 
   /**
    * Transform only the position of a body into a new `IReferenceFrame`.
@@ -102,7 +102,7 @@ trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
    * @param position Position before transform (in frame F0).
    * @return A new position vector which is equivalent to given provided vector, but in the new ReferenceFrame (frame F1).
    */
-  def transformPos(position: Vector3D): Vector3D
+  def transformPos(position: Vec3): Vec3
 
   /**
    * Transform the position and velocity of a body into a new ReferenceFrame.
@@ -117,7 +117,7 @@ trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
    * @return A new position and velocity vector which is equivalent to given provided vector,
    *         but in the new ReferenceFrame (frame F1).
    */
-  def transformPosVel(position: Vector3D, velocity: Vector3D): (Vector3D, Vector3D)
+  def transformPosVel(position: Vec3, velocity: Vec3): (Vec3, Vec3)
 
   /**
    * Transform the position, velocity and acceleration of a body into a new ReferenceFrame.
@@ -134,6 +134,6 @@ trait ReferenceFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem] {
    * @return A new position, velocity, and acceleration vector which is equivalent to given provided vector,
    *         but in the new ReferenceFrame (frame F1).
    */
-  def transformPosVelAcc(position: Vector3D, velocity: Vector3D, acceleration: Vector3D): (Vector3D, Vector3D, Vector3D)
+  def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3)
 
 }

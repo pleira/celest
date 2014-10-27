@@ -16,11 +16,12 @@
 
 package be.angelcorp.celest.frameGraph.frames.transforms
 
+import be.angelcorp.celest.math.geometry.Mat3
+
 import scala.math._
 import be.angelcorp.celest.time.{Epochs, Epoch}
 import be.angelcorp.celest.universe.Universe
 import be.angelcorp.celest.frameGraph._
-import be.angelcorp.libs.math.rotation.RotationMatrix._
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
@@ -47,10 +48,10 @@ class IAU2006Precession[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fromFr
     // Julian centuries TT from the J2000.0 epoch
     val t = epoch.inTimeStandard(TT).relativeTo(Epochs.J2000) / 36525.0
 
-    rotateX(arcSeconds(-IAU2006Precession.ε0)) !*
-      rotateZ(arcSeconds(IAU2006Precession.ψA(t))) !*
-      rotateX(arcSeconds(IAU2006Precession.ωA(t))) !*
-      rotateZ(arcSeconds(-IAU2006Precession.χA(t)))
+    Mat3.rotateX(arcSeconds(-IAU2006Precession.ε0)) dot
+      Mat3.rotateZ(arcSeconds(IAU2006Precession.ψA(t))) dot
+      Mat3.rotateX(arcSeconds(IAU2006Precession.ωA(t))) dot
+      Mat3.rotateZ(arcSeconds(-IAU2006Precession.χA(t)))
   }
 
   def cost(epoch: Epoch) = 100.0

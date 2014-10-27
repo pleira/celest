@@ -9,7 +9,7 @@ val epoch = new JulianDate(2013, 10, 26, 1, 53, 28.988, UTC)
 epoch relativeTo new JulianDate(2451545.0, TT)
 // For this correction, first convert into the same format
 val epoch_tt = epoch inTimeStandard TT
-val δ = epoch_tt relativeTo new JulianDate(2451545.0, TT)
+val delta = epoch_tt relativeTo new JulianDate(2451545.0, TT)
 
 // Basic operators (all arguments are in days)
 val epoch2 = epoch + 1.0

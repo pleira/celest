@@ -17,10 +17,10 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
+import be.angelcorp.celest.math.geometry.Vec3
+import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.state.{PosVel, Orbit}
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.linear.Vector3D
-import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
 
 /**
  * Transformation that consists only of a single translation between the two respective frameGraph frames.
@@ -33,7 +33,7 @@ import be.angelcorp.libs.math.rotation.{IRotation, RotationMatrix}
  * @tparam F1 Resulting frame after this transformation.
  * @tparam T  Factory that produced this transformation.
  */
-class TranslationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val dx: Vector3D, val epoch: Epoch, val factory: T)
+class TranslationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val dx: Vec3, val epoch: Epoch, val factory: T)
   extends BasicReferenceFrameTransform[F0, F1, T] {
 
   def transform(positionState: Orbit[F0]): Orbit[F1] = {
@@ -41,19 +41,19 @@ class TranslationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: Re
     new PosVel(pv.position + dx, pv.velocity, factory.toFrame)
   }
 
-  def transformOrientation(orientation: IRotation): IRotation =
+  def transformOrientation(orientation: Rotation): Rotation =
     orientation
 
-  def transformPos(position: Vector3D): Vector3D =
+  def transformPos(position: Vec3): Vec3 =
     position + dx
 
-  def transformPosVel(position: Vector3D, velocity: Vector3D): (Vector3D, Vector3D) =
+  def transformPosVel(position: Vec3, velocity: Vec3): (Vec3, Vec3) =
     (position + dx, velocity)
 
-  def transformPosVelAcc(position: Vector3D, velocity: Vector3D, acceleration: Vector3D): (Vector3D, Vector3D, Vector3D) =
+  def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3) =
     (position + dx, velocity, acceleration)
 
-  override def transformVector(vector: Vector3D): Vector3D =
+  override def transformVector(vector: Vec3): Vec3 =
     vector
 
 }

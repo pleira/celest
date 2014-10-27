@@ -15,7 +15,8 @@
  */
 package be.angelcorp.celest.physics.atmosphere;
 
-import be.angelcorp.libs.math.linear.Vector3D;
+
+import be.angelcorp.celest.math.geometry.Vec3;
 
 public interface IAtmosphere {
 
@@ -25,9 +26,9 @@ public interface IAtmosphere {
      * @param r   Position vector.
      * @return Atmospheric density in kg/m^3
      */
-    abstract public double computeDensity(Vector3D r);
+    abstract public double computeDensity(Vec3 r);
 
-    abstract public Vector3D computeV(Vector3D r);
+    abstract public Vec3 computeV(Vec3 r);
     // VectorN we = new VectorN(0, 0, omega_e);
     // VectorN wxr = we.crossProduct(r);
 }

@@ -3,9 +3,9 @@ package be.angelcorp.celest.frameGraph.frames.transforms
 import be.angelcorp.celest.body.Body
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.frameGraph.transformations.TranslationalTransformFactory
+import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.Epoch
-import be.angelcorp.libs.math.linear.Vector3D
 
 /**
  * Applies a translational offset between two frames, due to orbital motion of body inside another reference frame.
@@ -25,6 +25,6 @@ class SolarSystemBodyOffset[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fr
    * @param epoch Epoch for the frame transformation.
    * @return Translation offset to use in the transform from F0 to F1.
    */
-  override def translation(epoch: Epoch): Vector3D = ephemeris(epoch).position
+  override def translation(epoch: Epoch): Vec3 = ephemeris(epoch).position
 
 }

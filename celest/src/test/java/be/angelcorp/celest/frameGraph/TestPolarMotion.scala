@@ -18,13 +18,12 @@ package be.angelcorp.celest.frameGraph
 
 import be.angelcorp.celest.data.eop.PoleProvider
 import be.angelcorp.celest.frameGraph.frames.transforms.PolarMotion
+import be.angelcorp.celest.math.geometry.Mat3
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TT
 import be.angelcorp.celest.time.{Epoch, JulianDate}
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.libs.math.linear.Matrix3D
-import be.angelcorp.libs.util.physics.Angle._
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
@@ -48,7 +47,7 @@ class TestPolarMotion extends FlatSpec with Matchers with CelestTest {
   "J2000FrameBias" should "conform to the sofa library" in {
     val epoch = new JulianDate(2013,  4, 27, 12, 33, 18.1938271, TT)
 
-    val sofaRotation = Matrix3D(
+    val sofaRotation = Mat3(
       0.9999999999998824, 0, 4.848136811095171e-007,
       4.700886107818658e-013, 0.9999999999995299, -9.696273622188061e-007,
       -4.848136811092892e-007, 9.696273622189201e-007, 0.9999999999994124
@@ -65,8 +64,7 @@ class TestPolarMotion extends FlatSpec with Matchers with CelestTest {
     val polarMotion = new PolarMotion(null, null, pole)
     val transform = polarMotion.transform(epoch)
 
-    val error = matrixError(transform.M, sofaRotation)
-    error should be(0.0 +- ArcSecond.convert(1E-6))
+    transform.M should be rotation (sofaRotation +- arcSeconds(1E-6))
   }
 
 

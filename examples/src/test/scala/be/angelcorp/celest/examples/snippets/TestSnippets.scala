@@ -1,13 +1,16 @@
 package be.angelcorp.celest.examples.snippets
 
+import java.io.{BufferedReader, InputStreamReader}
+
 import org.reflections.Reflections
 import org.reflections.scanners.ResourcesScanner
 import org.reflections.util.{ClasspathHelper, ConfigurationBuilder}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.collection.JavaConverters._
+import scala.io.Source
 import scala.tools.nsc.GenericRunnerSettings
-import scala.tools.nsc.interpreter.Results
+import scala.tools.nsc.interpreter._
 
 class TestSnippets extends FlatSpec with Matchers {
   val flusher = new java.io.PrintWriter(System.out)
@@ -18,20 +21,21 @@ class TestSnippets extends FlatSpec with Matchers {
   )
   val snippets = reflections.getResources( """.*\.scala""".r.pattern)
 
-  snippets.asScala.map(snippet => snippet should "run without exception" in {
+  snippets.asScala.map(snippet => snippet should "compile and run without exception" in {
     val interpreter = {
-      val settings = new GenericRunnerSettings(println)
+      val settings = new GenericRunnerSettings( err => System.err.println(err) )
       settings.usejavacp.value = true
       new scala.tools.nsc.interpreter.IMain(settings, flusher)
     }
 
-    val source = getClass.getClassLoader.getResource(snippet)
-    interpreter.beQuietDuring {
-      interpreter.interpret(s":load $source" )
-    } match {
-      case Results.Error => fail(s"Error while running script '$snippet'")
-      case _ =>
+    val source = Source.fromInputStream( getClass.getClassLoader.getResourceAsStream(snippet) )
+    val lines  = source.getLines().mkString("\n")
+    val script = interpreter.interpret( lines ) match {
+      case Results.Success    =>
+      case Results.Error      => fail( "Failed to execute script successfully: The input script was erroneous in some way." )
+      case Results.Incomplete => fail( "Failed to execute script successfully: The input script was incomplete." )
     }
+    interpreter.reset()
   })
 
 }

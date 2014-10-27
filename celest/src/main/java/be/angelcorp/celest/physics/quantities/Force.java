@@ -15,20 +15,20 @@
  */
 package be.angelcorp.celest.physics.quantities;
 
-import be.angelcorp.libs.math.linear.Vector3D;
-import be.angelcorp.libs.math.linear.Vector3D$;
+import be.angelcorp.celest.math.geometry.Vec3;
+import be.angelcorp.celest.math.geometry.Vec3$;
 
 public abstract class Force implements Comparable<Force>, Cloneable {
 
-    private Vector3D force;
+    private Vec3 force;
 
-    public Vector3D add(Force force2) {
-        setForce(getForce().add(force2.getForce()));
+    public Vec3 add(Force force2) {
+        setForce(getForce().$plus(force2.getForce()));
         return getForce();
     }
 
-    public void add(Vector3D term) {
-        setForce(getForce().add(term));
+    public void add(Vec3 term) {
+        setForce(getForce().$plus(term));
     }
 
     @Override
@@ -36,18 +36,18 @@ public abstract class Force implements Comparable<Force>, Cloneable {
         return Double.compare(getForce().normSq(), o.getForce().normSq());
     }
 
-    public Vector3D getForce() {
+    public Vec3 getForce() {
         return force;
     }
 
-    public abstract Vector3D getOffset();
+    public abstract Vec3 getOffset();
 
-    public Vector3D mult(float scalar) {
-        setForce(getForce().multiply(scalar));
+    public Vec3 mult(float scalar) {
+        setForce(getForce().$times(scalar));
         return getForce();
     }
 
-    public void setForce(Vector3D force) {
+    public void setForce(Vec3 force) {
         this.force = force;
 
     }
@@ -58,12 +58,12 @@ public abstract class Force implements Comparable<Force>, Cloneable {
     }
 
     public Torque toTorque() {
-        return toTorque(Vector3D$.MODULE$.ZERO());
+        return toTorque(Vec3$.MODULE$.zero());
     }
 
-    public Torque toTorque(Vector3D newOrigin) {
+    public Torque toTorque(Vec3 newOrigin) {
         Torque t = new Torque();
-        Vector3D dR = getOffset().$minus(newOrigin);
+        Vec3 dR = getOffset().$minus(newOrigin);
         t.setTorque(dR.cross(getForce()));
         return t;
     }

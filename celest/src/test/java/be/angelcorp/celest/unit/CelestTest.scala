@@ -15,63 +15,18 @@
  */
 package be.angelcorp.celest.unit
 
+import be.angelcorp.celest.math.geometry.Mat3
+import be.angelcorp.celest.math.rotation.{RotationMatrix, Rotation, Quaternion}
 import be.angelcorp.celest.state.{Keplerian, PosVel, Spherical}
-import be.angelcorp.libs.math.functions.domain.AngularDomain
-import be.angelcorp.libs.math.linear.Matrix3D
-import be.angelcorp.libs.math.rotation.AxisAngle
 import org.apache.commons.math3.linear.RealVector
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics
+import org.scalactic.{TripleEqualsSupport, Prettifier}
+import org.scalatest.matchers.{BePropertyMatcher, BeMatcher, MatchResult, Matcher}
 import org.scalatest.{Assertions, Matchers}
 
-trait CelestTest extends Assertions with Matchers {
+trait CelestTest extends Assertions with Matchers with MtxMatchers with RotationMatchers {
 
-    /**
-     * Tests if the elements between two vectors are all within the given tolerance
-     */
-    def assertEquals(expected: Array[Double], actual: Array[Double], tol: Double) {
-        assertEquals("Elements of the vectors are not equal", expected, actual, tol)
-    }
-
-    /**
-     * Tests if the elements between two vectors are all within the given tolerance
-     */
-    def assertEquals(expected: Array[Double], actual: Array[Double], tol: Array[Double]) {
-        assertEquals("Elements of the vectors are not equal", expected, actual, tol)
-    }
-
-    /**
-     * Tests if the elements between two vectors are all within the given tolerance
-     */
-    def assertEquals(expected: RealVector, actual: RealVector, tol: Double) {
-        assertEquals(expected.toArray, actual.toArray, tol)
-    }
-
-    /**
-     * Tests if the elements between two vectors are all within the given tolerance
-     */
-    def assertEquals(message: String, expected: Array[Double], actual: Array[Double], tol: Double) {
-      actual.length should equal ( expected.length )
-      for (i <- 0 until expected.length)
-        actual(i) should be ( expected(i) +- tol )
-    }
-
-    /**
-     * Tests if the elements between two vectors are all within the given tolerance
-     */
-    def assertEquals(message: String, expected: Array[Double], actual: Array[Double], tol: Array[Double]) {
-      actual.length should equal ( expected.length )
-      for (i <- 0 until expected.length)
-        actual(i) should be ( expected(i) +- tol(i) )
-    }
-
-    /**
-     * Tests if the elements between two vectors are all within the given tolerance
-     */
-    def assertEquals(message: String, expected: RealVector, actual: RealVector, tol: Double) {
-        assertEquals(message, expected.toArray(), actual.toArray(), tol)
-    }
-
-    /**
+  /**
      * Check if two angles are equal within the given range. Note this will test 2*pi and 0 as equal (or
      * any value close to it). This means that the actual angles are compared, and not the numeric values
      * ( since 2*pi and 0 are not within linear tolerance, but the domain folds back).
@@ -98,10 +53,8 @@ trait CelestTest extends Assertions with Matchers {
      * @param b       Angle 2
      * @param tol     Tolerance to which the angles need to be equal
      */
-    def assertEqualsAngle(message: String, a: Double, b: Double, tol: Double) {
-      val dom = new AngularDomain(a, tol, tol)
-      assert(dom.inDomain(b), f"The angle of $a%f rad is not equal to the expected angle $b%f rad with a tolerance of $tol%f")
-    }
+    def assertEqualsAngle(message: String, a: Double, b: Double, tol: Double) =
+      angleEquals(a, b, tol)
 
     /**
      * Get statistics on the element wise error vector between two vectors
@@ -125,9 +78,6 @@ trait CelestTest extends Assertions with Matchers {
      */
     def getStatistics(v1: RealVector, v2: RealVector): SummaryStatistics =
         getStatistics(v1.toArray, v2.toArray)
-
-    def matrixError(m1: Matrix3D, m2: Matrix3D): Double =
-        new AxisAngle(m2.transpose().cross(m1)).getAngle
 
     def angleEquals(expected: Double, actual: Double, tolerance: Double) {
       val difference = Math.abs((expected - actual + Math.PI) % (2 * Math.PI) - Math.PI)

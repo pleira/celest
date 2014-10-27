@@ -19,12 +19,9 @@ import scala.math._
 import org.apache.commons.math3.linear.ArrayRealVector
 import org.apache.commons.math3.util.Precision
 import be.angelcorp.celest.state.Keplerian
-import be.angelcorp.libs.util.physics.Angle._
-import be.angelcorp.libs.math.MathUtils2.mod
+import be.angelcorp.celest.math.mod
 
 object ReferenceKeplerAngles {
-
-  val degree = Degree getScaleFactor
 
   val circularAngles = List[ArrayRealVector](
     // e, nu, M, E

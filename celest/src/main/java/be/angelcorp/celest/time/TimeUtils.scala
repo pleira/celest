@@ -16,7 +16,7 @@
 package be.angelcorp.celest.time
 
 import math._
-import be.angelcorp.libs.math.MathUtils2
+import be.angelcorp.celest.math._
 
 /**
  * Large suite of time utils, based partially on the code of fundamentals of astrodynamics and
@@ -205,7 +205,7 @@ object TimeUtils {
     val temp1 = -6.2e-6 * tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 +
       (876600.0 * 3600.0 + 8640184.812866) * tut1 + 67310.54841 // sec
     val temp2 = temp1 * (Pi / 180.0) / 240.0 // 360/86400 = 1/240, to deg, to rad
-    MathUtils2.mod(temp2, 2 * Pi)
+    mod(temp2, 2 * Pi)
   }
 
   /**
@@ -292,7 +292,7 @@ object TimeUtils {
    */
   def lstime(lon: Double, jdut1: Double) = {
     val gst = gstime(jdut1)
-    val lst = MathUtils2.mod(lon + gst, 2.0 * Pi)
+    val lst = mod(lon + gst, 2.0 * Pi)
     (lst, gst)
   }
 

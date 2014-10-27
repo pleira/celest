@@ -6,7 +6,7 @@ object Dependencies {
   val mavenVersion  = "3.1.0"
   val wagonVersion  = "1.0"
 
-  val angelcorpMath =   "be.angelcorp.libs"           %  "math"                     % "0.0.1-SNAPSHOT"
+  val commonsMath =     "org.apache.commons"          %  "commons-math3"            % "3.3"
   val orekit =          "org.orekit"                  %  "orekit"                   % "6.1"
   val sofa =            "be.angelcorp"                %  "sofa"                     % "1.1-SNAPSHOT"
 

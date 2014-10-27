@@ -1,17 +1,20 @@
 package be.angelcorp.celest.frameGraph
 
-import javax.inject.Singleton
+import javax.inject.{Inject, Provider, Singleton}
 
-import be.angelcorp.celest.data.eop.{EarthOrientationDataEntry, ExcessLengthOfDay, PoleProvider, UT1Provider}
+import be.angelcorp.celest.data.eop._
 import be.angelcorp.celest.frameGraph.frames._
+import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.time.timeStandard.TimeStandard
+import be.angelcorp.celest.time.timeStandard.TimeStandardAnnotations.UTC
 import be.angelcorp.celest.time.{Epoch, JulianDate}
 import be.angelcorp.celest.time.timeStandard.TimeStandards._
 import be.angelcorp.celest.universe.DefaultUniverseBuilder
 import be.angelcorp.celest.universe.modules._
-import be.angelcorp.libs.math.linear.Vector3D
 import com.google.inject.Provides
+import com.google.inject.util.Providers
 import net.codingwell.scalaguice.ScalaModule
 import org.eclipse.aether.repository.RemoteRepository
 import org.scalatest.{FlatSpec, Matchers}
@@ -36,7 +39,13 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
           override def polarCoordinatesOn(epoch: Epoch): (Double, Double) = (eop.x, eop.y)
         })
       }
+      @Provides
+      def provideEarthOrientationDataProvider( @UTC utc: TimeStandard ): EarthOrientationData =
+        new EarthOrientationData(utc) {
+          override def getEntry(epoch: Epoch, Δt_max: Double) = eop
+        }
     }
+    modules += new DefaultFrames
     modules += new DefaultTime
     modules += new DefaultJplEphemeris(430, "gov.nasa.jpl.ssd.pub.eph.planets.linux", "de430")
     modules += new JplEphemerisBodies()
@@ -57,8 +66,8 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
 
     val itrf = universe.instance[ITRS]
     val pv = new PosVel(
-      Vector3D(-1033.4793830E3, 7901.2952754E3, 6380.3565958E3),
-      Vector3D(-3.225636520E3, -2.872451450E3, 5.531924446E3),
+      Vec3(-1033.4793830E3, 7901.2952754E3, 6380.3565958E3),
+      Vec3(-3.225636520E3, -2.872451450E3, 5.531924446E3),
       itrf
     )
 

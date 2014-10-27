@@ -16,11 +16,12 @@
 
 package be.angelcorp.celest.frameGraph.frames.transforms
 
+import be.angelcorp.celest.math.geometry.Mat3
+
 import math._
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.physics.Units._
-import be.angelcorp.libs.math.linear.Matrix3D
 import be.angelcorp.celest.frameGraph.transformations.ConstantRotationTransformFactory
 
 /**
@@ -63,13 +64,13 @@ class J2000FrameBias[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val fromFrame
       val δα0Sq = pow(δα0, 2)
       val ξ0Sq = pow(ξ0, 2)
       val η0Sq = pow(η0, 2)
-      Matrix3D(// Reference [3] equation 3.4
+      Mat3(// Reference [3] equation 3.4
         1.0 - 0.5 * (δα0Sq + ξ0Sq), δα0, -ξ0,
         -δα0 - η0 * ξ0, 1.0 - 0.5 * (δα0Sq + η0Sq), -η0,
         ξ0 - η0 * δα0, η0 + ξ0 * δα0, 1.0 - 0.5 * (η0Sq + ξ0Sq)
       )
     } else
-      Matrix3D(// Reference [3] equation 3.3
+      Mat3(// Reference [3] equation 3.3
         1, δα0, -ξ0,
         -δα0, 1, -η0,
         ξ0, η0, 1
