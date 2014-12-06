@@ -15,13 +15,13 @@
  */
 package be.angelcorp.celest.kepler
 
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import be.angelcorp.celest.kepler
+import be.angelcorp.celest.math.CelestialRotate
 import be.angelcorp.celest.math.geometry.Vec3
+import be.angelcorp.celest.state.{Keplerian, PosVel}
 
 import scala.math._
-import be.angelcorp.celest.math.CelestialRotate
-import be.angelcorp.celest.kepler
-import be.angelcorp.celest.state.{Keplerian, PosVel}
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
 
 abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
@@ -204,7 +204,7 @@ object KeplerEquations {
 
   var angleTolarance = 1E-8
   var eccentricityTolarance = 1E-6
-  var anomalyIterationTol = 1E-8
+  var anomalyIterationTol = 1E-14
 
 }
 

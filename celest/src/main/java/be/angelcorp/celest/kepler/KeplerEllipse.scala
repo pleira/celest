@@ -15,10 +15,12 @@
  */
 package be.angelcorp.celest.kepler
 
-import scala.math._
+import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import be.angelcorp.celest.math._
 import be.angelcorp.celest.state.Keplerian
-import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import org.apache.commons.math3.util.FastMath.atan2
+
+import scala.math._
 
 class KeplerEllipse[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEquations(k) {
 
@@ -45,13 +47,13 @@ object KeplerEllipse {
   /**
    * Solves for eccentric anomaly (E), from a given mean anomaly (M), and eccentricity (e).
    *
-   * This is done by solving Kepler's equation for ellipses using a basic Newton-Raphson iteration scheme.
+   * This is done by solving Kepler's equation for ellipses using a basic Newton-Raphson iteration scheme and <b>first</b>-order iteration/starting value.
    *
    * @param MA Mean anomaly [rad]
-   * @param e Eccentricity [-]
+   * @param e Orbit eccentricity [-]
    * @return The eccentric anomaly [rad]
    */
-  def eccentricAnomalyFromMean(MA: Double, e: Double) = {
+  def eccentricAnomalyFromMeanOld(MA: Double, e: Double) = {
     val M = mod(MA, 2 * Pi)
 
     var E = if ((M > -Pi && M < 0) || M > Pi) M - e else M + e
@@ -62,6 +64,45 @@ object KeplerEllipse {
       E = Etemp + (M - Etemp + e * sin(Etemp)) / (1 - e * cos(Etemp))
     }
     E
+  }
+
+  /**
+   * Solves for eccentric anomaly (E), from a given mean anomaly (M), and eccentricity (e).
+   *
+   * This is done by solving Kepler's equation for ellipses using a basic Newton-Raphson iteration scheme and <b>third</b>-order iteration/starting value.
+   *
+   * See:
+   * <a href="http://murison.alpheratz.net/dynamics/twobody/KeplerIterations_summary.pdf">
+   *  Marc A. Murison, "A Practical Method for Solving the Kepler Equation", U.S. Naval Observatory, Washington DC, 6 November 2006
+   * </a>
+   *
+   * @param MA Mean anomaly [rad]
+   * @param e Orbit Eccentricity [-]
+   * @param tol Absolute accuracy of the obtained eccentric anomaly [rad]
+   * @return The eccentric anomaly [rad]
+   */
+  def eccentricAnomalyFromMean(MA: Double, e: Double, tol: Double = 1E-14) = {
+    val Mnorm = mod(MA, 2 * Pi)
+
+    // Initial guess
+    val t34 = e * e
+    val t35 = e * t34
+    val t33 = cos(Mnorm)
+    var E0 = Mnorm + (-1.0/2.0*t35+e+(t34+3.0/2.0*t33*t35)*t33)*sin(Mnorm)
+
+    var dE = tol + 1.0
+    while (dE > tol) {
+      val t1 = cos(E0)
+      val t2 = -1.0+e*t1
+      val t3 = sin(E0)
+      val t4 = e*t3
+      val t5 = -E0+t4+Mnorm
+      val t6 = t5/(1.0/2.0*t5*t4/t2+t2)
+      val E  = E0 - t5/((1.0/2.0*t3 - 1.0/6.0*t1*t6)*e*t6+t2)
+      dE = abs(E-E0)
+      E0 = E
+    }
+    E0
   }
 
   /**
