@@ -67,7 +67,7 @@ class QuickStart {
       state
     }
 
-    logger.info("Plotting the ephemeris")
+    logger.info("Plotting the ephemeris (TODO)")
     val x = Array.ofDim[Double](states.size)
     val y = Array.ofDim[Double](states.size)
     states.zipWithIndex.map(entry => {
@@ -88,7 +88,7 @@ class QuickStart {
     // Original orbit
     val Rp = EarthConstants.radiusMean + 190E3
     val Ra = 50000E3
-    val k = new Keplerian((Ra + Rp) / 2, eccentricity(Rp, Ra), 0, 0, 0, 0, earthFrame)
+    val k = new Keplerian((Ra + Rp) / 2, eccentricity(Rp, Ra), 0.01, 0, 0, 0, earthFrame)
 
     // The satellite that will perform the specific maneuver
     val satelliteT0 = MySatellite(Epochs.J2000, k)

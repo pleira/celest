@@ -19,7 +19,7 @@ class TestSnippets extends FlatSpec with Matchers {
     .setUrls(ClasspathHelper.forPackage("snippets"))
     .setScanners(new ResourcesScanner())
   )
-  val snippets = reflections.getResources( """.*\.scala""".r.pattern)
+  val snippets = reflections.getResources( """.*\.sc""".r.pattern)
 
   snippets.asScala.map(snippet => snippet should "compile and run without exception" in {
     val interpreter = {
