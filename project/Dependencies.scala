@@ -14,8 +14,9 @@ object Dependencies {
   val guava =           "com.google.guava"            %  "guava"                    % "17.0"
   val jgrapht =         "net.sf.jgrapht"              %  "jgrapht"                  % "0.8.3"
   val jsr305 =          "com.google.code.findbugs"    %  "jsr305"                   % "2.0.3" // Required for guava
+  val jzy3d = "org.jzy3d" % "jzy3d" % "0.9.1"
   val logbackClassic =  "ch.qos.logback"              %  "logback-classic"          % "1.0.13"
-  val miglayout =       "com.miglayout"               %  "miglayout-swing"          % "5.0-SNAPSHOT"
+  val miglayout = "com.miglayout" % "miglayout-swing" % "5.0"
   val reflections =     "org.reflections"             %  "reflections"              % "0.9.9-RC1" exclude( "com.google.guava", "guava" )
   val scalaGlsl =       "be.angelcorp.scala-glsl"     %% "core"                     % "1.0.0-SNAPSHOT"
   val scalaGuice =      "net.codingwell"              %% "scala-guice"              % "4.0.0-beta4"
