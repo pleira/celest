@@ -31,7 +31,7 @@ object BuildSettings {
   )
   val forkedRun = Seq(
     // Do not run in the same JVM (native libraries can only be loaded once in sbt, running again requires a restart of sbt)
-    javaOptions ++= List("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"),
+    //javaOptions ++= List("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"),
     fork := true
   )
 
@@ -88,10 +88,10 @@ object MyBuild extends Build {
     "examples",
     file("examples"),
     settings = buildSettings ++ forkedRun ++ Seq(
-      libraryDependencies ++= Seq( miglayout, reflections, servletApi ),
+      libraryDependencies ++= Seq( jfreechart, miglayout, reflections, servletApi ),
       libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value
     )
-  ) dependsOn celest_core
+  ) dependsOn(celest_core, celest_simulation)
 
   lazy val celest_simulation: Project = Project(
     "simulation",

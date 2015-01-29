@@ -26,6 +26,7 @@ import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.time.Epochs
 import be.angelcorp.celest.trajectory.{CompositeTrajectory, KeplerTrajectory}
 import be.angelcorp.celest.universe.DefaultUniverse
+import be.angelcorp.celest.examples.plot._
 import org.slf4j.LoggerFactory
 
 import scala.math._
@@ -67,9 +68,9 @@ class QuickStart {
       state
     }
 
-    logger.info("Plotting the ephemeris (TODO)")
-    val x = Array.ofDim[Double](states.size)
-    val y = Array.ofDim[Double](states.size)
+    logger.info("Plotting the ephemeris")
+    val plotX = Array.ofDim[Double](states.size)
+    val plotY = Array.ofDim[Double](states.size)
     states.zipWithIndex.map(entry => {
       val state = entry._1
       val index = entry._2
@@ -77,9 +78,12 @@ class QuickStart {
       val n = Vec3.z
       val r = state.position
       val projected = r - (n * (r dot n))
-      x(index) = projected.x
-      y(index) = projected.y
+      plotX(index) += projected.x
+      plotY(index) += projected.y
     })
+
+    plot( plotX, plotY, "Trajectory" )
+
   } catch {
     case e: Throwable => logger.error("Unexpected exception when trying to solve the quickstart example: ", e)
   }
