@@ -18,6 +18,9 @@ object BuildSettings {
 
     libraryDependencies ++= List(scalaLogging, logbackClassic, scalaTest),
     testOptions in Test += Tests.Argument("-oF"), // show full stack traces for scalatest
+    testOptions in Test <+= (target in Test) map {
+      t => Tests.Argument(TestFrameworks.ScalaTest, "junitxml(directory=\"%s\")" format (t / "test-reports"))
+    },
 
     publishMavenStyle := true,
     publishArtifact in Test := false,
