@@ -80,7 +80,7 @@ public class SolarRadiationPressure {
      * @param satellite      Satellite the force acts upon.
      * @param satelliteOrbit Orbit of the satellite on which the force acts?
      */
-    public Vec3 getForce(Orbit starOrbit, CelestialBody satellite, Orbit satelliteOrbit) {
+    public Vec3 getForce(Orbit<?> starOrbit, CelestialBody satellite, Orbit<?> satelliteOrbit) {
         return toAcceleration(starOrbit, satellite, satelliteOrbit).$times(satellite.mass());
     }
 
@@ -117,7 +117,7 @@ public class SolarRadiationPressure {
      * @param satellite      Satellite the force acts upon.
      * @param satelliteOrbit Orbit of the satellite on which the force acts?
      */
-    public Vec3 toAcceleration(Orbit starOrbit, CelestialBody satellite, Orbit satelliteOrbit) {
+    public Vec3 toAcceleration(Orbit<?> starOrbit, CelestialBody satellite, Orbit<?> satelliteOrbit) {
         // Relative position vector of spacecraft w.r.t. Sun (from the sun to s/c)
         Vec3 d = satelliteOrbit.toPosVel().position().$minus(starOrbit.toPosVel().position());
 

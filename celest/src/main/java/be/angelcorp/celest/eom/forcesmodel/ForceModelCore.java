@@ -36,7 +36,7 @@ import java.util.List;
  *
  * @author simon
  */
-public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivative> {
+public class ForceModelCore implements IStateEquation<PosVel<?>, ICartesianDerivative> {
 
     /**
      * Body where all the forces/torques act on
@@ -80,7 +80,7 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
     }
 
     @Override
-    public ICartesianDerivative calculateDerivatives(Epoch t, PosVel y) {
+    public ICartesianDerivative calculateDerivatives(Epoch t, PosVel<?> y) {
         Vec3 a = Vec3$.MODULE$.zero();
         for (ObjectForce f : getForcesList()) {
             Vec3 dA = f.toAcceleration();
@@ -90,8 +90,8 @@ public class ForceModelCore implements IStateEquation<PosVel, ICartesianDerivati
     }
 
     @Override
-    public PosVel createState(RealVector y) {
-        return PosVel.apply(y.getEntry(0), y.getEntry(1), y.getEntry(2), y.getEntry(3), y.getEntry(4), y.getEntry(5), null);
+    public PosVel<?> createState(RealVector y) {
+        return (PosVel<?>) PosVel.apply(y.getEntry(0), y.getEntry(1), y.getEntry(2), y.getEntry(3), y.getEntry(4), y.getEntry(5), null);
     }
 
     /**

@@ -6,7 +6,7 @@ object BuildSettings {
   import Dependencies._
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
-    organization := "be.angelcorp.omicronai",
+    organization := "be.angelcorp.celest",
     version := "1.0.0-SNAPSHOT",
     scalacOptions ++= Seq(),
     scalaVersion := "2.11.2",

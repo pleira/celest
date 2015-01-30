@@ -98,7 +98,7 @@ abstract public class AtmosphericDrag {
      * @param body      The body traveling through the atmosphere.
      * @param bodyOrbit State of the body traveling through the atmosphere.
      */
-    public Vec3 getForce(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
+    public Vec3 getForce(Orbit<?> planet, CelestialBody body, Orbit<?> bodyOrbit) {
         return toAcceleration(planet, body, bodyOrbit).$times(body.mass());
     }
 
@@ -128,7 +128,7 @@ abstract public class AtmosphericDrag {
      * @param body      The body traveling through the atmosphere.
      * @param bodyOrbit State of the body traveling through the atmosphere.
      */
-    public Vec3 toAcceleration(Orbit planet, CelestialBody body, Orbit bodyOrbit) {
+    public Vec3 toAcceleration(Orbit<?> planet, CelestialBody body, Orbit<?> bodyOrbit) {
         Vec3 r = bodyOrbit.toPosVel().position().$minus(
                 planet.toPosVel().position());
         Vec3 v = bodyOrbit.toPosVel().velocity().$minus(
