@@ -51,7 +51,7 @@ object MyBuild extends Build {
   ) aggregate(celest_core, celest_orekit, celest_sofa, celest_console, celest_examples/*, celest_simulation*/)
 
   lazy val celest_core: Project = Project(
-    "core",
+    "celest-core",
     file("celest"),
     settings = buildSettings ++ forkedRun ++ Seq(
       unmanagedSourceDirectories in Compile += baseDirectory.value / "src/main/interfaces",
@@ -80,7 +80,7 @@ object MyBuild extends Build {
   ) dependsOn celest_core
 
   lazy val celest_console: Project = Project(
-    "console",
+    "celest-console",
     file("console"),
     settings = buildSettings ++ forkedRun ++ Seq(
       libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value
@@ -88,7 +88,7 @@ object MyBuild extends Build {
   ) dependsOn celest_core
 
   lazy val celest_examples: Project = Project(
-    "examples",
+    "celest-examples",
     file("examples"),
     settings = buildSettings ++ forkedRun ++ Seq(
       libraryDependencies ++= Seq( jfreechart, miglayout, reflections, servletApi ),
@@ -97,7 +97,7 @@ object MyBuild extends Build {
   ) dependsOn(celest_core, celest_simulation)
 
   lazy val celest_simulation: Project = Project(
-    "simulation",
+    "celest-simulation",
     file("simulation"),
     settings = buildSettings ++ forkedRun ++ Seq(
       libraryDependencies ++= Seq( )
