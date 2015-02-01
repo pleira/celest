@@ -16,7 +16,6 @@
 package be.angelcorp.celest.examples.examples.quickstart
 
 import java.io.FileWriter
-
 import be.angelcorp.celest.constants.EarthConstants
 import be.angelcorp.celest.examples.gui.{CelestExample, Services}
 import be.angelcorp.celest.frameGraph.frames.GCRS
@@ -26,10 +25,11 @@ import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.time.Epochs
 import be.angelcorp.celest.trajectory.{CompositeTrajectory, KeplerTrajectory}
 import be.angelcorp.celest.universe.DefaultUniverse
-import be.angelcorp.celest.examples.plot._
 import org.slf4j.LoggerFactory
-
-import scala.math._
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
+import be.angelcorp.celest.math.geometry.DCoord
 
 @CelestExample(
   name = "Quickstart example",
@@ -58,32 +58,32 @@ class QuickStart {
 
     logger.info("Saving ephemeris to file {}", ephemerisFile)
 
+
     val tFinal = tf.relativeToS(t0)
     val states = for (t <- 0.0 until tFinal by (tFinal / samples)) yield {
       val time = t0.addS(t)
       val state = trajectory(time).toPosVel
 
       logger.debug(s"At jd=$time the state is: $state")
-      ephemerisFile.write(s"$t, ${state.position.x}, ${state.position.y}, ${state.position.z}, ${state.velocity.x}, ${state.velocity.y}, ${state.velocity.z}")
+  implicit val ev = CoordinateSpace.array[Double](3)
+      ephemerisFile.write(s"$t, ${state.position._x}, ${state.position._y}, ${state.position._z}, ${state.velocity._x}, ${state.velocity._y}, ${state.velocity._z}")
       state
     }
 
-    logger.info("Plotting the ephemeris")
-    val plotX = Array.ofDim[Double](states.size)
-    val plotY = Array.ofDim[Double](states.size)
+    logger.info("Plotting the ephemeris (TODO)")
+    val x = Array.ofDim[Double](states.size)
+    val y = Array.ofDim[Double](states.size)
     states.zipWithIndex.map(entry => {
       val state = entry._1
       val index = entry._2
 
-      val n = Vec3.z
+      val n = DCoord.z
       val r = state.position
-      val projected = r - (n * (r dot n))
-      plotX(index) += projected.x
-      plotY(index) += projected.y
+      val projected = r - (n :* (r dot n))
+  implicit val ev = CoordinateSpace.array[Double](3)
+      x(index) = projected._x
+      y(index) = projected._y
     })
-
-    plot( plotX, plotY, "Trajectory" )
-
   } catch {
     case e: Throwable => logger.error("Unexpected exception when trying to solve the quickstart example: ", e)
   }

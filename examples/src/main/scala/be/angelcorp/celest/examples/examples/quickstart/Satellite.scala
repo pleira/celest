@@ -20,6 +20,10 @@ import be.angelcorp.celest.state.{Keplerian, PosVel, Orbit}
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+
 class MySatellite[F <: BodyCenteredSystem]
 (e: Epoch, s: Orbit[F],
  val hydrazine: Propellant,
@@ -44,7 +48,7 @@ class MySatellite[F <: BodyCenteredSystem]
   def kickLAE(ΔV: Double) = {
     val HLAE = getHydrazineLAE.consumeDV(this, ΔV)
     val currentState = s.toPosVel
-    val newState = new PosVel(currentState.position, currentState.velocity + (s.toPosVel.velocity.normalized * ΔV), currentState.frame)
+    val newState = new PosVel(currentState.position, currentState.velocity + (s.toPosVel.velocity.normalize :* ΔV), currentState.frame)
     new MySatellite(e, newState, HLAE.primairy, HLAE.secondairy, xenon)
   }
 
