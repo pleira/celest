@@ -19,7 +19,7 @@ object Dependencies {
   val miglayout =       "com.miglayout"               %  "miglayout-swing"          % "5.0"
   val reflections =     "org.reflections"             %  "reflections"              % "0.9.9-RC1" exclude( "com.google.guava", "guava" )
   val scalaGlsl =       "be.angelcorp.scala-glsl"     %% "core"                     % "1.0.0-SNAPSHOT"
-  val scalaGuice =      "net.codingwell"              %% "scala-guice"              % "4.0.0-beta4"
+  val scalaGuice =      "net.codingwell"              %% "scala-guice"              % "4.0.0-beta5"
   val scalaLogging =    "com.typesafe.scala-logging"  %% "scala-logging-slf4j"      % "2.1.2"
   val scalaParser =     "org.scala-lang.modules"      %% "scala-parser-combinators" % "1.0.2"
   val scalaTest =       "org.scalatest"               %% "scalatest"                % "2.2.1"       % "test"
