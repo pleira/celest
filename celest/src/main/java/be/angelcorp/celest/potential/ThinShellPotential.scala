@@ -16,9 +16,10 @@
 package be.angelcorp.celest.potential
 
 import be.angelcorp.celest.body.Satellite
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.frameGraph.ReferenceSystem
 
+import be.angelcorp.celest.math.geometry.PowerArray._
+import be.angelcorp.celest.math.geometry.DCoord
 
 /**
  * Create an ideal gravitational potential of thin spherical shell. This is equivalent to a point mass,
@@ -34,11 +35,11 @@ class ThinShellPotential[F <: ReferenceSystem](body: Satellite[F], val radius: D
 
   val radiusSq = radius * radius
 
-  override def apply(point: Vec3) =
+  override def apply(point: Array[Double]) =
     if (point.normSq < radiusSq)
     // Valid where R is outside the shell, R >= R2
     // U = Constants.GRAVITATIONAL_CONSTANT / r and is constant, so dU/dr = 0
-      Vec3.zero
+      DCoord.zero
     else
     // Valid where R is inside the shell, R <= R1
     // U = GM/r = spherically symmetric

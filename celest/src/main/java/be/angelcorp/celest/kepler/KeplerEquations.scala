@@ -18,13 +18,15 @@ package be.angelcorp.celest.kepler
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import be.angelcorp.celest.kepler
 import be.angelcorp.celest.math.CelestialRotate
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.state.{Keplerian, PosVel}
 
-import scala.math._
-
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
+  
+  // implicit val ev = CoordinateSpace.array[Double](3)
 
   /** Cached value for sin(i) */
   lazy val sini = sin( k.i )
@@ -169,7 +171,7 @@ abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
   lazy val trueLongitude = {
     val ν = trueAnomaly
     val p = semiLatusRectum
-    val R_pqw = Vec3(p * cosν / (1 + k.e * cosν), p * sinν / (1 + k.e * cosν), 0)
+    val R_pqw = Array[Double](p * cosν / (1 + k.e * cosν), p * sinν / (1 + k.e * cosν), 0.0)
     val R = CelestialRotate.PQW2ECI(k.argumentOfPeriapsis, k.rightAscension, k.inclination) * R_pqw
     kepler.trueLongitude(R)
   }
@@ -178,11 +180,12 @@ abstract class KeplerEquations[F <: BodyCenteredSystem](k: Keplerian[F]) {
    * @see KeplerEquations#trueLongitudeOfPeriapseApproximate(Vector3D)
    */
   lazy val trueLongitudeOfPeriapse = {
-    val e_unit_vec = Vec3(
+    val e_unit_vec = Array[Double](
       cosΩ * cosω - cosi * sinΩ * sinω,
       sinΩ * cosω + cosi * cosΩ * sinω,
       sini * sinω)
-    kepler.trueLongitudeOfPeriapse(e_unit_vec * k.eccentricity)
+    val ecc = k.eccentricity *: e_unit_vec
+    kepler.trueLongitudeOfPeriapse(ecc)
   }
 
   /**

@@ -16,12 +16,16 @@
 
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
-import math._
 import org.apache.commons.math3.util.FastMath
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+import be.angelcorp.celest.math.geometry.PowerArray._
 
 /**
  * This function solves the high-thrust Lambert problem. It does this using an algorithm developed by
@@ -56,7 +60,8 @@ class Lambert2[F <: BodyCenteredSystem]
   val longWay = {
     val r1 = this.r1.position
     val r2 = this.r1.position
-    val progradeIsLong = r1.x * r2.y - r2.x * r1.y < 0.0
+    implicit val ev = CoordinateSpace.array[Double](3)
+    val progradeIsLong = r1._x * r2._y - r2._x * r1._y < 0.0
     if (prograde) progradeIsLong else !progradeIsLong
   }
 
@@ -71,8 +76,8 @@ class Lambert2[F <: BodyCenteredSystem]
 
     // Undimentionalize all units;
     val r1 = origin.norm
-    val r1vec = origin / r1
-    val r2vec = destination / r1
+    val r1vec = origin :/ r1
+    val r2vec = destination :/ r1
     val V = sqrt(frame.centerBody.μ / r1)
     val T = r1 / V
     val tf = abs(arrivalEpoch.relativeToS(departureEpoch) / T)
@@ -80,14 +85,14 @@ class Lambert2[F <: BodyCenteredSystem]
     // relevant geometry parameters (non dimensional)
     val mr2vec = r2vec.norm
 
-    val dth = if (longWay) 2 * Pi - origin.angle(destination) else origin.angle(destination)
+    val dth = if (longWay) 2 * pi - origin.angle(destination) else origin.angle(destination)
 
     // derived quantities
     val c = sqrt(1 + mr2vec * mr2vec - 2 * mr2vec * cos(dth)) // non-dimensional chord
     val s = (1 + mr2vec + c) / 2 // non-dimensional semi-perimeter
     val a_min = s / 2 // minimum energy ellipse semi major axis
     val Lambda = sqrt(mr2vec) * cos(dth / 2) / s // lambda parameter (from BATTIN's book)
-    val planeNormal = (r1vec cross r2vec).normalized // orbit plane unit vector
+    val planeNormal = (r1vec cross r2vec).normalize // orbit plane unit vector
 
     // Initial values
     val logt = log(tf); // avoid re-computing the same value
@@ -95,8 +100,8 @@ class Lambert2[F <: BodyCenteredSystem]
     // single revolution (1 solution)
     val inn1 = if (N == 0) -0.5233 else if (leftBranch) +0.7234 else -0.5234
     val inn2 = if (N == 0) +0.5233 else if (leftBranch) +0.5234 else -0.2234
-    var x1 = if (N == 0) log(1 + inn1) else tan(inn1 * Pi / 2)
-    var x2 = if (N == 0) log(1 + inn2) else tan(inn2 * Pi / 2)
+    var x1 = if (N == 0) log(1 + inn1) else tan(inn1 * pi / 2)
+    var x2 = if (N == 0) log(1 + inn2) else tan(inn2 * pi / 2)
 
     val longwaySign = if (longWay) -1 else 1
 
@@ -107,8 +112,8 @@ class Lambert2[F <: BodyCenteredSystem]
     val aalfa = xx map (x => 2 * acos(x))
 
     // evaluate the time of flight via Lagrange expression
-    val y12 = (aa._1 * sqrt(aa._1) * ((aalfa._1 - sin(aalfa._1)) - (bbeta._1 - sin(bbeta._1)) + 2 * Pi * N),
-      aa._2 * sqrt(aa._2) * ((aalfa._2 - sin(aalfa._2)) - (bbeta._2 - sin(bbeta._2)) + 2 * Pi * N))
+    val y12 = (aa._1 * sqrt(aa._1) * ((aalfa._1 - sin(aalfa._1)) - (bbeta._1 - sin(bbeta._1)) + 2 * pi * N),
+      aa._2 * sqrt(aa._2) * ((aalfa._2 - sin(aalfa._2)) - (bbeta._2 - sin(bbeta._2)) + 2 * pi * N))
 
     // initial estimates for y
     var (y1, y2) =
@@ -131,7 +136,7 @@ class Lambert2[F <: BodyCenteredSystem]
 
       xnew = (x1 * y2 - y1 * x2) / (y2 - y1)
 
-      val x = if (N == 0) exp(xnew) - 1 else atan(xnew) * 2 / Pi
+      val x = if (N == 0) exp(xnew) - 1 else atan(xnew) * 2 / pi
       val a = a_min / (1 - x * x)
       var alfa = 0.0
       var beta = 0.0
@@ -148,7 +153,7 @@ class Lambert2[F <: BodyCenteredSystem]
       }
       // evaluate the time of flight via Lagrange expression
       val tof = if (a > 0)
-        a * sqrt(a) * ((alfa - sin(alfa)) - (beta - sin(beta)) + 2 * Pi * N)
+        a * sqrt(a) * ((alfa - sin(alfa)) - (beta - sin(beta)) + 2 * pi * N)
       else
         -a * sqrt(-a) * ((sinh(alfa) - alfa) - (sinh(beta) - beta))
       // new value of y
@@ -172,7 +177,7 @@ class Lambert2[F <: BodyCenteredSystem]
       throw new ArithmeticException("Lambert2 failed to converge to a solution, use an alternative targeter instead eg. Lambert3")
     } else {
       // convert converged value of x
-      val x = if (N == 0) exp(xnew) - 1 else atan(xnew) * 2 / Pi
+      val x = if (N == 0) exp(xnew) - 1 else atan(xnew) * 2 / pi
 
       // The solution has been evaluated in terms of log(x+1) or tan(x*pi/2), we now need the conic.
       // As for transfer angles near to pi the Lagrange-coefficients technique goes singular (dg
@@ -205,10 +210,10 @@ class Lambert2[F <: BodyCenteredSystem]
         }
 
       // unit of the normalized normal vector
-      val ih = planeNormal * longwaySign
+      val ih = planeNormal :* longwaySign
 
       // unit vector for normalized [r2vec]
-      val r2n = r2vec / mr2vec
+      val r2n = r2vec :/ mr2vec
 
       // cross-products
       val crsprd1 = ih cross r1vec
@@ -223,8 +228,8 @@ class Lambert2[F <: BodyCenteredSystem]
       val Vr2 = (Vt1 - Vt2) / tan(dth / 2) - Vr1
 
       // terminal velocities
-      val V1 = ((r1vec * Vr1) + (crsprd1 * Vt1)) * V
-      val V2 = ((r2n   * Vr2) + (crsprd2 * Vt2)) * V
+      val V1 = ((r1vec :* Vr1) + (crsprd1 :* Vt1)) :* V
+      val V2 = ((r2n   :* Vr2) + (crsprd2 :* Vt2)) :* V
 
       new LambertTrajectory2(new PosVel(origin, V1, this.r1.frame),
         new PosVel(destination, V2, this.r1.frame),

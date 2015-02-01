@@ -16,7 +16,7 @@
 
 package be.angelcorp.celest.frameGraph.frames
 
-import be.angelcorp.celest.math.geometry.{Vec3, Mat3}
+import be.angelcorp.celest.math.geometry.Mat3
 import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.math.rotation.RotationMatrix._
 import be.angelcorp.celest.physics.Units._
@@ -73,8 +73,8 @@ class HeliosphericCoordinateFrames(implicit universe: Universe) {
     new KinematicTransformationFactory[ReferenceSystem, ReferenceSystem] {
       def calculateParameters(date: Epoch): TransformationParameters = {
         new TransformationParameters(date,
-          Vec3.zero, Vec3.zero, Vec3.zero,
-          trans(date), Vec3.zero, Vec3.zero
+          Array[Double](0,0,0), Array[Double](0,0,0), Array[Double](0,0,0),
+          trans(date), Array[Double](0,0,0), Array[Double](0,0,0)
         )
       }
 

@@ -15,10 +15,12 @@
  */
 package be.angelcorp.celest.kepler
 
-import math._
 import org.apache.commons.math3.util.FastMath
 import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 class KeplerHyperbola[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEquations(k) {
 
@@ -56,12 +58,12 @@ object KeplerHyperbola {
     /* Generate an initial guess */
     var H0 =
       if (e < 1.6) {
-        if (((M < 0.0) && (M > -Pi)) || M > Pi)
+        if (((M < 0.0) && (M > -pi)) || M > pi)
           M - e
         else
           M + e
       } else {
-        if (e < 3.6 && M > Pi)
+        if (e < 3.6 && M > pi)
           M - e
         else
           M / (e - 1)

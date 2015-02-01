@@ -15,9 +15,14 @@
  */
 package be.angelcorp.celest.kepler
 
-import math._
+
 import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 class KeplerCircular[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEllipse(k) {
 

@@ -17,10 +17,14 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.state.{PosVel, Orbit}
 import be.angelcorp.celest.time.Epoch
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
+
 
 /**
  * Transformation that consists only of a single translation between the two respective frameGraph frames.
@@ -33,7 +37,7 @@ import be.angelcorp.celest.time.Epoch
  * @tparam F1 Resulting frame after this transformation.
  * @tparam T  Factory that produced this transformation.
  */
-class TranslationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val dx: Vec3, val epoch: Epoch, val factory: T)
+class TranslationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: ReferenceFrameTransformFactory[F0, F1]](val dx: Array[Double], val epoch: Epoch, val factory: T)
   extends BasicReferenceFrameTransform[F0, F1, T] {
 
   def transform(positionState: Orbit[F0]): Orbit[F1] = {
@@ -44,16 +48,16 @@ class TranslationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T <: Re
   def transformOrientation(orientation: Rotation): Rotation =
     orientation
 
-  def transformPos(position: Vec3): Vec3 =
+  def transformPos(position: Array[Double]): Array[Double] =
     position + dx
 
-  def transformPosVel(position: Vec3, velocity: Vec3): (Vec3, Vec3) =
+  def transformPosVel(position: Array[Double], velocity: Array[Double]): (Array[Double], Array[Double]) =
     (position + dx, velocity)
 
-  def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3) =
+  def transformPosVelAcc(position: Array[Double], velocity: Array[Double], acceleration: Array[Double]): (Array[Double], Array[Double], Array[Double]) =
     (position + dx, velocity, acceleration)
 
-  override def transformVector(vector: Vec3): Vec3 =
+  override def transformVector(vector: Array[Double]): Array[Double] =
     vector
 
 }

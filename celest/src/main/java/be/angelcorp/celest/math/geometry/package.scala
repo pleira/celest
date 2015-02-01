@@ -1,6 +1,12 @@
 package be.angelcorp.celest.math
 
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+//import be.angelcorp.celest.math.geometry.PowerArray._
+
 package object geometry {
+
 
   /**
    * Return a vector pointing in the same direction as another
@@ -19,7 +25,7 @@ package object geometry {
    * @param Nref Specifies the reference vector.
    * @see http://www.opengl.org/sdk/docs/man4/html/faceforward.xhtml
    */
-  def faceforward(N: Vec3, I: Vec3, Nref: Vec3) =
+  def faceforward(N: Array[Double], I: Array[Double], Nref: Array[Double]) =
     if (Nref.dot(I) < 0) N else -N
 
   /**
@@ -35,8 +41,8 @@ package object geometry {
   def reflect(I: Vec2, N: Vec2) =
     I - (N * N.dot(I) * 2.0)
 
-  def reflect(I: Vec3, N: Vec3) =
-    I - (N * N.dot(I) * 2.0)
+  def reflect(I: Array[Double], N: Array[Double]) =
+    I - (N :* N.dot(I) :* 2.0)
 
   def reflect(I: Vec4, N: Vec4) =
     I - (N * N.dot(I) * 2.0)
@@ -47,16 +53,16 @@ package object geometry {
     if(k < 0)
       0
     else
-      (I * eta) - (N * (eta * dotValue + scala.math.sqrt(k)) )
+      (I * eta) - (N * (eta * dotValue + sqrt(k)) )
   }
 
-  def refract(I: Vec3, N: Vec3, eta: Double) = {
+  def refract(I: Array[Double], N: Array[Double], eta: Double) = {
     val dotValue = N dot I
     val k = 1.0 - eta * eta * (1.0 - dotValue * dotValue)
     if(k < 0)
       0
     else
-      (I * eta) - (N * (eta * dotValue + scala.math.sqrt(k)))
+      (I :* eta) - (N :* (eta * dotValue + sqrt(k)))
   }
 
   def refract(I: Vec4, N: Vec4, eta: Double) = {
@@ -65,7 +71,7 @@ package object geometry {
     if(k < 0)
       0
     else
-      (I * eta) - (N * (eta * dotValue + scala.math.sqrt(k)))
+      (I * eta) - (N * (eta * dotValue + sqrt(k)))
   }
 
   /** Apply additional scaling to a 3D transformation */
@@ -76,15 +82,17 @@ package object geometry {
   }
 
   /** Apply additional scaling to a 3D transformation */
-  def scale(mtx: Mat4, scale: Vec3): Mat4 = {
+  def scale(mtx: Mat4, scale: Array[Double]): Mat4 = {
     val result = Mat4(mtx)
-    this.scale(mtx, scale.x, scale.y, scale.z, result)
+   implicit val ev = CoordinateSpace.array[Double](3)
+    this.scale(mtx, scale._x, scale._y, scale._z, result)
     result
   }
 
   /** Apply additional scaling to a 3D transformation */
-  def scale(mtx: Mat4, scale: Vec3, result: Mat4) {
-    this.scale(mtx, scale.x, scale.y, scale.z, result)
+  def scale(mtx: Mat4, scale: Array[Double], result: Mat4) {
+   implicit val ev = CoordinateSpace.array[Double](3)
+    this.scale(mtx, scale._x, scale._y, scale._z, result)
   }
 
   /** Apply additional scaling to a 3D transformation */
@@ -143,14 +151,14 @@ package object geometry {
   }
 
   /** Apply additional rotation to a 3D transformation */
-  def rotate(mtx: Mat4, angle: Double, axis: Vec3): Mat4 = {
+  def rotate(mtx: Mat4, angle: Double, axis: Array[Double]): Mat4 = {
     val result = Mat4(mtx)
     rotate(mtx, angle, axis, result)
     result
   }
 
   /** Apply additional rotation to a 3D transformation */
-  def rotate(mtx: Mat4, angle: Double, axis: Vec3, result: Mat4) {
+  def rotate(mtx: Mat4, angle: Double, axis: Array[Double], result: Mat4) {
     val rot = Mat3.rotate( angle, axis )
     val t00 = mtx.m00 * rot.m00 + mtx.m10 * rot.m01 + mtx.m20 * rot.m02
     val t01 = mtx.m01 * rot.m00 + mtx.m11 * rot.m01 + mtx.m21 * rot.m02
@@ -183,8 +191,8 @@ package object geometry {
 
   /** Apply additional rotation to a 2D transformation */
   def rotate(mtx: Mat3, angle: Double, result: Mat3) {
-    val c = scala.math.cos(angle)
-    val s = scala.math.sin(angle)
+    val c = cos(angle)
+    val s = sin(angle)
     val t00 = mtx.m00 * (+c) + mtx.m10 * (+s)
     val t01 = mtx.m01 * (+c) + mtx.m11 * (+s)
     val t02 = mtx.m02 * (+c) + mtx.m12 * (+s)
@@ -203,19 +211,32 @@ package object geometry {
   }
 
   /** Apply additional translation to a 3D transformation */
-  def translate( mtx: Mat4, offset: Vec3 ): Mat4 = {
+  def translate( mtx: Mat4, offset: Array[Double] ): Mat4 = {
     val result = Mat4(mtx)
-    translate(mtx, offset, result)
-    result
+    val trans = translate(mtx, offset)
+    trans
   }
 
+    def translate( mtx: Mat4, offset: Array[Double], result: Mat4) : Mat4 = {
+        implicit val ev = CoordinateSpace.array[Double](3)
+      Mat4(
+      result.m00, result.m01, result.m02, result.m03,
+      result.m10, result.m11, result.m12, result.m13,
+      result.m20, result.m21, result.m22, result.m23,        
+    result.m30 + mtx.m00 * offset._x + mtx.m10 * offset._y + mtx.m20 * offset._z,
+    result.m31 + mtx.m01 * offset._x + mtx.m11 * offset._y + mtx.m21 * offset._z,
+    result.m32 + mtx.m02 * offset._x + mtx.m12 * offset._y + mtx.m22 * offset._z,
+    result.m33 + mtx.m03 * offset._x + mtx.m13 * offset._y + mtx.m23 * offset._z
+    )
+    }
+  
   /** Apply additional translation to a 3D transformation */
-  def translate( mtx: Mat4, offset: Vec3, result: Mat4 ) {
-    result.m30 += mtx.m00 * offset.x + mtx.m10 * offset.y + mtx.m20 * offset.z
-    result.m31 += mtx.m01 * offset.x + mtx.m11 * offset.y + mtx.m21 * offset.z
-    result.m32 += mtx.m02 * offset.x + mtx.m12 * offset.y + mtx.m22 * offset.z
-    result.m33 += mtx.m03 * offset.x + mtx.m13 * offset.y + mtx.m23 * offset.z
-  }
+//  def translate( mtx: Mat4, offset: Array[Double], result: Mat4 ) {
+//    result.m30 += mtx.m00 * offset._x + mtx.m10 * offset._y + mtx.m20 * offset._z
+//    result.m31 += mtx.m01 * offset._x + mtx.m11 * offset._y + mtx.m21 * offset._z
+//    result.m32 += mtx.m02 * offset._x + mtx.m12 * offset._y + mtx.m22 * offset._z
+//    result.m33 += mtx.m03 * offset._x + mtx.m13 * offset._y + mtx.m23 * offset._z
+//  }
 
   /** Apply additional translation to a 2D transformation */
   def translate( mtx: Mat3, offset: Vec2 ): Mat3 = {

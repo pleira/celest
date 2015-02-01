@@ -1,8 +1,12 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransformFactory, ReferenceSystem}
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.time.Epoch
+
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 trait TranslationalTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
   extends BasicReferenceFrameTransformFactory[F0, F1] {
@@ -12,7 +16,7 @@ trait TranslationalTransformFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem
    * @param epoch Epoch for the frame transformation.
    * @return Translation offset to use in the transform from F0 to F1.
    */
-  def translation(epoch: Epoch): Vec3
+  def translation(epoch: Epoch): Array[Double]
 
   /**
    * Factory that generates the inverse transformation from F1 => F0 by inverting the rotation matrix (= transpose)

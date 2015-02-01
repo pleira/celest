@@ -16,11 +16,15 @@
 
 package be.angelcorp.celest
 
-import be.angelcorp.celest.math.geometry.{Mat3, Vec3}
+import be.angelcorp.celest.math.geometry.{Mat3,DCoord}
 
-import scala.math._
 import math.CelestialRotate
 import be.angelcorp.celest.state.PosVel
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
+import be.angelcorp.celest.math.geometry.PowerArray._
 
 package object kepler {
 
@@ -52,10 +56,11 @@ package object kepler {
    * @param radius Vector pointing to the satellite
    * @return Argument of latitude [rad]
    */
-  def arguementOfLatitude(nodalVector: Vec3, radius: Vec3) = {
+  def arguementOfLatitude(nodalVector: Array[Double], radius: Array[Double]) = {
     val u = acos(nodalVector.dot(radius) / (nodalVector.norm * radius.norm))
-    if (radius.z < 0) // Checking for quadrant
-      2 * Pi - u
+    implicit val ev = CoordinateSpace.array[Double](3)
+    if (radius._z < 0) // Checking for quadrant
+      2 * pi - u
     else
       u
   }
@@ -75,18 +80,18 @@ package object kepler {
    * @return (a, e, i, ω, Ω, ν)
    */
   def cartesian2kepler(state: PosVel[_], µ: Double) = {
-    val R = state.position
-    val V = state.velocity
+    val R : Array[Double] = state.position
+    val V : Array[Double] = state.velocity
 
-    val h = R cross V // Specific angular momentum vector
-    val N = Vec3.z cross h
+    val h : Array[Double] = R cross V // Specific angular momentum vector
+    val N = DCoord.z cross h
 
     val rNorm = R.norm
     val vNorm2 = V.normSq
     val nNorm = N.norm
 
     // Eccentricity vector
-    val e_vec = ((R * (vNorm2 - µ / rNorm)) - (V * R.dot(V))) / µ
+    val e_vec = ((R :* (vNorm2 - µ / rNorm)) - (V :* R.dot(V))) :/ µ
     val ecc = e_vec.norm // Magnitude of eccentricity vector
 
     val zeta = vNorm2 / 2 - µ / rNorm; // Specific mechanical energy of orbit
@@ -95,20 +100,24 @@ package object kepler {
       -µ / (2 * zeta); // Semi-major axis
     else
       Double.PositiveInfinity
+      
+ implicit val ev = CoordinateSpace.array[Double](3)
+    val hNorm : Double = h.norm
+    val hz : Double = h._z
+    
+    val inc = acos(hz / hNorm) // inclination of orbit
 
-    val inc = acos(h.z / h.norm) // inclination of orbit
-
-    var Omega = acos(N.x / nNorm) // Right ascension of ascending node
-    if (N.y < 0) // Checking for quadrant
-      Omega = 2 * Pi - Omega
+    var Omega = acos(N._x / nNorm) // Right ascension of ascending node
+    if (N._y < 0) // Checking for quadrant
+      Omega = 2 * pi - Omega
 
     var w = acos(N.dot(e_vec) / (nNorm * ecc)) // Argument of perigee
-    if (e_vec.z < 0) // Checking for quadrant
-      w = 2 * Pi - w
+    if (e_vec._z < 0) // Checking for quadrant
+      w = 2 * pi - w
 
     var nu = e_vec angle R // True anomaly
     if (R.dot(V) < 0) // Checking for quadrant
-      nu = 2 * Pi - nu
+      nu = 2 * pi - nu
 
     (a, ecc, inc, w, Omega, nu)
   }
@@ -128,7 +137,7 @@ package object kepler {
     val rNorm = R.norm
     val vNorm2 = V.normSq
 
-    val e_vec = ((R * (vNorm2 - μ / rNorm)) - (V * R.dot(V))) / μ
+    val e_vec = ((R :* (vNorm2 - μ / rNorm)) - (V :* R.dot(V))) :/ μ
     val ecc = e_vec.norm
 
     val a = if ((1.0 - abs(ecc)) > KeplerEquations.eccentricityTolarance) // Checking to see if orbit is parabolic
@@ -138,7 +147,7 @@ package object kepler {
 
     var nu = acos(e_vec.dot(R) / (ecc * rNorm)); // True anomaly
     if (R.dot(V) < 0) // Checking for quadrant
-      nu = 2 * Pi - nu
+      nu = 2 * pi - nu
 
     (a, ecc, nu)
   }
@@ -167,22 +176,23 @@ package object kepler {
    *
    * @return angular momentum vector
    */
-  def getH(R: Vec3, V: Vec3) = R * V
+  def getH(R: Array[Double], V: Array[Double]) = R * V
 
   /**
    * Compute the gravity gradient matrix (dg/dr).
    *
    * @return Gravity gradient matrix.
    */
-  def gravityGradient(R: Vec3, µ: Double) = {
+  def gravityGradient(R: Array[Double], µ: Double) = {
     val rmag = R.norm
     val r2 = rmag * rmag
     val muor3 = µ / (r2 * rmag)
     val jk = 3.0 * muor3 / r2
 
-    val xx = R.x
-    val yy = R.y
-    val zz = R.z
+  implicit val ev = CoordinateSpace.array[Double](3)
+    val xx = R._x
+    val yy = R._y
+    val zz = R._z
 
     val gg00 = jk * xx * xx - muor3
     val gg01 = jk * xx * yy
@@ -227,13 +237,13 @@ package object kepler {
     val p = a * (1 - ecc * ecc)
 
     // CREATING THE R VECTOR IN THE pqw COORDINATE FRAME
-    val R_pqw = Vec3(
+    val R_pqw = Array[Double](
       p * cos(nu) / (1 + ecc * cos(nu)),
       p * sin(nu) / (1 + ecc * cos(nu)),
       0)
 
     // CREATING THE V VECTOR IN THE pqw COORDINATE FRAME
-    val V_pqw = Vec3(
+    val V_pqw = Array[Double](
       -sqrt(µ / p) * sin(nu),
       sqrt(µ / p) * (ecc + cos(nu)),
       0)
@@ -250,10 +260,10 @@ package object kepler {
    *
    * @return g vector
    */
-  def localGravity(r: Vec3, µ: Double) = {
+  def localGravity(r: Array[Double], µ: Double) = {
     val rmag = r.norm
     val muor3 = µ / pow(rmag, 3)
-    r * -muor3
+    r :* -muor3
   }
 
   /**
@@ -279,10 +289,11 @@ package object kepler {
    * @param radius Satellite position vector
    * @return The true longitude
    */
-  def trueLongitude(radius: Vec3) = {
-    val lambda_true = acos(radius.x / radius.norm)
-    if (radius.y < 0) // Checking for quadrant
-      2 * Pi - lambda_true
+  def trueLongitude(radius: Array[Double]) = {
+    implicit val ev = CoordinateSpace.array[Double](3)
+    val lambda_true = acos(radius._x / radius.norm)
+    if (radius._y < 0) // Checking for quadrant
+      2 * pi - lambda_true
     else
       lambda_true
   }
@@ -316,10 +327,11 @@ package object kepler {
    *
    * @return True longitude of periapse [RAD]
    */
-  def trueLongitudeOfPeriapse(eccentricityVector: Vec3) = {
-    val w_true = acos(eccentricityVector.x / eccentricityVector.norm)
-    if (eccentricityVector.y < 0) // Checking for quadrant
-      2 * Pi - w_true
+  def trueLongitudeOfPeriapse(eccentricityVector: Array[Double]) = {
+ implicit val ev = CoordinateSpace.array[Double](3)
+    val w_true = acos(eccentricityVector._x / eccentricityVector.norm)
+    if (eccentricityVector._y < 0) // Checking for quadrant
+      2 * pi - w_true
     else
       w_true
   }

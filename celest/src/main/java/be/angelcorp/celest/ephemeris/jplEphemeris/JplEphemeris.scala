@@ -1,14 +1,18 @@
 package be.angelcorp.celest.ephemeris.jplEphemeris
 
-import be.angelcorp.celest.math.geometry.Vec3
-import be.angelcorp.celest.time.{TimeRange, Epoch}
-import be.angelcorp.celest.state.PosVel
-import be.angelcorp.celest.universe.Universe
-import be.angelcorp.celest.time.JulianDate
-import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 import be.angelcorp.celest.body.Body
-import be.angelcorp.celest.physics.Units
 import be.angelcorp.celest.frameGraph.ReferenceSystem
+import be.angelcorp.celest.physics.Units
+import be.angelcorp.celest.state.PosVel
+import be.angelcorp.celest.time.Epoch
+import be.angelcorp.celest.time.JulianDate
+import be.angelcorp.celest.time.TimeRange
+import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
+import be.angelcorp.celest.universe.Universe
+
+import spire.algebra._
+import spire.math._
+
 
 trait JplEphemeris[F <: ReferenceSystem] {
 
@@ -25,7 +29,7 @@ trait JplEphemeris[F <: ReferenceSystem] {
   def epoch2index(time: Epoch) = {
     // Index of the record that contains the epoch
     //floor( time.relativeTo(metadata.range.start) / metadata.range.step ).toInt
-    math.ceil(time.relativeTo(metadata.range.start) / metadata.range.step).toInt - 1
+    ceil(time.relativeTo(metadata.range.start) / metadata.range.step).toInt - 1
   }
 
   /**
@@ -36,7 +40,7 @@ trait JplEphemeris[F <: ReferenceSystem] {
    */
   def interpolateLibration(epoch: Epoch) = {
     val (l, lDot) = interpolate(epoch, 12)
-    (Vec3(l), Vec3(lDot))
+    (l, lDot)
   }
 
   /**
@@ -62,15 +66,18 @@ trait JplEphemeris[F <: ReferenceSystem] {
    * @param body  Solar system body for which position is desired
    * @return State of the body at the time.
    */
-  def interpolateState(epoch: Epoch, body: JDEBody): PosVel[F] =
+
+  def interpolateState(epoch: Epoch, body: JDEBody): PosVel[F] = {
+    import spire.implicits._ // provides infix operators, instances and conversions
+    val posVel =    
     if (body == Earth()) {
       val emb = interpolateState(epoch, EMB())
       val moon = interpolateState(epoch, MoonGEO())
 
       // Translate from the Earth-Moon barycenter to Earth
       val s = 1.0 + metadata.EMRAT
-      val p = emb.position - moon.position / s
-      val v = emb.velocity - moon.velocity / s
+      val p = emb.position - moon.position :/ s
+      val v = emb.velocity - moon.velocity :/ s
 
       new PosVel(p, v, frame)
     } else if (body == Moon()) {
@@ -79,15 +86,17 @@ trait JplEphemeris[F <: ReferenceSystem] {
 
       /* Translate from Geocentered to Solar System barycentric */
       val s = 1.0 + metadata.EMRAT
-      val p = emb.position + moon.position * (1.0 - 1.0 / s)
-      val v = emb.velocity + moon.velocity * (1.0 - 1.0 / s)
+      val p = emb.position + moon.position :* (1.0 - 1.0 / s)
+      val v = emb.velocity + moon.velocity :* (1.0 - 1.0 / s)
       new PosVel(p, v, frame)
     } else if (body == SSB()) {
       PosVel(0, 0, 0, 0, 0, 0, frame)
     } else {
       val (p, v) = interpolate(epoch, body) // Results in [km] and [km/s]
-      new PosVel(Vec3(p) * 1000.0, Vec3(v) * 1000.0, frame)
+      new PosVel(p :* 1000.0, v :* 1000.0, frame)
     }
+    posVel
+  }
 
   /**
    * Compute the Chebeyshev polynomials and interpolate them to the specified epoch.

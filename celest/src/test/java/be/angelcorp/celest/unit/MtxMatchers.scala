@@ -1,8 +1,11 @@
 package be.angelcorp.celest.unit
 
-import be.angelcorp.celest.math.geometry.Vec3
 import org.scalactic.Prettifier
 import org.scalatest.matchers.{BeMatcher, MatchResult, Matcher}
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * Matchers for testing matrices
@@ -31,21 +34,26 @@ trait MtxMatchers {
   }
 
 
-  case class Vec3Spread(pivot: Vec3, tolerance: Vec3) extends MtxSpread[Vec3] {
-    require(tolerance.x >= 0 && tolerance.y >= 0 && tolerance.z >= 0, "tolerance elements must be zero or greater, but was " + tolerance)
+  case class Vec3Spread(pivot: Array[Double], tolerance: Array[Double]) extends MtxSpread[Array[Double]] {
+    {
+      implicit val ev = CoordinateSpace.array[Double](3)
+    require(tolerance._x >= 0 && tolerance._y >= 0 && tolerance._z >= 0, "tolerance elements must be zero or greater, but was " + tolerance)
+    }
+
     private val max = pivot + tolerance
     private val min = pivot - tolerance
-    def isWithin(vector: Vec3): Boolean = {
+    def isWithin(vector: Array[Double]): Boolean = {
       val error = vector - pivot
-      val xerr = math.abs(error.x) < tolerance.x
-      val yerr = math.abs(error.y) < tolerance.y
-      val zerr = math.abs(error.z) < tolerance.z
+      implicit val ev = CoordinateSpace.array[Double](3)
+      val xerr = abs(error._x) < tolerance._x
+      val yerr = abs(error._y) < tolerance._y
+      val zerr = abs(error._z) < tolerance._z
       xerr && yerr && zerr
     }
   }
-  implicit class Vec3Pivot( pivot: Vec3 ) {
-    def +-( tolerance: Double ): MtxSpreadMatcher[Vec3] = this +- Vec3(tolerance)
-    def +-( tolerance: Vec3 ):   MtxSpreadMatcher[Vec3] = new MtxSpreadMatcher( new Vec3Spread(pivot, tolerance) )
+  implicit class Vec3Pivot( pivot: Array[Double] ) {
+    def +-( tolerance: Double ): MtxSpreadMatcher[Array[Double]] = this +- Array[Double](tolerance, tolerance, tolerance) // FIXME
+    def +-( tolerance: Array[Double] ):   MtxSpreadMatcher[Array[Double]] = new MtxSpreadMatcher( new Vec3Spread(pivot, tolerance) )
   }
 
 }

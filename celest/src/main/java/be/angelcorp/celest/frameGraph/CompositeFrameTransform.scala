@@ -15,7 +15,6 @@
  */
 package be.angelcorp.celest.frameGraph
 
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.state.Orbit
 import be.angelcorp.celest.time.Epoch
@@ -54,19 +53,19 @@ class CompositeFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, F2 <
     transform1.transformOrientation(orientation_f1)
   }
 
-  override def transformPos(position: Vec3): Vec3 = {
+  override def transformPos(position: Array[Double]): Array[Double] = {
     val position_f1 = transform0.transformPos(position)
     transform1.transformPos(position_f1)
   }
 
-  override def transformPosVel(position: Vec3, velocity: Vec3): (Vec3, Vec3) = {
+  override def transformPosVel(position: Array[Double], velocity: Array[Double]): (Array[Double], Array[Double]) = {
     val pv_f1 = transform0.transformPosVel(position, velocity)
     val position_f1 = pv_f1._1
     val velocity_f1 = pv_f1._2
     transform1.transformPosVel(position_f1, velocity_f1)
   }
 
-  override def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3) = {
+  override def transformPosVelAcc(position: Array[Double], velocity: Array[Double], acceleration: Array[Double]): (Array[Double], Array[Double], Array[Double]) = {
     val pva_f1 = transform0.transformPosVelAcc(position, velocity, acceleration)
     val position_f1 = pva_f1._1
     val velocity_f1 = pva_f1._2
@@ -74,7 +73,7 @@ class CompositeFrameTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, F2 <
     transform1.transformPosVelAcc(position_f1, velocity_f1, acceleration_f1)
   }
 
-  override def transformVector(vector: Vec3): Vec3 = {
+  override def transformVector(vector: Array[Double]): Array[Double] = {
     val vector0 = transform0.transformVector( vector )
     transform1.transformVector( vector0 )
   }

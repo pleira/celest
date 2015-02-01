@@ -1,8 +1,6 @@
 package be.angelcorp.celest.maneuvers.targeters.qlaw
 
-import be.angelcorp.celest.math.geometry.Vec3
 
-import scala.math._
 import be.angelcorp.celest.state.{TrueAnomaly, Keplerian}
 import be.angelcorp.celest.universe.DefaultUniverse
 import be.angelcorp.celest.frameGraph.frames.{BodyCenteredSystem, GCRF}
@@ -10,6 +8,11 @@ import org.apache.commons.math3.ode.nonstiff.ClassicalRungeKuttaIntegrator
 import org.apache.commons.math3.ode.{ContinuousOutputModel, FirstOrderDifferentialEquations}
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.time.EpochAnnotations.J2000
+
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+
 
 object TestQLaw extends App {
 
@@ -30,7 +33,7 @@ object TestQLaw extends App {
   } )
 
 
-  def integrate[F <: BodyCenteredSystem]( acceleration: ((Epoch, Keplerian[F], Double) => Vec3), t0: Epoch, k0: Keplerian[F], m0: Double, tf: Epoch, Isp: Double = 300 ) = {
+  def integrate[F <: BodyCenteredSystem]( acceleration: ((Epoch, Keplerian[F], Double) => Array[Double]), t0: Epoch, k0: Keplerian[F], m0: Double, tf: Epoch, Isp: Double = 300 ) = {
     val g0 = 9.80665
     def toArray( k: Keplerian[F], m: Double, array: Array[Double] = null ) = {
       val y = if (array == null) Array.ofDim[Double](7) else array
@@ -56,9 +59,12 @@ object TestQLaw extends App {
         import k.quantities._ // import the symbols p/h/sini/...
 
         val acc  = acceleration(t, k, m)
-        val ar = acc.x
-        val as = acc.y
-        val aw = acc.z
+//        val ar = acc._x
+//        val as = acc._y
+//        val aw = acc._z
+        val ar = acc(0)
+        val as = acc(1)
+        val aw = acc(2)
 
         yDot(0) /*da/dt*/ = (2*(a*a)/h) * ( e * sinν * ar + (p/radius) * as )
         yDot(1) /*de/dt*/ = (1/h) * ( p * sinν * ar + ( (p+ radius) * cosν + radius * e ) * as )

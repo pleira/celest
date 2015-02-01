@@ -18,9 +18,13 @@ package be.angelcorp.celest.frameGraph.transformations
 import be.angelcorp.celest.frameGraph.BasicReferenceFrameTransformFactory
 import be.angelcorp.celest.frameGraph.ReferenceFrameTransform
 import be.angelcorp.celest.frameGraph.ReferenceSystem
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.time.Epoch
+
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * Abstract factory that can produce transforms, once the [[be.angelcorp.celest.frameGraph.ReferenceFrameTransformFactory# c a l c u l a t e P a r a m e t e r s ( b e.a n g e l c o r p.c e l e s t.t i m e.E p o c h )]] is implemented.
@@ -131,10 +135,10 @@ class ReferenceFrameTransformInverseFactory[F0 <: ReferenceSystem, F1 <: Referen
  *
  * @author Simon Billemont
  */
-case class TransformationParameters(epoch: Epoch,
-                                    translation: Vec3,
-                                    velocity: Vec3,
-                                    acceleration: Vec3,
-                                    rotation: Rotation,
-                                    rotationRate: Vec3,
-                                    rotationAcceleration: Vec3)
+class TransformationParameters(val epoch: Epoch,
+                                    val translation: Array[Double],
+                                    val velocity: Array[Double],
+                                    val acceleration: Array[Double],
+                                    val rotation: Rotation,
+                                    val rotationRate: Array[Double],
+                                    val rotationAcceleration: Array[Double])

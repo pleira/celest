@@ -24,7 +24,10 @@ import org.apache.commons.math3.analysis.function.{Add, Constant}
 import org.apache.commons.math3.analysis.solvers.BrentSolver
 import org.apache.commons.math3.util.Precision
 
-import scala.math._
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+
 
 
 /**
@@ -106,7 +109,7 @@ class LambertUV[F <: BodyCenteredSystem]
 
     val func = new LambertFunctionUV(A, r1norm, r2norm)
     val solver = new BrentSolver(1e-12)
-    val z = solver.solve(100, FunctionUtils.combine(new Add(), new Constant(-travelTime), func), -4d * Pi, 5.0 * Pi * Pi, 0)
+    val z = solver.solve(100, FunctionUtils.combine(new Add(), new Constant(-travelTime), func), -4d * pi, 5.0 * pi * pi, 0)
 
     val y = func.computeY(z)
     val f = 1d - y / r1norm

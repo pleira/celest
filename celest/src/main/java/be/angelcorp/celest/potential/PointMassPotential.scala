@@ -16,9 +16,11 @@
 package be.angelcorp.celest.potential
 
 import be.angelcorp.celest.body.Satellite
-import be.angelcorp.celest.math.geometry.Vec3
-import scala.math._
 import be.angelcorp.celest.frameGraph.ReferenceSystem
+
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * Create an ideal gravitational potential of a point mass, homogeneous sphere or body with a spherically
@@ -31,7 +33,7 @@ import be.angelcorp.celest.frameGraph.ReferenceSystem
  */
 class PointMassPotential[F <: ReferenceSystem](val body: Satellite[F]) extends GravitationalPotential {
 
-  override def apply(point: Vec3) =
-    -point * (body.μ / pow(point.norm, 3))
+  override def apply(point: Array[Double]) =
+    -point :* (body.μ / pow(point.norm, 3))
 
 }

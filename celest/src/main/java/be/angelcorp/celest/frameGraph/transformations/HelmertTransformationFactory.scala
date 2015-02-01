@@ -16,10 +16,13 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.ReferenceSystem
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.math.rotation.AxisAngle
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.physics.Units
+
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * An [[be.angelcorp.celest.frameGraph.ReferenceFrameTransformFactory]] which produces transformations based on a set
@@ -76,20 +79,20 @@ import be.angelcorp.celest.physics.Units
  */
 class HelmertTransformationFactory[F0 <: ReferenceSystem, F1 <: ReferenceSystem]
 (val fromFrame: F0, val toFrame: F1, val helmert_epoch: Epoch,
- val T0: Vec3, val s0: Double, val R0: Vec3, val dT0: Vec3, val ds0: Double, val dR0: Vec3)
+ val T0: Array[Double], val s0: Double, val R0: Array[Double], val dT0: Array[Double], val ds0: Double, val dR0: Array[Double])
   extends KinematicTransformationFactory[F0, F1] {
 
   /** {@inheritDoc} */
   override def calculateParameters(epoch: Epoch): TransformationParameters = {
     val dt = epoch.relativeToS(helmert_epoch)
 
-    val T = T0 + (dT0 * dt)
-    val R = R0 + (dR0 * dt)
+    val T = T0 + (dT0 :* dt)
+    val R = R0 + (dR0 :* dt)
     val s = s0 + ds0 * dt
 
-    val rotation = new AxisAngle(R.normalized, R.norm)
+    val rotation = new AxisAngle(R.normalize, R.norm)
 
-    new TransformationParameters(epoch, T, dT0, Vec3.zero, rotation, dR0, Vec3.zero)
+    new TransformationParameters(epoch, T, dT0, Array[Double](0,0,0), rotation, dR0, Array[Double](0,0,0))
   }
 
   /** {@inheritDoc} */
@@ -126,7 +129,7 @@ object HelmertTransformationFactory {
   def fromIERSunits[F0 <: ReferenceSystem, F1 <: ReferenceSystem](from: F0, to: F1, epoch: Epoch,
                                                                   Tx: Double, Ty: Double, Tz: Double, S: Double, Rx: Double, Ry: Double, Rz: Double,
                                                                   dTx: Double, dTy: Double, dTz: Double, dS: Double, dRx: Double, dRy: Double, dRz: Double): HelmertTransformationFactory[F0, F1] = {
-    fromIERSunits(from, to, epoch, Vec3(Tx, Ty, Tz), S, Vec3(Rx, Ry, Rz), Vec3(dTx, dTy, dTz), dS, Vec3(dRx, dRy, dRz))
+    fromIERSunits(from, to, epoch, Array[Double](Tx, Ty, Tz), S, Array[Double](Rx, Ry, Rz), Array[Double](dTx, dTy, dTz), dS, Array[Double](dRx, dRy, dRz))
   }
 
   /**
@@ -144,20 +147,20 @@ object HelmertTransformationFactory {
    * </p>
    *
    * @return A new { @link HelmertTransformationFactory} with the supplied parameters
-   * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.celest.time.Epoch, Vec3, double,
-   *      Vec3, Vec3, double, Vec3)
+   * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.celest.time.Epoch, Array[Double], double,
+   *      Array[Double], Array[Double], double, Array[Double])
    */
-  def fromIERSunits[F0 <: ReferenceSystem, F1 <: ReferenceSystem](from: F0, to: F1, epoch: Epoch, T: Vec3, S: Double, R: Vec3, dT: Vec3, dS: Double, dR: Vec3): HelmertTransformationFactory[F0, F1] = {
+  def fromIERSunits[F0 <: ReferenceSystem, F1 <: ReferenceSystem](from: F0, to: F1, epoch: Epoch, T: Array[Double], S: Double, R: Array[Double], dT: Array[Double], dS: Double, dR: Array[Double]): HelmertTransformationFactory[F0, F1] = {
     val mm2m = Units.millimeter
     val y2s = Units.julianYear
     val mas2rad = Units.arcSecond(1E-3) // mas = milliarcsecond
 
-    val T2 = T * mm2m
-    val dT2 = dT * (mm2m / y2s)
+    val T2 = T :* mm2m
+    val dT2 = dT :* (mm2m / y2s)
     val S2 = S * 1E-9
     val dS2 = dS * 1E-9 / y2s
-    val R2 = R * mas2rad
-    val dR2 = dR * (mas2rad / y2s)
+    val R2 = R :* mas2rad
+    val dR2 = dR :* (mas2rad / y2s)
 
     new HelmertTransformationFactory(from, to, epoch, T2, S2, R2, dT2, dS2, dR2)
   }
@@ -186,13 +189,13 @@ object HelmertTransformationFactory {
    * @param dRx   Rotation rate x component at Helmert parameters epoch [rad/s].
    * @param dRy   Rotation rate y component at Helmert parameters epoch [rad/s].
    * @param dRz   Rotation rate z component at Helmert parameters epoch [rad/s].
-   * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.celest.time.Epoch, Vec3, double,
-   *      Vec3, Vec3, double, Vec3)
+   * @see HelmertTransformationFactory#HelmertTransformationFactory(be.angelcorp.celest.time.Epoch, Array[Double], double,
+   *      Array[Double], Array[Double], double, Array[Double])
    */
   def fromSIunits[F0 <: ReferenceSystem, F1 <: ReferenceSystem](from: F0, to: F1, epoch: Epoch,
                                                                 Tx: Double, Ty: Double, Tz: Double, S: Double, Rx: Double, Ry: Double, Rz: Double,
                                                                 dTx: Double, dTy: Double, dTz: Double, dS: Double, dRx: Double, dRy: Double, dRz: Double) = {
-    new HelmertTransformationFactory(from, to, epoch, Vec3(Tx, Ty, Tz), S, Vec3(Rx, Ry, Rz), Vec3(dTx, dTy, dTz), dS, Vec3(dRx, dRy, dRz))
+    new HelmertTransformationFactory(from, to, epoch, Array[Double](Tx, Ty, Tz), S, Array[Double](Rx, Ry, Rz), Array[Double](dTx, dTy, dTz), dS, Array[Double](dRx, dRy, dRz))
   }
 
 }

@@ -1,5 +1,9 @@
 package be.angelcorp.celest.math.geometry
 
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+
 class Mat3(var m00: Double, var m01: Double, var m02: Double,
            var m10: Double, var m11: Double, var m12: Double,
            var m20: Double, var m21: Double, var m22: Double) {
@@ -125,32 +129,35 @@ class Mat3(var m00: Double, var m01: Double, var m02: Double,
   }
 
   /** Matrix vector multiplication */
-  def dot(vector: Vec3): Vec3 = Vec3(
-    m00 * vector.x + m01 * vector.y + m02 * vector.z,
-    m10 * vector.x + m11 * vector.y + m12 * vector.z,
-    m20 * vector.x + m21 * vector.y + m22 * vector.z
+  def dot(vector: Array[Double]): Array[Double] = {
+      implicit val ev = CoordinateSpace.array[Double](3)
+  Array[Double](
+    m00 * vector._x + m01 * vector._y + m02 * vector._z,
+    m10 * vector._x + m11 * vector._y + m12 * vector._z,
+    m20 * vector._x + m21 * vector._y + m22 * vector._z
   )
-  /**
-   * Matrix vector multiplication.
-   * Alias for ''dot''
-   */
-  def *(vector: Vec3): Vec3 = dot(vector)
-
-  /** Matrix vector multiplication */
-  def dot(vector: Vec3, result: Vec3): Unit = {
-    val x = m00 * vector.x + m01 * vector.y + m02 * vector.z
-    val y = m10 * vector.x + m11 * vector.y + m12 * vector.z
-    val z = m20 * vector.x + m21 * vector.y + m22 * vector.z
-
-    result.x = x
-    result.y = y
-    result.z = z
   }
   /**
    * Matrix vector multiplication.
    * Alias for ''dot''
    */
-  def *(vector: Vec3, result: Vec3): Unit = dot(vector, result)
+  def *(vector: Array[Double]): Array[Double] = dot(vector)
+
+  /** Matrix vector multiplication */
+//  def dot(vector: Array[Double], result: Array[Double])(implicit ev: CoordinateSpace[Array[Double], Double]): Unit = {
+//    val x = m00 * vector._x+ m01 * vector._y+ m02 * vector._z
+//    val y = m10 * vector._x+ m11 * vector._y+ m12 * vector._z
+//    val z = m20 * vector._x+ m21 * vector._y+ m22 * vector._z
+//
+//    result._x= x
+//    result._y= y
+//    result._z = z
+//  }
+  /**
+   * Matrix vector multiplication.
+   * Alias for ''dot''
+   */
+//  def *(vector: Array[Double], result: Array[Double]): Unit = dot(vector, result)
 
   /** Transpose of this matrix stored in a new matrix. */
   def transpose: Mat3 = {
@@ -325,6 +332,8 @@ class Mat3(var m00: Double, var m01: Double, var m02: Double,
 
 object Mat3 {
 
+  implicit val ev = CoordinateSpace.array[Double](3)
+     
   def identity() = new Mat3(
     1, 0, 0,
     0, 1, 0,
@@ -337,16 +346,16 @@ object Mat3 {
     0, 0, 0
   )
 
-  def columns( c0: Vec3, c1: Vec3, c2: Vec3 ) = new Mat3(
-    c0.x, c1.x, c2.x,
-    c0.y, c1.y, c2.y,
-    c0.z, c1.z, c2.z
+  def columns( c0: Array[Double], c1: Array[Double], c2: Array[Double] ) = new Mat3(
+    c0._x, c1._x, c2._x,
+    c0._y, c1._y, c2._y,
+    c0._z, c1._z, c2._z
   )
 
-  def rows( r0: Vec3, r1: Vec3, r2: Vec3 ) = new Mat3(
-    r0.x, r0.y, r0.z,
-    r1.x, r1.y, r1.z,
-    r2.x, r2.y, r2.z
+  def rows( r0: Array[Double], r1: Array[Double], r2: Array[Double] ) = new Mat3(
+    r0._x, r0._y, r0._z,
+    r1._x, r1._y, r1._z,
+    r2._x, r2._y, r2._z
   )
 
   def diag( s: Double ) = new Mat3(
@@ -355,10 +364,10 @@ object Mat3 {
     0, 0, s
   )
 
-  def diag( v: Vec3 ) = new Mat3(
-    v.x, 0,  0,
-     0, v.y, 0,
-     0,  0, v.z
+  def diag( v: Array[Double] )(implicit ev: CoordinateSpace[Array[Double], Double]) = new Mat3(
+    v._x, 0,  0,
+     0, v._y, 0,
+     0,  0, v._z
   )
 
   def apply(): Mat3 = identity()
@@ -459,25 +468,25 @@ object Mat3 {
    * http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToMatrix/index.htm
    * </p>
    */
-  def rotate(angle: Double, axis: Vec3): Mat3 = {
+  def rotate(angle: Double, axis: Array[Double]) : Mat3 = {
     val c = math.cos(angle)
     val s = math.sin(angle)
     val t = 1f - c
-    val _axis = axis.normalized
+    val _axis = axis.normalize
 
-    val m00 = c + _axis.x * _axis.x * t
-    val m11 = c + _axis.y * _axis.y * t
-    val m22 = c + _axis.z * _axis.z * t
-    val tmp1 = _axis.x * _axis.y * t
-    val tmp2 = _axis.z * s
+    val m00 = c + _axis._x* _axis._x* t
+    val m11 = c + _axis._y* _axis._y* t
+    val m22 = c + _axis._z * _axis._z * t
+    val tmp1 = _axis._x * _axis._y* t
+    val tmp2 = _axis._z * s
     val m10 = tmp1 + tmp2
     val m01 = tmp1 - tmp2
-    val tmp3 = _axis.x * _axis.z * t
-    val tmp4 = _axis.y * s
+    val tmp3 = _axis._x* _axis._z * t
+    val tmp4 = _axis._y* s
     val m20 = tmp3 - tmp4
     val m02 = tmp3 + tmp4
-    val tmp5 = _axis.y * _axis.z * t
-    val tmp6 = _axis.x * s
+    val tmp5 = _axis._y* _axis._z * t
+    val tmp6 = _axis._x* s
     val m21 = tmp5 + tmp6
     val m12 = tmp5 - tmp6
     new Mat3(m00, m01, m02,

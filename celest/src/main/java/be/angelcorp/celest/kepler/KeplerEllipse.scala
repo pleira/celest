@@ -20,7 +20,10 @@ import be.angelcorp.celest.math._
 import be.angelcorp.celest.state.Keplerian
 import org.apache.commons.math3.util.FastMath.atan2
 
-import scala.math._
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
+
 
 class KeplerEllipse[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEquations(k) {
 
@@ -32,7 +35,7 @@ class KeplerEllipse[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEqua
 
   val pericenter = k.semiMajorAxis * (1 - k.eccentricity)
 
-  lazy val period = 2 * Pi / meanMotion
+  lazy val period = 2 * pi / meanMotion
 
   val semiLatusRectum = k.semiMajorAxis * (1 - k.e * k.e)
 
@@ -54,9 +57,9 @@ object KeplerEllipse {
    * @return The eccentric anomaly [rad]
    */
   def eccentricAnomalyFromMeanOld(MA: Double, e: Double) = {
-    val M = mod(MA, 2 * Pi)
+    val M = mod(MA, 2 * pi)
 
-    var E = if ((M > -Pi && M < 0) || M > Pi) M - e else M + e
+    var E = if ((M > -pi && M < 0) || M > pi) M - e else M + e
     var Etemp = E + (M - E + e * sin(E)) / (1 - e * cos(E))
 
     while (abs(Etemp - E) > KeplerEquations.anomalyIterationTol) {
@@ -82,7 +85,7 @@ object KeplerEllipse {
    * @return The eccentric anomaly [rad]
    */
   def eccentricAnomalyFromMean(MA: Double, e: Double, tol: Double = 1E-14) = {
-    val Mnorm = mod(MA, 2 * Pi)
+    val Mnorm = mod(MA, 2 * pi)
 
     // Initial guess
     val t34 = e * e

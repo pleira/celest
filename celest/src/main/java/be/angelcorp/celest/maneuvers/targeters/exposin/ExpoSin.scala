@@ -21,7 +21,9 @@ import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.Epoch
 import org.slf4j.LoggerFactory
 
-import scala.math._
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * Exponential sinusoid solution (low thrust solution) to the Lambert problem ( a two-point boundary
@@ -90,7 +92,7 @@ class ExpoSin[F <: BodyCenteredSystem](val r1: PosVel[F], val r2: PosVel[F], val
     val r2 = r2vec.norm
 
     val psi = acos(r1vec.dot(r2vec) / (r1 * r2));
-    val theta = psi + 2 * Pi * N
+    val theta = psi + 2 * pi * N
 
     new ExpoSinSolutionSet(r1, r2, assumeK2, theta, frame.centerBody.μ)
   }

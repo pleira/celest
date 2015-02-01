@@ -17,11 +17,12 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
-import be.angelcorp.celest.math.geometry.{Vec3, Mat3}
+import be.angelcorp.celest.math.geometry.Mat3
 import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.math.rotation.RotationMatrix._
 import be.angelcorp.celest.state.{Orbit, PosVel}
 import be.angelcorp.celest.time.Epoch
+
 
 /**
  * Transformation that consists only of a single rotation between the two respective frameGraph. This transformation neglects
@@ -46,16 +47,16 @@ class ConstantRotationTransform[F0 <: ReferenceSystem, F1 <: ReferenceSystem, T 
   def transformOrientation(orientation: Rotation): Rotation =
     orientation.applyTo(M)
 
-  def transformPos(position: Vec3): Vec3 =
+  def transformPos(position: Array[Double]): Array[Double] =
     M * position
 
-  def transformPosVel(position: Vec3, velocity: Vec3): (Vec3, Vec3) =
+  def transformPosVel(position: Array[Double], velocity: Array[Double]): (Array[Double], Array[Double]) =
     (M * position, M * velocity)
 
-  def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3) =
+  def transformPosVelAcc(position: Array[Double], velocity: Array[Double], acceleration: Array[Double]): (Array[Double], Array[Double], Array[Double]) =
     (M * position, M * velocity, M * acceleration)
 
-  override def transformVector(vector: Vec3): Vec3 =
+  override def transformVector(vector: Array[Double]): Array[Double] =
     M * vector
 
 }

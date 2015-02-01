@@ -1,6 +1,9 @@
 package be.angelcorp.celest.math.geometry
 
 import be.angelcorp.celest.math.geometry
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 class Mat4( var m00: Double, var m01: Double, var m02: Double, var m03: Double,
             var m10: Double, var m11: Double, var m12: Double, var m13: Double,
@@ -321,10 +324,10 @@ class Mat4( var m00: Double, var m01: Double, var m02: Double, var m03: Double,
   def scale(scale: Double): Mat4 =
     geometry.scale(this, scale)
 
-  def scale(scale: Vec3): Mat4 =
+  def scale(scale: Array[Double]): Mat4 =
     geometry.scale(this, scale)
 
-  def scale(scale: Vec3, result: Mat4) =
+  def scale(scale: Array[Double], result: Mat4) =
     geometry.scale(this, scale, result)
 
   def scale(scale: Double, result: Mat4) =
@@ -333,22 +336,22 @@ class Mat4( var m00: Double, var m01: Double, var m02: Double, var m03: Double,
   def scale(scaleX: Double, scaleY: Double, scaleZ: Double, result: Mat4) =
     geometry.scale(this, scaleX, scaleY, scaleZ, result)
 
-  def rotate(angle: Double, axis: Vec3): Mat4 =
+  def rotate(angle: Double, axis: Array[Double]): Mat4 =
     geometry.rotate(this, angle, axis)
 
-  def rotate(angle: Double, axis: Vec3, result: Mat4) =
+  def rotate(angle: Double, axis: Array[Double], result: Mat4) =
     geometry.rotate(this, angle, axis, result)
 
-  def translate( offset: Vec3 ): Mat4 =
+  def translate( offset: Array[Double] ): Mat4 =
     geometry.translate(this, offset)
 
-  def translate( offset: Vec3, result: Mat4 ) =
+  def translate( offset: Array[Double], result: Mat4 ) =
     geometry.translate(this, offset, result)
 
 }
 
 object Mat4 {
-
+  implicit val ev = CoordinateSpace.array[Double](3)
   /**
    * The identity matrix:
    * <pre>
@@ -512,13 +515,13 @@ object Mat4 {
   /**
    * Create a affine transformation matrix that translates by the given vector.
    */
-  def translate( v: Vec3 ): Mat4 =
-    translate( v.x, v.y, v.z )
+  def translate( v: Array[Double] ): Mat4 =
+    translate( v._x, v._y, v._z )
 
   /**
    * Create a affine transformation matrix that rotates according to the given axis-angle rotation.
    */
-  def rotate( angle: Double, axis: Vec3 ) = Mat4( Mat3.rotate(angle, axis) )
+  def rotate( angle: Double, axis: Array[Double] ) = Mat4( Mat3.rotate(angle, axis) )
 
   /**
    * Create a affine transformation matrix that rotates around the X-axis.
@@ -538,15 +541,15 @@ object Mat4 {
   /**
    * Create a affine transformation matrix that scales by the given scalar.
    */
-  def scale( s: Double ): Mat4 = scale( Vec3(s, s, s) )
+  def scale( s: Double ): Mat4 = scale( Array[Double](s, s, s) )
 
   /**
    * Create a affine transformation matrix that scales by the given vector.
    */
-  def scale( s: Vec3 ): Mat4 = Mat4(
-    s.x, 0,   0,   0,
-    0,   s.y, 0,   0,
-    0,   0,   s.z, 0,
+  def scale( s: Array[Double] ): Mat4 = Mat4(
+    s._x, 0,   0,   0,
+    0,   s._y, 0,   0,
+    0,   0,   s._z, 0,
     0,   0,   0,   1
   )
 

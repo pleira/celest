@@ -4,7 +4,6 @@ import javax.inject.{Inject, Provider, Singleton}
 
 import be.angelcorp.celest.data.eop._
 import be.angelcorp.celest.frameGraph.frames._
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.timeStandard.TimeStandard
@@ -18,12 +17,16 @@ import com.google.inject.util.Providers
 import net.codingwell.scalaguice.ScalaModule
 import org.eclipse.aether.repository.RemoteRepository
 import org.scalatest.{FlatSpec, Matchers}
-
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 /**
  * Test IAU reference systems, based on:
  * D. Vallado et al. ,<b>"Implementation Issues Surrounding the New IAU Reference Systems for Astrodynamics"</b>, 16th AAS/AIAA Space Flight Mechanics Conference, Florida, January 2006<br/>
  */
 class TestIAUReferenceSystems extends FlatSpec with Matchers {
+
+  implicit val ev = CoordinateSpace.array[Double](3)
 
   def makeUniverse(eop: EarthOrientationDataEntry) = new DefaultUniverseBuilder {
     modules += new DefaultAether
@@ -60,40 +63,41 @@ class TestIAUReferenceSystems extends FlatSpec with Matchers {
   }.result
 
   "The framegraph" should "operate correctly on the default IAU frames" in {
-    implicit val universe = makeUniverse(new EarthOrientationDataEntry(2004, 4, 6, 53101, arcSeconds(-0.140682), arcSeconds(0.333309), -0.439962, 0.001556, arcSeconds(-0.000199), arcSeconds(-0.000252)))
+    val eode = new EarthOrientationDataEntry(2004, 4, 6, 53101, arcSeconds(-0.140682), arcSeconds(0.333309), -0.439962, 0.001556, arcSeconds(-0.000199), arcSeconds(-0.000252))
+    implicit val universe = makeUniverse(eode)
     val epoch = new JulianDate(2453101.82815474550, TT)
     val framegraph = universe.instance[ReferenceFrameGraph]
 
     val itrf = universe.instance[ITRS]
     val pv = new PosVel(
-      Vec3(-1033.4793830E3, 7901.2952754E3, 6380.3565958E3),
-      Vec3(-3.225636520E3, -2.872451450E3, 5.531924446E3),
+      Array(-1033.4793830E3, 7901.2952754E3, 6380.3565958E3),
+      Array(-3.225636520E3, -2.872451450E3, 5.531924446E3),
       itrf
     )
 
     val pvTIRS = framegraph.getTransform(itrf, universe.instance[TIRS], epoch).get.transform(pv).toPosVel
-    pvTIRS.position.x should be(-1033.4750312E3 +- 1E-3)
-    pvTIRS.position.y should be(7901.3055856E3 +- 1E-3)
-    pvTIRS.position.z should be(6380.3445328E3 +- 1E-3)
-    pvTIRS.velocity.x should be(-3.225632747E3 +- 1E-3)
-    pvTIRS.velocity.y should be(-2.872442511E3 +- 1E-3)
-    pvTIRS.velocity.z should be(5.531931288E3 +- 1E-3)
+    pvTIRS.position._x should be(-1033.4750312E3 +- 1E-3)
+    pvTIRS.position._y should be(7901.3055856E3 +- 1E-3)
+    pvTIRS.position._z should be(6380.3445328E3 +- 1E-3)
+    pvTIRS.velocity._x should be(-3.225632747E3 +- 1E-3)
+    pvTIRS.velocity._y should be(-2.872442511E3 +- 1E-3)
+    pvTIRS.velocity._z should be(5.531931288E3 +- 1E-3)
 
     val pvERF = framegraph.getTransform(itrf, universe.instance[ERS], epoch).get.transform(pv).toPosVel
-    pvERF.position.x should be(5094.5146278E3 +- 1E-2)
-    pvERF.position.y should be(6127.3665880E3 +- 1E-2)
-    pvERF.position.z should be(6380.3445328E3 +- 1E-2)
-    pvERF.velocity.x should be(-4.746088587E3 +- 1E-3)
-    pvERF.velocity.y should be(0.786077104E3 +- 1E-3)
-    pvERF.velocity.z should be(5.531931288E3 +- 1E-3)
+    pvERF.position._x should be(5094.5146278E3 +- 1E-2)
+    pvERF.position._y should be(6127.3665880E3 +- 1E-2)
+    pvERF.position._z should be(6380.3445328E3 +- 1E-2)
+    pvERF.velocity._x should be(-4.746088587E3 +- 1E-3)
+    pvERF.velocity._y should be(0.786077104E3 +- 1E-3)
+    pvERF.velocity._z should be(5.531931288E3 +- 1E-3)
 
     val pvMOD_corr = framegraph.getTransform(itrf, universe.instance[MOD], epoch).get.transform(pv).toPosVel
-    pvMOD_corr.position.x should be(5094.0283745E3 +- 1E0)
-    pvMOD_corr.position.y should be(6127.8708164E3 +- 1E0)
-    pvMOD_corr.position.z should be(6380.2485164E3 +- 1E0)
-    pvMOD_corr.velocity.x should be(-4.746263052E3 +- 1E-3)
-    pvMOD_corr.velocity.y should be(0.786014045E3 +- 1E-3)
-    pvMOD_corr.velocity.z should be(5.531790562E3 +- 1E-3)
+    pvMOD_corr.position._x should be(5094.0283745E3 +- 1E0)
+    pvMOD_corr.position._y should be(6127.8708164E3 +- 1E0)
+    pvMOD_corr.position._z should be(6380.2485164E3 +- 1E0)
+    pvMOD_corr.velocity._x should be(-4.746263052E3 +- 1E-3)
+    pvMOD_corr.velocity._y should be(0.786014045E3 +- 1E-3)
+    pvMOD_corr.velocity._z should be(5.531790562E3 +- 1E-3)
   }
 
 }

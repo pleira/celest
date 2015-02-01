@@ -17,15 +17,17 @@ package be.angelcorp.celest.maneuvers.targeters.exposin
 
 import be.angelcorp.celest.constants.Constants
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.time.Epochs
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.universe.DefaultUniverse
 import org.scalatest.{FlatSpec, Matchers}
-
-import scala.math._
+import be.angelcorp.celest.math.geometry.DCoord
+import be.angelcorp.celest.math.geometry.PowerArray
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * Validation of the Exposin angular rate equations
@@ -46,23 +48,23 @@ class TestExpoSin extends FlatSpec with Matchers with CelestTest {
   "ExpoSin" should "generate the correct trajectory for n=0" in {
     val r1 = 151366683.169E3
     val r2 = 206953872.627E3
-    val dTheta = 1.9532 + 0 * (2 * Pi)
+    val dTheta = 1.9532 + 0 * (2 * pi)
     val k2 = 0.7013
     val dt = days(130)
 
     val t1 = Epochs.J2000(universe)
     val t2 = Epochs.J2000(universe).addS(dt)
 
-    val s1 = new PosVel[BodyCenteredSystem]( Vec3(r1, 0, 0), Vec3.zero, null)
-    val s2 = new PosVel[BodyCenteredSystem]( Vec3.spherical(dTheta, 0) * r2, Vec3.zero, null)
+    val s1 = new PosVel[BodyCenteredSystem]( Array(r1, 0, 0), DCoord.zero, null)
+    val s2 = new PosVel[BodyCenteredSystem]( PowerArray.spherical(dTheta, 0) :* r2, DCoord.zero, null)
 
     val frame = BodyCenteredSystem(Constants.mass2mu(1.9891E30))
     val exposin = new ExpoSin(s1, s2, t1, t2, frame)
     exposin.assumeK2 = k2
 
     // Results as computed by the Matlab routine:
-    val ml_V1 = Vec3(-2.951216831366131e+002, +3.310652568212942e+004, 0)
-    val ml_V2 = Vec3(-2.572543389259841e+004, -2.886383731363452e+003, 0)
+    val ml_V1 = Array[Double](-2.951216831366131e+002, +3.310652568212942e+004, 0)
+    val ml_V2 = Array[Double](-2.572543389259841e+004, -2.886383731363452e+003, 0)
     val ml_k0 = 2.272595936284008e+011
     val ml_k1 = -4.065864323385938e-001
     val ml_k2 = 7.013000000000000e-001
@@ -91,20 +93,23 @@ class TestExpoSin extends FlatSpec with Matchers with CelestTest {
     val c2 = trajectory.apply(t2)
     assertEquals(r1, c1.position.norm, 1e-16)
     assertEquals(r2, c2.position.norm, 1)
-    c1.velocity.x should be (ml_V1.x +- 1E-1)
-    c1.velocity.y should be (ml_V1.y +- 1E-1)
-    c1.velocity.z should be (ml_V1.z +- 1E-1)
-    c2.velocity.x should be (ml_V2.x +- 1E-1)
-    c2.velocity.y should be (ml_V2.y +- 1E-1)
-    c2.velocity.z should be (ml_V2.z +- 1E-1)
+  
+    implicit val ev = CoordinateSpace.array[Double](3)
+    
+    c1.velocity._x should be (ml_V1._x +- 1E-1)
+    c1.velocity._y should be (ml_V1._y +- 1E-1)
+    c1.velocity._z should be (ml_V1._z +- 1E-1)
+    c2.velocity._x should be (ml_V2._x +- 1E-1)
+    c2.velocity._y should be (ml_V2._y +- 1E-1)
+    c2.velocity._z should be (ml_V2._z +- 1E-1)
   }
 
   it should "generate the correct trajectory for n=3" in {
     val k2 = 1.0 / 12.0
     val dt = days(1E-3)
     val N = 3
-    val r1 = new PosVel[BodyCenteredSystem](Vec3(2, 0, 0), Vec3.zero, null)
-    val r2 = new PosVel[BodyCenteredSystem](Vec3(0.2, -1, 0), Vec3.zero, null)
+    val r1 = new PosVel[BodyCenteredSystem](Array[Double](2, 0, 0), DCoord.zero, null)
+    val r2 = new PosVel[BodyCenteredSystem](Array[Double](0.2, -1, 0), DCoord.zero, null)
 
     val t1 = Epochs.J2000(universe)
     val t2 = Epochs.J2000(universe).addS(dt)
@@ -115,8 +120,8 @@ class TestExpoSin extends FlatSpec with Matchers with CelestTest {
     exposin.assumeK2 = k2
 
     // Results as computed by the Matlab routine:
-    val ml_V1 = Vec3(+4.279665287258510e+001, +5.461017978436156e+001, 0)
-    val ml_V2 = Vec3(-8.557155856649688e+001, -4.647847748181721e+001, 0)
+    val ml_V1 = Array[Double](+4.279665287258510e+001, +5.461017978436156e+001, 0)
+    val ml_V2 = Array[Double](-8.557155856649688e+001, -4.647847748181721e+001, 0)
     val ml_k0 = 2.494219696832175e-004
     val ml_k1 = 1.300955416481242e+001
     val ml_k2 = 8.333333333333333e-002
@@ -145,11 +150,13 @@ class TestExpoSin extends FlatSpec with Matchers with CelestTest {
     val c2 = trajectory.apply(t2)
     assertEquals(r1.position.norm, c1.position.norm, 1e-15)
     assertEquals(r2.position.norm, c2.position.norm, 1)
-    c1.velocity.x should be (ml_V1.x +- 1E-1)
-    c1.velocity.y should be (ml_V1.y +- 1E-1)
-    c1.velocity.z should be (ml_V1.z +- 1E-1)
-    c2.velocity.x should be (ml_V2.x +- 1E-1)
-    c2.velocity.y should be (ml_V2.y +- 1E-1)
-    c2.velocity.z should be (ml_V2.z +- 1E-1)
+    implicit val ev = CoordinateSpace.array[Double](3)
+    
+    c1.velocity._x should be (ml_V1._x +- 1E-1)
+    c1.velocity._y should be (ml_V1._y +- 1E-1)
+    c1.velocity._z should be (ml_V1._z +- 1E-1)
+    c2.velocity._x should be (ml_V2._x +- 1E-1)
+    c2.velocity._y should be (ml_V2._y +- 1E-1)
+    c2.velocity._z should be (ml_V2._z +- 1E-1)
   }
 }

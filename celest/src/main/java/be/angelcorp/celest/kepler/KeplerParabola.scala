@@ -18,10 +18,13 @@ package be.angelcorp.celest.kepler
 import org.apache.commons.math3.analysis.solvers.NewtonSolver
 import org.apache.commons.math3.analysis.{UnivariateFunction, DifferentiableUnivariateFunction}
 
-import math._
 import be.angelcorp.celest.math._
 import be.angelcorp.celest.state.Keplerian
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 class KeplerParabola[F <: BodyCenteredSystem](k: Keplerian[F]) extends KeplerEquations(k) {
 
@@ -66,9 +69,9 @@ object KeplerParabola {
   }
 
   def anomalyFromTrue(trueA: Double) = {
-    val nu = mod(trueA, 2 * Pi)
-    if (nu > Pi)
-      tan(nu - 2 * Pi)
+    val nu = mod(trueA, 2 * pi)
+    if (nu > pi)
+      tan(nu - 2 * pi)
     else
       tan(nu / 2)
   }

@@ -8,7 +8,6 @@ import java.text.{DecimalFormatSymbols, DecimalFormat, NumberFormat}
 import java.util.Locale
 import java.nio.file.StandardOpenOption._
 import scala.Some
-import scala.math._
 import scala.io.Source
 import scala.collection.immutable.ListMap
 import org.slf4j.LoggerFactory
@@ -17,6 +16,11 @@ import be.angelcorp.celest.util._
 import be.angelcorp.celest.time.JulianDate
 import be.angelcorp.celest.time.timeStandard.TimeStandards.TDB
 import be.angelcorp.celest.frameGraph.frames.ICRS
+
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 package object jplEphemeris {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -368,7 +372,7 @@ package object jplEphemeris {
    *         - {de_number, calender_date, Julian_Date, target_body, center_body, coordinate_id, coordinate_value}
    *         - Expected value, computed value [AU|AU/s|rad|rad/s]
    */
-  def test(ephemeris: JplEphemeris[_], testFile: Source, maximumTests: Option[Int] = None)(implicit universe: Universe) = {
+  def test(ephemeris: JplEphemeris[_], testFile: Source, maximumTests: Option[Int] = None)(implicit universe: Universe, ev: CoordinateSpace[Array[Double], Double]) = {
     // Ephemeris AU is in [km] not in [m]
     val AU = ephemeris.metadata.AU * 1E3
     // Read header of file, up to and including the EOT line
@@ -434,26 +438,27 @@ package object jplEphemeris {
           case 15 => // Libration
             val precession = ephemeris.interpolateLibration(epoch)
             coord match {
-              case 1 => precession._1.x
-              case 2 => precession._1.y
-              case 3 => precession._1.z
-              case 4 => precession._2.x
-              case 5 => precession._2.y
-              case _ => precession._2.z
+              case 1 => precession._1._x
+              case 2 => precession._1._y
+              case 3 => precession._1._z
+              case 4 => precession._2._x
+              case 5 => precession._2._y
+              case _ => precession._2._z
             }
           case target => // Planetairy state
             val bodyState = ephemeris.interpolateState(epoch, correctBody(target))
             val centerState = ephemeris.interpolateState(epoch, correctBody(cent))
-            val resultPosition = (bodyState.position - centerState.position) / AU // in [AU]
-            val resultVelocity = (bodyState.velocity - centerState.velocity) * 86400.0 / AU // in [AY/day]
-            coord match {
-              case 1 => resultPosition.x
-              case 2 => resultPosition.y
-              case 3 => resultPosition.z
-              case 4 => resultVelocity.x
-              case 5 => resultVelocity.y
-              case _ => resultVelocity.z
-            }
+ //implicit val ev = CoordinateSpace.array[Double](3)
+//            val resultPosition = (bodyState.position - centerState.position) :/ AU // in [AU]
+//            val resultVelocity = (bodyState.velocity - centerState.velocity) :* 86400.0 / AU // in [AY/day]
+//            coord match {
+//              case 1 => resultPosition._x
+//              case 2 => resultPosition._y
+//              case 3 => resultPosition._z
+//              case 4 => resultVelocity._x
+//              case 5 => resultVelocity._y
+//              case _ => resultVelocity._z
+//            }
         }
       } catch {
         case e: Throwable => Double.NaN

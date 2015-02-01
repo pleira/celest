@@ -15,10 +15,11 @@
  */
 package be.angelcorp.celest.state
 
-import be.angelcorp.celest.math.geometry.Vec3
-
-import math._
 import be.angelcorp.celest.frameGraph.ReferenceSystem
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
+import be.angelcorp.celest.math.geometry.DCoord
 
 /**
  * Spherical elements are basically the length of the radius r and velocity vector v, and its orientation
@@ -77,11 +78,11 @@ class Spherical[F <: ReferenceSystem]
     val cosG = cos(γ)
     val sinG = sin(γ)
 
-    val R = Vec3(
+    val R = Array(
       r * cosD * cosAl,
       r * cosD * sinAl,
       r * sinD)
-    val V = Vec3(
+    val V = Array(
       v * (cosAl * (-cosA * cosG * sinD + sinG * cosD) - sinA * cosG * sinAl),
       v * (sinAl * (-cosA * cosG * sinD + sinG * cosD) + sinA * cosG * cosAl),
       v * (cosA * cosG * cosD + sinG * cosD))
@@ -93,6 +94,8 @@ class Spherical[F <: ReferenceSystem]
 
 object Spherical {
 
+    implicit val ev = CoordinateSpace.array[Double](3)
+    
   /**
    * Create a set of [[be.angelcorp.celest.state.Spherical]] from another
    * [[be.angelcorp.celest.state.Orbit]]. Chooses itself what the best way of converting is.
@@ -114,13 +117,13 @@ object Spherical {
     // Orbital Mechanics with Numerit: Astrodynamic Coordinates
     val R = posvel.position
     val V = posvel.velocity
-
+import be.angelcorp.celest.math.geometry.PowerArray._
     val r = R.norm
     val v = V.norm
-    val α = atan2(R.y, R.x)
-    val δ = atan2(R.z, sqrt(pow(R.x, 2) + pow(R.y, 2)))
-    val γ = Pi / 2.0 - R.angle(V) // TODO: Quadrant corrections ?
-    val ψ = atan2(r * (R.x * V.y - R.y * V.x), R.y * (R.y * V.z - R.z * V.y) - R.x * (R.z * V.x - R.x * V.z))
+    val α = atan2(R._y, R._x)
+    val δ = atan2(R._z, sqrt(pow(R._x, 2) + pow(R._y, 2)))
+    val γ = pi / 2.0 - (R angle V) // TODO: Quadrant corrections ?
+    val ψ = atan2(r * (R._x * V._y - R._y * V._x), R._y * (R._y * V._z - R._z * V._y) - R._x * (R._z * V._x - R._x * V._z))
 
     new Spherical(r, α, δ, v, γ, ψ, posvel.frame)
   }

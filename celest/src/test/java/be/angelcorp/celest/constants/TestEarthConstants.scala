@@ -15,13 +15,15 @@
  */
 package be.angelcorp.celest.constants
 
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.physics.Units._
 import be.angelcorp.celest.state.{PosVel, Spherical}
 import be.angelcorp.celest.time.{Epochs, JulianDate}
 import be.angelcorp.celest.universe.DefaultUniverse
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 class TestEarthConstants extends FlatSpec with ShouldMatchers {
 
@@ -35,12 +37,18 @@ class TestEarthConstants extends FlatSpec with ShouldMatchers {
     // AU/days/Degree
 
     val state_actual_k = trajectory(Epochs.J2000)
-    val state_actual_c = state_actual_k.toPosVel
-    val state_actual_s = Spherical(state_actual_c)
+    val state_actual_c = {
+      implicit val ev = CoordinateSpace.array[Double](3)
+      state_actual_k.toPosVel
+    }
+    val state_actual_s = {
+      implicit val ev = CoordinateSpace.array[Double](3)
+      Spherical(state_actual_c)
+    }
 
     val state_true_c = new PosVel(
-      new Vec3(-1.771351029694605E-01, 9.672416861070041E-01, -4.092421117973204E-06) * AU,
-      new Vec3(-1.720762505701730E-02, -3.158782207802509E-03, 1.050630211603302E-07) * (AU / julianDay),
+      Array(-1.771351029694605E-01, 9.672416861070041E-01, -4.092421117973204E-06) :* AU,
+      Array(-1.720762505701730E-02, -3.158782207802509E-03, 1.050630211603302E-07) :* (AU / julianDay),
       state_actual_k.frame
     )
     val state_true_s = Spherical(state_true_c)
@@ -68,8 +76,8 @@ class TestEarthConstants extends FlatSpec with ShouldMatchers {
     val state_actual_s = Spherical(state_actual_c)
 
     val state_true_c = new PosVel(
-      new Vec3(-9.813457035727633E-01, -1.876731681458192E-01, 1.832964606032273E-06) * AU,
-      new Vec3(2.958686601622319E-03, -1.696218721190317E-02, -5.609085586954323E-07) * (AU / julianDay),
+      Array(-9.813457035727633E-01, -1.876731681458192E-01, 1.832964606032273E-06) :* AU,
+      Array(2.958686601622319E-03, -1.696218721190317E-02, -5.609085586954323E-07) :* (AU / julianDay),
       state_actual_k.frame
     )
     val state_true_s = Spherical(state_true_c)

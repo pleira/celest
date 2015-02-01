@@ -16,10 +16,13 @@
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.state.{PosVel, Keplerian}
 import be.angelcorp.celest.trajectory.{Trajectory, KeplerTrajectory}
+
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * Create a solution to the classical Lambert problem (pure keplerian two-point boundary value problem).
@@ -36,7 +39,7 @@ import be.angelcorp.celest.trajectory.{Trajectory, KeplerTrajectory}
  * @tparam F Frame type in which the motion takes place
  */
 class LambertTrajectory[F <: BodyCenteredSystem]
-(r1: Vec3, r2: Vec3, frame: F, departureEpoch: Epoch, arrivalEpoch: Epoch,
+(r1: Array[Double], r2: Array[Double], frame: F, departureEpoch: Epoch, arrivalEpoch: Epoch,
  f: Double, g: Double, g_dot: Double) extends Trajectory[F] {
 
   /**
@@ -57,13 +60,13 @@ class LambertTrajectory[F <: BodyCenteredSystem]
    *
    * @return Inertial velocity at R1 [m/s]
    */
-  def v1 = (r2 - (r1 * f)) / g
+  def v1 = (r2 - (r1 :* f)) :/ g
 
   /**
    * Get the inertial velocity when arriving R2
    *
    * @return Inertial velocity at R2 [m/s]
    */
-  def v2 = ((r2 * g_dot) - r1) / g
+  def v2 = ((r2 :* g_dot) - r1) :/ g
 
 }

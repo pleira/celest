@@ -23,7 +23,10 @@ import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.universe.DefaultUniverse
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.math._
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+import  be.angelcorp.celest.math.geometry.PowerArray._
 
 class TestExpoSinSolution extends FlatSpec with Matchers with CelestTest {
 
@@ -43,7 +46,7 @@ class TestExpoSinSolution extends FlatSpec with Matchers with CelestTest {
     val r2 = 206953872.627E3
     val k2 = 0.7013
     val gamma = -0.03858
-    val dTheta = 1.9532 + 0 * (2 * Pi)
+    val dTheta = 1.9532 + 0 * (2 * pi)
 
     // EXPECTED OUTPUT
     val R_tol = 1E1
@@ -90,7 +93,7 @@ class TestExpoSinSolution extends FlatSpec with Matchers with CelestTest {
     val r2 = 207035807.816E3
     val k2 = 0.3192
     val gamma = 0.02342
-    val dTheta = 1.7915 + 1 * (2 * Pi)
+    val dTheta = 1.7915 + 1 * (2 * pi)
 
     // EXPECTED OUTPUT
     val R_tol = 1E1
@@ -138,7 +141,7 @@ class TestExpoSinSolution extends FlatSpec with Matchers with CelestTest {
     val r2 = 222257727.478E3
     val k2 = 0.1524
     val gamma = 0.01048
-    val dTheta = 0.0419 + 3 * (2 * Pi)
+    val dTheta = 0.0419 + 3 * (2 * pi)
 
     // EXPECTED OUTPUT
     val R_tol = 1E1

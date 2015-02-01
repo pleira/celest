@@ -16,9 +16,7 @@
 package be.angelcorp.celest.maneuvers.targeters.exposin
 
 import be.angelcorp.celest.math.functions.ExponentialSinusoid
-import be.angelcorp.celest.math.geometry.{Mat3, Vec3}
-
-import math._
+import be.angelcorp.celest.math.geometry.{Mat3, DCoord}
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import org.apache.commons.math3.analysis.{FunctionUtils, UnivariateFunction}
@@ -27,6 +25,10 @@ import org.apache.commons.math3.analysis.function.Inverse
 import org.apache.commons.math3.analysis.solvers.RiddersSolver
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.trajectory.Trajectory
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
+import be.angelcorp.celest.math.geometry.PowerArray._
 
 /**
  * Creates a trajectory from a known [[be.angelcorp.celest.maneuvers.targeters.exposin.ExpoSin]] solution to the
@@ -77,18 +79,18 @@ class ExpoSinTrajectory[F <: BodyCenteredSystem](val exposin: ExponentialSinusoi
     val r_dot = theta_dot * (exposin.getQ0 + exposin.getK1 * exposin.getK2 * c) * r
 
     // Compose the radial vector
-    val R_norm = Vec3(Math.cos(theta), Math.sin(theta), 0)
-    val R = R_norm * r
+    val R_norm = Array(cos(theta), sin(theta), 0)
+    val R = R_norm :* r
 
     // Compute the scale of the velocity components
     val V_r = r_dot
     val V_theta = r * theta_dot
-    val V_theta_norm = Vec3.z cross R_norm
+    val V_theta_norm = DCoord.z cross R_norm
 
     // TODO: make inherit this rotation from the ExpoSin input states
     val rotation = Mat3.identity()
     // Compose the velocity vector from radial and tangential velocities
-    val V = rotation * (R.normalized * V_r) + (V_theta_norm * V_theta)
+    val V = rotation * (R.normalize :* V_r) + (V_theta_norm :* V_theta)
 
     // Convert to the position in cartesian elements (in plane coordinates)
     new PosVel(R, V, frame)

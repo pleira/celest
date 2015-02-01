@@ -16,7 +16,6 @@
 package be.angelcorp.celest.state
 
 import be.angelcorp.celest.frameGraph.ReferenceSystem
-import be.angelcorp.celest.math.geometry.Vec3
 
 /**
  * [[be.angelcorp.celest.state.Orbit]] in the form of the Cartesian position (x,y,z) and velocity (&#7819;,
@@ -33,7 +32,7 @@ import be.angelcorp.celest.math.geometry.Vec3
  *
  * @author Simon Billemont
  */
-class PosVel[F <: ReferenceSystem](val position: Vec3, val velocity: Vec3, val frame: F) extends Orbit[F] {
+class PosVel[F <: ReferenceSystem](val position: Array[Double], val velocity: Array[Double], val frame: F) extends Orbit[F] {
 
   /**
    * {@inheritDoc}
@@ -52,7 +51,7 @@ object PosVel {
    * V = [0, 0, 0]
    * </pre>
    */
-  def apply[F <: ReferenceSystem](frame: F): PosVel[F] = new PosVel(Vec3.zero, Vec3.zero, frame)
+  def apply[F <: ReferenceSystem](frame: F): PosVel[F] = new PosVel(Array[Double](0,0,0), Array[Double](0,0,0), frame)
 
   /**
    * Create a pair of position/velocity, both equal to zero:
@@ -68,7 +67,7 @@ object PosVel {
    * @param vz Instantaneous z velocity [m/s].
    */
   def apply[F <: ReferenceSystem](x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double, frame: F): PosVel[F] =
-    new PosVel(Vec3(x, y, z), Vec3(vx, vy, vz), frame)
+    new PosVel(Array(x, y, z), Array(vx, vy, vz), frame)
 
   /**
    * Create from a 6 dimensional array.

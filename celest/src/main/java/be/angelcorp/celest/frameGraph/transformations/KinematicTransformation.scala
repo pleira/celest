@@ -16,10 +16,13 @@
 package be.angelcorp.celest.frameGraph.transformations
 
 import be.angelcorp.celest.frameGraph.{BasicReferenceFrameTransform, ReferenceFrameTransformFactory, ReferenceSystem}
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.math.rotation.Rotation
 import be.angelcorp.celest.state.{Orbit, PosVel}
 import be.angelcorp.celest.time.Epoch
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
+import be.angelcorp.celest.math.geometry.PowerArray._
 
 /**
  * The default implementation for a reference frame transformation, including kinematic effects:
@@ -100,8 +103,8 @@ class KinematicTransformation[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val 
    * Based on: [battin] page 101, eqn 2.49
    * </p>
    */
-  override def transformPos(position: Vec3) = {
-    val p_f01 = position + parameters.translation
+  override def transformPos(position: Array[Double]) : Array[Double] = {
+    val p_f01 : Array[Double] = position |+| parameters.translation
     parameters.rotation.applyTo(p_f01)
   }
 
@@ -126,12 +129,12 @@ class KinematicTransformation[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val 
    * [battin] page 102, eqn 2.52
    * </p>
    */
-  override def transformPosVel(position: Vec3, velocity: Vec3) = {
-    val p_f01 = position + parameters.translation
+  override def transformPosVel(position: Array[Double], velocity: Array[Double]) = {
+    val p_f01 = position |+| parameters.translation
     val p_f1 = parameters.rotation.applyTo(p_f01)
 
-    val cross = parameters.rotationRate.cross(p_f01)
-    val v_f01 = velocity + parameters.velocity + cross
+    val cross : Array[Double] = parameters.rotationRate cross p_f01
+    val v_f01 = velocity |+| parameters.velocity |+| cross
     val v_f1 = parameters.rotation.applyTo(v_f01)
 
     (p_f1, v_f1)
@@ -162,22 +165,22 @@ class KinematicTransformation[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val 
    * [battin] page 102, eqn 2.54
    * </p>
    */
-  override def transformPosVelAcc(position: Vec3, velocity: Vec3, acceleration: Vec3): (Vec3, Vec3, Vec3) = {
-    val p_f01 = position + parameters.translation
+  override def transformPosVelAcc(position: Array[Double], velocity: Array[Double], acceleration: Array[Double]): (Array[Double], Array[Double], Array[Double]) = {
+    val p_f01 = position |+| parameters.translation
     val p_f1 = parameters.rotation.applyTo(p_f01)
 
-    val cross = parameters.rotationRate.cross(p_f01)
-    val v_f01 = velocity + parameters.velocity + cross
+    val cross : Array[Double] = parameters.rotationRate cross p_f01
+    val v_f01 = velocity |+| parameters.velocity |+| cross
     val v_f1 = parameters.rotation.applyTo(v_f01)
 
     // a_observed = \vec{a}
-    val observed = acceleration + parameters.acceleration
+    val observed : Array[Double] = acceleration |+| parameters.acceleration
     // a_coriolis = 2 \vec{\omega} \times \vec{v}
-    val coriolis = (parameters.rotationRate * 2).cross(velocity + parameters.velocity)
+    val coriolis = (parameters.rotationRate :* 2) cross (velocity + parameters.velocity)
     // a_euler = \vec{\alpha} \times \vec{r}
-    val euler = parameters.rotationAcceleration.cross(p_f01)
+    val euler = parameters.rotationAcceleration cross p_f01
     // a_centripetal = omega \times ( \vec{\omega} \times \vec{r} )
-    val centripetal = parameters.rotationRate.cross(parameters.rotationRate.cross(p_f01))
+    val centripetal = parameters.rotationRate cross (parameters.rotationRate cross p_f01)
 
     // a = R [ a_observed + a_coriolis + a_euler + a_centripetal ]
     val a_f1 = parameters.rotation.applyTo(observed + coriolis + euler + centripetal)
@@ -185,7 +188,7 @@ class KinematicTransformation[F0 <: ReferenceSystem, F1 <: ReferenceSystem](val 
     (p_f1, v_f1, a_f1)
   }
 
-  override def transformVector(vector: Vec3): Vec3 = {
+  override def transformVector(vector: Array[Double]): Array[Double] = {
     parameters.rotation.applyTo(vector)
   }
 

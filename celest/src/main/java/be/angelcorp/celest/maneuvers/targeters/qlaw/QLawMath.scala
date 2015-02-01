@@ -1,6 +1,5 @@
 package be.angelcorp.celest.maneuvers.targeters.qlaw
 
-import be.angelcorp.celest.math.geometry.Vec3
 
 import scala.math._
 import be.angelcorp.celest.state.Keplerian
@@ -291,12 +290,12 @@ trait QLawMath[F <: BodyCenteredSystem] {
   }
 
   /** The optimal acceleration vector over all α and β */
-  def accelerationVector: Vec3 = accelerationVector( α, β )
+  def accelerationVector: Array[Double] = accelerationVector( α, β )
 
-  def accelerationVector( α: Double, β: Double ): Vec3 = {
+  def accelerationVector( α: Double, β: Double ): Array[Double] = {
     val sinα = sin(α); val cosα = cos(α)
     val sinβ = sin(β); val cosβ = cos(β)
-    Vec3(acceleration * cosβ * sinα, acceleration * cosβ * cosα, acceleration * sinβ)
+    Array[Double](acceleration * cosβ * sinα, acceleration * cosβ * cosα, acceleration * sinβ)
   }
 
   def error( k: Keplerian[F] ) =

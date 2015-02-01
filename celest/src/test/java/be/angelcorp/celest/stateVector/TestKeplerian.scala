@@ -22,6 +22,9 @@ import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.unit.CelestTest
 import be.angelcorp.celest.physics.Units._
 import org.scalatest.{FlatSpec, Matchers}
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 class TestKeplerian extends FlatSpec with Matchers with CelestTest {
 

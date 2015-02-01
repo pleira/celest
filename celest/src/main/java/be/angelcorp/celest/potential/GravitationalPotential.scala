@@ -15,8 +15,6 @@
  */
 package be.angelcorp.celest.potential
 
-import be.angelcorp.celest.math.geometry.Vec3
-
 
 /**
  * Represents the LOCAL gravitational field or potential created by an object
@@ -46,6 +44,6 @@ trait GravitationalPotential {
 	 * Point relative to the center of mass of the body being evaluated
    * @return Local acceleration for a unit mass a the location of the given point
    */
-  def apply(point: Vec3): Vec3
+  def apply(point: Array[Double]): Array[Double]
 
 }

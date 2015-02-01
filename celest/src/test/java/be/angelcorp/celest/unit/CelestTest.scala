@@ -24,6 +24,10 @@ import org.scalactic.{TripleEqualsSupport, Prettifier}
 import org.scalatest.matchers.{BePropertyMatcher, BeMatcher, MatchResult, Matcher}
 import org.scalatest.{Assertions, Matchers}
 
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+
 trait CelestTest extends Assertions with Matchers with MtxMatchers with RotationMatchers {
 
   /**
@@ -85,15 +89,16 @@ trait CelestTest extends Assertions with Matchers with MtxMatchers with Rotation
     }
 
     def assertEquals(expected: PosVel[_], actual: PosVel[_], positionError: Double, velocityError: Double) {
+      implicit val ev = CoordinateSpace.array[Double](3)
       assertEquals(expected.position.norm, actual.position.norm, positionError)
-      assertEquals(expected.position.x, actual.position.x, positionError)
-      assertEquals(expected.position.y, actual.position.y, positionError)
-      assertEquals(expected.position.z, actual.position.z, positionError)
+      assertEquals(expected.position._x, actual.position._x, positionError)
+      assertEquals(expected.position._y, actual.position._y, positionError)
+      assertEquals(expected.position._z, actual.position._z, positionError)
 
       assertEquals(expected.velocity.norm, actual.velocity.norm, velocityError)
-      assertEquals(expected.velocity.x, actual.velocity.x, velocityError)
-      assertEquals(expected.velocity.y, actual.velocity.y, velocityError)
-      assertEquals(expected.velocity.z, actual.velocity.z, velocityError)
+      assertEquals(expected.velocity._x, actual.velocity._x, velocityError)
+      assertEquals(expected.velocity._y, actual.velocity._y, velocityError)
+      assertEquals(expected.velocity._z, actual.velocity._z, velocityError)
     }
 
     def assertEquals(expected: Keplerian[_], actual: Keplerian[_],

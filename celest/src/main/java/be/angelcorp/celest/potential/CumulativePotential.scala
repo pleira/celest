@@ -15,7 +15,11 @@
  */
 package be.angelcorp.celest.potential
 
-import be.angelcorp.celest.math.geometry.Vec3
+import be.angelcorp.celest.math.geometry.DCoord
+
+import spire.algebra._
+import spire.math._
+import spire.implicits._ // provides infix operators, instances and conversions
 
 /**
  * Create a GravitationalPotential that is the result of the summation of a set of independent
@@ -27,7 +31,7 @@ import be.angelcorp.celest.math.geometry.Vec3
  */
 class CumulativePotential(val potentials: List[GravitationalPotential]) extends GravitationalPotential {
 
-  override def apply(point: Vec3) =
-    potentials.foldLeft(Vec3.zero)((sum, p) => sum + p(point))
+  override def apply(point: Array[Double]) =
+    potentials.foldLeft(DCoord.zero)((sum, p) => sum + p(point))
 
 }

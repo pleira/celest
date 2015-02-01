@@ -1,5 +1,6 @@
 package be.angelcorp.celest.math.geometry
 
+
 class Vec3(var x: Double, var y: Double, var z: Double) {
 
   def size = 3
@@ -208,6 +209,9 @@ class Vec3(var x: Double, var y: Double, var z: Double) {
     z = op(z)
   }
 
+  def asDoubleArray() =
+    Array[Double](x,y,z)
+  
   override def toString: String = s"Vec3($x, $y, $z)"
 
   override def equals(obj: Any) = obj match {
@@ -219,6 +223,7 @@ class Vec3(var x: Double, var y: Double, var z: Double) {
     ((3 * 31 + Double.box(x).hashCode()) * 31 + Double.box(y).hashCode()) * 31 + Double.box(z).hashCode()
 
 }
+
 
 object Vec3 {
 

@@ -15,7 +15,11 @@
  */
 package be.angelcorp.celest.math.rotation
 
-import be.angelcorp.celest.math.geometry.{Vec3, Mat3}
+import be.angelcorp.celest.math.geometry.Mat3
+
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
 
 class RotationMatrix(val mtx: Mat3) extends Rotation {
 
@@ -35,7 +39,7 @@ class RotationMatrix(val mtx: Mat3) extends Rotation {
 	 * </pre>
 	 * @param vector Vector to apply the inverse of this transform to.
 	 */
-	override def applyInverseTo(vector: Vec3) = mtx.transpose * vector
+	override def applyInverseTo(vector: Array[Double]) = mtx.transpose * vector
 
 	/**
 	 * Converts the given rotation to matrix form and applies the following:
@@ -53,7 +57,7 @@ class RotationMatrix(val mtx: Mat3) extends Rotation {
 	 * </pre>
 	 * @param vector Vector on which to apply this transform.
 	 */
-	override def applyTo(vector: Vec3) = mtx * vector
+	override def applyTo(vector: Array[Double]) = mtx * vector
 
 	override def inverse(): RotationMatrix = mtx.transpose
 
@@ -66,6 +70,8 @@ class RotationMatrix(val mtx: Mat3) extends Rotation {
 
 object RotationMatrix {
 
+  implicit val ev = CoordinateSpace.array[Double](3)
+     
   implicit def fromMat3( mtx: Mat3 ): RotationMatrix = new RotationMatrix( mtx )
 
 	/**
@@ -81,21 +87,21 @@ object RotationMatrix {
 		val c = scala.math.cos(aa.angle)
 		val s = scala.math.sin(aa.angle)
 		val t = 1.0 - c
-		val axis = aa.axis.normalized
+		val axis = aa.axis.normalize
 
-		val m00 = c + axis.x * axis.x * t
-		val m11 = c + axis.y * axis.y * t
-		val m22 = c + axis.z * axis.z * t
-		val tmp1 = axis.x * axis.y * t
-		val tmp2 = axis.z * s
+		val m00 = c + axis._x * axis._x * t
+		val m11 = c + axis._y * axis._y * t
+		val m22 = c + axis._z * axis._z * t
+		val tmp1 = axis._x * axis._y * t
+		val tmp2 = axis._z * s
 		val m10 = tmp1 + tmp2
 		val m01 = tmp1 - tmp2
-		val tmp3 = axis.x * axis.z * t
-		val tmp4 = axis.y * s
+		val tmp3 = axis._x * axis._z * t
+		val tmp4 = axis._y * s
 		val m20 = tmp3 - tmp4
 		val m02 = tmp3 + tmp4
-		val tmp5 = axis.y * axis.z * t
-		val tmp6 = axis.x * s
+		val tmp5 = axis._y * axis._z * t
+		val tmp6 = axis._x * s
 		val m21 = tmp5 + tmp6
 		val m12 = tmp5 - tmp6
 		new RotationMatrix( Mat3(m00.toFloat, m01.toFloat, m02.toFloat, m10.toFloat, m11.toFloat, m12.toFloat, m20.toFloat, m21.toFloat, m22.toFloat) )

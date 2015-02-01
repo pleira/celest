@@ -16,7 +16,6 @@
 
 package be.angelcorp.celest.maneuvers.targeters.lambert
 
-import math._
 import be.angelcorp.celest.math._
 import be.angelcorp.celest.time.Epoch
 import be.angelcorp.celest.maneuvers.targeters.TPBVP
@@ -24,37 +23,46 @@ import be.angelcorp.celest.state.PosVel
 import com.google.common.base.Preconditions._
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 
+import spire.algebra._   // provides algebraic type classes
+import spire.math._      // provides functions, types, and type classes
+import spire.implicits._ // provides infix operators, instances and conversions
+
+
+
 class Lambert3[F <: BodyCenteredSystem]
 (val r1: PosVel[F], val r2: PosVel[F],
  val departureEpoch: Epoch, val arrivalEpoch: Epoch,
  val frame: F, val N: Double = 0,
  val prograde: Boolean = true, val leftBranch: Boolean = true) extends TPBVP[F] {
 
+
   val longWay = {
     val r1 = this.r1.position
     val r2 = this.r1.position
-    val progradeIsLong = (r1.x * r2.y - r2.x * r1.y < 0.0)
+    implicit val ev = CoordinateSpace.array[Double](3)
+    val progradeIsLong = r1._x * r2._y - r2._x * r1._y < 0.0
     if (prograde) progradeIsLong else !progradeIsLong
   }
 
   override lazy val trajectory = {
     val r1vec = this.r1.position
     val r2vec = this.r2.position
+ import be.angelcorp.celest.math.geometry.PowerArray._
 
     // manipulate input
     val tol = 1E-12
     // optimum for numerical noise v.s. actual precision
     val r1 = r1vec.norm // magnitude of r1vec
     val r2 = r2vec.norm // magnitude of r2vec
-    val r1unit = r1vec / r1 // unit vector of r1vec
-    val r2unit = r2vec / r2 // unit vector of r2vec
+    val r1unit = r1vec.normalize //  :/ r1 // unit vector of r1vec
+    val r2unit = r2vec.normalize //  :/ r2 // unit vector of r2vec
     val crsprod = r1vec * r2vec // cross product of r1vec and r2vec
     val mcrsprd = crsprod.norm // magnitude of that cross product
-    val th1unit = (crsprod / mcrsprd) * r1unit // unit vectors in the tangential-directions
-    val th2unit = (crsprod / mcrsprd) * r2unit
+    val th1unit = (crsprod :/ mcrsprd) * r1unit // unit vectors in the tangential-directions
+    val th2unit = (crsprod :/ mcrsprd) * r2unit
     val tf = abs(arrivalEpoch.relativeToS(departureEpoch))
 
-    val dth = if (longWay) 2 * Pi - r1vec.angle(r2vec) else r1vec.angle(r2vec)
+    val dth = if (longWay) 2 * pi - r1vec.angle(r2vec) else r1vec.angle(r2vec)
 
     // define constants
     val c = sqrt(pow(r1, 2) + pow(r2, 2) - 2 * r1 * r2 * cos(dth))
@@ -68,7 +76,7 @@ class Lambert3[F <: BodyCenteredSystem]
     val (a_, b_, c_, d_) = Lambert3.LancasterBlanchard(0, q, N)
     val T0 = a_
     val Td = T0 - T
-    val phr = mod(2 * atan2(1 - pow(q, 2), 2 * q), 2 * Pi)
+    val phr = mod(2 * atan2(1 - pow(q, 2), 2 * q), 2 * pi)
 
     // single-revolution case
     val x0 = if (N == 0) {
@@ -79,7 +87,7 @@ class Lambert3[F <: BodyCenteredSystem]
         } else {
           val x01 = Td / (4 - Td)
           val x02 = -sqrt(-Td / (T + T0 / 2))
-          val W = x01 + 1.7 * sqrt(2 - phr / Pi)
+          val W = x01 + 1.7 * sqrt(2 - phr / pi)
           val x03 = if (W >= 0) x01 else x01 + pow(-W, 1 / 16).*(x02 - x01)
           val lambda = 1 + x03 * (1 + x01) / 2 - 0.03 * pow(x03, 2) * sqrt(1 + x01)
           lambda * x03
@@ -92,11 +100,11 @@ class Lambert3[F <: BodyCenteredSystem]
       // multi-revolution case
     } else {
       // determine minimum Tp(x)
-      val xMpi = 4 / (3 * Pi * (2 * N + 1))
-      val xM0 = if (phr < Pi)
-        xMpi * pow(phr / Pi, 1 / 8)
-      else if (phr > Pi)
-        xMpi * (2 - pow(2 - phr / Pi, 1 / 8))
+      val xMpi = 4 / (3 * pi * (2 * N + 1))
+      val xM0 = if (phr < pi)
+        xMpi * pow(phr / pi, 1 / 8)
+      else if (phr > pi)
+        xMpi * (2 - pow(2 - phr / pi, 1 / 8))
       else
         0
 
@@ -218,15 +226,15 @@ class Lambert3[F <: BodyCenteredSystem]
 
     // radial component
     val Vr1 = gamma * ((q * z - x) - rho * (q * z + x)) / r1
-    val Vr1vec = r1unit * Vr1
+    val Vr1vec = r1unit :* Vr1
     val Vr2 = -gamma * ((q * z - x) + rho * (q * z + x)) / r2
-    val Vr2vec = r2unit * Vr2
+    val Vr2vec = r2unit :* Vr2
 
     // tangential component
     val Vtan1 = sigma * gamma * (z + q * x) / r1
-    val Vtan1vec = th1unit * Vtan1
+    val Vtan1vec = th1unit :* Vtan1
     val Vtan2 = sigma * gamma * (z + q * x) / r2
-    val Vtan2vec = th2unit * Vtan2
+    val Vtan2vec = th2unit :* Vtan2
 
     // Cartesian velocity
     val V1 = Vtan1vec + Vr1vec
@@ -281,7 +289,7 @@ object Lambert3 {
       val z = sqrt(1 + q * q * E)
       val f = y * (z - q * x)
       val g = x * z - q * E
-      val d = if (E < 0) (atan2(f, g) + Pi * m) else log(max(0, f + g))
+      val d = if (E < 0) (atan2(f, g) + pi * m) else log(max(0, f + g))
       // T(x)
       val T = 2 * (x - q * z - d / y) / E
       //  T'(x)

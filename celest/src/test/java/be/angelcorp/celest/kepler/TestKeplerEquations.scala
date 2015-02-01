@@ -19,7 +19,6 @@ import be.angelcorp.celest.body.Satellite
 import be.angelcorp.celest.constants.Constants._
 import be.angelcorp.celest.frameGraph.frames.BodyCenteredSystem
 import be.angelcorp.celest.kepler
-import be.angelcorp.celest.math.geometry.Vec3
 import be.angelcorp.celest.math._
 import be.angelcorp.celest.state.PosVel
 import be.angelcorp.celest.unit.CelestTest
@@ -72,7 +71,7 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers with CelestTest {
 
   //it should "compute the correct arguement of latitude" in {
   // public static double arguementOfLatitude(double w, double nu)
-  // public static double arguementOfLatitude(Vec3 nodalVector, Vec3 radius)
+  // public static double arguementOfLatitude(Array nodalVector, Array radius)
   // TODO: Add tests
   //}
 
@@ -81,8 +80,8 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers with CelestTest {
       val centerBody = new Satellite(5.9736E24, null)
     }
     val c = new PosVel(
-      Vec3(10157768.1264, -6475997.0091, 2421205.9518),
-      Vec3(1099.2953996, 3455.105924, 4355.0978095),
+      Array(10157768.1264, -6475997.0091, 2421205.9518),
+      Array(1099.2953996, 3455.105924, 4355.0978095),
       frame
     )
 
@@ -103,8 +102,8 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers with CelestTest {
       val centerBody = new Satellite(5.9736E24, null)
     }
     val c = new PosVel(
-      Vec3(10157768.1264, -6475997.0091, 2421205.9518),
-      Vec3(1099.2953996, 3455.105924, 4355.0978095),
+      Array(10157768.1264, -6475997.0091, 2421205.9518),
+      Array(1099.2953996, 3455.105924, 4355.0978095),
       frame
     )
 
@@ -135,8 +134,8 @@ class TestKeplerEquations extends FlatSpec with ShouldMatchers with CelestTest {
     // Values from keplerCOE from Matlab Orbital_Library by Richard Rieber
     val c = kepler.kepler2cartesian(1.216495E7, 0.01404, 0.919398, 2.656017, 5.561776, 3.880560, mass2mu(5.9736E24))
     val c_true = new PosVel(
-      Vec3(1.092882447232868e+007, -5.619415989750504e+006, -1.715953308630781e+005),
-      Vec3(1.466941526515634e+003, +3.108913288555892e+003, -4.504368922790057e+003),
+      Array(1.092882447232868e+007, -5.619415989750504e+006, -1.715953308630781e+005),
+      Array(1.466941526515634e+003, +3.108913288555892e+003, -4.504368922790057e+003),
       null
     )
 
